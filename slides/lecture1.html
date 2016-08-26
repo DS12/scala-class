@@ -426,7 +426,8 @@ Variance refers to a categorical framework undergirding the type system (entirel
           <div class="inner">
             
             
-            <section><p><img alt="" src="images/lecture1/variance.png" /></p></section>
+            <section><p><img alt="" src="images/lecture1/variance.png" />
+<a href="https://www.clear.rice.edu/comp310/JavaResources/generics/co_contra_host_visitor.html">source</a></p></section>
             
           </div>
           <div class="presenter_notes">
@@ -445,38 +446,6 @@ Variance refers to a categorical framework undergirding the type system (entirel
             
             <aside class="page_number">
               11/38
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture1.md -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            
-            <section><p><img alt="" src="images/lecture1/variance2.png" /></p>
-<p><a href="https://www.clear.rice.edu/comp310/JavaResources/generics/co_contra_host_visitor.html">source</a></p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture1.md">lecture1.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              12/38
             </aside>
 
           </footer>
@@ -510,7 +479,7 @@ A type can be contravariant when it does call methods on the type that it is gen
             </aside>
             
             <aside class="page_number">
-              13/38
+              12/38
             </aside>
 
           </footer>
@@ -544,7 +513,7 @@ For example: "a function expecting a Cat and returning an Animal" (written <code
             </aside>
             
             <aside class="page_number">
-              14/38
+              13/38
             </aside>
 
           </footer>
@@ -580,7 +549,7 @@ For example: "a function expecting a Cat and returning an Animal" (written <code
             </aside>
             
             <aside class="page_number">
-              15/38
+              14/38
             </aside>
 
           </footer>
@@ -618,7 +587,7 @@ For example: "a function expecting a Cat and returning an Animal" (written <code
             </aside>
             
             <aside class="page_number">
-              16/38
+              15/38
             </aside>
 
           </footer>
@@ -652,7 +621,7 @@ For example, a function of type <code>Cat=&gt;Cat</code> can safely be used wher
             </aside>
             
             <aside class="page_number">
-              17/38
+              16/38
             </aside>
 
           </footer>
@@ -684,7 +653,7 @@ For example, a function of type <code>Cat=&gt;Cat</code> can safely be used wher
             </aside>
             
             <aside class="page_number">
-              18/38
+              17/38
             </aside>
 
           </footer>
@@ -721,7 +690,7 @@ For example, a function of type <code>Cat=&gt;Cat</code> can safely be used wher
             </aside>
             
             <aside class="page_number">
-              19/38
+              18/38
             </aside>
 
           </footer>
@@ -760,7 +729,7 @@ For example, a function of type <code>Cat=&gt;Cat</code> can safely be used wher
             </aside>
             
             <aside class="page_number">
-              20/38
+              19/38
             </aside>
 
           </footer>
@@ -801,7 +770,7 @@ For example, a function of type <code>Cat=&gt;Cat</code> can safely be used wher
             </aside>
             
             <aside class="page_number">
-              21/38
+              20/38
             </aside>
 
           </footer>
@@ -837,7 +806,7 @@ The term ad hoc in this context is not intended to be pejorative; it refers to t
             </aside>
             
             <aside class="page_number">
-              22/38
+              21/38
             </aside>
 
           </footer>
@@ -871,7 +840,7 @@ Most languages support at least some ad-hoc polymorphism, but in some languages 
             </aside>
             
             <aside class="page_number">
-              23/38
+              22/38
             </aside>
 
           </footer>
@@ -905,7 +874,7 @@ Ad-hoc polymorphism in Scala (with a large debt to Haskell) is most closely asso
             </aside>
             
             <aside class="page_number">
-              24/38
+              23/38
             </aside>
 
           </footer>
@@ -939,7 +908,7 @@ Type classes are commonly misinterpreted as being synonymous with interfaces in 
             </aside>
             
             <aside class="page_number">
-              25/38
+              24/38
             </aside>
 
           </footer>
@@ -953,7 +922,7 @@ Type classes are commonly misinterpreted as being synonymous with interfaces in 
             
             
             <section><p>The focus with interfaces is on subtype polymorphism.</p>
-<p>The focus with type classes changes to type-level parametric polymorphism: you implement the contracts that the type class publishes across unrelated types.
+<p>The focus with type classes changes to parametric polymorphism: you implement the contracts that the type class publishes across unrelated types.
 <br />
 <br />
 A second crucial distinction between type classes and interfaces is that for class to be a "member" of an interface it must declare so at the site of its own definition.</p></section>
@@ -974,7 +943,7 @@ A second crucial distinction between type classes and interfaces is that for cla
             </aside>
             
             <aside class="page_number">
-              26/38
+              25/38
             </aside>
 
           </footer>
@@ -1008,7 +977,7 @@ Type classes are similar to the <a href="https://en.wikipedia.org/wiki/Adapter_p
             </aside>
             
             <aside class="page_number">
-              27/38
+              26/38
             </aside>
 
           </footer>
@@ -1042,7 +1011,7 @@ The instances of a type class provide implementations for the types we care abou
             </aside>
             
             <aside class="page_number">
-              28/38
+              27/38
             </aside>
 
           </footer>
@@ -1081,7 +1050,7 @@ The instances of a type class provide implementations for the types we care abou
             </aside>
             
             <aside class="page_number">
-              29/38
+              28/38
             </aside>
 
           </footer>
@@ -1118,7 +1087,7 @@ The instances of a type class provide implementations for the types we care abou
             </aside>
             
             <aside class="page_number">
-              30/38
+              29/38
             </aside>
 
           </footer>
@@ -1155,7 +1124,7 @@ In Scala's case we name the instance explicitly as <code>IntPlus</code>, while t
             </aside>
             
             <aside class="page_number">
-              31/38
+              30/38
             </aside>
 
           </footer>
@@ -1189,7 +1158,7 @@ In Scala's case the search is performed locally in the scope of the method call 
             </aside>
             
             <aside class="page_number">
-              32/38
+              31/38
             </aside>
 
           </footer>
@@ -1223,7 +1192,7 @@ So, for example, you could easily define, in different scopes, two or more diffe
             </aside>
             
             <aside class="page_number">
-              33/38
+              32/38
             </aside>
 
           </footer>
@@ -1259,7 +1228,7 @@ So, for example, you could easily define, in different scopes, two or more diffe
             </aside>
             
             <aside class="page_number">
-              34/38
+              33/38
             </aside>
 
           </footer>
@@ -1295,7 +1264,7 @@ So, for example, you could easily define, in different scopes, two or more diffe
             </aside>
             
             <aside class="page_number">
-              35/38
+              34/38
             </aside>
 
           </footer>
@@ -1330,7 +1299,7 @@ So, for example, you could easily define, in different scopes, two or more diffe
             </aside>
             
             <aside class="page_number">
-              36/38
+              35/38
             </aside>
 
           </footer>
@@ -1370,7 +1339,7 @@ So, for example, you could easily define, in different scopes, two or more diffe
             </aside>
             
             <aside class="page_number">
-              37/38
+              36/38
             </aside>
 
           </footer>
@@ -1408,18 +1377,22 @@ So, for example, you could easily define, in different scopes, two or more diffe
             </aside>
             
             <aside class="page_number">
-              38/38
+              37/38
             </aside>
 
           </footer>
         </div>
       </div>
       
-      <!-- slide source:  -->
+      <!-- slide source: lecture1.md -->
       <div class="slide-wrapper">
         <div class="slide">
           <div class="inner">
             
+            <header><h1>Homework</h1></header>
+            
+            
+            <section><p>Read Chapter 10 and get started on Chapter 11 in <em>Functional Programming in Scala</em>.</p></section>
             
           </div>
           <div class="presenter_notes">
@@ -1432,8 +1405,12 @@ So, for example, you could easily define, in different scopes, two or more diffe
 
           <footer>
             
+            <aside class="source">
+              Source: <a href="lecture1.md">lecture1.md</a>
+            </aside>
+            
             <aside class="page_number">
-              /38
+              38/38
             </aside>
 
           </footer>
@@ -1557,25 +1534,25 @@ So, for example, you could easily define, in different scopes, two or more diffe
       
       
       <tr id="toc-row-19">
-        <th><a href="#slide19">-</a></th>
+        <th><a href="#slide19">Exercise</a></th>
         <td><a href="#slide19">19</a></td>
       </tr>
       
       
       <tr id="toc-row-20">
-        <th><a href="#slide20">Exercise</a></th>
+        <th><a href="#slide20">-</a></th>
         <td><a href="#slide20">20</a></td>
       </tr>
       
       
       <tr id="toc-row-21">
-        <th><a href="#slide21">-</a></th>
+        <th><a href="#slide21">Ad-hoc Polymorphism</a></th>
         <td><a href="#slide21">21</a></td>
       </tr>
       
       
       <tr id="toc-row-22">
-        <th><a href="#slide22">Ad-hoc Polymorphism</a></th>
+        <th><a href="#slide22">-</a></th>
         <td><a href="#slide22">22</a></td>
       </tr>
       
@@ -1647,13 +1624,13 @@ So, for example, you could easily define, in different scopes, two or more diffe
       
       
       <tr id="toc-row-34">
-        <th><a href="#slide34">-</a></th>
+        <th><a href="#slide34">Example: Thrush Combinator</a></th>
         <td><a href="#slide34">34</a></td>
       </tr>
       
       
       <tr id="toc-row-35">
-        <th><a href="#slide35">Example: Thrush Combinator</a></th>
+        <th><a href="#slide35">-</a></th>
         <td><a href="#slide35">35</a></td>
       </tr>
       
@@ -1671,7 +1648,7 @@ So, for example, you could easily define, in different scopes, two or more diffe
       
       
       <tr id="toc-row-38">
-        <th><a href="#slide38">-</a></th>
+        <th><a href="#slide38">Homework</a></th>
         <td><a href="#slide38">38</a></td>
       </tr>
       

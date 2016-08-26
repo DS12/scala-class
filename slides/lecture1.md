@@ -88,14 +88,10 @@ Variance refers to a categorical framework undergirding the type system (entirel
 ---
 
 ![](images/lecture1/variance.png)
-
----
-
-![](images/lecture1/variance2.png)
-
 [source](https://www.clear.rice.edu/comp310/JavaResources/generics/co_contra_host_visitor.html)
 
 ---
+
 
 A type can be covariant when it does not call methods on the type that it is generic over. If the type needs to call methods on generic objects that are passed into it , it cannot be covariant.
 <br />
@@ -214,7 +210,7 @@ Type classes are commonly misinterpreted as being synonymous with interfaces in 
 
 The focus with interfaces is on subtype polymorphism.
 
-The focus with type classes changes to type-level parametric polymorphism: you implement the contracts that the type class publishes across unrelated types.
+The focus with type classes changes to parametric polymorphism: you implement the contracts that the type class publishes across unrelated types.
 <br />
 <br />
 A second crucial distinction between type classes and interfaces is that for class to be a "member" of an interface it must declare so at the site of its own definition.
