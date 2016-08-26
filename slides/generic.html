@@ -1,0 +1,2132 @@
+<!DOCTYPE html>
+<!--
+  Copyright 2010 Google Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+  Original slides: Marcin Wichary (mwichary@google.com)
+  Modifications: Ernest Delgado (ernestd@google.com)
+                 Alex Russell (slightlyoff@chromium.org)
+
+  landslide modifications: Adam Zapletal (adamzap@gmail.com)
+                           Nicolas Perriault (nperriault@gmail.com)
+-->
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Generic Programming</title>
+    <!-- Styles -->
+    
+    <link rel="stylesheet" media="print" href="theme/css/print.css">
+    <link rel="stylesheet" media="screen, projection" href="theme/css/screen.css">
+    
+    
+    <!-- /Styles -->
+    <!-- Javascripts -->
+    
+    <script type="text/javascript" src="theme/js/slides.js"></script>
+    
+    
+    <!-- /Javascripts -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          processEscapes: true
+        },
+        "HTML-CSS": { availableFonts: ["TeX"] }
+      });
+    </script>
+    <script type="text/javascript"
+        src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+</head>
+<body style="!important;">
+  <div id="blank"></div>
+  <div class="presentation">
+    <div id="current_presenter_notes">
+      <div id="presenter_note"></div>
+    </div>
+    <div class="slides">
+      
+      <!-- slide source: generic.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            <header><h1>Generic Programming</h1></header>
+            
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="generic.md">generic.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              1/46
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: generic.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>Generic programming is the art of programming with types that you know nothing about.
+<br />
+<br />
+GP enables abstractions over shapes richer than can be captured with traditional parametric polymorphism, subtype polymorphism, or ad-hoc (typeclass) polymorphism:</p>
+<ul>
+<li>type level functions</li>
+<li><a href="https://en.wikipedia.org/wiki/Functional_dependency">dependent types</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Functional_dependency">functional dependencies</a></li>
+</ul></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="generic.md">generic.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              2/46
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: generic.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>The main generic programming library in Scala (other than the Reflections API) is Shapeless, which was started by Miles Sabin in 2011 as a research project.
+<br />
+<br />
+It is now an extremely active project w/ many commercial users.
+<br />
+<br />
+Key idea (following SYB): represent polymorphic function values via type classes</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="generic.md">generic.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              3/46
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: generic.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>One of the main use cases for data engineering is to reduce boilerplate and enforce constraints at compile time with the following strategy:</p>
+<ul>
+<li>
+<p>trasform a domain type into a generic representation.</p>
+</li>
+<li>
+<p>write a program that manipulates that generic representation <em>at the type level</em></p>
+</li>
+<li>
+<p>apply ('shape') the result to many different types as needed</p>
+</li>
+</ul></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="generic.md">generic.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              4/46
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: generic.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            <header><h1>Example: Singleton Types</h1></header>
+            
+            
+            <section><p>The Scala codeompiler can understand a constant value as a type.</p>
+<div class="highlight"><pre><span></span><span class="s">&quot;bar&quot;</span><span class="o">.</span><span class="n">narrow</span> <span class="c1">// &lt;: String</span>
+<span class="c1">//&quot;bar&quot;.narrow : String(&quot;bar&quot;)</span>
+<span class="mf">42.</span><span class="n">narrow</span>    <span class="c1">// &lt;: Int</span>
+<span class="c1">//42.narrow    : Int(42)</span>
+</pre></div>
+
+<p>For performance reasons, the JVM runtime uses type erasure to merge these with their superclasses, but at compile time they are understood as distinct elements of Scala's type system.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="generic.md">generic.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              5/46
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: generic.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>Singleton types bridge the gap between the value level and the type level and hence allow the exploration in Scala of techniques which would typically only be available in languages with support for full-spectrum dependent types.</p>
+<p>You've seen at least one example of a 'native' singleton type before:</p>
+<div class="highlight"><pre><span></span><span class="nc">Nil</span><span class="o">.</span><span class="n">narrow</span>
+<span class="c1">//res0: scala.collection.immutable.Nil.type = List()</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="generic.md">generic.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              6/46
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: generic.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            <header><h1>Heterogenous lists</h1></header>
+            
+            
+            <section><p>Heterogeneous lists are the core abstraction of Shapeless, most of its features revolve around the <code>HList</code> type:</p>
+<div class="highlight"><pre><span></span><span class="k">sealed</span> <span class="k">trait</span> <span class="nc">HList</span>
+<span class="k">case</span> <span class="k">class</span> <span class="nc">::</span><span class="o">[</span><span class="kt">+H</span>, <span class="kt">+T</span> <span class="k">&lt;:</span> <span class="kt">HList</span><span class="o">](</span><span class="n">head</span> <span class="k">:</span> <span class="kt">H</span><span class="o">,</span> <span class="n">tail</span> <span class="k">:</span> <span class="kt">T</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">HList</span>
+<span class="k">case</span> <span class="k">object</span> <span class="nc">HNil</span> <span class="k">extends</span> <span class="nc">HList</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="generic.md">generic.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              7/46
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: generic.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">shapeless.</span><span class="o">{</span><span class="nc">HList</span><span class="o">,</span> <span class="nc">HNil</span><span class="o">,</span> <span class="o">::}</span>
+<span class="k">val</span> <span class="n">hl</span><span class="k">:</span> <span class="kt">String</span> <span class="kt">::</span> <span class="kt">Int</span> <span class="kt">::</span> <span class="kt">HNil</span> <span class="o">=</span> <span class="s">&quot;foo&quot;</span> <span class="o">::</span> <span class="mi">42</span> <span class="o">::</span> <span class="nc">HNil</span>
+<span class="k">type</span> <span class="kt">StrInt</span> <span class="o">=</span> <span class="nc">String</span> <span class="o">::</span> <span class="nc">Int</span> <span class="o">::</span> <span class="nc">HNil</span>
+<span class="n">hl</span><span class="k">:</span> <span class="kt">::</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">::</span><span class="o">[</span><span class="kt">Int</span>, <span class="kt">HNil</span><span class="o">]]</span> <span class="k">=</span> <span class="n">foo</span> <span class="o">::</span> <span class="mi">42</span> <span class="o">::</span> <span class="nc">HNil</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="generic.md">generic.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              8/46
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: generic.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>An <code>HList</code> can have elements of arbitrary types, and unlike a <code>List</code> it will retain the types of each of its elements.</p>
+<div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">l</span> <span class="k">=</span> <span class="s">&quot;foo&quot;</span> <span class="o">::</span> <span class="mi">42</span> <span class="o">::</span> <span class="nc">Nil</span>
+<span class="n">l</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Any</span><span class="o">]</span> <span class="k">=</span> <span class="nc">List</span><span class="o">(</span><span class="n">foo</span><span class="o">,</span> <span class="mi">42</span><span class="o">)</span>
+<span class="k">type</span> <span class="kt">IntStr</span> <span class="o">=</span>  <span class="nc">Int</span> <span class="o">::</span> <span class="nc">String</span> <span class="o">::</span> <span class="nc">HNil</span>
+<span class="k">val</span> <span class="n">hl2</span> <span class="k">:</span> <span class="kt">IntStr</span> <span class="o">=</span> <span class="s">&quot;foo&quot;</span> <span class="o">::</span> <span class="mi">42</span> <span class="o">::</span> <span class="nc">HNil</span>
+<span class="c1">// error: type mismatch</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="generic.md">generic.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              9/46
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: generic.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>We can get the head or tail of an <code>HList</code> if and only if it is a cons:</p>
+<div class="highlight"><pre><span></span><span class="n">hl</span><span class="o">.</span><span class="n">head</span>
+<span class="n">res0</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="n">foo</span>
+<span class="n">hl</span><span class="o">.</span><span class="n">tail</span>
+<span class="n">res1</span><span class="k">:</span> <span class="kt">shapeless.::</span><span class="o">[</span><span class="kt">Int</span>,<span class="kt">shapeless.HNil</span><span class="o">]</span> <span class="k">=</span> <span class="mi">42</span> <span class="o">::</span> <span class="nc">HNil</span>
+<span class="n">scala</span><span class="o">&gt;</span> <span class="n">mySecondHList</span><span class="o">.</span><span class="n">tail</span><span class="o">.</span><span class="n">tail</span><span class="o">.</span><span class="n">tail</span>
+<span class="n">res2</span><span class="k">:</span> <span class="kt">shapeless.HNil</span> <span class="o">=</span> <span class="nc">HNil</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="generic.md">generic.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              10/46
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: generic.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>Of course if it is <code>HNil</code> there is no such method to call :</p>
+<div class="highlight"><pre><span></span><span class="n">hl</span><span class="o">.</span><span class="n">tail</span><span class="o">.</span><span class="n">tail</span><span class="o">.</span><span class="n">head</span>
+<span class="c1">//error: could not find implicit value for parameter c: //shapeless.ops.hlist.IsHCons[shapeless.HNil]</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="generic.md">generic.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              11/46
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: generic.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>Note that this is a compile error, and not a runtime exception like the one that arises when we try to access the head or tail of an empty List.</p>
+<div class="highlight"><pre><span></span><span class="nc">List</span><span class="o">().</span><span class="n">head</span>
+<span class="c1">//java.util.NoSuchElementException: head of empty list</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="generic.md">generic.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              12/46
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: generic.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>Shapeless provides an easy way to encode case classes as <code>HLists</code>, again with compile-time type guarantees on structure.
+<br />
+<br />
+This lends itself well to employing Spark <code>Dataset</code>s, which express semistructured data as case classes.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="generic.md">generic.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              13/46
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: generic.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><div class="highlight"><pre><span></span><span class="k">case</span> <span class="k">class</span> <span class="nc">Person</span><span class="o">(</span><span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">age</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span>
+<span class="k">val</span> <span class="n">genPerson</span> <span class="k">=</span> <span class="nc">Generic</span><span class="o">[</span><span class="kt">Person</span><span class="o">]</span>
+<span class="k">val</span> <span class="n">alice</span> <span class="k">=</span> <span class="nc">Person</span><span class="o">(</span><span class="s">&quot;Alice&quot;</span><span class="o">,</span> <span class="mi">25</span><span class="o">)</span>
+<span class="k">val</span> <span class="n">repr</span> <span class="k">=</span> <span class="n">genPerson</span><span class="o">.</span><span class="n">to</span><span class="o">(</span><span class="n">alice</span><span class="o">)</span>
+<span class="c1">//genPerson.Repr = Alice :: 25 :: HNil</span>
+<span class="k">val</span> <span class="n">bob</span> <span class="k">=</span> <span class="n">genPerson</span><span class="o">.</span><span class="n">from</span><span class="o">(</span><span class="s">&quot;Bob&quot;</span> <span class="o">::</span> <span class="mi">22</span> <span class="o">::</span> <span class="nc">HNil</span><span class="o">)</span>
+<span class="c1">//bob: Person = Person(Bob,22)</span>
+<span class="k">val</span> <span class="n">eve</span> <span class="k">=</span> <span class="n">genPerson</span><span class="o">.</span><span class="n">from</span><span class="o">(</span><span class="s">&quot;Eve&quot;</span> <span class="o">::</span> <span class="s">&quot;23&quot;</span> <span class="o">::</span> <span class="nc">HNil</span><span class="o">)</span>
+<span class="c1">//error: type mismatch</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="generic.md">generic.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              14/46
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: generic.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            <header><h1>Implicit Recursion</h1></header>
+            
+            
+            <section><p>However there’s not much else we can do with an arbitrary <code>HList</code>, because almost all the methods are injected via type classes.
+<br />
+<br />
+Lets work through an example of this, computing the size of an <code>HList</code>.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="generic.md">generic.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              15/46
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: generic.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><div class="highlight"><pre><span></span><span class="k">case</span> <span class="k">class</span> <span class="nc">size</span><span class="o">[</span><span class="kt">L</span> <span class="k">&lt;:</span> <span class="kt">HList</span><span class="o">](</span><span class="n">get</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span>
+<span class="k">object</span> <span class="nc">size</span> <span class="o">{</span>
+  <span class="k">implicit</span> <span class="k">val</span> <span class="n">hnilsize</span> <span class="k">=</span> <span class="n">size</span><span class="o">[</span><span class="kt">HNil</span><span class="o">](</span><span class="mi">0</span><span class="o">)</span>
+  <span class="k">implicit</span> <span class="k">def</span> <span class="n">hconssize</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">T</span> <span class="k">&lt;:</span> <span class="kt">HList</span><span class="o">]</span>
+    <span class="o">(</span><span class="k">implicit</span> <span class="n">tailsize</span><span class="k">:</span> <span class="kt">size</span><span class="o">[</span><span class="kt">T</span><span class="o">])</span> <span class="k">=</span>
+      <span class="n">size</span><span class="o">[</span><span class="kt">H</span> <span class="kt">::</span> <span class="kt">T</span><span class="o">](</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">tailsize</span><span class="o">.</span><span class="n">get</span><span class="o">)</span>
+  <span class="k">def</span> <span class="n">apply</span><span class="o">[</span><span class="kt">L</span> <span class="k">&lt;:</span> <span class="kt">HList</span><span class="o">](</span><span class="n">l</span><span class="k">:</span> <span class="kt">L</span><span class="o">)</span>
+    <span class="o">(</span><span class="k">implicit</span> <span class="n">size</span><span class="k">:</span> <span class="kt">size</span><span class="o">[</span><span class="kt">L</span><span class="o">])</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="n">size</span><span class="o">.</span><span class="n">get</span>
+<span class="o">}</span>
+<span class="k">val</span> <span class="n">hl</span> <span class="k">=</span> <span class="s">&quot;foo&quot;</span> <span class="o">::</span> <span class="kc">true</span> <span class="o">::</span> <span class="nc">HNil</span>
+<span class="n">size</span><span class="o">(</span><span class="n">hl</span><span class="o">)</span>
+<span class="c1">//res0: Int = 2</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="generic.md">generic.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              16/46
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: generic.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>How does it work?</p>
+<ul>
+<li><code>size(hl)</code> requires an implicit <code>size[String :: Boolean :: HNil]</code></li>
+<li>... which we obtain by calling <code>hconssize[String, Boolean :: HNil]</code></li>
+<li>... which itself requires a <code>size[Boolean :: HNil]</code></li>
+<li>... which we obtain by calling <code>hconssize[Boolean, HNil]</code></li>
+<li>... which itself requires a <code>size[HNil]</code></li>
+<li>... which we obtain by returning <code>hnilsize</code></li>
+</ul></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="generic.md">generic.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              17/46
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: generic.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>In the end calling <code>size(hl)</code> returns:</p>
+<div class="highlight"><pre><span></span><span class="n">hconssize</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">Boolean</span> <span class="kt">::</span> <span class="kt">HNil</span><span class="o">](</span>
+  <span class="n">hconssize</span><span class="o">[</span><span class="kt">Boolean</span>, <span class="kt">HNil</span><span class="o">](</span>
+    <span class="n">hnilsize</span><span class="o">))</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="generic.md">generic.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              18/46
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: generic.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>Or equivalently:</p>
+<div class="highlight"><pre><span></span><span class="n">size</span><span class="o">[</span><span class="kt">String</span> <span class="kt">::</span> <span class="kt">Boolean</span> <span class="kt">::</span> <span class="kt">HNil</span><span class="o">](</span> <span class="mi">1</span> <span class="o">+</span>
+  <span class="n">size</span><span class="o">[</span><span class="kt">Boolean</span> <span class="kt">::</span> <span class="kt">HNil</span><span class="o">](</span> <span class="mi">1</span> <span class="o">+</span>
+    <span class="n">size</span><span class="o">[</span><span class="kt">HNil</span><span class="o">](</span><span class="mi">0</span><span class="o">).</span><span class="n">get</span><span class="o">).</span><span class="n">get</span><span class="o">)</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="generic.md">generic.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              19/46
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: generic.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>What about mapping over an <code>HList</code>?
+<br />
+<br />
+To map over an <code>HList</code> we will need a polymorphic 'function' that can be applied to each of the types in the list:</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="generic.md">generic.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              20/46
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: generic.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            <header><h1>Polymorphic Functions</h1></header>
+            
+            
+            <section><p>A polymorphic function is a function that is defined for various – possibly unrelated – input types:</p>
+<div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">poly._</span>
+<span class="k">object</span> <span class="nc">choose</span> <span class="k">extends</span> <span class="o">(</span><span class="nc">Set</span> <span class="o">~&gt;</span> <span class="nc">Option</span><span class="o">)</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="n">apply</span><span class="o">[</span><span class="kt">T</span><span class="o">](</span><span class="n">s</span> <span class="k">:</span> <span class="kt">Set</span><span class="o">[</span><span class="kt">T</span><span class="o">])</span> <span class="k">=</span> <span class="n">s</span><span class="o">.</span><span class="n">headOption</span>
+<span class="o">}</span>
+<span class="k">val</span> <span class="n">sets</span> <span class="k">=</span> <span class="nc">Set</span><span class="o">(</span><span class="mi">1</span><span class="o">)</span> <span class="o">::</span> <span class="nc">Set</span><span class="o">(</span><span class="s">&quot;foo&quot;</span><span class="o">)</span> <span class="o">::</span> <span class="nc">HNil</span>
+<span class="k">val</span> <span class="n">opts</span> <span class="k">=</span> <span class="n">sets</span> <span class="n">map</span> <span class="n">choose</span>   
+<span class="c1">//opts = Some(1) :: Some(foo) :: HNil</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="generic.md">generic.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              21/46
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: generic.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>Poly functions are convertible to an ordinary monomorphic function and can be mapped across an ordinary Scala List</p>
+<div class="highlight"><pre><span></span><span class="nc">List</span><span class="o">(</span><span class="nc">Set</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">3</span><span class="o">,</span> <span class="mi">5</span><span class="o">),</span> <span class="nc">Set</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="mi">4</span><span class="o">,</span> <span class="mi">6</span><span class="o">))</span> <span class="n">map</span> <span class="n">choose</span>
+<span class="c1">//res3: List[Option[Int]] = List(Some(1), Some(2))</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="generic.md">generic.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              22/46
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: generic.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>Shapeless provides several traits with methods to make poly function construction more convenient:</p>
+<div class="highlight"><pre><span></span><span class="k">object</span> <span class="nc">size</span> <span class="k">extends</span> <span class="nc">Poly1</span> <span class="o">{</span>
+  <span class="k">implicit</span> <span class="k">def</span> <span class="n">caseInt</span> <span class="k">=</span> <span class="n">at</span><span class="o">[</span><span class="kt">Int</span><span class="o">](</span><span class="n">x</span> <span class="k">=&gt;</span> <span class="mi">1</span><span class="o">)</span>
+  <span class="k">implicit</span> <span class="k">def</span> <span class="n">caseString</span> <span class="k">=</span> <span class="n">at</span><span class="o">[</span><span class="kt">String</span><span class="o">](</span><span class="k">_</span><span class="o">.</span><span class="n">length</span><span class="o">)</span>
+  <span class="k">implicit</span> <span class="k">def</span> <span class="n">caseTuple</span><span class="o">[</span><span class="kt">T</span>, <span class="kt">U</span><span class="o">]</span>
+    <span class="o">(</span><span class="k">implicit</span> <span class="n">st</span> <span class="k">:</span> <span class="kt">Case.Aux</span><span class="o">[</span><span class="kt">T</span>, <span class="kt">Int</span><span class="o">],</span> <span class="n">su</span> <span class="k">:</span> <span class="kt">Case.Aux</span><span class="o">[</span><span class="kt">U</span>, <span class="kt">Int</span><span class="o">])</span> <span class="k">=</span>
+      <span class="n">at</span><span class="o">[(</span><span class="kt">T</span>, <span class="kt">U</span><span class="o">)](</span><span class="n">t</span> <span class="k">=&gt;</span> <span class="n">size</span><span class="o">(</span><span class="n">t</span><span class="o">.</span><span class="n">_1</span><span class="o">)+</span><span class="n">size</span><span class="o">(</span><span class="n">t</span><span class="o">.</span><span class="n">_2</span><span class="o">))</span>
+<span class="o">}</span>
+</pre></div>
+
+<p>The <code>at[T]</code> method, takes a function as a parameter, that represents what <code>size</code> does when called with an argument of type <code>T</code>.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="generic.md">generic.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              23/46
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: generic.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p><code>size</code> is a polymorphic function of one argument, defined as a bunch of <code>implicit def</code>s that mimic pattern-matching on types.
+<br />
+<br />
+Actually <code>size</code> is functioning like an entire type class, and the cases are functioning like type class instances for that type class (SYB with class).</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="generic.md">generic.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              24/46
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: generic.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>The <code>Poly1</code> trait also gives our <code>size</code> object an <code>apply</code> method so we can use it as a standard function:</p>
+<div class="highlight"><pre><span></span><span class="n">size</span><span class="o">(</span><span class="mi">23</span><span class="o">)</span>
+<span class="c1">//res4 = ???</span>
+<span class="n">size</span><span class="o">(</span><span class="s">&quot;foo&quot;</span><span class="o">)</span>
+<span class="c1">//res5 = ???</span>
+<span class="n">size</span><span class="o">((</span><span class="mi">23</span><span class="o">,</span> <span class="s">&quot;foo&quot;</span><span class="o">))</span>
+<span class="c1">//res6 = ???</span>
+<span class="n">size</span><span class="o">(((</span><span class="mi">23</span><span class="o">,</span> <span class="s">&quot;foo&quot;</span><span class="o">),</span> <span class="mi">13</span><span class="o">))</span>
+<span class="c1">//res7 = ???</span>
+<span class="o">(</span><span class="mi">1</span> <span class="o">::</span> <span class="s">&quot;23&quot;</span> <span class="o">::</span> <span class="mi">4</span> <span class="o">::</span> <span class="nc">HNil</span><span class="o">)</span> <span class="n">map</span> <span class="n">size</span>
+<span class="c1">//res8 = ???</span>
+<span class="n">size</span><span class="o">(</span><span class="mi">1</span> <span class="o">::</span> <span class="s">&quot;23&quot;</span> <span class="o">::</span> <span class="mi">4</span> <span class="o">::</span> <span class="nc">HNil</span><span class="o">)</span>
+<span class="c1">//res9 = ???</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="generic.md">generic.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              25/46
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: generic.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>Let's extend a similar <code>Poly1</code> function to <code>HList</code>s:</p>
+<div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">shapeless._</span>
+<span class="k">object</span> <span class="nc">makeBigger</span> <span class="k">extends</span> <span class="nc">Poly1</span> <span class="o">{</span>
+  <span class="k">implicit</span> <span class="k">def</span> <span class="n">intCase</span> <span class="k">=</span> <span class="n">at</span><span class="o">[</span><span class="kt">Int</span><span class="o">](</span><span class="k">_</span> <span class="o">*</span> <span class="mi">100</span><span class="o">)</span>
+  <span class="k">implicit</span> <span class="k">def</span> <span class="n">stringCase</span> <span class="k">=</span> <span class="n">at</span><span class="o">[</span><span class="kt">String</span><span class="o">](</span><span class="k">_</span><span class="o">.</span><span class="n">toUpperCase</span><span class="o">)</span>
+<span class="o">}</span>
+<span class="n">makeBigger</span><span class="o">(</span><span class="mi">42</span><span class="o">)</span>
+<span class="c1">//res0: Int = 4200</span>
+<span class="n">makeBigger</span><span class="o">(</span><span class="s">&quot;foo&quot;</span><span class="o">)</span>
+<span class="c1">//res1: String = FOO</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="generic.md">generic.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              26/46
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: generic.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>If we attempt to call it with an argument of an unhandled type, we get a compilation error:</p>
+<div class="highlight"><pre><span></span><span class="n">makeBigger</span><span class="o">(</span><span class="kc">true</span><span class="o">)</span>
+<span class="c1">//error: could not find implicit value for parameter</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="generic.md">generic.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              27/46
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: generic.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>We also get the same error if we widen the argument’s type up to an unhandled supertype:</p>
+<div class="highlight"><pre><span></span><span class="n">makeBigger</span><span class="o">(</span><span class="mi">42</span><span class="k">:</span> <span class="kt">Any</span><span class="o">)</span>
+<span class="c1">//error: could not find implicit value for parameter</span>
+</pre></div>
+
+<p><br />
+<br />
+To understand the implicit resolution errors here, we have to take a closer look at the <code>Poly</code> trait.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="generic.md">generic.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              28/46
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: generic.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>First, we can inspect the types of <code>intCase</code> and <code>stringCase</code>:</p>
+<div class="highlight"><pre><span></span><span class="k">:type</span> <span class="kt">makeBigger.intCase</span>
+<span class="c1">//makeBigger.Case[Int]{type Result = Int}</span>
+<span class="k">:type</span> <span class="kt">makeBigger.stringCase</span>
+<span class="c1">//makeBigger.Case[String]{type Result = String}</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="generic.md">generic.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              29/46
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: generic.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>The inner type <code>Case[T]</code> is inherited from <code>Poly1</code>; it represents the part of the definition of a <code>Poly1</code> that takes care of an argument of type <code>T</code>.
+<br />
+<br />
+Likewise, there is a similar type <code>Case[T, U]</code> defined in <code>Poly2</code>, a <code>Case[T,U,V]</code> in <code>Poly3</code> and so on.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="generic.md">generic.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              30/46
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: generic.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>All these different <code>Case</code> types are in fact aliases to the <code>shapeless.poly.Case</code> class.
+<br />
+<br />
+<code>shapeless.poly.Case</code> takes two type parameters: the type of the <code>Poly</code> in which this case is defined, and a <code>Hlist</code> type that contains the case’s parameters types:</p>
+<div class="highlight"><pre><span></span><span class="k">abstract</span> <span class="k">class</span> <span class="nc">Case</span><span class="o">[</span><span class="kt">P</span>, <span class="kt">L</span> <span class="k">&lt;:</span> <span class="kt">HList</span><span class="o">]</span> <span class="nc">extends</span> <span class="nc">Serializable</span> <span class="o">{</span>
+  <span class="k">type</span> <span class="kt">Result</span>
+  <span class="k">val</span> <span class="n">value</span> <span class="k">:</span> <span class="kt">L</span> <span class="o">=&gt;</span> <span class="nc">Result</span>
+  <span class="k">def</span> <span class="n">apply</span><span class="o">(</span><span class="n">t</span> <span class="k">:</span> <span class="kt">L</span><span class="o">)</span> <span class="k">=</span> <span class="n">value</span><span class="o">(</span><span class="n">t</span><span class="o">)</span>
+<span class="o">}</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="generic.md">generic.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              31/46
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: generic.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><div class="highlight"><pre><span></span><span class="n">makeBigger</span><span class="o">.</span><span class="n">intCase</span>
+          <span class="o">.</span><span class="n">isInstanceOf</span><span class="o">[</span>
+            <span class="kt">shapeless.poly.Case</span><span class="o">[</span>
+              <span class="kt">makeBigger.</span><span class="k">type</span>, <span class="kt">Int::HNil</span><span class="o">]]</span>
+<span class="n">res3</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span> <span class="kc">true</span>
+</pre></div>
+
+<p><br />
+<br />
+When we called <code>makeBigger(true)</code> above, <code>scalac</code> was unsuccessfully trying to instantiate a <code>Case[Boolean]</code>.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="generic.md">generic.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              32/46
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: generic.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>Here is the type signature for <code>Poly1</code>s <code>apply</code> method:</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">apply</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">a</span><span class="k">:</span><span class="kt">A</span><span class="o">)</span>
+  <span class="o">(</span><span class="k">implicit</span> <span class="n">cse</span> <span class="k">:</span> <span class="kt">poly.Case</span><span class="o">[</span><span class="kt">this.</span><span class="k">type</span>, <span class="kt">A::HNil</span><span class="o">])</span><span class="k">:</span> <span class="kt">cse.Result</span>
+</pre></div>
+
+<p>Note that the return type of <code>apply</code> is computed in the process of resolving the relevant <code>implicit</code>. This is known as a <a href="https://en.wikipedia.org/wiki/Functional_dependency">functional dependency</a></p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="generic.md">generic.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              33/46
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: generic.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>We can now see how the <code>apply</code> method works for <code>Poly1</code>:</p>
+<ul>
+<li>For any <code>Poly1</code> subtype <code>F</code>, given a argument of type <code>T</code>, an instance of <code>shapeless.poly.Case[F,T::HNil]</code> is searched in the implicit scope.</li>
+<li>If we have defined a parameterless implicit method in object <code>F</code> that returns <code>at[T](f)</code> (<code>f</code> being a function defined on <code>T</code>), this method will be selected since it returns an instance of <code>shapeless.poly.Case[F, T::HNil]</code>.</li>
+<li>The result of applying <code>F</code> to an argument of type <code>T</code> will be the one of applying <code>f</code> to that argument.</li>
+</ul></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="generic.md">generic.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              34/46
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: generic.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>Now imagine we want our <code>makeBigger</code> function to operate on <code>HList</code>s. Say for example that we make an <code>HList</code> bigger by duplicating each of its elements:</p>
+<div class="highlight"><pre><span></span><span class="n">makeBigger</span><span class="o">(</span><span class="kc">true</span> <span class="o">::</span> <span class="mf">1.2</span> <span class="o">::</span> <span class="nc">HNil</span><span class="o">)</span>
+<span class="c1">//res9 = true :: true :: 1.2 :: 1.2 :: HNil</span>
+</pre></div>
+
+<p>How can we define enough cases in <code>makeBigger</code> to cover each possible <code>HList</code> subtype?</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="generic.md">generic.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              35/46
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: generic.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>We'll take the same approach as we did before, this time using a <code>Poly1</code>.
+<br>
+<br>
+If we can handle the empty case (<code>HNil</code>) and the composite case <code>H :: T</code> (with <code>T</code> a <code>HList</code>) then we can handle any possible <code>HList</code>.
+<br>
+<br>
+First we need to handle the empty case, which as usual is rather easy :</p>
+<div class="highlight"><pre><span></span><span class="k">implicit</span> <span class="k">def</span> <span class="n">hnilCase</span> <span class="k">=</span> <span class="n">at</span><span class="o">[</span><span class="kt">HNil</span><span class="o">](</span><span class="n">identity</span><span class="o">)</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="generic.md">generic.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              36/46
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: generic.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>We need to somehow call <code>makeBigger</code> recursively. We would like to write something equivalent to the following:</p>
+<div class="highlight"><pre><span></span><span class="k">implicit</span> <span class="k">def</span> <span class="n">hconsCase</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">T</span> <span class="k">&lt;:</span> <span class="kt">HList</span><span class="o">]</span> <span class="k">=</span>
+  <span class="n">at</span><span class="o">[</span><span class="kt">H</span> <span class="kt">::</span> <span class="kt">T</span><span class="o">](</span> <span class="n">l</span> <span class="k">=&gt;</span> <span class="n">l</span><span class="o">.</span><span class="n">head</span> <span class="o">::</span> <span class="n">l</span><span class="o">.</span><span class="n">head</span> <span class="o">::</span> <span class="n">makeBigger</span><span class="o">(</span><span class="n">l</span><span class="o">.</span><span class="n">tail</span><span class="o">))</span>
+</pre></div>
+
+<p><br>
+<br>
+But to call <code>makeBigger(l.tail)</code> we need to have an implicit <code>makeBigger.Case[T]</code> in scope, since <code>l.tail</code> is of type <code>T</code>.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="generic.md">generic.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              37/46
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: generic.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>So lets bring it into the scope by adding an implicit parameter to <code>hconsCase</code> for it:</p>
+<div class="highlight"><pre><span></span><span class="k">implicit</span> <span class="k">def</span> <span class="n">hconsCase</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">T</span> <span class="k">&lt;:</span> <span class="kt">HList</span><span class="o">]</span>
+                      <span class="o">(</span><span class="k">implicit</span> <span class="n">tailCase</span><span class="k">:</span> <span class="kt">Case</span><span class="o">[</span><span class="kt">T</span><span class="o">])</span> <span class="k">=</span>
+  <span class="n">at</span><span class="o">[</span><span class="kt">H</span> <span class="kt">::</span> <span class="kt">T</span><span class="o">](</span><span class="n">l</span> <span class="k">=&gt;</span> <span class="n">l</span><span class="o">.</span><span class="n">head</span> <span class="o">::</span> <span class="n">l</span><span class="o">.</span><span class="n">head</span> <span class="o">::</span> <span class="n">tailCase</span><span class="o">(</span><span class="n">l</span><span class="o">.</span><span class="n">tail</span><span class="o">))</span>
+</pre></div>
+
+<p><br>
+<br>
+Now we are simultaneously recursing at both the type and value levels.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="generic.md">generic.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              38/46
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: generic.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>There's a problem, this case won’t type check.
+<br>
+<br>
+Since there is nothing in it that constrains the result of <code>tailCase(l.tail)</code> to be a <code>HList</code>, we cannot pass it as the left hand side of <code>::</code>.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="generic.md">generic.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              39/46
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: generic.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>Recall that the <code>Case[X]</code> type has an abstract type member <code>Result</code>, we can use that it to express our constraint:</p>
+<div class="highlight"><pre><span></span><span class="k">implicit</span> <span class="k">def</span> <span class="n">hconsCase</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">T</span> <span class="k">&lt;:</span> <span class="kt">HList</span><span class="o">]</span>
+                      <span class="o">(</span><span class="k">implicit</span> <span class="n">tailCase</span><span class="k">:</span>
+            <span class="kt">makeBigger.Case</span><span class="o">[</span><span class="kt">T</span><span class="o">]{</span><span class="k">type</span> <span class="kt">Result</span> <span class="k">&lt;:</span> <span class="kt">HList</span><span class="o">})</span> <span class="k">=</span> <span class="n">at</span><span class="o">[</span><span class="kt">H::T</span><span class="o">]</span>
+            <span class="o">(</span><span class="n">l</span> <span class="k">=&gt;</span> <span class="n">l</span><span class="o">.</span><span class="n">head</span> <span class="o">::</span> <span class="n">l</span><span class="o">.</span><span class="n">head</span> <span class="o">::</span> <span class="n">makeBigger</span><span class="o">(</span><span class="n">l</span><span class="o">.</span><span class="n">tail</span><span class="o">))</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="generic.md">generic.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              40/46
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: generic.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>Our <code>makeBigger</code> function is now able to operate on <code>HLists</code>:</p>
+<div class="highlight"><pre><span></span><span class="k">object</span> <span class="nc">makeBigger</span> <span class="k">extends</span> <span class="nc">Poly1</span> <span class="o">{</span>
+  <span class="k">implicit</span> <span class="k">def</span> <span class="n">intCase</span> <span class="k">=</span> <span class="n">at</span><span class="o">[</span><span class="kt">Int</span><span class="o">](</span><span class="k">_</span> <span class="o">*</span> <span class="mi">100</span><span class="o">)</span>
+  <span class="k">implicit</span> <span class="k">def</span> <span class="n">stringCase</span> <span class="k">=</span> <span class="n">at</span><span class="o">[</span><span class="kt">String</span><span class="o">](</span><span class="k">_</span><span class="o">.</span><span class="n">toUpperCase</span><span class="o">)</span>
+  <span class="k">implicit</span> <span class="k">def</span> <span class="n">hnilCase</span> <span class="k">=</span> <span class="n">at</span><span class="o">[</span><span class="kt">HNil</span><span class="o">](</span><span class="n">identity</span><span class="o">)</span>  
+  <span class="k">implicit</span> <span class="k">def</span> <span class="n">hconsCase</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">T</span> <span class="k">&lt;:</span> <span class="kt">HList</span><span class="o">]</span>
+    <span class="o">(</span><span class="k">implicit</span> <span class="n">tailCase</span><span class="k">:</span> <span class="kt">makeBigger.Case</span><span class="o">[</span><span class="kt">T</span><span class="o">]{</span><span class="k">type</span> <span class="kt">Result</span> <span class="k">&lt;:</span> <span class="kt">HList</span><span class="o">})</span> <span class="k">=</span>   
+      <span class="n">at</span><span class="o">[</span><span class="kt">H::T</span><span class="o">](</span><span class="n">l</span> <span class="k">=&gt;</span> <span class="n">l</span><span class="o">.</span><span class="n">head</span> <span class="o">::</span> <span class="n">l</span><span class="o">.</span><span class="n">head</span> <span class="o">::</span> <span class="n">makeBigger</span><span class="o">(</span><span class="n">l</span><span class="o">.</span><span class="n">tail</span><span class="o">))</span>
+<span class="o">}</span>
+<span class="n">makeBigger</span><span class="o">(</span><span class="kc">true</span> <span class="o">::</span> <span class="mf">1.2</span> <span class="o">::</span> <span class="nc">HNil</span><span class="o">)</span>
+<span class="c1">//res27 = true :: true :: 1.2 :: 1.2 :: HNil</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="generic.md">generic.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              41/46
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: generic.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>The syntax we used to constrain <code>Result</code> to be a <code>HList</code> in the previous example was a bit clunky. Fortunately, there is a nice type alias defined inside <code>Case</code>:</p>
+<div class="highlight"><pre><span></span><span class="k">object</span> <span class="nc">Case</span> <span class="o">{</span>
+  <span class="k">type</span> <span class="kt">Aux</span><span class="o">[</span><span class="kt">In</span>, <span class="kt">Out</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Case</span><span class="o">[</span><span class="kt">In</span><span class="o">]</span> <span class="o">{</span> <span class="k">type</span> <span class="kt">Result</span> <span class="o">=</span> <span class="nc">Out</span> <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="generic.md">generic.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              42/46
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: generic.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>Using <code>Aux</code>, we can rewrite the previous example like so:</p>
+<div class="highlight"><pre><span></span><span class="k">object</span> <span class="nc">makeBigger</span> <span class="k">extends</span> <span class="nc">Poly1</span> <span class="o">{</span>
+  <span class="k">implicit</span> <span class="k">def</span> <span class="n">intCase</span> <span class="k">=</span> <span class="n">at</span><span class="o">[</span><span class="kt">Int</span><span class="o">](</span><span class="k">_</span> <span class="o">*</span> <span class="mi">100</span><span class="o">)</span>
+  <span class="k">implicit</span> <span class="k">def</span> <span class="n">stringCase</span> <span class="k">=</span> <span class="n">at</span><span class="o">[</span><span class="kt">String</span><span class="o">](</span><span class="k">_</span><span class="o">.</span><span class="n">toUpperCase</span><span class="o">)</span>
+  <span class="k">implicit</span> <span class="k">def</span> <span class="n">hnilCase</span> <span class="k">=</span> <span class="n">at</span><span class="o">[</span><span class="kt">HNil</span><span class="o">](</span><span class="n">identity</span><span class="o">)</span>  
+  <span class="k">implicit</span> <span class="k">def</span> <span class="n">hconsCase</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">T</span> <span class="k">&lt;:</span> <span class="kt">HList</span>, <span class="kt">R</span> <span class="k">&lt;:</span> <span class="kt">HList</span><span class="o">]</span>
+    <span class="o">(</span><span class="k">implicit</span> <span class="n">tailCase</span><span class="k">:</span> <span class="kt">Case.Aux</span><span class="o">[</span><span class="kt">T</span>, <span class="kt">R</span><span class="o">])</span> <span class="k">=</span>
+      <span class="n">at</span><span class="o">[</span><span class="kt">H::T</span><span class="o">](</span><span class="n">l</span> <span class="k">=&gt;</span> <span class="n">l</span><span class="o">.</span><span class="n">head</span> <span class="o">::</span> <span class="n">l</span><span class="o">.</span><span class="n">head</span> <span class="o">::</span> <span class="n">makeBigger</span><span class="o">(</span><span class="n">l</span><span class="o">.</span><span class="n">tail</span><span class="o">))</span>    
+<span class="o">}</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="generic.md">generic.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              43/46
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: generic.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>Again, here is the type signature for <code>Poly1</code>s <code>apply</code> method:</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">apply</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">a</span><span class="k">:</span><span class="kt">A</span><span class="o">)</span>
+  <span class="o">(</span><span class="k">implicit</span> <span class="n">cse</span> <span class="k">:</span> <span class="kt">poly.Case</span><span class="o">[</span><span class="kt">this.</span><span class="k">type</span>, <span class="kt">A::HNil</span><span class="o">])</span><span class="k">:</span> <span class="kt">cse.Result</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="generic.md">generic.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              44/46
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: generic.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>Notice how <code>apply</code> is parametrized only on the input type (so that users can call it without knowing the return type), which was perfectly fine until we had to enforce some constraint over that result type (eg in the <code>hconsCase</code> above).
+<br />
+<br />
+On the other hand, the aux trick allows us to bind the abstract type member to a type variable that we constrain as we see fit.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="generic.md">generic.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              45/46
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: generic.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            <header><h1>Links</h1></header>
+            
+            
+            <section><p><a href="http://research.microsoft.com/en-us/um/people/simonpj/papers/hmap/hmap.ps">Scrap your boilerplate: a practical approach to generic programming</a>, Ralf Laemmel and Simon Peyton Jones, Proc ACM SIGPLAN Workshop on Types in Language Design and Implementation, TLDI 2003
+<a href="http://research.microsoft.com/en-us/um/people/simonpj/papers/hmap/gmap2.ps">Scrap more boilerplate: reflection, zips, and generalised casts</a>, Ralf Laemmel and Simon Peyton Jones, ICFP 2004
+<a href="http://research.microsoft.com/en-us/um/people/simonpj/papers/hmap/gmap3.pdf">Scrap your boilerplate with class: extensible generic functions</a>, Ralf Laemmel and Simon Peyton Jones, ICFP 2005
+<a href="http://stackoverflow.com/questions/11825129/are-hlists-nothing-more-than-a-convoluted-way-of-writing-tuples">SO post</a> by Miles Sabin.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="generic.md">generic.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              46/46
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+  <div id="toc" class="sidebar hidden">
+    <h2>Table of Contents</h2>
+    <table>
+      <caption>Table of Contents</caption>
+      
+      <tr id="toc-row-1">
+        <th><a href="#slide1">Generic Programming</a></th>
+        <td><a href="#slide1">1</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-2">
+        <th><a href="#slide2">-</a></th>
+        <td><a href="#slide2">2</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-3">
+        <th><a href="#slide3">-</a></th>
+        <td><a href="#slide3">3</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-4">
+        <th><a href="#slide4">-</a></th>
+        <td><a href="#slide4">4</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-5">
+        <th><a href="#slide5">Example: Singleton Types</a></th>
+        <td><a href="#slide5">5</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-6">
+        <th><a href="#slide6">-</a></th>
+        <td><a href="#slide6">6</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-7">
+        <th><a href="#slide7">Heterogenous lists</a></th>
+        <td><a href="#slide7">7</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-8">
+        <th><a href="#slide8">-</a></th>
+        <td><a href="#slide8">8</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-9">
+        <th><a href="#slide9">-</a></th>
+        <td><a href="#slide9">9</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-10">
+        <th><a href="#slide10">-</a></th>
+        <td><a href="#slide10">10</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-11">
+        <th><a href="#slide11">-</a></th>
+        <td><a href="#slide11">11</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-12">
+        <th><a href="#slide12">-</a></th>
+        <td><a href="#slide12">12</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-13">
+        <th><a href="#slide13">-</a></th>
+        <td><a href="#slide13">13</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-14">
+        <th><a href="#slide14">-</a></th>
+        <td><a href="#slide14">14</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-15">
+        <th><a href="#slide15">Implicit Recursion</a></th>
+        <td><a href="#slide15">15</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-16">
+        <th><a href="#slide16">-</a></th>
+        <td><a href="#slide16">16</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-17">
+        <th><a href="#slide17">-</a></th>
+        <td><a href="#slide17">17</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-18">
+        <th><a href="#slide18">-</a></th>
+        <td><a href="#slide18">18</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-19">
+        <th><a href="#slide19">-</a></th>
+        <td><a href="#slide19">19</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-20">
+        <th><a href="#slide20">-</a></th>
+        <td><a href="#slide20">20</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-21">
+        <th><a href="#slide21">Polymorphic Functions</a></th>
+        <td><a href="#slide21">21</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-22">
+        <th><a href="#slide22">-</a></th>
+        <td><a href="#slide22">22</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-23">
+        <th><a href="#slide23">-</a></th>
+        <td><a href="#slide23">23</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-24">
+        <th><a href="#slide24">-</a></th>
+        <td><a href="#slide24">24</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-25">
+        <th><a href="#slide25">-</a></th>
+        <td><a href="#slide25">25</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-26">
+        <th><a href="#slide26">-</a></th>
+        <td><a href="#slide26">26</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-27">
+        <th><a href="#slide27">-</a></th>
+        <td><a href="#slide27">27</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-28">
+        <th><a href="#slide28">-</a></th>
+        <td><a href="#slide28">28</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-29">
+        <th><a href="#slide29">-</a></th>
+        <td><a href="#slide29">29</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-30">
+        <th><a href="#slide30">-</a></th>
+        <td><a href="#slide30">30</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-31">
+        <th><a href="#slide31">-</a></th>
+        <td><a href="#slide31">31</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-32">
+        <th><a href="#slide32">-</a></th>
+        <td><a href="#slide32">32</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-33">
+        <th><a href="#slide33">-</a></th>
+        <td><a href="#slide33">33</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-34">
+        <th><a href="#slide34">-</a></th>
+        <td><a href="#slide34">34</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-35">
+        <th><a href="#slide35">-</a></th>
+        <td><a href="#slide35">35</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-36">
+        <th><a href="#slide36">-</a></th>
+        <td><a href="#slide36">36</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-37">
+        <th><a href="#slide37">-</a></th>
+        <td><a href="#slide37">37</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-38">
+        <th><a href="#slide38">-</a></th>
+        <td><a href="#slide38">38</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-39">
+        <th><a href="#slide39">-</a></th>
+        <td><a href="#slide39">39</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-40">
+        <th><a href="#slide40">-</a></th>
+        <td><a href="#slide40">40</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-41">
+        <th><a href="#slide41">-</a></th>
+        <td><a href="#slide41">41</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-42">
+        <th><a href="#slide42">-</a></th>
+        <td><a href="#slide42">42</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-43">
+        <th><a href="#slide43">-</a></th>
+        <td><a href="#slide43">43</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-44">
+        <th><a href="#slide44">-</a></th>
+        <td><a href="#slide44">44</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-45">
+        <th><a href="#slide45">-</a></th>
+        <td><a href="#slide45">45</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-46">
+        <th><a href="#slide46">Links</a></th>
+        <td><a href="#slide46">46</a></td>
+      </tr>
+      
+      
+    </table>
+  </div>
+  
+  <div id="help" class="sidebar hidden">
+    <h2>Help</h2>
+    <table>
+      <caption>Help</caption>
+      <tr>
+        <th>Table of Contents</th>
+        <td>t</td>
+      </tr>
+      <tr>
+        <th>Exposé</th>
+        <td>ESC</td>
+      </tr>
+      <tr>
+        <th>Full screen slides</th>
+        <td>e</td>
+      </tr>
+      <tr>
+        <th>Presenter View</th>
+        <td>p</td>
+      </tr>
+      <tr>
+        <th>Source Files</th>
+        <td>s</td>
+      </tr>
+      <tr>
+        <th>Slide Numbers</th>
+        <td>n</td>
+      </tr>
+      <tr>
+        <th>Toggle screen blanking</th>
+        <td>b</td>
+      </tr>
+      <tr>
+        <th>Show/hide slide context</th>
+        <td>c</td>
+      </tr>
+      <tr>
+        <th>Notes</th>
+        <td>2</td>
+      </tr>
+      <tr>
+        <th>Help</th>
+        <td>h</td>
+      </tr>
+    </table>
+  </div>
+  <script>main()</script>
+</body>
+</html>
