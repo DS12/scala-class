@@ -5,7 +5,6 @@ import sbt._
 object Dependencies {
   import Common.scalaVer
 
-  val scalaVer = "2.11.8"
   
   val catsVersion = "0.6.1"
   val dogsVersion = "0.2.2"
@@ -13,7 +12,10 @@ object Dependencies {
   val shapelessVersion = "2.3.1"
   val framelessVersion = "0.1.0"
   val summingbirdVersion = "0.11.0-RC1"
-  
+
+  // will use Spark 2.0 and Scala 2.11
+  // Spark 1.6, Scala 2.10 could be delicately joined with the rest of the 2.11 repo
+  // Fortunately this is no longer necessary
   //val sparkVer = "1.6.2"
 
   val kindProjector = compilerPlugin("org.spire-math" % "kind-projector" % "0.8.0" cross CrossVersion.binary)
@@ -29,9 +31,9 @@ object Dependencies {
     "com.chuusai" %% "shapeless" % shapelessVersion,
     "io.github.adelbertc" %% "frameless-cats"      % framelessVersion,
     "io.github.adelbertc" %% "frameless-dataset"   % framelessVersion,
-    "io.github.adelbertc" %% "frameless-dataframe" % framelessVersion
+    "io.github.adelbertc" %% "frameless-dataframe" % framelessVersion,
     "org.scalatest" %% "scalatest" % "3.0.0" % "test",
-    "org.scalacheck" % "scalacheck_2.10" % "1.13.2" % "test",
+    "org.scalacheck" % "scalacheck_2.11" % "1.13.2" % "test",
     "org.scalanlp" %% "breeze" % "0.12",
     "org.scalanlp" %% "breeze-natives" % "0.12",
     "org.scalanlp" %% "breeze-viz" % "0.12",
@@ -51,8 +53,8 @@ object Dependencies {
   )
 
 
-  lazy val sparkDependencies = Seq(
-    "org.apache.spark" %% "spark-core" % sparkVer % "provided",
-    "org.apache.spark" %% "spark-sql" % sparkVer % "provided").union(dependencies)
+  // lazy val sparkDependencies = Seq(
+  //   "org.apache.spark" %% "spark-core" % sparkVer % "provided",
+  //   "org.apache.spark" %% "spark-sql" % sparkVer % "provided").union(dependencies)
 
 }

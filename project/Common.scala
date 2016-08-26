@@ -5,7 +5,7 @@ import Keys._
 
 object Common {
 
-  val scalaVer = "2.10.6"
+  val scalaVer = "2.11.8"
 
 
   lazy val otherResolvers = Seq(
@@ -23,7 +23,7 @@ object Common {
   lazy val settings: Seq[Def.Setting[_]] = Seq(
     version := "0.1",
     scalaVersion := scalaVer,
-    organization := "com.datascience.waze",
+    organization := "com.datascience.ds12",
     scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature"),
     resolvers ++= otherResolvers,
     libraryDependencies ++= Dependencies.dependencies
