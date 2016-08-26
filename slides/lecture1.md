@@ -177,6 +177,7 @@ Rest assured that the Scala compiler will complain if you violate these rules:
 
 ---
 
+---
 
 #Ad-hoc Polymorphism
 
