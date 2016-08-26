@@ -23,7 +23,7 @@ object Common {
   lazy val settings: Seq[Def.Setting[_]] = Seq(
     version := "0.1",
     scalaVersion := scalaVer,
-    organization := "com.datascience.ds12",
+    organization := "com.datascience.education",
     scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature"),
     resolvers ++= otherResolvers,
     libraryDependencies ++= Dependencies.dependencies
