@@ -173,6 +173,7 @@ Rest assured that the Scala compiler will complain if you violate these rules:
     bar(new Contravariant[Child])
     //???
     bar(new Contravariant[GrandParent])
+    //???
 
 
 ---
