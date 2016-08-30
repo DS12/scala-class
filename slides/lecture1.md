@@ -326,44 +326,7 @@ We use interface syntax by importing it along-side the instances for the types w
     //show: 42
 
 ---
-class Show a where
-  show :: a -> String
-class Eq a where
-  (==) :: a -> a -> Bool
-instance Eq Float where
-  x == y  =  x `floatEq` y
 
-Note that one place where Haskell is much less verbose than Scala in the above implementation is the instance definition of the type class.
-<br />
-<br />
-But here the added verbosity in Scala is not without a purpose and offers a definite advantage over the corresponding Haskell definition.
-<br />
-<br />
-In Scala's case we name the instance explicitly, while the instance is unnamed in case of Haskell.
-
----
-
-Because the instance is explicitly named in Scala, you can inject another instance into the scope and it will be picked up for use for the implicit.
-<br />
-<br />
-So, for example, you could easily define, in different scopes, two or more different implementations of the same type class for the same type.
-
----
-
-The Haskell compiler looks into the dictionary on the global namespace for a qualifying instance to be picked up.
-<br />
-<br />
-In Scala's case implicits allow the compiler to do type-directed resolution of an argument locally in the scope of the method call that triggered it.
-
----
-
-So the type class pattern is truly ad-hoc in the sense that:
-
-* we can provide separate implementations for different types
-* we can provide implementations for types without write access to their source code
-* the implementations can be enabled or disabled in different scopes
-
----
 
 #Example: `Eq` Typeclass
 
@@ -398,6 +361,48 @@ Now we can use our `Eq` typeclass implementation for `Point` to test different p
     //res0: Boolean = true
     p1 != p3
     //res1: Boolean = true
+
+---
+
+Again, it's interesting to compare this to typeclass syntax in Haskell:
+
+    !haskell
+    class Eq a where
+      (==) :: a -> a -> Bool
+    instance Eq Float where
+      x == y  =  x `floatEq` y
+
+---
+
+Note that one place where Haskell is much less verbose than Scala in the above implementation is the instance definition of the type class.
+<br />
+<br />
+But here the added verbosity in Scala is not without a purpose and offers a definite advantage over the corresponding Haskell definition.
+<br />
+<br />
+In Scala's case we name the instance explicitly, while the instance is unnamed in case of Haskell.
+
+---
+
+Because the instance is explicitly named in Scala, you can inject another instance into the scope and it will be picked up for use for the implicit.
+<br />
+<br />
+So, for example, you could easily define, in different scopes, two or more different implementations of the same type class for the same type.
+
+---
+
+The Haskell compiler looks into the dictionary on the global namespace for a qualifying instance to be picked up.
+<br />
+<br />
+In Scala's case implicits allow the compiler to do type-directed resolution of an argument locally in the scope of the method call that triggered it.
+
+---
+
+So the type class pattern is truly ad-hoc in the sense that:
+
+* we can provide separate implementations for different types
+* we can provide implementations for types without write access to their source code
+* the implementations can be enabled or disabled in different scopes
 
 ---
 
