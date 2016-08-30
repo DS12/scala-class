@@ -37,13 +37,6 @@ We can mix in parametric polymorphism at the trait level, as well as add upper a
 
 ---
 
-However this is not flexible since trait `Plus` needs to be mixed in at the time of defining the datatype, so it can’t work for `Int` and `String` for example.
-<br />
-<br />
-We will see how to extend this w/ type classes.
-
----
-
 
 #Subtype Polymorphism
 
@@ -73,8 +66,6 @@ Here the method `subtypePolymorphic` has no type parameters, so it’s parametri
 <br />
 Nevertheless, it can be applied to values of more than one type as long as those types stand in a subtype relationship to the fixed `Base` type which is specified in the method signature.
 
-In other words, this method is both parametrically monomorphic and subtype polymorphic.
-
 ---
 
 #Variance
@@ -83,7 +74,6 @@ In Scala, parametric and subtype polymorphism are unified by the concept of vari
 <br />
 <br />
 Variance refers to a categorical framework undergirding the type system (entirely separate from and in addition to the one commonly used in Haskell).
-
 
 ---
 
@@ -212,7 +202,7 @@ Type classes are commonly misinterpreted as being synonymous with interfaces in 
 
 The focus with interfaces is on subtype polymorphism.
 
-The focus with type classes changes to parametric polymorphism: you implement the contracts that the type class publishes across unrelated types.
+However with type classes the focus is on parametric polymorphism: you implement the contracts that the type class publishes across unrelated types.
 <br />
 <br />
 A second crucial distinction between type classes and interfaces is that for class to be a "member" of an interface it must declare so at the site of its own definition.
@@ -233,25 +223,94 @@ The instances of a type class provide implementations for the types we care abou
 
 ---
 
-We define instances by creating concrete implementations of the type class and tagging them with the `implicit` keyword:
+The type class itself is a generic type that represents the functionality we want to implement:
 
     !scala
-    trait Plus[A] {
-      def plus(a1: A, a2: A): A
-    }
-    implicit object IntPlus extends Plus[Int] {
-      def plus(a1: Int, a2: Int): Int = a1 + a2
+    trait Show[A] {
+      def format(value: A): String
     }
 
 ---
 
-Instances are then exposed to users through interface methods:
+We define instances by creating concrete implementations of the type class and tagging them with the `implicit` keyword:
 
     !scala
-    def plus(a1: A, a2: A)
-      (implicit p: Plus[A]): A = p.plus(a1, a2)
-    plus(3,2)
-    //res0: Int = 5
+    object ShowInstances {
+      implicit val stringPrintable = new Show[String] {
+        def format(input: String) = "show: " ++ input }
+      implicit val intPrintable = new Show[Int] {
+        def format(input: Int) = "show: " ++ input.toString
+      }
+    }
+
+
+---
+
+Instances are then exposed to users through interface methods.
+
+Interfaces to type classes are generic methods that accept instances of the type class as implicit parameters.
+
+There are two common ways of specifying an interface: Interface Objects and Interface Syntax.
+
+---
+
+#Interface Objects
+
+The simplest way of creating an interface is to place the interface methods in a singleton object.
+
+    !scala
+    object Printer {
+      def format[A](input: A)
+        (implicit printer: Show[A]): String = {
+          printer.format(input)
+      }
+      def print[A](input: A)(implicit printer: Show[A]): Unit = {      
+        println(format(input))
+      }
+    }
+
+
+---
+
+To use the interface, we bring the relevant type class instances into scope and call the relevant method:
+
+    !scala
+    import ShowInstances._
+    Printer.print("foo")
+    //show: foo
+    Printer.print(42)
+    //show: 42
+
+---
+
+#Interface Syntax
+
+Another approach is to use type enrichment to extend existing types with interface methods.
+
+Typelevel libraries often refer to this as “syntax” for the type class:
+
+    !scala
+    object ShowSyntax {
+      implicit class ShowOps[A](value: A) {
+        def format(implicit printer: Show[A]): String = {
+          printer.format(value)
+        }
+        def print(implicit printer: Show[A]): Unit = {
+          println(printer.format(value))
+        }
+      }
+    }
+
+---
+
+We use interface syntax by importing it along-side the instances for the types we need:
+
+    !scala
+    import ShowSyntax._
+    "foo".print
+    //show: foo
+    42.print
+    //show: 42
 
 ---
 
@@ -261,21 +320,21 @@ Note that one place where Haskell is much less verbose than Scala in the above i
 But here the added verbosity in Scala is not without a purpose and offers a definite advantage over the corresponding Haskell definition.
 <br />
 <br />
-In Scala's case we name the instance explicitly as `IntPlus`, while the instance is unnamed in case of Haskell.
+In Scala's case we name the instance explicitly, while the instance is unnamed in case of Haskell.
+
+---
+
+Because the instance is explicitly named in Scala, you can inject another instance into the scope and it will be picked up for use for the implicit.
+<br />
+<br />
+So, for example, you could easily define, in different scopes, two or more different implementations of the same type class for the same type.
 
 ---
 
 The Haskell compiler looks into the dictionary on the global namespace for a qualifying instance to be picked up.
 <br />
 <br />
-In Scala's case the search is performed locally in the scope of the method call that triggered it.
-
----
-
-And because the instance is explicitly named in Scala, you can inject another instance into the scope and it will be picked up for use for the implicit.
-<br />
-<br />
-So, for example, you could easily define, in different scopes, two or more different implementations of the same type class for the same type.
+In Scala's case implicits allow the compiler to do type-directed resolution of an argument locally in the scope of the method call that triggered it.
 
 ---
 
@@ -284,6 +343,42 @@ So the type class pattern is truly ad-hoc in the sense that:
 * we can provide separate implementations for different types
 * we can provide implementations for types without write access to their source code
 * the implementations can be enabled or disabled in different scopes
+
+---
+
+#Example: `Eq` Typeclass
+
+    !scala
+    import cats.Eq
+    import cats.syntax.eq._
+    case class Point(x: Double, y: Double)
+
+---
+
+We define our instance of `Eq[Point]` in the companion object, and bring the `Eq` instance for `Double` into scope for the implementation:
+
+    !scala
+    object Point {
+      implicit val pointEqual = Eq.instance[Point] {
+        (point1, point2) =>
+          import cats.std.double._
+          (point1.x == point2.y ) &&
+          (point1.y == point2.y )
+      }
+    }
+
+---
+
+Now we can use our `Eq` typeclass implementation for `Point` to test different points for equality:
+
+    !scala
+    val p1 = Point(1.0,0.0)
+    val p2 = Point(1.0,0.0)
+    val p3 = Point(0.0,1.0)
+    p1 == p2
+    //res0: Boolean = true
+    p1 != p3
+    //res1: Boolean = true
 
 ---
 
@@ -332,3 +427,11 @@ Now we can provide an implicit instance of the type class for `Int` and use it t
 #Homework
 
 Read Chapter 10 and get started on Chapter 11 in _Functional Programming in Scala_.
+
+---
+
+#Links
+
+* [Advanced Scala with Cats](http://underscore.io/books/advanced-scala/)
+* [Demystifying Implicits and Typeclasses in Scala](http://www.cakesolutions.net/teamblogs/demystifying-implicits-and-typeclasses-in-scala)
+* [Herding Cats: Eq](http://eed3si9n.com/herding-cats/Eq.html)
