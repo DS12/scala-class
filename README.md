@@ -2,7 +2,7 @@
 
 A fast-paced introduction to Scala's FP ecosystem for data engineers. 
 
-These slides loosely follow Chiusano and Bjarnason's [Functional Programming in Scala](https://www.manning.com/books/functional-programming-in-scala) with an emphasis on introducing Cats and various other FP libraries. Welsh and Gurnell's [Essential Scala](http://underscore.io/books/essential-scala/) is a minimal prerequisite for the course. The first two courses in Coursera's [Functional Programming in Scala Specialization](https://www.coursera.org/specializations/scala) are recommended. 
+These slides loosely follow Chiusano and Bjarnason's [Functional Programming in Scala](https://www.manning.com/books/functional-programming-in-scala) with an emphasis on introducing Cats and various other FP libraries. Welsh and Gurnell's [Advanced Scala with Cats](http://underscore.io/books/advanced-scala/) is an optional but recommended supplementary text. Welsh and Gurnell's [Essential Scala](http://underscore.io/books/essential-scala/) (or equivalent) is a minimal prerequisite for the course. The first two courses in Coursera's [Functional Programming in Scala Specialization](https://www.coursera.org/specializations/scala) are also highly recommended. 
 
 Slides are viewable [here](http://DS12.github.io/scala-class).
 
