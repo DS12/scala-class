@@ -18,13 +18,13 @@ Polymorphic methods can be applied to arguments of any types which correspond to
 ---
 
     !scala
-    def monomorphic(s: String): Int = s.length
-    monomorphic("foo")
+    def slength(s: String): Int = s.length
+    slength("foo")
     //res0: Int = 3
-    def polymorphic[T](l: List[T]): Int = l.length
-    polymorphic(List(1, 2, 3))
+    def length[T](l: List[T]): Int = l.length
+    length(List(1, 2, 3))
     //res1: Int = 3
-    polymorphic(List("foo", "bar", "baz"))
+    length(List("foo", "bar", "baz"))
     //res2: Int = 3
 
 ---
@@ -37,6 +37,19 @@ We can mix in parametric polymorphism at the trait level, as well as add upper a
 
 ---
 
+It's also interesting to compare the syntax with Haskell:
+
+    !haskell
+    length :: Foldable t => t a -> Int
+    length = foldl' (\c _ -> c+1) 0
+
+---
+
+These implementations, along with Java generics, have quite a lot in common.
+
+In fact one of the original designers of Haskell, Philip Wadler, was later one of the main architects (along with Martin Odersky, creator of Scala) in the development of [Java generics](https://en.wikipedia.org/wiki/Generic_Java).
+
+---
 
 #Subtype Polymorphism
 
@@ -313,6 +326,12 @@ We use interface syntax by importing it along-side the instances for the types w
     //show: 42
 
 ---
+class Show a where
+  show :: a -> String
+class Eq a where
+  (==) :: a -> a -> Bool
+instance Eq Float where
+  x == y  =  x `floatEq` y
 
 Note that one place where Haskell is much less verbose than Scala in the above implementation is the instance definition of the type class.
 <br />

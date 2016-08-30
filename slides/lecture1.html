@@ -89,7 +89,7 @@
             </aside>
             
             <aside class="page_number">
-              1/42
+              1/44
             </aside>
 
           </footer>
@@ -122,7 +122,7 @@
             </aside>
             
             <aside class="page_number">
-              2/42
+              2/44
             </aside>
 
           </footer>
@@ -156,7 +156,7 @@ Polymorphic methods can be applied to arguments of any types which correspond to
             </aside>
             
             <aside class="page_number">
-              3/42
+              3/44
             </aside>
 
           </footer>
@@ -169,13 +169,13 @@ Polymorphic methods can be applied to arguments of any types which correspond to
           <div class="inner">
             
             
-            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">monomorphic</span><span class="o">(</span><span class="n">s</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">length</span>
-<span class="n">monomorphic</span><span class="o">(</span><span class="s">&quot;foo&quot;</span><span class="o">)</span>
+            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">slength</span><span class="o">(</span><span class="n">s</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">length</span>
+<span class="n">slength</span><span class="o">(</span><span class="s">&quot;foo&quot;</span><span class="o">)</span>
 <span class="c1">//res0: Int = 3</span>
-<span class="k">def</span> <span class="n">polymorphic</span><span class="o">[</span><span class="kt">T</span><span class="o">](</span><span class="n">l</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">T</span><span class="o">])</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="n">l</span><span class="o">.</span><span class="n">length</span>
-<span class="n">polymorphic</span><span class="o">(</span><span class="nc">List</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">3</span><span class="o">))</span>
+<span class="k">def</span> <span class="n">length</span><span class="o">[</span><span class="kt">T</span><span class="o">](</span><span class="n">l</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">T</span><span class="o">])</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="n">l</span><span class="o">.</span><span class="n">length</span>
+<span class="n">length</span><span class="o">(</span><span class="nc">List</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">3</span><span class="o">))</span>
 <span class="c1">//res1: Int = 3</span>
-<span class="n">polymorphic</span><span class="o">(</span><span class="nc">List</span><span class="o">(</span><span class="s">&quot;foo&quot;</span><span class="o">,</span> <span class="s">&quot;bar&quot;</span><span class="o">,</span> <span class="s">&quot;baz&quot;</span><span class="o">))</span>
+<span class="n">length</span><span class="o">(</span><span class="nc">List</span><span class="o">(</span><span class="s">&quot;foo&quot;</span><span class="o">,</span> <span class="s">&quot;bar&quot;</span><span class="o">,</span> <span class="s">&quot;baz&quot;</span><span class="o">))</span>
 <span class="c1">//res2: Int = 3</span>
 </pre></div>
 </section>
@@ -196,7 +196,7 @@ Polymorphic methods can be applied to arguments of any types which correspond to
             </aside>
             
             <aside class="page_number">
-              4/42
+              4/44
             </aside>
 
           </footer>
@@ -231,7 +231,74 @@ Polymorphic methods can be applied to arguments of any types which correspond to
             </aside>
             
             <aside class="page_number">
-              5/42
+              5/44
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture1.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>It's also interesting to compare the syntax with Haskell:</p>
+<div class="highlight"><pre><span></span><span class="nf">length</span> <span class="ow">::</span> <span class="kt">Foldable</span> <span class="n">t</span> <span class="ow">=&gt;</span> <span class="n">t</span> <span class="n">a</span> <span class="ow">-&gt;</span> <span class="kt">Int</span>
+<span class="nf">length</span> <span class="ow">=</span> <span class="n">foldl&#39;</span> <span class="p">(</span><span class="nf">\</span><span class="n">c</span> <span class="kr">_</span> <span class="ow">-&gt;</span> <span class="n">c</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="mi">0</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture1.md">lecture1.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              6/44
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture1.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>These implementations, along with Java generics, have quite a lot in common.</p>
+<p>In fact one of the original designers of Haskell, Philip Wadler, was later one of the main architects (along with Martin Odersky, creator of Scala) in the development of <a href="https://en.wikipedia.org/wiki/Generic_Java">Java generics</a>.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture1.md">lecture1.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              7/44
             </aside>
 
           </footer>
@@ -267,7 +334,7 @@ The methods that we’ve been calling monomorphic are only monomorphic in the se
             </aside>
             
             <aside class="page_number">
-              6/42
+              8/44
             </aside>
 
           </footer>
@@ -308,7 +375,7 @@ The methods that we’ve been calling monomorphic are only monomorphic in the se
             </aside>
             
             <aside class="page_number">
-              7/42
+              9/44
             </aside>
 
           </footer>
@@ -342,7 +409,7 @@ Nevertheless, it can be applied to values of more than one type as long as those
             </aside>
             
             <aside class="page_number">
-              8/42
+              10/44
             </aside>
 
           </footer>
@@ -378,7 +445,7 @@ Variance refers to a categorical framework undergirding the type system (entirel
             </aside>
             
             <aside class="page_number">
-              9/42
+              11/44
             </aside>
 
           </footer>
@@ -410,7 +477,7 @@ Variance refers to a categorical framework undergirding the type system (entirel
             </aside>
             
             <aside class="page_number">
-              10/42
+              12/44
             </aside>
 
           </footer>
@@ -444,7 +511,7 @@ A type can be contravariant when it does call methods on the type that it is gen
             </aside>
             
             <aside class="page_number">
-              11/42
+              13/44
             </aside>
 
           </footer>
@@ -478,7 +545,7 @@ For example: "a function expecting a Cat and returning an Animal" (written <code
             </aside>
             
             <aside class="page_number">
-              12/42
+              14/44
             </aside>
 
           </footer>
@@ -514,7 +581,7 @@ For example: "a function expecting a Cat and returning an Animal" (written <code
             </aside>
             
             <aside class="page_number">
-              13/42
+              15/44
             </aside>
 
           </footer>
@@ -552,7 +619,7 @@ For example: "a function expecting a Cat and returning an Animal" (written <code
             </aside>
             
             <aside class="page_number">
-              14/42
+              16/44
             </aside>
 
           </footer>
@@ -586,7 +653,7 @@ For example, a function of type <code>Cat=&gt;Cat</code> can safely be used wher
             </aside>
             
             <aside class="page_number">
-              15/42
+              17/44
             </aside>
 
           </footer>
@@ -618,7 +685,7 @@ For example, a function of type <code>Cat=&gt;Cat</code> can safely be used wher
             </aside>
             
             <aside class="page_number">
-              16/42
+              18/44
             </aside>
 
           </footer>
@@ -655,7 +722,7 @@ For example, a function of type <code>Cat=&gt;Cat</code> can safely be used wher
             </aside>
             
             <aside class="page_number">
-              17/42
+              19/44
             </aside>
 
           </footer>
@@ -694,7 +761,7 @@ For example, a function of type <code>Cat=&gt;Cat</code> can safely be used wher
             </aside>
             
             <aside class="page_number">
-              18/42
+              20/44
             </aside>
 
           </footer>
@@ -736,7 +803,7 @@ For example, a function of type <code>Cat=&gt;Cat</code> can safely be used wher
             </aside>
             
             <aside class="page_number">
-              19/42
+              21/44
             </aside>
 
           </footer>
@@ -761,7 +828,7 @@ For example, a function of type <code>Cat=&gt;Cat</code> can safely be used wher
           <footer>
             
             <aside class="page_number">
-              /42
+              /44
             </aside>
 
           </footer>
@@ -797,7 +864,7 @@ The term ad hoc in this context is not intended to be pejorative; it refers to t
             </aside>
             
             <aside class="page_number">
-              20/42
+              22/44
             </aside>
 
           </footer>
@@ -831,7 +898,7 @@ Most languages support at least some ad-hoc polymorphism, but in some languages 
             </aside>
             
             <aside class="page_number">
-              21/42
+              23/44
             </aside>
 
           </footer>
@@ -865,7 +932,7 @@ Ad-hoc polymorphism in Scala (with a large debt to Haskell) is most closely asso
             </aside>
             
             <aside class="page_number">
-              22/42
+              24/44
             </aside>
 
           </footer>
@@ -899,7 +966,7 @@ Type classes are commonly misinterpreted as being synonymous with interfaces in 
             </aside>
             
             <aside class="page_number">
-              23/42
+              25/44
             </aside>
 
           </footer>
@@ -934,7 +1001,7 @@ A second crucial distinction between type classes and interfaces is that for cla
             </aside>
             
             <aside class="page_number">
-              24/42
+              26/44
             </aside>
 
           </footer>
@@ -968,7 +1035,7 @@ Type classes are similar to the <a href="https://en.wikipedia.org/wiki/Adapter_p
             </aside>
             
             <aside class="page_number">
-              25/42
+              27/44
             </aside>
 
           </footer>
@@ -1002,7 +1069,7 @@ The instances of a type class provide implementations for the types we care abou
             </aside>
             
             <aside class="page_number">
-              26/42
+              28/44
             </aside>
 
           </footer>
@@ -1038,7 +1105,7 @@ The instances of a type class provide implementations for the types we care abou
             </aside>
             
             <aside class="page_number">
-              27/42
+              29/44
             </aside>
 
           </footer>
@@ -1078,7 +1145,7 @@ The instances of a type class provide implementations for the types we care abou
             </aside>
             
             <aside class="page_number">
-              28/42
+              30/44
             </aside>
 
           </footer>
@@ -1111,7 +1178,7 @@ The instances of a type class provide implementations for the types we care abou
             </aside>
             
             <aside class="page_number">
-              29/42
+              31/44
             </aside>
 
           </footer>
@@ -1155,7 +1222,7 @@ The instances of a type class provide implementations for the types we care abou
             </aside>
             
             <aside class="page_number">
-              30/42
+              32/44
             </aside>
 
           </footer>
@@ -1193,7 +1260,7 @@ The instances of a type class provide implementations for the types we care abou
             </aside>
             
             <aside class="page_number">
-              31/42
+              33/44
             </aside>
 
           </footer>
@@ -1239,7 +1306,7 @@ The instances of a type class provide implementations for the types we care abou
             </aside>
             
             <aside class="page_number">
-              32/42
+              34/44
             </aside>
 
           </footer>
@@ -1277,7 +1344,7 @@ The instances of a type class provide implementations for the types we care abou
             </aside>
             
             <aside class="page_number">
-              33/42
+              35/44
             </aside>
 
           </footer>
@@ -1290,7 +1357,13 @@ The instances of a type class provide implementations for the types we care abou
           <div class="inner">
             
             
-            <section><p>Note that one place where Haskell is much less verbose than Scala in the above implementation is the instance definition of the type class.
+            <section><p>class Show a where
+  show :: a -&gt; String
+class Eq a where
+  (==) :: a -&gt; a -&gt; Bool
+instance Eq Float where
+  x == y  =  x <code>floatEq</code> y</p>
+<p>Note that one place where Haskell is much less verbose than Scala in the above implementation is the instance definition of the type class.
 <br />
 <br />
 But here the added verbosity in Scala is not without a purpose and offers a definite advantage over the corresponding Haskell definition.
@@ -1314,7 +1387,7 @@ In Scala's case we name the instance explicitly, while the instance is unnamed i
             </aside>
             
             <aside class="page_number">
-              34/42
+              36/44
             </aside>
 
           </footer>
@@ -1348,7 +1421,7 @@ So, for example, you could easily define, in different scopes, two or more diffe
             </aside>
             
             <aside class="page_number">
-              35/42
+              37/44
             </aside>
 
           </footer>
@@ -1382,7 +1455,7 @@ In Scala's case implicits allow the compiler to do type-directed resolution of a
             </aside>
             
             <aside class="page_number">
-              36/42
+              38/44
             </aside>
 
           </footer>
@@ -1418,7 +1491,7 @@ In Scala's case implicits allow the compiler to do type-directed resolution of a
             </aside>
             
             <aside class="page_number">
-              37/42
+              39/44
             </aside>
 
           </footer>
@@ -1455,7 +1528,7 @@ In Scala's case implicits allow the compiler to do type-directed resolution of a
             </aside>
             
             <aside class="page_number">
-              38/42
+              40/44
             </aside>
 
           </footer>
@@ -1496,7 +1569,7 @@ In Scala's case implicits allow the compiler to do type-directed resolution of a
             </aside>
             
             <aside class="page_number">
-              39/42
+              41/44
             </aside>
 
           </footer>
@@ -1536,7 +1609,7 @@ In Scala's case implicits allow the compiler to do type-directed resolution of a
             </aside>
             
             <aside class="page_number">
-              40/42
+              42/44
             </aside>
 
           </footer>
@@ -1569,7 +1642,7 @@ In Scala's case implicits allow the compiler to do type-directed resolution of a
             </aside>
             
             <aside class="page_number">
-              41/42
+              43/44
             </aside>
 
           </footer>
@@ -1606,7 +1679,7 @@ In Scala's case implicits allow the compiler to do type-directed resolution of a
             </aside>
             
             <aside class="page_number">
-              42/42
+              44/44
             </aside>
 
           </footer>
@@ -1652,7 +1725,7 @@ In Scala's case implicits allow the compiler to do type-directed resolution of a
       
       
       <tr id="toc-row-6">
-        <th><a href="#slide6">Subtype Polymorphism</a></th>
+        <th><a href="#slide6">-</a></th>
         <td><a href="#slide6">6</a></td>
       </tr>
       
@@ -1664,13 +1737,13 @@ In Scala's case implicits allow the compiler to do type-directed resolution of a
       
       
       <tr id="toc-row-8">
-        <th><a href="#slide8">-</a></th>
+        <th><a href="#slide8">Subtype Polymorphism</a></th>
         <td><a href="#slide8">8</a></td>
       </tr>
       
       
       <tr id="toc-row-9">
-        <th><a href="#slide9">Variance</a></th>
+        <th><a href="#slide9">-</a></th>
         <td><a href="#slide9">9</a></td>
       </tr>
       
@@ -1682,7 +1755,7 @@ In Scala's case implicits allow the compiler to do type-directed resolution of a
       
       
       <tr id="toc-row-11">
-        <th><a href="#slide11">-</a></th>
+        <th><a href="#slide11">Variance</a></th>
         <td><a href="#slide11">11</a></td>
       </tr>
       
@@ -1724,7 +1797,7 @@ In Scala's case implicits allow the compiler to do type-directed resolution of a
       
       
       <tr id="toc-row-18">
-        <th><a href="#slide18">Exercise</a></th>
+        <th><a href="#slide18">-</a></th>
         <td><a href="#slide18">18</a></td>
       </tr>
       
@@ -1736,7 +1809,7 @@ In Scala's case implicits allow the compiler to do type-directed resolution of a
       
       
       <tr id="toc-row-20">
-        <th><a href="#slide20">Ad-hoc Polymorphism</a></th>
+        <th><a href="#slide20">Exercise</a></th>
         <td><a href="#slide20">20</a></td>
       </tr>
       
@@ -1748,7 +1821,7 @@ In Scala's case implicits allow the compiler to do type-directed resolution of a
       
       
       <tr id="toc-row-22">
-        <th><a href="#slide22">-</a></th>
+        <th><a href="#slide22">Ad-hoc Polymorphism</a></th>
         <td><a href="#slide22">22</a></td>
       </tr>
       
@@ -1796,7 +1869,7 @@ In Scala's case implicits allow the compiler to do type-directed resolution of a
       
       
       <tr id="toc-row-30">
-        <th><a href="#slide30">Interface Objects</a></th>
+        <th><a href="#slide30">-</a></th>
         <td><a href="#slide30">30</a></td>
       </tr>
       
@@ -1808,7 +1881,7 @@ In Scala's case implicits allow the compiler to do type-directed resolution of a
       
       
       <tr id="toc-row-32">
-        <th><a href="#slide32">Interface Syntax</a></th>
+        <th><a href="#slide32">Interface Objects</a></th>
         <td><a href="#slide32">32</a></td>
       </tr>
       
@@ -1820,7 +1893,7 @@ In Scala's case implicits allow the compiler to do type-directed resolution of a
       
       
       <tr id="toc-row-34">
-        <th><a href="#slide34">-</a></th>
+        <th><a href="#slide34">Interface Syntax</a></th>
         <td><a href="#slide34">34</a></td>
       </tr>
       
@@ -1844,7 +1917,7 @@ In Scala's case implicits allow the compiler to do type-directed resolution of a
       
       
       <tr id="toc-row-38">
-        <th><a href="#slide38">Example: <code>Eq</code> Typeclass</a></th>
+        <th><a href="#slide38">-</a></th>
         <td><a href="#slide38">38</a></td>
       </tr>
       
@@ -1856,20 +1929,32 @@ In Scala's case implicits allow the compiler to do type-directed resolution of a
       
       
       <tr id="toc-row-40">
-        <th><a href="#slide40">-</a></th>
+        <th><a href="#slide40">Example: <code>Eq</code> Typeclass</a></th>
         <td><a href="#slide40">40</a></td>
       </tr>
       
       
       <tr id="toc-row-41">
-        <th><a href="#slide41">Homework</a></th>
+        <th><a href="#slide41">-</a></th>
         <td><a href="#slide41">41</a></td>
       </tr>
       
       
       <tr id="toc-row-42">
-        <th><a href="#slide42">Links</a></th>
+        <th><a href="#slide42">-</a></th>
         <td><a href="#slide42">42</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-43">
+        <th><a href="#slide43">Homework</a></th>
+        <td><a href="#slide43">43</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-44">
+        <th><a href="#slide44">Links</a></th>
+        <td><a href="#slide44">44</a></td>
       </tr>
       
       
