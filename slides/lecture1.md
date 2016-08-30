@@ -382,48 +382,6 @@ Now we can use our `Eq` typeclass implementation for `Point` to test different p
 
 ---
 
-#Example: Thrush Combinator
-
-In his classic book [To Mock a Mockingbird](http://www.amazon.com/Mock-Mockingbird-Other-Logic-Puzzles/dp/0192801422), Raymond Smullyan teaches combinatory logic using the analogy of songbirds in a forest.
-
-For example, the Thrush combinator is defined by the following condition:
-
-    T x y = y x
-
----
-
-The following code is correct but difficult to read:
-
-    !scala
-    ((x: Int) => (x * x))(
-      (1 to 100).filter(_ % 2 != 0).foldLeft(0)(_+_))
-
----
-
-Let's fix that with a Thrush combinator. First we define the type class:
-
-    !scala
-    case class Thrush[A](x: A) {
-      def into[B](g: A => B): B = g(x)
-    }
-    val x = (1 to 100).filter(_ % 2 != 0)
-                      .foldLeft(0)(_ + _)
-    Thrush(x).into((x: Int) => x * x)
-    //res0: Int = 6250000
-
----
-
-Now we can provide an implicit instance of the type class for `Int` and use it to re-order our chain of method calls:
-
-    !scala
-    implicit def int2Thrush(x: Int) = Thrush[Int](x)
-    (1 to 100)
-      .filter(_ % 2 != 0)
-      .foldLeft(0)(_ + _)
-      .into((x: Int) => x * x)
-
----
-
 #Homework
 
 Read Chapter 10 and get started on Chapter 11 in _Functional Programming in Scala_.
