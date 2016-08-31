@@ -323,7 +323,7 @@ They also include some 'non-proper morphisms' which give them additional capabil
 
 `pure` and `flatMap` must obey three laws:
 
-1. Left identity: `pure(a) flatMap f == pure(f(a))`
+1. Left identity: `pure(a) flatMap f == f(a)`
 2. Right identity: `m flatMap pure == m`
 3. Associativity: `(m flatMap f) flatMap g == m flatMap (a=>f(a) flatMap g)`
 

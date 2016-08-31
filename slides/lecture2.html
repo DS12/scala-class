@@ -1275,7 +1275,7 @@ This is one of the many benefits of using Cats.</p></section>
             
             <section><p><code>pure</code> and <code>flatMap</code> must obey three laws:</p>
 <ol>
-<li>Left identity: <code>pure(a) flatMap f == pure(f(a))</code></li>
+<li>Left identity: <code>pure(a) flatMap f == f(a)</code></li>
 <li>Right identity: <code>m flatMap pure == m</code></li>
 <li>Associativity: <code>(m flatMap f) flatMap g == m flatMap (a=&gt;f(a) flatMap g)</code></li>
 </ol></section>
