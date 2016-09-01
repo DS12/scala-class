@@ -323,9 +323,9 @@ They also include some 'non-proper morphisms' which give them additional capabil
 
 `pure` and `flatMap` must obey three laws:
 
-1. Left identity: `pure(a) flatMap f == f(a)`
-2. Right identity: `m flatMap pure == m`
-3. Associativity: `(m flatMap f) flatMap g == m flatMap (a=>f(a) flatMap g)`
+1. Left identity:  `flatMap pure(a) f == f(a)`
+2. Right identity: `flatMap m pure == m`
+3. Associativity:  `flatMap (flatMap m f) g == flatMap m (a => flatMap f(a) g)`
 
 ---
 
@@ -488,7 +488,8 @@ Onward and upward!
 
 #Homework
 
-Finish reading Chapter 11 in _Functional Programming in Scala_.
+Finish reading Chapter 11 in _Functional Programming in Scala_ and have a look at the `Monad` type class in [*Cats*](https://github.com/typelevel/cats).
+
 
 ---
 

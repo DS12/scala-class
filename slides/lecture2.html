@@ -1275,9 +1275,9 @@ This is one of the many benefits of using Cats.</p></section>
             
             <section><p><code>pure</code> and <code>flatMap</code> must obey three laws:</p>
 <ol>
-<li>Left identity: <code>pure(a) flatMap f == f(a)</code></li>
-<li>Right identity: <code>m flatMap pure == m</code></li>
-<li>Associativity: <code>(m flatMap f) flatMap g == m flatMap (a=&gt;f(a) flatMap g)</code></li>
+<li>Left identity:  <code>flatMap pure(a) f == f(a)</code></li>
+<li>Right identity: <code>flatMap m pure == m</code></li>
+<li>Associativity:  <code>flatMap (flatMap m f) g == flatMap m (a =&gt; flatMap f(a) g)</code></li>
 </ol></section>
             
           </div>
@@ -1835,7 +1835,7 @@ Onward and upward!</p></section>
             <header><h1>Homework</h1></header>
             
             
-            <section><p>Finish reading Chapter 11 in <em>Functional Programming in Scala</em>.</p></section>
+            <section><p>Finish reading Chapter 11 in <em>Functional Programming in Scala</em> and have a look at the <code>Monad</code> type class in <a href="https://github.com/typelevel/cats"><em>Cats</em></a>.</p></section>
             
           </div>
           <div class="presenter_notes">
