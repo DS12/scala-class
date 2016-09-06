@@ -1,5 +1,5 @@
+package com.datascience.education.tutorials.lecture1
 
-package tutorial.lecture3
 
 // Task (5a): decide where the implicit conversion should go; implement it
 

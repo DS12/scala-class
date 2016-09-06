@@ -1,4 +1,4 @@
-package tutorials.lecture3
+package com.datascience.education.tutorials.lecture1
 
 import scala.language.higherKinds
 
