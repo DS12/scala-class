@@ -105,9 +105,9 @@
             
             
             <section><ul>
-<li>Exceptions</li>
-<li>Sentinel Values</li>
 <li>flagged arguments</li>
+<li>sentinel values</li>
+<li>exceptions</li>
 </ul></section>
             
           </div>
@@ -127,6 +127,80 @@
             
             <aside class="page_number">
               2/47
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            <header><h1>Flagged Arguments</h1></header>
+            
+            
+            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">mean2</span><span class="o">(</span><span class="n">xs</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Double</span><span class="o">],</span> <span class="n">empty</span><span class="k">:</span> <span class="kt">Double</span><span class="o">)</span><span class="k">:</span> <span class="kt">Double</span> <span class="o">=</span>
+  <span class="k">if</span> <span class="o">(</span><span class="n">xs</span><span class="o">.</span><span class="n">isEmpty</span><span class="o">)</span> <span class="n">empty</span>
+  <span class="k">else</span> <span class="n">xs</span><span class="o">.</span><span class="n">sum</span> <span class="o">/</span> <span class="n">xs</span><span class="o">.</span><span class="n">length</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4.md">lecture4.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              3/47
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            <header><h1>Sentinel Values</h1></header>
+            
+            
+            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">mean1</span><span class="o">(</span><span class="n">xs</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Double</span><span class="o">])</span><span class="k">:</span> <span class="kt">Double</span> <span class="o">=</span>
+  <span class="k">if</span> <span class="o">(</span><span class="n">xs</span><span class="o">.</span><span class="n">isEmpty</span><span class="o">)</span> <span class="nc">Double</span><span class="o">.</span><span class="nc">NaN</span>
+  <span class="k">else</span> <span class="n">xs</span><span class="o">.</span><span class="n">sum</span> <span class="o">/</span> <span class="n">xs</span><span class="o">.</span><span class="n">length</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4.md">lecture4.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              4/47
             </aside>
 
           </footer>
@@ -164,7 +238,7 @@
             </aside>
             
             <aside class="page_number">
-              3/47
+              5/47
             </aside>
 
           </footer>
@@ -177,82 +251,8 @@
           <div class="inner">
             
             
-            <section><p>The mean function is an example of what’s called a partial function: it’s not defined for some inputs.</p>
-<p>A function is typically partial because it makes some assumptions about its inputs that aren’t implied by the input types.</p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4.md">lecture4.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              4/47
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code">
-          <div class="inner">
-            
-            <header><h1>Sentinel Values</h1></header>
-            
-            
-            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">mean1</span><span class="o">(</span><span class="n">xs</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Double</span><span class="o">])</span><span class="k">:</span> <span class="kt">Double</span> <span class="o">=</span>
-  <span class="k">if</span> <span class="o">(</span><span class="n">xs</span><span class="o">.</span><span class="n">isEmpty</span><span class="o">)</span> <span class="nc">Double</span><span class="o">.</span><span class="nc">NaN</span>
-  <span class="k">else</span> <span class="n">xs</span><span class="o">.</span><span class="n">sum</span> <span class="o">/</span> <span class="n">xs</span><span class="o">.</span><span class="n">length</span>
-</pre></div>
-</section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4.md">lecture4.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              5/47
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code">
-          <div class="inner">
-            
-            <header><h1>Flagged Arguments</h1></header>
-            
-            
-            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">mean2</span><span class="o">(</span><span class="n">xs</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Double</span><span class="o">],</span> <span class="n">empty</span><span class="k">:</span> <span class="kt">Double</span><span class="o">)</span><span class="k">:</span> <span class="kt">Double</span> <span class="o">=</span>
-  <span class="k">if</span> <span class="o">(</span><span class="n">xs</span><span class="o">.</span><span class="n">isEmpty</span><span class="o">)</span> <span class="n">empty</span>
-  <span class="k">else</span> <span class="n">xs</span><span class="o">.</span><span class="n">sum</span> <span class="o">/</span> <span class="n">xs</span><span class="o">.</span><span class="n">length</span>
-</pre></div>
-</section>
+            <section><p>Exceptions are not type-safe or referentially transparent.</p>
+<p>The type of <code>mean</code>, <code>Seq[Double]) =&gt; Double</code> tells us nothing about the fact that exceptions may occur, and the compiler will not force callers of <code>mean</code> to make a decision about how to handle those exceptions.</p></section>
             
           </div>
           <div class="presenter_notes">
@@ -283,8 +283,8 @@
           <div class="inner">
             
             
-            <section><p>Exceptions are not type-safe or referentially transparent.</p>
-<p>The type of <code>mean</code>, <code>Seq[Double]) =&gt; Double</code> tells us nothing about the fact that exceptions may occur, and the compiler will not force callers of <code>mean</code> to make a decision about how to handle those exceptions.</p></section>
+            <section><p>The <code>mean</code> function is an example of what’s called a partial function: it’s not defined for some inputs.</p>
+<p>A function is typically partial because it makes some assumptions about its inputs that aren’t implied by the input types.</p></section>
             
           </div>
           <div class="presenter_notes">
@@ -1958,25 +1958,25 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
       
       
       <tr id="toc-row-3">
-        <th><a href="#slide3">Exceptions</a></th>
+        <th><a href="#slide3">Flagged Arguments</a></th>
         <td><a href="#slide3">3</a></td>
       </tr>
       
       
       <tr id="toc-row-4">
-        <th><a href="#slide4">-</a></th>
+        <th><a href="#slide4">Sentinel Values</a></th>
         <td><a href="#slide4">4</a></td>
       </tr>
       
       
       <tr id="toc-row-5">
-        <th><a href="#slide5">Sentinel Values</a></th>
+        <th><a href="#slide5">Exceptions</a></th>
         <td><a href="#slide5">5</a></td>
       </tr>
       
       
       <tr id="toc-row-6">
-        <th><a href="#slide6">Flagged Arguments</a></th>
+        <th><a href="#slide6">-</a></th>
         <td><a href="#slide6">6</a></td>
       </tr>
       
