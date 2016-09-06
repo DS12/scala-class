@@ -8,9 +8,27 @@
 
 #Imperative Error Handling
 
-* Exceptions
-* Sentinel Values
 * flagged arguments
+* sentinel values
+* exceptions
+
+---
+
+#Flagged Arguments
+
+    !scala
+    def mean2(xs: Seq[Double], empty: Double): Double =
+      if (xs.isEmpty) empty
+      else xs.sum / xs.length
+
+---
+
+#Sentinel Values
+
+    !scala
+    def mean1(xs: Seq[Double]): Double =
+      if (xs.isEmpty) Double.NaN
+      else xs.sum / xs.length
 
 ---
 
@@ -24,33 +42,15 @@
 
 ---
 
-The mean function is an example of what’s called a partial function: it’s not defined for some inputs.
-
-A function is typically partial because it makes some assumptions about its inputs that aren’t implied by the input types.
-
----
-
-#Sentinel Values
-
-    !scala
-    def mean1(xs: Seq[Double]): Double =
-      if (xs.isEmpty) Double.NaN
-      else xs.sum / xs.length
-
----
-
-#Flagged Arguments
-
-    !scala
-    def mean2(xs: Seq[Double], empty: Double): Double =
-      if (xs.isEmpty) empty
-      else xs.sum / xs.length
-
----
-
 Exceptions are not type-safe or referentially transparent.
 
 The type of `mean`, `Seq[Double]) => Double` tells us nothing about the fact that exceptions may occur, and the compiler will not force callers of `mean` to make a decision about how to handle those exceptions.
+
+---
+
+The `mean` function is an example of what’s called a partial function: it’s not defined for some inputs.
+
+A function is typically partial because it makes some assumptions about its inputs that aren’t implied by the input types.
 
 ---
 
