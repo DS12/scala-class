@@ -2225,7 +2225,7 @@ The only thing you can do with the state in a Writer is use the monoid to append
             <section><p>Note that this improvement essentially makes our new <code>CountMe</code> monad into a specialized version of <code>Writer</code>.
 <br />
 <br />
-Another 'improvement' would have been to drop the count altogether. This would have created a <code>CountMe</code> monad equivalent to <code>Reader</code>.</p></section>
+Another 'improvement' would have been to drop the count altogether. This would have created a <code>CountMe</code> monad equivalent to <code>Id</code>.</p></section>
             
           </div>
           <div class="presenter_notes">
@@ -2258,7 +2258,7 @@ Another 'improvement' would have been to drop the count altogether. This would h
             <header><h1>Writer vs Reader</h1></header>
             
             
-            <section><p>These improvements to <code>CountMe</code> are an indication that the <code>Writer</code> and <code>Reader</code> monads are actually closely related as well.</p>
+            <section><p>Finally, the <code>Writer</code> and <code>Reader</code> monads are somewhat closely related as well.</p>
 <p>We'll discuss this in more depth when we cover comonads and adjoint functors in lecture 11.</p></section>
             
           </div>
