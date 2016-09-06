@@ -12,6 +12,10 @@ src_managed/
 project/boot/
 project/plugins/project/
 
+# scala class answers
+tutorialAnswer
+labAnswer
+
 # Scala-IDE specific
 .scala_dependencies
 .worksheet
