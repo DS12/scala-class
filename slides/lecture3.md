@@ -381,8 +381,9 @@ The `Reader` produces one large operation that accepts the configuration as a pa
 
 ---
 
+Let's first have a look at a toy implementation:
+
     !scala
-    //basic implementation
     case class Reader[E,A](run: E => A) {
       def flatMap[B](f: A => Reader[E,B]): Reader[E,B] =
         Reader[E,B] { e => f(run(e)).run(e) }
@@ -395,72 +396,93 @@ The `Reader` produces one large operation that accepts the configuration as a pa
 
 ---
 
-We can create a `Reader[A, B]` from a function of type `A => B` using the `Reader.apply` constructor:
+We can create a `Reader[A, B]` from a function of type `A => B` and run it like so:
 
     !scala
     import cats.data.Reader
     def double(a: Int): Int = a*2
     val doubleReader: Reader[Int, Int] = Reader(double)
     // doubleReader: Reader[Int,Int] = Kleisli(<function1>)
-    val double2: Int => Int = doubleReader.run
-    // double2: Int => Int = <function1>
-    double2(10)
-    // res0: Int = 20
+    doubleReader.run(21)
+    //res0: Id[Int] = 42 //note the Id monad wrapper
 
 ---
 
-Note that `Reader` is implemented in terms of another type called `Kleisli`.
+Note also that `Reader` is implemented in terms of another type called `Kleisli`.
 <br />
 <br />
-`Kleisli` arrows are a more general form of the `Reader` monad that generalize over the type constructor of the result type. We will discuss these more when we get to monad transformers.
+`Kleisli` arrows are a more general form of the `Reader` monad that generalize over the type constructor of the result type.
+
+---
+
+The type name here refers to a [Kleisli Category](https://en.wikipedia.org/wiki/Kleisli_category).
 <br />
 <br />
-The type name `Kleisli` refers to a [Kleisli Category](https://en.wikipedia.org/wiki/Kleisli_category).
+We will discuss `Kleisli`s more in lecture 11a when we get to monad transformers.
 
 ---
 
 #Composing Readers
 
-The power of `Reader`s comes from their `map` and `flatMap` methods, both of which represent kinds of function composition.
+The power of readers comes from their `map` and `flatMap` methods, both of which represent kinds of function composition.
 
 The `map` method simply extends the computation in the `Reader` by passing its result through a function:
 
     !scala
-    val mapReader = doubleReader.map(_ + "!")
-    mapReader.run(10)
-    //???
+    doubleReader.map(_ + "!").run(21)
+    //res1: Id[String] = 42!
 
 ---
 
 The `flatMap` method is more interesting. It allows us to combine two readers that depend on the same input type:
 
     !scala
-    val add1Reader: Reader[Int, Int] = Reader(_ + 1)
-    val addReaders: Reader[Int, Int] =
-      for {
-        x <- doubleReader
-        y <- add1Reader
-      } yield x + y
-    addReaders.run(10)
-    //???
+    def addKReader(k: Int): Reader[Int,Int] = Reader(_ + k)
+    val foo = doubleReader.flatMap(addKReader _)
+    //foo: Kleisli[Id,Int,Int] = Kleisli(<function1>)
+    foo.run(14)
+    //res2: Id[Int] = 42
 
 ---
 
-Notice that the same input value is passed to both `doubleReader` and `add1Reader`.
+To see what's happening here it's useful to refer back to `Reader`s implementation of `flatMap`:
+
+    !scala
+    //28 + 14 = 42
+    def flatMap[B](f: A => Reader[E,B]): Reader[E,B] =
+      Reader[E,B] { e => f(run(e)).run(e) }
+
+---
+
+
+Notice that the same input value is passed to both `doubleReader` and `addKReader`.
 <br />
 <br />
 This is the value of the `Reader` monad, which ensures that the same “configuration” (in this case an input number) is passed to each part of the system.
 
 ---
 
-We can use the output of the prior step to determine which step to run next. For example:
+We can also combine readers using for comprehensions:
+
+    !scala
+    val addReaders: Reader[Int, Int] =
+      for {
+        x <- doubleReader
+        y <- addKReader(x)
+      } yield x + y
+    addReaders.run(10)
+    //???
+
+---
+
+In particular we can use the output of a prior step to determine which `Reader` to run next:
 
     !scala
     val sub5Reader: Reader[Int, Int] = Reader(_ - 5)
     val sequencingEx: Reader[Int, (Int, Int)] =
       for {
         x <- doubleReader
-        y <- if(x > 20) sub5Reader else add1Reader
+        y <- if(x < 20) sub5Reader else addKReader(x)
       } yield (x, y)
     sequencingEx.run(5)
     //???
@@ -469,7 +491,7 @@ We can use the output of the prior step to determine which step to run next. For
 
 ---
 
-#Exercise: Dependency Injection
+#Application: Dependency Injection
 
     !scala
     def areaR(r: Int): Reader[Double,Double] =
@@ -482,7 +504,6 @@ We can use the output of the prior step to determine which step to run next. For
       }
     val volumeRRR = Reader { h: Int => volumeRR(h) }
     //Reader[Int,Reader[Int,Reader[Double,Double]]] = Kleisli(<function1>)
-    //What does this remind you of?
 
 ---
 
@@ -498,17 +519,19 @@ We can use the output of the prior step to determine which step to run next. For
 
     !scala
     volumeRR(2) run 1
+    //res0: Id[Reader[Double,Double]] = Kleisli(<function1>)
+    volumeRRR run 2 run 1
     //res1: Id[Reader[Double,Double]] = Kleisli(<function1>)
-    volumeRRR run 2 run 1
-    //res2: Id[Reader[Double,Double]] = Kleisli(<function1>)
     volumeRR(2) run 1 run 3.14
-    //res3: Id[Double] = 6.28
+    //res2: Id[Double] = 6.28
     volumeRRR run 2 run 1 run 3.14
-    //res4: Id[Double] = 6.28
+    //res3: Id[Double] = 6.28
 
 ---
 
 #Reader vs State
+
+We'll discuss the `State` monad in detail in lectures 6 and 6a.
 
     !scala
     //Reader[S,A] has a run: S => A
@@ -534,7 +557,7 @@ The `Writer` and `State` monads are also [closely related](http://stackoverflow.
 The difference is that `Writer` is much more limited, in that it doesn't allow you to read the accumulated state.
 <br />
 <br />
-The only thing you can do with the state in a Writer is use the monoid to tack more stuff onto the end.
+The only thing you can do with the state in a Writer is use the monoid to append things into the log.
 
 ---
 
@@ -544,7 +567,6 @@ Fix `CountMe`s flatMap so that it is a valid monad.
 
     !scala
     case class CountMe[A](count: Int, data: A)
-
     val countMeMonad = new Monad[CountMe] {
       def flatMap[A, B](value: CountMe[A])
         (f: A => CountMe[B]): CountMe[B] = {
@@ -561,7 +583,6 @@ Fix `CountMe`s flatMap so that it is a valid monad.
 
     !scala
     case class CountMe[A](count: Int, data: A)
-
     val countMeMonad2 = new Monad[CountMe] {
       def flatMap[A, B](value: CountMe[A])
         (f: A => CountMe[B]): CountMe[B] = {
@@ -593,9 +614,15 @@ Another 'improvement' would have been to drop the count altogether. This would h
 
 #Writer vs Reader
 
-While it may not look like it at first glance, the `Writer` and `Reader` monads are actually closely related.
+These improvements to `CountMe` are an indication that the `Writer` and `Reader` monads are actually closely related as well.
 
 We'll discuss this in more depth when we cover comonads and adjoint functors in lecture 11.
+
+---
+
+For now, let's just have a look at their implementations in Haskell.
+
+![](images/lecture11/adjoints.png)
 
 ---
 
@@ -607,5 +634,6 @@ Read Chapter 4 of _Functional Programming in Scala_.
 
 #Links
 
+* [Herding Cats](http://eed3si9n.com/herding-cats)
 * [Advanced Scala with Cats](http://underscore.io/books/advanced-scala/)
 * [Typeclassopedia](http://www.haskell.org/haskellwiki/Typeclassopedia)
