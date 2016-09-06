@@ -620,9 +620,9 @@ We'll discuss this in more depth when we cover comonads and adjoint functors in 
 
 ---
 
-For now, let's just have a look at their implementations in Haskell.
+For now, let's just have a look at their type classes in Haskell:
 
-![](images/lecture11/adjoints.png)
+<img src="images/lecture11/adjoints.png" width="750">
 
 ---
 
