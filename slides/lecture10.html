@@ -1,0 +1,2280 @@
+<!DOCTYPE html>
+<!--
+  Copyright 2010 Google Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+  Original slides: Marcin Wichary (mwichary@google.com)
+  Modifications: Ernest Delgado (ernestd@google.com)
+                 Alex Russell (slightlyoff@chromium.org)
+
+  landslide modifications: Adam Zapletal (adamzap@gmail.com)
+                           Nicolas Perriault (nperriault@gmail.com)
+-->
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Lecture 10: Monoids</title>
+    <!-- Styles -->
+    
+    <link rel="stylesheet" media="print" href="theme/css/print.css">
+    <link rel="stylesheet" media="screen, projection" href="theme/css/screen.css">
+    
+    
+    <!-- /Styles -->
+    <!-- Javascripts -->
+    
+    <script type="text/javascript" src="theme/js/slides.js"></script>
+    
+    
+    <!-- /Javascripts -->
+</head>
+<body style="!important;">
+  <div id="blank"></div>
+  <div class="presentation">
+    <div id="current_presenter_notes">
+      <div id="presenter_note"></div>
+    </div>
+    <div class="slides">
+      
+      <!-- slide source: lecture10.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            <header><h1>Lecture 10: Monoids</h1></header>
+            
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture10.md">lecture10.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              1/41
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture10.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>"In abstract algebra, a branch of mathematics, a monoid is an algebraic structure with </p>
+<p>(1) a single associative binary operation </p>
+<p>and </p>
+<p>(2) an identity element."</p>
+<p><br />
+<br /></p>
+<p><a href="https://en.wikipedia.org/wiki/Monoid">https://en.wikipedia.org/wiki/Monoid</a></p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture10.md">lecture10.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              2/41
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture10.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><div class="highlight"><pre><span></span><span class="k">trait</span> <span class="nc">Monoid</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="n">op</span><span class="o">(</span><span class="n">a1</span><span class="k">:</span> <span class="kt">A</span><span class="o">,</span> <span class="n">a2</span><span class="k">:</span> <span class="kt">A</span><span class="o">)</span><span class="k">:</span> <span class="kt">A</span>
+  <span class="k">def</span> <span class="n">zero</span><span class="k">:</span> <span class="kt">A</span>
+<span class="o">}</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture10.md">lecture10.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              3/41
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture10.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>Note:
+Our usual combinators are not inside the <code>Monoid</code> trait.</p>
+<p>Every lecture so far has repeated the pattern:</p>
+<ul>
+<li>Give a container, like <code>Option</code>, or function, like <code>Rand</code></li>
+<li>
+<p>implement the usual combinators on it</p>
+<ul>
+<li><code>unit</code></li>
+<li><code>flatMap</code></li>
+<li><code>map</code></li>
+<li><code>map2</code></li>
+</ul>
+</li>
+</ul>
+<p><em><code>Monoid</code> is a departure from this pattern.</em></p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture10.md">lecture10.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              4/41
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture10.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>Strings under concatenation form a Monoid</p>
+<div class="highlight"><pre><span></span><span class="k">trait</span> <span class="nc">Monoid</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="n">op</span><span class="o">(</span><span class="n">a1</span><span class="k">:</span> <span class="kt">A</span><span class="o">,</span> <span class="n">a2</span><span class="k">:</span> <span class="kt">A</span><span class="o">)</span><span class="k">:</span> <span class="kt">A</span>
+  <span class="k">def</span> <span class="n">zero</span><span class="k">:</span> <span class="kt">A</span>
+<span class="o">}</span>
+
+<span class="k">val</span> <span class="n">monoidString</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">Monoid</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="n">op</span><span class="o">(</span><span class="n">s1</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">s2</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span> <span class="k">=</span> <span class="n">s1</span> <span class="o">+</span> <span class="n">s2</span>
+  <span class="k">val</span> <span class="n">zero</span> <span class="k">=</span> <span class="s">&quot;&quot;</span>
+<span class="o">}</span>
+</pre></div>
+
+<p><br />
+<br /></p>
+<p>in <code>common.lecture10.Monoid</code></p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture10.md">lecture10.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              5/41
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture10.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">foo</span> <span class="k">=</span> <span class="s">&quot;foo&quot;</span>
+<span class="k">val</span> <span class="n">bar</span> <span class="k">=</span> <span class="s">&quot;bar&quot;</span>
+<span class="k">val</span> <span class="n">foobar</span> <span class="k">=</span> <span class="n">monoidString</span><span class="o">.</span><span class="n">op</span><span class="o">(</span><span class="n">foo</span><span class="o">,</span><span class="n">bar</span><span class="o">)</span>
+<span class="n">println</span><span class="o">(</span><span class="n">foobar</span><span class="o">)</span>
+<span class="c1">// prints &quot;foobar&quot;</span>
+</pre></div>
+
+<p><br />
+<br />
+<br />
+<br /></p>
+<p>in <code>slideCode.lecture10.BasicExamples</code></p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture10.md">lecture10.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              6/41
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture10.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>String Monoid and <code>foldLeft</code></p>
+<div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">words</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span> <span class="k">=</span> 
+  <span class="nc">List</span><span class="o">(</span><span class="s">&quot;foo&quot;</span><span class="o">,</span> <span class="s">&quot;bar&quot;</span><span class="o">,</span> <span class="s">&quot;baz&quot;</span><span class="o">,</span> <span class="s">&quot;biz&quot;</span><span class="o">)</span>
+
+<span class="k">val</span> <span class="n">foobarbazbiz</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=</span>
+  <span class="n">words</span><span class="o">.</span><span class="n">foldLeft</span><span class="o">(</span><span class="n">monoidString</span><span class="o">.</span><span class="n">zero</span><span class="o">)</span>
+                <span class="o">(</span><span class="n">monoidString</span><span class="o">.</span><span class="n">op</span><span class="o">)</span>
+
+<span class="n">println</span><span class="o">(</span><span class="n">foobarbazbiz</span><span class="o">)</span>
+<span class="c1">// prints &quot;foobarbazbiz&quot;</span>
+</pre></div>
+
+<p><br />
+<br />
+<br />
+<br /></p>
+<p>in <code>slideCode.lecture10.BasicExamples</code></p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture10.md">lecture10.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              7/41
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture10.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>Integers under addition form a monoid </p>
+<div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">monoidIntAddition</span><span class="k">:</span> <span class="kt">Monoid</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> 
+  <span class="k">new</span> <span class="nc">Monoid</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="o">{</span>
+    <span class="k">def</span> <span class="n">op</span><span class="o">(</span><span class="n">i1</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">i2</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="n">i1</span> <span class="o">+</span> <span class="n">i2</span>
+    <span class="k">val</span> <span class="n">zero</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="o">}</span>
+</pre></div>
+
+<p><br />
+<br />
+in <code>common.lecture10.Monoid</code></p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture10.md">lecture10.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              8/41
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture10.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>Monoids are the natural algebraic basis for fold operations.</p>
+<div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">ints</span> <span class="k">=</span> <span class="o">(</span><span class="mi">0</span> <span class="n">to</span> <span class="mi">10</span><span class="o">).</span><span class="n">toList</span>
+
+<span class="k">val</span> <span class="n">s</span> <span class="k">=</span> <span class="n">ints</span><span class="o">.</span><span class="n">foldLeft</span><span class="o">(</span><span class="n">monoidIntAddition</span><span class="o">.</span><span class="n">zero</span><span class="o">)</span>
+                     <span class="o">(</span><span class="n">monoidIntAddition</span><span class="o">.</span><span class="n">op</span><span class="o">)</span>
+
+<span class="n">println</span><span class="o">(</span><span class="n">s</span><span class="o">)</span>
+<span class="c1">// 55</span>
+</pre></div>
+
+<p><br />
+<br />
+<br /></p>
+<p>in <code>slideCode.lecture10.BasicExamples</code></p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture10.md">lecture10.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              9/41
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture10.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            <header><h1>Option</h1></header>
+            
+            
+            <section><div class="highlight"><pre><span></span><span class="k">sealed</span> <span class="k">trait</span> <span class="nc">FPOption</span><span class="o">[</span><span class="kt">+A</span><span class="o">]</span> <span class="o">{</span> 
+  <span class="k">def</span> <span class="n">orElse</span><span class="o">[</span><span class="kt">B</span> <span class="k">&gt;:</span> <span class="kt">A</span><span class="o">](</span><span class="n">otherOp</span><span class="k">:</span> <span class="o">=&gt;</span> <span class="nc">FPOption</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span><span class="k">:</span> 
+    <span class="kt">FPOption</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span> <span class="k">=</span>
+    <span class="k">this</span> <span class="k">match</span> <span class="o">{</span>
+      <span class="k">case</span> <span class="nc">Some</span><span class="o">(</span><span class="n">get</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="k">this</span>
+      <span class="k">case</span> <span class="nc">None</span> <span class="k">=&gt;</span> <span class="n">otherOp</span>
+    <span class="o">}</span>
+  <span class="o">...</span>
+<span class="o">}</span>
+</pre></div>
+
+<p><br />
+<br /></p>
+<p>in <code>common.lecture4.FPOption</code></p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture10.md">lecture10.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              10/41
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture10.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>Options form a Monoid using <code>None</code> and <code>orElse</code>.</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">monoidOption</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span><span class="k">:</span> <span class="kt">Monoid</span><span class="o">[</span><span class="kt">FPOption</span><span class="o">[</span><span class="kt">A</span><span class="o">]]</span> <span class="k">=</span>
+  <span class="k">new</span> <span class="nc">Monoid</span><span class="o">[</span><span class="kt">FPOption</span><span class="o">[</span><span class="kt">A</span><span class="o">]]</span> <span class="o">{</span>
+    <span class="k">def</span> <span class="n">op</span><span class="o">(</span><span class="n">a1</span><span class="k">:</span> <span class="kt">FPOption</span><span class="o">[</span><span class="kt">A</span><span class="o">],</span> <span class="n">a2</span><span class="k">:</span> <span class="kt">FPOption</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span><span class="k">:</span> 
+      <span class="kt">FPOption</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span>
+      <span class="n">a1</span><span class="o">.</span><span class="n">orElse</span><span class="o">(</span><span class="n">a2</span><span class="o">)</span>
+
+    <span class="k">val</span> <span class="n">zero</span><span class="k">:</span> <span class="kt">FPOption</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="nc">None</span>
+  <span class="o">}</span>
+</pre></div>
+
+<p><br />
+<br /></p>
+<p>in <code>common.lecture10.Monoid</code></p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture10.md">lecture10.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              11/41
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture10.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">listOptions</span> <span class="k">=</span> <span class="nc">List</span><span class="o">(</span><span class="nc">Some</span><span class="o">(</span><span class="mi">6</span><span class="o">),</span> <span class="nc">None</span><span class="o">,</span> 
+                       <span class="nc">Some</span><span class="o">(</span><span class="mi">8</span><span class="o">),</span> <span class="nc">Some</span><span class="o">(</span><span class="mi">9</span><span class="o">),</span> 
+                       <span class="nc">None</span><span class="o">,</span> <span class="nc">Some</span><span class="o">(</span><span class="mi">11</span><span class="o">))</span>
+
+<span class="k">val</span> <span class="n">folded</span><span class="k">:</span> <span class="kt">FPOption</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> 
+  <span class="n">listOptions</span><span class="o">.</span><span class="n">foldLeft</span><span class="o">(</span><span class="n">monoidOption</span><span class="o">[</span><span class="kt">Int</span><span class="o">].</span><span class="n">zero</span><span class="o">)</span>
+                      <span class="o">(</span><span class="n">monoidOption</span><span class="o">[</span><span class="kt">Int</span><span class="o">].</span><span class="n">op</span><span class="o">)</span>
+
+<span class="n">println</span><span class="o">(</span><span class="n">folded</span><span class="o">)</span>
+<span class="c1">// prints &quot;Some(6)&quot;</span>
+</pre></div>
+
+<p><br />
+Note that <code>orElse</code> is "left-biased."  Which <code>Some</code> in the list would be returned if <code>orElse</code> were "right-biased"?
+<br />
+<br />
+<br /></p>
+<p>in <code>slideCode.lecture10.BasicExamples</code></p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture10.md">lecture10.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              12/41
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture10.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            <header><h1>Exercise</h1></header>
+            
+            
+            <section><p>In the monoid of Options under <code>orElse</code>, <code>None</code> is the identity element.  Why?</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">monoidOption</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span><span class="k">:</span> <span class="kt">Monoid</span><span class="o">[</span><span class="kt">FPOption</span><span class="o">[</span><span class="kt">A</span><span class="o">]]</span> <span class="k">=</span>
+  <span class="k">new</span> <span class="nc">Monoid</span><span class="o">[</span><span class="kt">FPOption</span><span class="o">[</span><span class="kt">A</span><span class="o">]]</span> <span class="o">{</span>
+    <span class="k">def</span> <span class="n">op</span><span class="o">(</span><span class="n">a1</span><span class="k">:</span> <span class="kt">FPOption</span><span class="o">[</span><span class="kt">A</span><span class="o">],</span> <span class="n">a2</span><span class="k">:</span> <span class="kt">FPOption</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span><span class="k">:</span> 
+      <span class="kt">FPOption</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span>
+      <span class="n">a1</span><span class="o">.</span><span class="n">orElse</span><span class="o">(</span><span class="n">a2</span><span class="o">)</span>
+
+    <span class="k">val</span> <span class="n">zero</span><span class="k">:</span> <span class="kt">FPOption</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="nc">None</span>
+  <span class="o">}</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture10.md">lecture10.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              13/41
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source:  -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="page_number">
+              /41
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture10.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><div class="highlight"><pre><span></span><span class="n">a1</span><span class="o">.</span><span class="n">orElse</span><span class="o">(</span><span class="nc">None</span><span class="o">)</span> <span class="k">=</span> <span class="n">a1</span>
+</pre></div>
+
+<p>and</p>
+<div class="highlight"><pre><span></span><span class="nc">None</span><span class="o">.</span><span class="n">orElse</span><span class="o">(</span><span class="n">a2</span><span class="o">)</span> <span class="k">=</span> <span class="n">a2</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture10.md">lecture10.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              14/41
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture10.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>Endofunctions under composition form a monoid</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">endoMonoid</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span><span class="k">:</span> <span class="kt">Monoid</span><span class="o">[</span><span class="kt">A</span><span class="k">=&gt;</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> 
+  <span class="k">new</span> <span class="nc">Monoid</span><span class="o">[</span><span class="kt">A</span><span class="k">=&gt;</span><span class="kt">A</span><span class="o">]</span> <span class="o">{</span>
+    <span class="k">def</span> <span class="n">op</span><span class="o">(</span><span class="n">f1</span><span class="k">:</span> <span class="kt">A</span><span class="o">=&gt;</span><span class="n">A</span><span class="o">,</span> <span class="n">f2</span><span class="k">:</span> <span class="kt">A</span><span class="o">=&gt;</span><span class="n">A</span><span class="o">)</span><span class="k">:</span> <span class="kt">A</span><span class="o">=&gt;</span><span class="n">A</span> <span class="k">=</span> 
+      <span class="o">(</span><span class="n">a</span><span class="k">:</span> <span class="kt">A</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">f2</span><span class="o">(</span><span class="n">f1</span><span class="o">(</span><span class="n">a</span><span class="o">))</span>
+
+    <span class="k">def</span> <span class="n">zero</span><span class="k">:</span> <span class="kt">A</span><span class="o">=&gt;</span><span class="n">A</span> <span class="k">=</span>
+      <span class="o">(</span><span class="n">a</span><span class="k">:</span> <span class="kt">A</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">a</span>
+  <span class="o">}</span>
+</pre></div>
+
+<p><br />
+<br />
+in <code>common.lecture10.Monoid</code></p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture10.md">lecture10.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              15/41
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture10.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            <header><h1>Every Monoid has a <a href="https://en.wikipedia.org/wiki/Dual_%28category_theory%29"><em>dual</em></a></h1></header>
+            
+            
+            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">dual</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">m</span><span class="k">:</span> <span class="kt">Monoid</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span><span class="k">:</span> <span class="kt">Monoid</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> 
+  <span class="k">new</span> <span class="nc">Monoid</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="o">{</span>
+    <span class="k">def</span> <span class="n">op</span><span class="o">(</span><span class="n">x</span><span class="k">:</span> <span class="kt">A</span><span class="o">,</span> <span class="n">y</span><span class="k">:</span> <span class="kt">A</span><span class="o">)</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">op</span><span class="o">(</span><span class="n">y</span><span class="o">,</span> <span class="n">x</span><span class="o">)</span>
+    <span class="k">val</span> <span class="n">zero</span> <span class="k">=</span> <span class="n">m</span><span class="o">.</span><span class="n">zero</span>
+  <span class="o">}</span>
+</pre></div>
+
+<p>Dual of our Option Monoid</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">monoidOption</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span><span class="k">:</span> <span class="kt">Monoid</span><span class="o">[</span><span class="kt">FPOption</span><span class="o">[</span><span class="kt">A</span><span class="o">]]</span> <span class="k">=</span> <span class="o">...</span>
+
+<span class="k">def</span> <span class="n">monoidOptionDual</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span><span class="k">:</span> <span class="kt">Monoid</span><span class="o">[</span><span class="kt">FPOption</span><span class="o">[</span><span class="kt">A</span><span class="o">]]</span> <span class="k">=</span> 
+  <span class="n">dual</span><span class="o">(</span><span class="n">monoidOption</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture10.md">lecture10.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              16/41
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture10.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            <header><h1>Exercise</h1></header>
+            
+            
+            <section><p>Which Option from the List will <code>println</code> print?</p>
+<div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">listOptions</span> <span class="k">=</span> <span class="nc">List</span><span class="o">(</span><span class="nc">Some</span><span class="o">(</span><span class="mi">6</span><span class="o">),</span> <span class="nc">None</span><span class="o">,</span> <span class="nc">Some</span><span class="o">(</span><span class="mi">8</span><span class="o">),</span> 
+                       <span class="nc">Some</span><span class="o">(</span><span class="mi">9</span><span class="o">),</span> <span class="nc">None</span><span class="o">,</span> <span class="nc">Some</span><span class="o">(</span><span class="mi">11</span><span class="o">))</span>
+
+<span class="k">val</span> <span class="n">foldedByDual</span><span class="k">:</span> <span class="kt">FPOption</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> 
+  <span class="n">listOptions</span><span class="o">.</span><span class="n">foldLeft</span><span class="o">(</span><span class="n">monoidOptionDual</span><span class="o">[</span><span class="kt">Int</span><span class="o">].</span><span class="n">zero</span><span class="o">)</span>
+                      <span class="o">(</span><span class="n">monoidOptionDual</span><span class="o">[</span><span class="kt">Int</span><span class="o">].</span><span class="n">op</span><span class="o">)</span>
+
+<span class="n">println</span><span class="o">(</span><span class="n">foldedByDual</span><span class="o">)</span>
+<span class="c1">// ???</span>
+</pre></div>
+
+<p><br />
+<br />
+in <code>slideCode.lecture10.BasicExamples</code></p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture10.md">lecture10.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              17/41
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture10.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            <header><h1>Exercise</h1></header>
+            
+            
+            <section><p>What is the implementation of <code>op</code> in the dual of an endofunction monoid?</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">dualEndo</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span><span class="k">:</span> <span class="kt">Monoid</span><span class="o">[</span><span class="kt">A</span><span class="k">=&gt;</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span>
+  <span class="n">dual</span><span class="o">[</span><span class="kt">A</span><span class="k">=&gt;</span><span class="kt">A</span><span class="o">](</span><span class="n">endoMonoid</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture10.md">lecture10.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              18/41
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source:  -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="page_number">
+              /41
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture10.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            <header><h1>Answer</h1></header>
+            
+            
+            <section><div class="highlight"><pre><span></span><span class="n">dualEndo</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="n">op</span><span class="o">(</span><span class="n">f1</span><span class="k">:</span> <span class="kt">A</span><span class="o">=&gt;</span><span class="n">A</span><span class="o">,</span> <span class="n">f2</span><span class="k">:</span> <span class="kt">A</span><span class="o">=&gt;</span><span class="n">A</span><span class="o">)</span><span class="k">:</span> <span class="kt">A</span><span class="o">=&gt;</span><span class="n">A</span> <span class="k">=</span>
+    <span class="o">(</span><span class="n">a</span><span class="k">:</span> <span class="kt">A</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">f1</span><span class="o">(</span><span class="n">f2</span><span class="o">(</span><span class="n">a</span><span class="o">))</span>
+
+  <span class="k">def</span> <span class="n">zero</span><span class="k">:</span> <span class="kt">A</span><span class="o">=&gt;</span><span class="n">A</span> <span class="k">=</span> 
+    <span class="o">(</span><span class="n">a</span><span class="k">:</span> <span class="kt">A</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">a</span>
+<span class="o">}</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture10.md">lecture10.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              19/41
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source:  -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="page_number">
+              /41
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture10.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            <header><h1>Exercise</h1></header>
+            
+            
+            <section><p>Under what condition will <code>m</code> and <code>dual(m)</code> be the same?</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture10.md">lecture10.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              20/41
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture10.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            <header><h1>Monoid Isomorphism</h1></header>
+            
+            
+            <section><p>A homomorphism between two monoids (M, *) and (N, •) is a function f : M → N such that</p>
+<p>$$ f(x * y) = f(x) • f(y) for all x, y in M $$</p>
+<p>$$ f(e_M) = e_N $$</p>
+<p>where $e_M$ and $e_N$ are the identities on M and N respectively.</p>
+<p>A bijective monoid homomorphism is called a monoid isomorphism.</p>
+<p>Two monoids are said to be isomorphic if there is a monoid isomorphism between them.
+<br />
+<br />
+<br />
+<br />
+<br />
+<br /></p>
+<p><a href="https://en.wikipedia.org/wiki/Monoid#Monoid_homomorphisms">https://en.wikipedia.org/wiki/Monoid#Monoid_homomorphisms</a></p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture10.md">lecture10.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              21/41
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture10.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>Booleans under <code>or</code> form a Monoid</p>
+<div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">booleanOr</span><span class="k">:</span> <span class="kt">Monoid</span><span class="o">[</span><span class="kt">Boolean</span><span class="o">]</span> <span class="k">=</span> 
+  <span class="k">new</span> <span class="nc">Monoid</span><span class="o">[</span><span class="kt">Boolean</span><span class="o">]</span> <span class="o">{</span>
+    <span class="k">def</span> <span class="n">op</span><span class="o">(</span><span class="n">x</span><span class="k">:</span> <span class="kt">Boolean</span><span class="o">,</span> <span class="n">y</span><span class="k">:</span> <span class="kt">Boolean</span><span class="o">)</span> <span class="k">=</span> <span class="n">x</span> <span class="o">||</span> <span class="n">y</span>
+    <span class="k">val</span> <span class="n">zero</span> <span class="k">=</span> <span class="kc">false</span>
+  <span class="o">}</span>
+</pre></div>
+
+<p>Booleans under <code>and</code> form a Monoid</p>
+<div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">booleanAnd</span><span class="k">:</span> <span class="kt">Monoid</span><span class="o">[</span><span class="kt">Boolean</span><span class="o">]</span> <span class="k">=</span> 
+  <span class="k">new</span> <span class="nc">Monoid</span><span class="o">[</span><span class="kt">Boolean</span><span class="o">]</span> <span class="o">{</span>
+    <span class="k">def</span> <span class="n">op</span><span class="o">(</span><span class="n">x</span><span class="k">:</span> <span class="kt">Boolean</span><span class="o">,</span> <span class="n">y</span><span class="k">:</span> <span class="kt">Boolean</span><span class="o">)</span> <span class="k">=</span> <span class="n">x</span> <span class="o">&amp;&amp;</span> <span class="n">y</span>
+    <span class="k">val</span> <span class="n">zero</span> <span class="k">=</span> <span class="kc">true</span>
+  <span class="o">}</span>
+</pre></div>
+
+<p><br />
+in <code>slideCode.lecture10.BooleanIsomorphism</code></p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture10.md">lecture10.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              22/41
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture10.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">booleans</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Boolean</span><span class="o">]</span> <span class="k">=</span> 
+  <span class="nc">List</span><span class="o">(</span><span class="kc">true</span><span class="o">,</span> <span class="kc">true</span><span class="o">,</span> <span class="kc">false</span><span class="o">,</span> <span class="kc">true</span><span class="o">,</span> <span class="kc">false</span><span class="o">)</span>
+
+<span class="k">val</span> <span class="n">reducedOr</span> <span class="k">=</span> <span class="n">booleans</span><span class="o">.</span><span class="n">reduce</span><span class="o">(</span><span class="n">booleanOr</span><span class="o">.</span><span class="n">op</span><span class="o">)</span>
+<span class="n">println</span><span class="o">(</span><span class="n">reducedOr</span><span class="o">)</span>
+<span class="c1">// true</span>
+
+<span class="k">val</span> <span class="n">reducedAnd</span> <span class="k">=</span> <span class="n">booleans</span><span class="o">.</span><span class="n">reduce</span><span class="o">(</span><span class="n">booleanAnd</span><span class="o">.</span><span class="n">op</span><span class="o">)</span>
+<span class="n">println</span><span class="o">(</span><span class="n">reducedAnd</span><span class="o">)</span>
+<span class="c1">// false</span>
+</pre></div>
+
+<p><br />
+<br />
+in <code>slideCode.lecture10.BooleanIsomorphismExamples</code></p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture10.md">lecture10.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              23/41
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture10.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><div class="highlight"><pre><span></span><span class="c1">// x &amp;&amp; y == !((!x)||(!y))</span>
+<span class="c1">// x || y == !((!x)&amp;&amp;(!y))</span>
+<span class="k">def</span> <span class="n">booleanIsomorphism</span><span class="o">(</span><span class="n">mb</span><span class="k">:</span> <span class="kt">Monoid</span><span class="o">[</span><span class="kt">Boolean</span><span class="o">])</span><span class="k">:</span>
+    <span class="kt">Monoid</span><span class="o">[</span><span class="kt">Boolean</span><span class="o">]</span> <span class="k">=</span>
+  <span class="k">new</span> <span class="nc">Monoid</span><span class="o">[</span><span class="kt">Boolean</span><span class="o">]</span> <span class="o">{</span>
+    <span class="k">def</span> <span class="n">op</span><span class="o">(</span><span class="n">x</span><span class="k">:</span> <span class="kt">Boolean</span><span class="o">,</span> <span class="n">y</span><span class="k">:</span> <span class="kt">Boolean</span><span class="o">)</span> <span class="k">=</span>
+      <span class="o">!</span><span class="n">mb</span><span class="o">.</span><span class="n">op</span><span class="o">(!</span><span class="n">x</span><span class="o">,</span> <span class="o">!</span><span class="n">y</span><span class="o">)</span>
+    <span class="k">def</span> <span class="n">zero</span> <span class="k">=</span> <span class="o">!</span><span class="n">mb</span><span class="o">.</span><span class="n">zero</span>
+  <span class="o">}</span>
+
+<span class="k">val</span> <span class="n">booleanOr2</span><span class="k">:</span> <span class="kt">Monoid</span><span class="o">[</span><span class="kt">Boolean</span><span class="o">]</span> <span class="k">=</span>
+  <span class="n">booleanIsomorphism</span><span class="o">(</span><span class="n">booleanAnd</span><span class="o">)</span>
+<span class="k">val</span> <span class="n">booleanAnd2</span><span class="k">:</span> <span class="kt">Monoid</span><span class="o">[</span><span class="kt">Boolean</span><span class="o">]</span> <span class="k">=</span>
+  <span class="n">booleanIsomorphism</span><span class="o">(</span><span class="n">booleanOr</span><span class="o">)</span>
+</pre></div>
+
+<p>in <code>slideCode.lecture10.BooleanIsomorphism</code></p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture10.md">lecture10.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              24/41
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture10.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">booleans</span> <span class="k">=</span> 
+  <span class="nc">List</span><span class="o">(</span><span class="kc">true</span><span class="o">,</span> <span class="kc">true</span><span class="o">,</span> <span class="kc">false</span><span class="o">,</span> <span class="kc">true</span><span class="o">,</span> <span class="kc">false</span><span class="o">)</span>
+
+<span class="k">val</span> <span class="n">reducedOr2</span> <span class="k">=</span>
+  <span class="n">booleans</span><span class="o">.</span><span class="n">foldLeft</span><span class="o">(</span><span class="n">booleanOr2</span><span class="o">.</span><span class="n">zero</span><span class="o">)</span>
+                   <span class="o">(</span><span class="n">booleanOr2</span><span class="o">.</span><span class="n">op</span><span class="o">)</span>
+<span class="c1">// true</span>
+
+<span class="k">val</span> <span class="n">reducedAnd2</span> <span class="k">=</span>
+  <span class="n">booleans</span><span class="o">.</span><span class="n">foldLeft</span><span class="o">(</span><span class="n">booleanAnd2</span><span class="o">.</span><span class="n">zero</span><span class="o">)</span>
+                   <span class="o">(</span><span class="n">booleanAnd2</span><span class="o">.</span><span class="n">op</span><span class="o">)</span>
+<span class="c1">// false</span>
+</pre></div>
+
+<p><br />
+<br />
+in <code>slideCode.lecture10.BooleanIsomorphismExamples</code></p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture10.md">lecture10.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              25/41
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture10.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            <header><h1>Derived monoids</h1></header>
+            
+            
+            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">monoidFunction</span><span class="o">[</span><span class="kt">A</span>,<span class="kt">B</span><span class="o">](</span><span class="n">monoidB</span><span class="k">:</span> <span class="kt">Monoid</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span><span class="k">:</span>
+  <span class="kt">Monoid</span><span class="o">[</span><span class="kt">A</span> <span class="k">=&gt;</span> <span class="kt">B</span><span class="o">]</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">Monoid</span><span class="o">[</span><span class="kt">A</span> <span class="k">=&gt;</span> <span class="kt">B</span><span class="o">]</span> <span class="o">{</span>
+    <span class="k">def</span> <span class="n">op</span><span class="o">(</span><span class="n">f1</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="n">B</span><span class="o">,</span> <span class="n">f2</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="n">B</span><span class="o">)</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="n">B</span> <span class="k">=</span>
+      <span class="o">(</span><span class="n">a</span><span class="k">:</span> <span class="kt">A</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="o">{</span>
+        <span class="k">val</span> <span class="n">b1</span><span class="k">:</span> <span class="kt">B</span> <span class="o">=</span> <span class="n">f1</span><span class="o">(</span><span class="n">a</span><span class="o">)</span>
+        <span class="k">val</span> <span class="n">b2</span><span class="k">:</span> <span class="kt">B</span> <span class="o">=</span> <span class="n">f2</span><span class="o">(</span><span class="n">a</span><span class="o">)</span>
+        <span class="k">val</span> <span class="n">b3</span><span class="k">:</span> <span class="kt">B</span> <span class="o">=</span> <span class="n">monoidB</span><span class="o">.</span><span class="n">op</span><span class="o">(</span><span class="n">b1</span><span class="o">,</span> <span class="n">b2</span><span class="o">)</span>
+        <span class="n">b3</span>
+      <span class="o">}</span>
+    <span class="k">def</span> <span class="n">zero</span><span class="k">:</span> <span class="kt">Function1</span><span class="o">[</span><span class="kt">A</span>,<span class="kt">B</span><span class="o">]</span> <span class="k">=</span>
+      <span class="o">(</span><span class="n">a</span><span class="k">:</span> <span class="kt">A</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">monoidB</span><span class="o">.</span><span class="n">zero</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<p>in <code>common.lecture10.Monoid</code></p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture10.md">lecture10.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              26/41
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture10.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">monoidProduct</span><span class="o">[</span><span class="kt">A</span>,<span class="kt">B</span><span class="o">](</span><span class="n">mA</span><span class="k">:</span> <span class="kt">Monoid</span><span class="o">[</span><span class="kt">A</span><span class="o">],</span> 
+                       <span class="n">mB</span><span class="k">:</span> <span class="kt">Monoid</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span> <span class="k">=</span>
+  <span class="k">new</span> <span class="nc">Monoid</span><span class="o">[(</span><span class="kt">A</span>,<span class="kt">B</span><span class="o">)]</span> <span class="o">{</span>
+    <span class="k">def</span> <span class="n">op</span><span class="o">(</span><span class="n">ab1</span><span class="k">:</span> <span class="o">(</span><span class="kt">A</span><span class="o">,</span><span class="kt">B</span><span class="o">),</span> <span class="n">ab2</span><span class="k">:</span> <span class="o">(</span><span class="kt">A</span><span class="o">,</span><span class="kt">B</span><span class="o">))</span><span class="k">:</span> 
+        <span class="o">(</span><span class="kt">A</span><span class="o">,</span><span class="kt">B</span><span class="o">)</span> <span class="k">=</span> <span class="o">{</span>
+      <span class="k">val</span> <span class="n">a3</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=</span> <span class="n">mA</span><span class="o">.</span><span class="n">op</span><span class="o">(</span><span class="n">ab1</span><span class="o">.</span><span class="n">_1</span><span class="o">,</span> <span class="n">ab2</span><span class="o">.</span><span class="n">_1</span><span class="o">)</span>
+      <span class="k">val</span> <span class="n">b3</span><span class="k">:</span> <span class="kt">B</span> <span class="o">=</span> <span class="n">mB</span><span class="o">.</span><span class="n">op</span><span class="o">(</span><span class="n">ab1</span><span class="o">.</span><span class="n">_2</span><span class="o">,</span> <span class="n">ab2</span><span class="o">.</span><span class="n">_2</span><span class="o">)</span>
+      <span class="o">(</span><span class="n">a3</span><span class="o">,</span> <span class="n">b3</span><span class="o">)</span>
+    <span class="o">}</span>
+    <span class="k">val</span> <span class="n">zero</span><span class="k">:</span> <span class="o">(</span><span class="kt">A</span><span class="o">,</span><span class="kt">B</span><span class="o">)</span> <span class="k">=</span> <span class="o">(</span><span class="n">mA</span><span class="o">.</span><span class="n">zero</span><span class="o">,</span> <span class="n">mB</span><span class="o">.</span><span class="n">zero</span><span class="o">)</span>
+  <span class="o">}</span>
+</pre></div>
+
+<p>in <code>common.lecture10.Monoid</code></p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture10.md">lecture10.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              27/41
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture10.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            <header><h1>Example: Counting</h1></header>
+            
+            
+            <section><p>We can use the monoid of integers under addition to count the elements of a <code>List</code>.</p>
+<div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">listChars</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Char</span><span class="o">]</span> <span class="k">=</span> 
+  <span class="nc">List</span><span class="o">(</span><span class="sc">&#39;f&#39;</span><span class="o">,</span><span class="sc">&#39;o&#39;</span><span class="o">,</span><span class="sc">&#39;o&#39;</span><span class="o">,</span><span class="sc">&#39;b&#39;</span><span class="o">,</span><span class="sc">&#39;a&#39;</span><span class="o">,</span><span class="sc">&#39;r&#39;</span><span class="o">)</span>
+
+<span class="k">val</span> <span class="n">listCounts</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="n">listChars</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span> <span class="k">=&gt;</span> <span class="mi">1</span><span class="o">)</span>
+
+<span class="k">val</span> <span class="n">charCount</span> <span class="k">=</span> 
+  <span class="n">listCounts</span><span class="o">.</span><span class="n">foldRight</span><span class="o">(</span><span class="n">monoidIntAddition</span><span class="o">.</span><span class="n">zero</span><span class="o">)</span>
+                      <span class="o">(</span><span class="n">monoidIntAddition</span><span class="o">.</span><span class="n">op</span><span class="o">)</span>
+
+<span class="c1">// 6</span>
+</pre></div>
+
+<p><br />
+<br />
+in <code>slideCode.lecture10.CountingSimpleExamples</code></p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture10.md">lecture10.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              28/41
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture10.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>Refactor into a <code>def</code> so we can count the elements of any <code>List</code></p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">countBasic</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">listA</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="k">val</span> <span class="n">listCount</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="n">listA</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span> <span class="k">=&gt;</span> <span class="mi">1</span><span class="o">)</span>
+  <span class="n">listCount</span><span class="o">.</span><span class="n">foldLeft</span><span class="o">(</span><span class="n">monoidIntAddition</span><span class="o">.</span><span class="n">zero</span><span class="o">)</span>
+                    <span class="o">(</span><span class="n">monoidIntAddition</span><span class="o">.</span><span class="n">op</span><span class="o">)</span>
+<span class="o">}</span>
+</pre></div>
+
+<p><code>countBasic</code> maps elements of type <code>A</code> to "counts" of type <code>Int</code>.  </p>
+<p>These <code>Ints</code> can then be reduced by the monoid of integers under addition.  </p>
+<p><br />
+<br />
+<br />
+<br />
+<br />
+<br />
+in <code>slideCode.lecture10.CountSimple</code></p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture10.md">lecture10.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              29/41
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture10.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            <header><h1>foldMap</h1></header>
+            
+            
+            <section><p>Generalize <code>countBasic</code>:</p>
+<p><code>foldMap</code> maps elements of type <code>A</code> to elements of type <code>B</code>.</p>
+<p>These <code>B</code> elements can then be reduced by <code>Monoid[B]</code>.</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">foldMap</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">](</span><span class="n">as</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">A</span><span class="o">],</span> <span class="n">m</span><span class="k">:</span> <span class="kt">Monoid</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span>
+                 <span class="o">(</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="n">B</span><span class="o">)</span><span class="k">:</span> <span class="kt">B</span> <span class="o">=</span>
+  <span class="n">as</span><span class="o">.</span><span class="n">foldLeft</span><span class="o">(</span><span class="n">m</span><span class="o">.</span><span class="n">zero</span><span class="o">)((</span><span class="n">b</span><span class="o">,</span> <span class="n">a</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">m</span><span class="o">.</span><span class="n">op</span><span class="o">(</span><span class="n">b</span><span class="o">,</span> <span class="n">f</span><span class="o">(</span><span class="n">a</span><span class="o">)))</span>
+</pre></div>
+
+<p><br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+in <code>slideCode.lecture10.FoldList</code></p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture10.md">lecture10.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              30/41
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture10.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">listChars</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Char</span><span class="o">]</span> <span class="k">=</span> 
+  <span class="nc">List</span><span class="o">(</span><span class="sc">&#39;f&#39;</span><span class="o">,</span><span class="sc">&#39;o&#39;</span><span class="o">,</span><span class="sc">&#39;o&#39;</span><span class="o">,</span><span class="sc">&#39;b&#39;</span><span class="o">,</span><span class="sc">&#39;a&#39;</span><span class="o">,</span><span class="sc">&#39;r&#39;</span><span class="o">)</span>
+<span class="n">foldMap</span><span class="o">(</span><span class="n">listA</span><span class="o">,</span> <span class="n">monoidIntAddition</span><span class="o">)((</span><span class="k">_:</span> <span class="kt">A</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="mi">1</span><span class="o">)</span>
+
+<span class="c1">// 6</span>
+</pre></div>
+
+<p><br />
+<br />
+in <code>slideCode.lecture10.CountSimple</code> and <code>slideCode.lecture10.CountingExamples</code></p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture10.md">lecture10.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              31/41
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture10.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>The notion of a monoid is closely related to folding.</p>
+<p>Folding necessarily implies a binary associative operation that has an initial value. </p>
+<p>A fold is a specific type of <a href="https://en.wikipedia.org/wiki/Catamorphism">catamorphism</a>. </p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture10.md">lecture10.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              32/41
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture10.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            <header><h1>Example: foldRight</h1></header>
+            
+            
+            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">foldMap</span><span class="o">[</span><span class="kt">A</span>,<span class="kt">B</span><span class="o">](</span><span class="n">listA</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">A</span><span class="o">],</span> <span class="n">mb</span><span class="k">:</span> <span class="kt">Monoid</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span>
+    <span class="o">(</span><span class="n">f</span><span class="k">:</span> <span class="kt">Function1</span><span class="o">[</span><span class="kt">A</span>,<span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">B</span> <span class="o">=</span> <span class="o">{</span>
+    <span class="k">def</span> <span class="n">g</span><span class="o">(</span><span class="n">b</span><span class="k">:</span> <span class="kt">B</span><span class="o">,</span> <span class="n">a</span><span class="k">:</span> <span class="kt">A</span><span class="o">)</span><span class="k">:</span> <span class="kt">B</span> <span class="o">=</span> <span class="n">mb</span><span class="o">.</span><span class="n">op</span><span class="o">(</span><span class="n">b</span><span class="o">,</span> <span class="n">f</span><span class="o">(</span><span class="n">a</span><span class="o">))</span>
+    <span class="n">foldLeft</span><span class="o">(</span><span class="n">listA</span><span class="o">)(</span><span class="n">mb</span><span class="o">.</span><span class="n">zero</span><span class="o">)(</span><span class="n">g</span><span class="o">)</span>
+<span class="o">}</span>
+<span class="k">def</span> <span class="n">foldRight</span><span class="o">[</span><span class="kt">A</span>,<span class="kt">B</span><span class="o">](</span><span class="n">listA</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span>
+    <span class="o">(</span><span class="n">z</span><span class="k">:</span> <span class="kt">B</span><span class="o">)</span>
+    <span class="o">(</span><span class="n">f</span><span class="k">:</span> <span class="o">(</span><span class="kt">A</span><span class="o">,</span> <span class="kt">B</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">B</span><span class="o">)</span><span class="k">:</span> <span class="kt">B</span> <span class="o">=</span> <span class="o">{</span>
+    <span class="k">val</span> <span class="n">g</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="o">(</span><span class="n">B</span> <span class="k">=&gt;</span> <span class="n">B</span><span class="o">)</span> <span class="k">=</span> <span class="n">f</span><span class="o">.</span><span class="n">curried</span>
+    <span class="n">foldMap</span><span class="o">(</span><span class="n">listA</span><span class="o">,</span> <span class="o">(</span><span class="n">endoMonoid</span><span class="o">[</span><span class="kt">B</span><span class="o">]))(</span><span class="n">g</span><span class="o">)(</span><span class="n">z</span><span class="o">)</span>
+<span class="o">}</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture10.md">lecture10.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              33/41
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture10.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            <header><h1>Example: Averaging</h1></header>
+            
+            
+            <section><div class="highlight"><pre><span></span><span class="o">(</span><span class="n">a</span><span class="o">.</span><span class="n">avg</span><span class="o">,</span> <span class="n">a</span><span class="o">.</span><span class="n">count</span><span class="o">)</span> <span class="o">+</span> <span class="o">(</span><span class="n">b</span><span class="o">.</span><span class="n">avg</span><span class="o">,</span> <span class="n">b</span><span class="o">.</span><span class="n">count</span><span class="o">)</span> <span class="k">=</span>
+   <span class="o">((</span><span class="n">a</span><span class="o">.</span><span class="n">count</span><span class="o">*</span><span class="n">a</span><span class="o">.</span><span class="n">avg</span> <span class="o">+</span> <span class="n">b</span><span class="o">.</span><span class="n">count</span><span class="o">*</span><span class="n">b</span><span class="o">.</span><span class="n">avg</span><span class="o">)/</span>
+      <span class="o">(</span><span class="n">a</span><span class="o">.</span><span class="n">count</span> <span class="o">+</span> <span class="n">b</span><span class="o">.</span><span class="n">count</span><span class="o">),</span>
+    <span class="n">a</span><span class="o">.</span><span class="n">count</span> <span class="o">+</span> <span class="n">b</span><span class="o">.</span><span class="n">count</span><span class="o">)</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture10.md">lecture10.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              34/41
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture10.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">op</span><span class="o">(</span>
+  <span class="n">a</span><span class="k">:</span> <span class="o">(</span><span class="kt">Double</span><span class="o">,</span> <span class="kt">Int</span><span class="o">),</span>
+  <span class="n">b</span><span class="k">:</span> <span class="o">(</span><span class="kt">Double</span><span class="o">,</span> <span class="kt">Int</span><span class="o">)</span>
+<span class="o">)</span><span class="k">:</span> <span class="o">(</span><span class="kt">Double</span><span class="o">,</span> <span class="kt">Int</span><span class="o">)</span> <span class="k">=</span> <span class="o">{</span>
+  <span class="k">val</span> <span class="n">cCount</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">_2</span> <span class="o">+</span> <span class="n">b</span><span class="o">.</span><span class="n">_2</span>
+  <span class="k">val</span> <span class="n">cAverage</span><span class="k">:</span> <span class="kt">Double</span> <span class="o">=</span>
+    <span class="o">(</span><span class="n">a</span><span class="o">.</span><span class="n">_2</span><span class="o">.</span><span class="n">toDouble</span> <span class="o">*</span> <span class="n">a</span><span class="o">.</span><span class="n">_1</span> <span class="o">+</span> <span class="n">b</span><span class="o">.</span><span class="n">_2</span><span class="o">.</span><span class="n">toDouble</span> <span class="o">*</span> <span class="n">b</span><span class="o">.</span><span class="n">_1</span><span class="o">)</span> <span class="o">/</span> <span class="n">cCount</span>
+  <span class="o">(</span><span class="n">cAverage</span><span class="o">,</span> <span class="n">cCount</span><span class="o">)</span>
+<span class="o">}</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture10.md">lecture10.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              35/41
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture10.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">monoidAverageAndCount</span><span class="k">:</span> 
+  <span class="kt">Monoid</span><span class="o">[(</span><span class="kt">Double</span>, <span class="kt">Int</span><span class="o">)]</span> <span class="k">=</span>
+  <span class="k">new</span> <span class="nc">Monoid</span><span class="o">[(</span><span class="kt">Double</span>, <span class="kt">Int</span><span class="o">)]</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="n">op</span><span class="o">(</span>
+    <span class="n">a</span><span class="k">:</span> <span class="o">(</span><span class="kt">Double</span><span class="o">,</span> <span class="kt">Int</span><span class="o">),</span>
+    <span class="n">b</span><span class="k">:</span> <span class="o">(</span><span class="kt">Double</span><span class="o">,</span> <span class="kt">Int</span><span class="o">)</span>
+  <span class="o">)</span><span class="k">:</span> <span class="o">(</span><span class="kt">Double</span><span class="o">,</span> <span class="kt">Int</span><span class="o">)</span> <span class="k">=</span> <span class="o">...</span>
+
+  <span class="k">def</span> <span class="n">zero</span><span class="k">:</span> <span class="o">(</span><span class="kt">Double</span><span class="o">,</span> <span class="kt">Int</span><span class="o">)</span> <span class="k">=</span>
+    <span class="o">(</span><span class="mf">0.0</span><span class="o">,</span> <span class="n">monoidIntAddition</span><span class="o">.</span><span class="n">zero</span><span class="o">)</span>
+
+<span class="o">}</span>
+</pre></div>
+
+<p><br />
+<br />
+in <code>slideCode.lecture10.Homomorphism</code></p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture10.md">lecture10.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              36/41
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture10.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">monoidAverageAndCount</span><span class="k">:</span> 
+  <span class="kt">Monoid</span><span class="o">[(</span><span class="kt">Double</span>, <span class="kt">Int</span><span class="o">)]</span> <span class="k">=</span> <span class="o">...</span>
+
+<span class="k">val</span> <span class="n">doubles</span> <span class="k">=</span> <span class="o">(</span><span class="mi">0</span> <span class="n">to</span> <span class="mi">18</span><span class="o">).</span><span class="n">toList</span><span class="o">.</span>
+              <span class="n">map</span><span class="o">(</span><span class="n">i</span> <span class="k">=&gt;</span> <span class="n">i</span><span class="o">.</span><span class="n">toDouble</span><span class="o">/</span><span class="mi">10</span><span class="o">)</span>
+
+<span class="n">foldMap</span><span class="o">(</span><span class="n">doubles</span><span class="o">,</span> <span class="n">monoidAverageAndCount</span><span class="o">)</span>
+       <span class="o">{(</span><span class="n">d</span><span class="k">:</span> <span class="kt">Double</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="o">(</span><span class="n">d</span><span class="o">,</span> <span class="mi">1</span><span class="o">)}</span>
+
+<span class="c1">// (0.8999999999999999,19)</span>
+</pre></div>
+
+<p><br />
+<br />
+in <code>slideCode.lecture10.HomomorphismExample</code></p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture10.md">lecture10.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              37/41
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source:  -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="page_number">
+              /41
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source:  -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="page_number">
+              /41
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source:  -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="page_number">
+              /41
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture10.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>The free monoid on a set A corresponds to lists of elements from A with concatenation as the binary operation. 
+<br />
+<br />
+A monoid homomorphism from the free monoid to any other monoid $(M,\cdot)$ is a function $f$ such that
+$$
+f(x_1 \dots x_n) = f(x_1) \cdot \dots \cdot f(x_n)
+f() = e
+$$
+where $e$ is the identity on $M$. </p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture10.md">lecture10.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              38/41
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture10.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>Every such homomorphism corresponds to a map operation applying f to all the elements of a list, followed by a fold operation which combines the results using the binary operator. 
+<br />
+<br />
+This computational paradigm has inspired the MapReduce software framework.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture10.md">lecture10.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              39/41
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture10.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            <header><h1>Generalize away from List</h1></header>
+            
+            
+            <section><div class="highlight"><pre><span></span><span class="k">object</span> <span class="nc">FoldList</span> <span class="o">{</span>
+
+  <span class="k">def</span> <span class="n">foldMap</span><span class="o">[</span><span class="kt">A</span>,<span class="kt">B</span><span class="o">](</span><span class="n">listA</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">A</span><span class="o">],</span> 
+                   <span class="n">monoidB</span><span class="k">:</span> <span class="kt">Monoid</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span>
+                   <span class="o">(</span><span class="n">f</span><span class="k">:</span> <span class="kt">Function1</span><span class="o">[</span><span class="kt">A</span>,<span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">B</span> <span class="o">=</span> <span class="o">...</span>
+  <span class="k">def</span> <span class="n">foldLeft</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">](</span><span class="n">as</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span>
+                    <span class="o">(</span><span class="n">z</span><span class="k">:</span> <span class="kt">B</span><span class="o">)</span>
+                    <span class="o">(</span><span class="n">f</span><span class="k">:</span> <span class="o">(</span><span class="kt">B</span><span class="o">,</span> <span class="kt">A</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">B</span><span class="o">)</span><span class="k">:</span> <span class="kt">B</span> <span class="o">=</span> <span class="o">...</span>
+<span class="o">}</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture10.md">lecture10.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              40/41
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture10.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            <header><h1>Generalize away from List</h1></header>
+            
+            
+            <section><div class="highlight"><pre><span></span><span class="k">trait</span> <span class="nc">Foldable</span><span class="o">[</span><span class="kt">F</span><span class="o">[</span><span class="k">_</span><span class="o">]]</span> <span class="o">{</span>
+
+  <span class="k">def</span> <span class="n">foldLeft</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">](</span><span class="n">fA</span><span class="k">:</span> <span class="kt">F</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span>
+                    <span class="o">(</span><span class="n">z</span><span class="k">:</span> <span class="kt">B</span><span class="o">)</span>
+                    <span class="o">(</span><span class="n">f</span><span class="k">:</span> <span class="o">(</span><span class="kt">B</span><span class="o">,</span> <span class="kt">A</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">B</span><span class="o">)</span><span class="k">:</span> <span class="kt">B</span> <span class="o">=</span> <span class="o">...</span>
+<span class="o">}</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture10.md">lecture10.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              41/41
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source:  -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="page_number">
+              /41
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+  <div id="toc" class="sidebar hidden">
+    <h2>Table of Contents</h2>
+    <table>
+      <caption>Table of Contents</caption>
+      
+      <tr id="toc-row-1">
+        <th><a href="#slide1">Lecture 10: Monoids</a></th>
+        <td><a href="#slide1">1</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-2">
+        <th><a href="#slide2">-</a></th>
+        <td><a href="#slide2">2</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-3">
+        <th><a href="#slide3">-</a></th>
+        <td><a href="#slide3">3</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-4">
+        <th><a href="#slide4">-</a></th>
+        <td><a href="#slide4">4</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-5">
+        <th><a href="#slide5">-</a></th>
+        <td><a href="#slide5">5</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-6">
+        <th><a href="#slide6">-</a></th>
+        <td><a href="#slide6">6</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-7">
+        <th><a href="#slide7">-</a></th>
+        <td><a href="#slide7">7</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-8">
+        <th><a href="#slide8">-</a></th>
+        <td><a href="#slide8">8</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-9">
+        <th><a href="#slide9">-</a></th>
+        <td><a href="#slide9">9</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-10">
+        <th><a href="#slide10">Option</a></th>
+        <td><a href="#slide10">10</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-11">
+        <th><a href="#slide11">-</a></th>
+        <td><a href="#slide11">11</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-12">
+        <th><a href="#slide12">-</a></th>
+        <td><a href="#slide12">12</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-13">
+        <th><a href="#slide13">Exercise</a></th>
+        <td><a href="#slide13">13</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-14">
+        <th><a href="#slide14">-</a></th>
+        <td><a href="#slide14">14</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-15">
+        <th><a href="#slide15">-</a></th>
+        <td><a href="#slide15">15</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-16">
+        <th><a href="#slide16">Every Monoid has a <a href="https://en.wikipedia.org/wiki/Dual_%28category_theory%29"><em>dual</em></a></a></th>
+        <td><a href="#slide16">16</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-17">
+        <th><a href="#slide17">Exercise</a></th>
+        <td><a href="#slide17">17</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-18">
+        <th><a href="#slide18">Exercise</a></th>
+        <td><a href="#slide18">18</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-19">
+        <th><a href="#slide19">Answer</a></th>
+        <td><a href="#slide19">19</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-20">
+        <th><a href="#slide20">Exercise</a></th>
+        <td><a href="#slide20">20</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-21">
+        <th><a href="#slide21">Monoid Isomorphism</a></th>
+        <td><a href="#slide21">21</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-22">
+        <th><a href="#slide22">-</a></th>
+        <td><a href="#slide22">22</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-23">
+        <th><a href="#slide23">-</a></th>
+        <td><a href="#slide23">23</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-24">
+        <th><a href="#slide24">-</a></th>
+        <td><a href="#slide24">24</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-25">
+        <th><a href="#slide25">-</a></th>
+        <td><a href="#slide25">25</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-26">
+        <th><a href="#slide26">Derived monoids</a></th>
+        <td><a href="#slide26">26</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-27">
+        <th><a href="#slide27">-</a></th>
+        <td><a href="#slide27">27</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-28">
+        <th><a href="#slide28">Example: Counting</a></th>
+        <td><a href="#slide28">28</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-29">
+        <th><a href="#slide29">-</a></th>
+        <td><a href="#slide29">29</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-30">
+        <th><a href="#slide30">foldMap</a></th>
+        <td><a href="#slide30">30</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-31">
+        <th><a href="#slide31">-</a></th>
+        <td><a href="#slide31">31</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-32">
+        <th><a href="#slide32">-</a></th>
+        <td><a href="#slide32">32</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-33">
+        <th><a href="#slide33">Example: foldRight</a></th>
+        <td><a href="#slide33">33</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-34">
+        <th><a href="#slide34">Example: Averaging</a></th>
+        <td><a href="#slide34">34</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-35">
+        <th><a href="#slide35">-</a></th>
+        <td><a href="#slide35">35</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-36">
+        <th><a href="#slide36">-</a></th>
+        <td><a href="#slide36">36</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-37">
+        <th><a href="#slide37">-</a></th>
+        <td><a href="#slide37">37</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-38">
+        <th><a href="#slide38">-</a></th>
+        <td><a href="#slide38">38</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-39">
+        <th><a href="#slide39">-</a></th>
+        <td><a href="#slide39">39</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-40">
+        <th><a href="#slide40">Generalize away from List</a></th>
+        <td><a href="#slide40">40</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-41">
+        <th><a href="#slide41">Generalize away from List</a></th>
+        <td><a href="#slide41">41</a></td>
+      </tr>
+      
+      
+    </table>
+  </div>
+  
+  <div id="help" class="sidebar hidden">
+    <h2>Help</h2>
+    <table>
+      <caption>Help</caption>
+      <tr>
+        <th>Table of Contents</th>
+        <td>t</td>
+      </tr>
+      <tr>
+        <th>Exposé</th>
+        <td>ESC</td>
+      </tr>
+      <tr>
+        <th>Full screen slides</th>
+        <td>e</td>
+      </tr>
+      <tr>
+        <th>Presenter View</th>
+        <td>p</td>
+      </tr>
+      <tr>
+        <th>Source Files</th>
+        <td>s</td>
+      </tr>
+      <tr>
+        <th>Slide Numbers</th>
+        <td>n</td>
+      </tr>
+      <tr>
+        <th>Toggle screen blanking</th>
+        <td>b</td>
+      </tr>
+      <tr>
+        <th>Show/hide slide context</th>
+        <td>c</td>
+      </tr>
+      <tr>
+        <th>Notes</th>
+        <td>2</td>
+      </tr>
+      <tr>
+        <th>Help</th>
+        <td>h</td>
+      </tr>
+    </table>
+  </div>
+  <script>main()</script>
+</body>
+</html>
