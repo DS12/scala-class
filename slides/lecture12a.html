@@ -1,0 +1,2778 @@
+<!DOCTYPE html>
+<!--
+  Copyright 2010 Google Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+  Original slides: Marcin Wichary (mwichary@google.com)
+  Modifications: Ernest Delgado (ernestd@google.com)
+                 Alex Russell (slightlyoff@chromium.org)
+
+  landslide modifications: Adam Zapletal (adamzap@gmail.com)
+                           Nicolas Perriault (nperriault@gmail.com)
+-->
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Lecture 12a: Traversable Functors</title>
+    <!-- Styles -->
+    
+    <link rel="stylesheet" media="print" href="theme/css/print.css">
+    <link rel="stylesheet" media="screen, projection" href="theme/css/screen.css">
+    
+    
+    <!-- /Styles -->
+    <!-- Javascripts -->
+    
+    <script type="text/javascript" src="theme/js/slides.js"></script>
+    
+    
+    <!-- /Javascripts -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          processEscapes: true
+        },
+        "HTML-CSS": { availableFonts: ["TeX"] }
+      });
+    </script>
+    <script type="text/javascript"
+        src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+</head>
+<body style="!important;">
+  <div id="blank"></div>
+  <div class="presentation">
+    <div id="current_presenter_notes">
+      <div id="presenter_note"></div>
+    </div>
+    <div class="slides">
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            <header><h1>Lecture 12a: Traversable Functors</h1></header>
+            
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              1/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            <header><h1>Foldable</h1></header>
+            
+            
+            <section><p>The <code>Foldable</code> type class captures the concept of data structures that we can iterate over. Lists are foldable, as are Vectors and Streams.
+<br />
+<br />
+Foldables give us a way to process values embedded in a structure as if they existed in a sequential order, as we’ve seen with list folding.
+<br />
+<br />
+<code>Foldable</code> gives us great use cases for monoids and the <code>Eval</code> monad.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              2/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>In general, a fold function allows users to transform one algebraic data type to another.
+<br />
+<br />
+The typical use case is to accumulate a value as we traverse. We supply an accumulator value and a binary function to combine it with an item in the sequence.
+<br />
+<br />
+The function produces another accumulator, allowing us to recurse down the sequence. When we reach the end, the final accumulator is our result.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              3/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>Cats’ <code>Foldable</code> abstracts the two operations <code>foldLeft</code> and <code>foldRight</code> into a type class:</p>
+<div class="highlight"><pre><span></span><span class="k">trait</span> <span class="nc">Foldable</span><span class="o">[</span><span class="kt">F</span><span class="o">[</span><span class="k">_</span><span class="o">]]</span> <span class="o">{</span> <span class="n">self</span> <span class="k">=&gt;</span>
+  <span class="k">def</span> <span class="n">foldLeft</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">](</span><span class="n">fa</span><span class="k">:</span> <span class="kt">F</span><span class="o">[</span><span class="kt">A</span><span class="o">],</span> <span class="n">b</span><span class="k">:</span> <span class="kt">B</span><span class="o">)</span>
+                    <span class="o">(</span><span class="n">f</span><span class="k">:</span> <span class="o">(</span><span class="kt">B</span><span class="o">,</span> <span class="kt">A</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">B</span><span class="o">)</span><span class="k">:</span> <span class="kt">B</span>
+  <span class="k">def</span> <span class="n">foldRight</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">](</span><span class="n">fa</span><span class="k">:</span> <span class="kt">F</span><span class="o">[</span><span class="kt">A</span><span class="o">],</span> <span class="n">lb</span><span class="k">:</span> <span class="kt">Eval</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span>
+                     <span class="o">(</span><span class="n">f</span><span class="k">:</span> <span class="o">(</span><span class="kt">A</span><span class="o">,</span> <span class="kt">Eval</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span> <span class="k">=&gt;</span> <span class="nc">Eval</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">Eval</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span>
+  <span class="c1">//...</span>
+<span class="o">}</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              4/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>Cats provides out-of-the-box instances of Foldable for a handful of Scala data types: <code>List</code>, <code>Vector</code>, <code>Stream</code>, <code>Option</code>, and <code>Map</code>.</p>
+<div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">cats.Foldable</span>
+<span class="k">val</span> <span class="n">ints</span> <span class="k">=</span> <span class="nc">List</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">3</span><span class="o">)</span>
+<span class="k">import</span> <span class="nn">cats.instances.list._</span>
+<span class="nc">Foldable</span><span class="o">[</span><span class="kt">List</span><span class="o">].</span><span class="n">foldLeft</span><span class="o">(</span><span class="n">ints</span><span class="o">,</span> <span class="mi">0</span><span class="o">)(</span><span class="k">_</span> <span class="o">+</span> <span class="k">_</span><span class="o">)</span>
+<span class="c1">//res0: Int = 6</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              5/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>The <code>Foldable</code> instance for <code>Map</code> allows us to fold over its values (as opposed to its keys).
+<br />
+<br />
+Because <code>Map</code> has two type parameters, we have to fix one of them to create the single-parameter type constructor we need to summon the <code>Foldable</code>:</p>
+<div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">cats.std.map._</span>
+<span class="k">type</span> <span class="kt">StringMap</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Map</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">A</span><span class="o">]</span>
+<span class="k">val</span> <span class="n">stringMap</span> <span class="k">=</span> <span class="nc">Map</span><span class="o">(</span><span class="s">&quot;a&quot;</span> <span class="o">-&gt;</span> <span class="s">&quot;b&quot;</span><span class="o">,</span> <span class="s">&quot;c&quot;</span> <span class="o">-&gt;</span> <span class="s">&quot;d&quot;</span><span class="o">)</span>
+<span class="nc">Foldable</span><span class="o">[</span><span class="kt">StringMap</span><span class="o">].</span><span class="n">foldLeft</span><span class="o">(</span><span class="n">stringMap</span><span class="o">,</span> <span class="s">&quot;nil&quot;</span><span class="o">)(</span><span class="k">_</span> <span class="o">+</span> <span class="s">&quot;,&quot;</span> <span class="o">+</span> <span class="k">_</span><span class="o">)</span>
+<span class="c1">//res1: String = nil,b,d</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              6/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>Foldable defines <code>foldRight</code> differently from <code>foldLeft</code>, in terms of the <code>Eval</code> monad:</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">foldRight</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">](</span><span class="n">fa</span><span class="k">:</span> <span class="kt">F</span><span class="o">[</span><span class="kt">A</span><span class="o">],</span> <span class="n">lb</span><span class="k">:</span> <span class="kt">Eval</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span>
+  <span class="o">(</span><span class="n">f</span><span class="k">:</span> <span class="o">(</span><span class="kt">A</span><span class="o">,</span> <span class="kt">Eval</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span> <span class="k">=&gt;</span> <span class="nc">Eval</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">Eval</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span>
+</pre></div>
+
+<p><br />
+<br />
+Using <code>Eval</code> means folding with <code>Foldable</code> is always stack safe, even when the collection’s default definition of <code>foldRight</code> is not.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              7/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>For example, the default implementation for <code>Stream</code> is not stack safe. We can see the stack depth changing as we iterate across the stream.</p>
+<div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">cats.Eval</span>
+<span class="k">import</span> <span class="nn">cats.Foldable</span>
+<span class="k">def</span> <span class="n">stackDepth</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="nc">Thread</span><span class="o">.</span><span class="n">currentThread</span><span class="o">.</span><span class="n">getStackTrace</span><span class="o">.</span><span class="n">length</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              8/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>The longer the stream, the larger the stack requirements for the fold. A sufficiently large stream will trigger a <code>StackOverflowException</code>:</p>
+<div class="highlight"><pre><span></span><span class="o">(</span><span class="mi">1</span> <span class="n">to</span> <span class="mi">5</span><span class="o">).</span><span class="n">toStream</span><span class="o">.</span><span class="n">foldRight</span><span class="o">(</span><span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+  <span class="o">(</span><span class="n">item</span><span class="o">,</span> <span class="n">accum</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">println</span><span class="o">(</span><span class="n">stackDepth</span><span class="o">)</span>
+  <span class="n">item</span> <span class="o">+</span> <span class="n">accum</span>
+<span class="o">}</span>
+<span class="c1">//60</span>
+<span class="c1">//58</span>
+<span class="c1">//56</span>
+<span class="c1">//54</span>
+<span class="c1">//52</span>
+<span class="c1">//res2: Int = 15</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              9/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>However since <code>Eval</code>'s <code>map</code> and <code>flatMap</code> are trampolined, <code>Foldable</code>'s <code>foldRight</code> maintains the same stack depth throughout:</p>
+<div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">cats.std.stream._</span>
+<span class="k">val</span> <span class="n">s</span> <span class="k">=</span> <span class="o">(</span><span class="mi">1</span> <span class="n">to</span> <span class="mi">5</span><span class="o">).</span><span class="n">toStream</span>
+<span class="k">val</span> <span class="n">accum</span><span class="k">:</span> <span class="kt">Eval</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Eval</span><span class="o">.</span><span class="n">now</span><span class="o">(</span><span class="mi">0</span><span class="o">)</span>
+<span class="k">val</span> <span class="n">result</span><span class="k">:</span> <span class="kt">Eval</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span>
+  <span class="nc">Foldable</span><span class="o">[</span><span class="kt">Stream</span><span class="o">].</span><span class="n">foldRight</span><span class="o">(</span><span class="n">s</span><span class="o">,</span> <span class="n">accum</span><span class="o">)</span> <span class="o">{</span>
+    <span class="o">(</span><span class="n">item</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">accum</span><span class="k">:</span> <span class="kt">Eval</span><span class="o">[</span><span class="kt">Int</span><span class="o">])</span> <span class="k">=&gt;</span>
+      <span class="n">println</span><span class="o">(</span><span class="n">stackDepth</span><span class="o">)</span>
+      <span class="n">accum</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span> <span class="o">+</span> <span class="n">item</span><span class="o">)</span>
+<span class="o">}</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              10/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><div class="highlight"><pre><span></span><span class="n">result</span><span class="o">.</span><span class="n">value</span>
+<span class="c1">//55</span>
+<span class="c1">//55</span>
+<span class="c1">//55</span>
+<span class="c1">//55</span>
+<span class="c1">//55</span>
+<span class="c1">//res3: Int = 15</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              11/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            <header><h1>Folding with Monoids</h1></header>
+            
+            
+            <section><p>Cats’ <code>Foldable</code> provides us with a host of useful methods defined on top of <code>foldLeft</code>.
+<br />
+<br />
+Many of these are facsimiles of familiar methods from the standard library, including <code>find</code>, <code>exists</code>, <code>forall</code>, <code>toList</code>, <code>isEmpty</code>, and <code>nonEmpty</code>:</p>
+<div class="highlight"><pre><span></span><span class="nc">Foldable</span><span class="o">[</span><span class="kt">Option</span><span class="o">].</span><span class="n">nonEmpty</span><span class="o">(</span><span class="nc">Option</span><span class="o">(</span><span class="mi">42</span><span class="o">))</span>
+<span class="c1">//res4: Boolean = true</span>
+<span class="nc">Foldable</span><span class="o">[</span><span class="kt">List</span><span class="o">].</span><span class="n">find</span><span class="o">(</span><span class="nc">List</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">3</span><span class="o">))(</span><span class="k">_</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span>
+<span class="c1">//res5: Option[Int] = Some(2)</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              12/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>In addition to these familiar methods, Cats provides two methods that make use of monoids:
+<br />
+<br />
+<em> <code>fold</code> (and its alias <code>combineAll</code>) combines all elements in the sequence using their <code>Monoid</code>
+</em> <code>foldMap</code> maps a user-supplied function over the sequence and combines the results using a <code>Monoid</code></p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              13/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>For example, we can use <code>combineAll</code> to sum over a <code>List[Int]</code>:</p>
+<div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">cats.std.int._</span> <span class="c1">// import Monoid[Int]</span>
+<span class="nc">Foldable</span><span class="o">[</span><span class="kt">List</span><span class="o">].</span><span class="n">fold</span><span class="o">(</span><span class="nc">List</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">3</span><span class="o">))</span>
+<span class="c1">//res6: Int = 6</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              14/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>Alternatively, we can use <code>foldMap</code> to convert each <code>Int</code> to a <code>String</code> and concatenate them:</p>
+<div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">cats.std.string._</span> <span class="c1">// import Monoid[String]</span>
+<span class="nc">Foldable</span><span class="o">[</span><span class="kt">List</span><span class="o">].</span><span class="n">foldMap</span><span class="o">(</span><span class="nc">List</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">3</span><span class="o">))(</span><span class="k">_</span><span class="o">.</span><span class="n">toString</span><span class="o">)</span>
+<span class="c1">//???</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              15/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>The interesting thing about <code>fold</code> and <code>foldMap</code> is that they use a <code>Monoid</code> instead of a function to give us the final result.
+<br />
+<br />
+One very important aspect to understand here is that it is the <code>fold</code> function that requires the elements of <code>Foldable</code> to have a <code>Monoid</code> instance, while <code>Foldable</code> itself does not have that restriction.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              16/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><div class="highlight"><pre><span></span><span class="k">trait</span> <span class="nc">Foldable</span><span class="o">[</span><span class="kt">F</span><span class="o">[</span><span class="k">_</span><span class="o">]]</span> <span class="o">{</span> <span class="n">self</span> <span class="k">=&gt;</span>
+  <span class="c1">//foldLeft, foldRight etc</span>
+  <span class="k">def</span> <span class="n">fold</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">fa</span><span class="k">:</span> <span class="kt">F</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span>
+             <span class="o">(</span><span class="k">implicit</span> <span class="n">A</span><span class="k">:</span> <span class="kt">Monoid</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=</span>
+    <span class="n">foldLeft</span><span class="o">(</span><span class="n">fa</span><span class="o">,</span> <span class="n">A</span><span class="o">.</span><span class="n">empty</span><span class="o">)</span> <span class="o">{</span> <span class="o">(</span><span class="n">acc</span><span class="o">,</span> <span class="n">a</span><span class="o">)</span> <span class="k">=&gt;</span>
+      <span class="n">A</span><span class="o">.</span><span class="n">combine</span><span class="o">(</span><span class="n">acc</span><span class="o">,</span> <span class="n">a</span><span class="o">)</span>
+    <span class="o">}</span>
+
+  <span class="k">def</span> <span class="n">foldMap</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">](</span><span class="n">fa</span><span class="k">:</span> <span class="kt">F</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span>
+                   <span class="o">(</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="n">B</span><span class="o">)</span>
+                   <span class="o">(</span><span class="k">implicit</span> <span class="n">B</span><span class="k">:</span> <span class="kt">Monoid</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">B</span> <span class="o">=</span>
+    <span class="n">foldLeft</span><span class="o">(</span><span class="n">fa</span><span class="o">,</span> <span class="n">B</span><span class="o">.</span><span class="n">empty</span><span class="o">)</span> <span class="o">{</span> <span class="o">(</span><span class="n">b</span><span class="o">,</span> <span class="n">a</span><span class="o">)</span> <span class="k">=&gt;</span>
+      <span class="n">B</span><span class="o">.</span><span class="n">combine</span><span class="o">(</span><span class="n">b</span><span class="o">,</span> <span class="n">f</span><span class="o">(</span><span class="n">a</span><span class="o">))</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              17/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>The same goes for <code>foldM</code>, which implements left associative monadic folding using an implicit <code>Monad</code>:</p>
+<div class="highlight"><pre><span></span><span class="k">trait</span> <span class="nc">Foldable</span><span class="o">[</span><span class="kt">F</span><span class="o">[</span><span class="k">_</span><span class="o">]]</span> <span class="o">{</span> <span class="n">self</span> <span class="k">=&gt;</span>
+  <span class="c1">//foldLeft, foldRight, fold, foldMap etc</span>
+  <span class="k">def</span> <span class="n">foldM</span><span class="o">[</span><span class="kt">G</span><span class="o">[</span><span class="k">_</span><span class="o">]</span>, <span class="kt">A</span>, <span class="kt">B</span><span class="o">](</span><span class="n">fa</span><span class="k">:</span> <span class="kt">F</span><span class="o">[</span><span class="kt">A</span><span class="o">],</span> <span class="n">z</span><span class="k">:</span> <span class="kt">B</span><span class="o">)</span>
+                       <span class="o">(</span><span class="n">f</span><span class="k">:</span> <span class="o">(</span><span class="kt">B</span><span class="o">,</span> <span class="kt">A</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">G</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span>
+                       <span class="o">(</span><span class="k">implicit</span> <span class="n">G</span><span class="k">:</span> <span class="kt">Monad</span><span class="o">[</span><span class="kt">G</span><span class="o">])</span><span class="k">:</span> <span class="kt">G</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span> <span class="k">=</span>
+    <span class="n">foldLeft</span><span class="o">(</span><span class="n">fa</span><span class="o">,</span> <span class="n">G</span><span class="o">.</span><span class="n">pure</span><span class="o">(</span><span class="n">z</span><span class="o">))</span> <span class="o">{</span> <span class="o">(</span><span class="n">gb</span><span class="o">,</span> <span class="n">a</span><span class="o">)</span> <span class="k">=&gt;</span>
+      <span class="n">G</span><span class="o">.</span><span class="n">flatMap</span><span class="o">(</span><span class="n">gb</span><span class="o">)(</span><span class="n">b</span> <span class="k">=&gt;</span> <span class="n">f</span><span class="o">(</span><span class="n">b</span><span class="o">,</span> <span class="n">a</span><span class="o">))</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              18/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">cats.implicits._</span>
+<span class="k">def</span> <span class="n">binSmalls</span><span class="o">(</span><span class="n">acc</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">x</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span>
+  <span class="k">if</span> <span class="o">(</span><span class="n">x</span> <span class="o">&gt;</span> <span class="mi">9</span><span class="o">)</span> <span class="n">none</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">else</span> <span class="o">(</span><span class="n">acc</span> <span class="o">+</span> <span class="n">x</span><span class="o">).</span><span class="n">some</span>
+<span class="o">(</span><span class="nc">Foldable</span><span class="o">[</span><span class="kt">List</span><span class="o">].</span><span class="n">foldM</span><span class="o">(</span><span class="nc">List</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="mi">8</span><span class="o">,</span> <span class="mi">3</span><span class="o">,</span> <span class="mi">1</span><span class="o">),</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span><span class="n">binSmalls</span><span class="o">})</span>
+<span class="c1">//???</span>
+<span class="o">(</span><span class="nc">Foldable</span><span class="o">[</span><span class="kt">List</span><span class="o">].</span><span class="n">foldM</span><span class="o">(</span><span class="nc">List</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="mi">10</span><span class="o">,</span> <span class="mi">3</span><span class="o">,</span> <span class="mi">1</span><span class="o">),</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span><span class="n">binSmalls</span><span class="o">})</span>
+<span class="c1">//???</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              19/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>Finally, we can compose <code>Foldable</code>s to support deep traversal of nested sequences:</p>
+<div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">cats.std.vector._</span>
+<span class="k">val</span> <span class="n">deepFold</span> <span class="k">=</span> <span class="nc">Foldable</span><span class="o">[</span><span class="kt">List</span><span class="o">].</span><span class="n">compose</span><span class="o">(</span><span class="nc">Foldable</span><span class="o">[</span><span class="kt">Vector</span><span class="o">])</span>
+<span class="k">val</span> <span class="n">ints</span> <span class="k">=</span> <span class="nc">List</span><span class="o">(</span><span class="nc">Vector</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">3</span><span class="o">),</span> <span class="nc">Vector</span><span class="o">(</span><span class="mi">4</span><span class="o">,</span> <span class="mi">5</span><span class="o">,</span> <span class="mi">6</span><span class="o">))</span>
+<span class="n">deepFold</span> <span class="n">fold</span> <span class="n">ints</span>
+<span class="c1">//res7: Int = 21</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              20/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            <header><h1>Traverse</h1></header>
+            
+            
+            <section><p>In functional programming it is very common to encode "effects" as data types - common effects include Option for possibly missing values, Xor and Validated for possible errors, and Future for asynchronous computations.
+<br />
+<br />
+These effects tend to show up in functions working on a single piece of data - for instance parsing a single String into an Int, validating a login, or asynchronously fetching website information for a user.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              21/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">parseInt</span><span class="o">(</span><span class="n">s</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="o">???</span>
+<span class="k">import</span> <span class="nn">cats.data.Xor</span>
+<span class="k">import</span> <span class="nn">scala.concurrent.Future</span>
+<span class="k">trait</span> <span class="nc">SecError</span>
+<span class="k">trait</span> <span class="nc">Token</span>
+<span class="k">def</span> <span class="n">validateLogin</span><span class="o">(</span><span class="n">cred</span><span class="k">:</span> <span class="kt">Token</span><span class="o">)</span><span class="k">:</span> <span class="kt">Xor</span><span class="o">[</span><span class="kt">SecError</span>, <span class="kt">Unit</span><span class="o">]</span> <span class="k">=</span> <span class="o">???</span>
+<span class="k">trait</span> <span class="nc">Profile</span>
+<span class="k">trait</span> <span class="nc">User</span>
+<span class="k">def</span> <span class="n">userInfo</span><span class="o">(</span><span class="n">user</span><span class="k">:</span> <span class="kt">User</span><span class="o">)</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">Profile</span><span class="o">]</span> <span class="k">=</span> <span class="o">???</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              22/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>Each function asks only for the data it actually needs; in the case of userInfo, a single User.
+<br />
+<br />
+We could write a function that takes a list of users and fetches profiles for all of them, but that would be a bit strange.
+<br />
+<br />
+If we just wanted to fetch the profile of just one user, we would either have to wrap it in a List or write a separate function that takes in a single user anyways.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              23/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>More fundamentally, functional programming is about building lots of small, independent pieces and composing them to make larger and larger pieces - does this hold true in this case?
+<br />
+<br />
+Given just <code>User =&gt; Future[Profile]</code>, what should we do if we want to fetch profiles for a <code>List[User]</code>? We could try familiar combinators like <code>map</code>:</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">profilesFor</span><span class="o">(</span><span class="n">users</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">User</span><span class="o">])</span> <span class="k">=</span> <span class="n">users</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">userInfo</span><span class="o">)</span>
+<span class="n">profilesFor</span><span class="k">:</span> <span class="o">(</span><span class="kt">users:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">User</span><span class="o">])</span><span class="nc">List</span><span class="o">[</span><span class="kt">Future</span><span class="o">[</span><span class="kt">Profile</span><span class="o">]]</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              24/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>Note the return type <code>List[Future[Profile]]</code>. This makes sense given the type signatures, but seems unwieldy.
+<br />
+<br />
+We now have a list of asynchronous values, and to work with those values we must then use the combinators on Future for every single one.
+<br />
+<br />
+It would be nicer instead if we could get the aggregate result in a single <code>Future</code>, say a <code>Future[List[Profile]]</code>.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              25/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>As it turns out, the <code>Future</code> companion object has a traverse method on it.
+<br />
+<br />
+However, that method is specialized to standard library collections and <code>Futures</code> - there exists a much more generalized form that would allow us to do things like parse a <code>List[String]</code> or validate credentials for a <code>List[User]</code>.
+<br />
+<br />
+Enter <code>Traverse</code>.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              26/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p><code>Traverse</code> depends on <code>Applicative</code> (and thus <code>Functor</code>) as well as <code>Foldable</code>:</p>
+<div class="highlight"><pre><span></span><span class="k">trait</span> <span class="nc">Traverse</span><span class="o">[</span><span class="kt">F</span><span class="o">[</span><span class="k">_</span><span class="o">]]</span> <span class="nc">extends</span> <span class="nc">Functor</span><span class="o">[</span><span class="kt">F</span><span class="o">]</span> <span class="k">with</span> <span class="nc">Foldable</span><span class="o">[</span><span class="kt">F</span><span class="o">]</span> <span class="o">{</span> <span class="n">self</span> <span class="k">=&gt;</span>
+
+  <span class="k">def</span> <span class="n">traverse</span><span class="o">[</span><span class="kt">G</span><span class="o">[</span><span class="k">_</span><span class="o">]</span><span class="kt">:</span> <span class="kt">Applicative</span>, <span class="kt">A</span>, <span class="kt">B</span><span class="o">]</span>
+    <span class="o">(</span><span class="n">fa</span><span class="k">:</span> <span class="kt">F</span><span class="o">[</span><span class="kt">A</span><span class="o">])(</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="n">G</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">G</span><span class="o">[</span><span class="kt">F</span><span class="o">[</span><span class="kt">B</span><span class="o">]]</span>
+
+  <span class="k">def</span> <span class="n">sequence</span><span class="o">[</span><span class="kt">G</span><span class="o">[</span><span class="k">_</span><span class="o">]</span><span class="kt">:</span> <span class="kt">Applicative</span>, <span class="kt">A</span><span class="o">]</span>
+    <span class="o">(</span><span class="n">fga</span><span class="k">:</span> <span class="kt">F</span><span class="o">[</span><span class="kt">G</span><span class="o">[</span><span class="kt">A</span><span class="o">]])</span><span class="k">:</span> <span class="kt">G</span><span class="o">[</span><span class="kt">F</span><span class="o">[</span><span class="kt">A</span><span class="o">]]</span> <span class="k">=</span> <span class="n">traverse</span><span class="o">(</span><span class="n">fga</span><span class="o">)(</span><span class="n">ga</span> <span class="k">=&gt;</span> <span class="n">ga</span><span class="o">)</span>
+  <span class="c1">//...</span>
+<span class="o">}</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              27/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p><code>sequence</code> threads all the <code>G</code> effects through the <code>F</code> structure to invert the structure from <code>F[G[_]]</code> to <code>G[F[_]]</code>.
+<br />
+<br />
+<code>traverse</code> allows you to transform elements inside the structure like a <code>Functor</code>, producing applicative effects along the way, and lift those instances of applicative structure outside of the <code>Traversable</code> structure.
+<br />
+<br />
+Given a function which returns a <code>G</code> effect, <code>traverse</code> threads this effect through the running of this function on all the values in <code>F</code>, returning an <code>F[A]</code> in a <code>G</code> context.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              28/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>In our above examples, <code>F</code> is <code>List</code>, and <code>G</code> is <code>Option</code>, <code>Xor</code>, or <code>Future</code>.
+<br />
+<br />
+For the profile example, <code>traverse</code> says given a <code>List[User]</code> and a function <code>User =&gt; Future[Profile]</code>, it can give you a <code>Future[List[Profile]]</code>.
+<br />
+<br />
+More generally, <code>F[_]</code> is some sort of context which may contain a value (or several). While <code>List</code> tends to be among the most general cases, there also exist <code>Traversable</code> instances for <code>Option</code>, <code>Xor</code>, and <code>Validated</code> (among others).</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              29/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>One way to think of <code>traverse</code> is as a generalization of <code>sequence</code>:</p>
+<div class="highlight"><pre><span></span><span class="nc">List</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span><span class="mi">2</span><span class="o">,</span><span class="mi">3</span><span class="o">).</span><span class="n">traverse</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">some</span><span class="o">)</span>
+<span class="c1">//res8 = ???</span>
+<span class="nc">List</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span><span class="mi">2</span><span class="o">,</span><span class="mi">3</span><span class="o">).</span><span class="n">map</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">some</span><span class="o">).</span><span class="n">traverse</span><span class="o">(</span><span class="n">identity</span><span class="o">)</span>
+<span class="c1">//res9 = ???</span>
+<span class="nc">List</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span><span class="mi">2</span><span class="o">,</span><span class="mi">3</span><span class="o">).</span><span class="n">map</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">some</span><span class="o">).</span><span class="n">sequence</span>
+<span class="c1">//res10 = ???</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              30/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>Another is as a generalization of <code>map</code>:</p>
+<div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">cats.syntax.traverse._</span>
+<span class="nc">List</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span><span class="mi">2</span><span class="o">,</span><span class="mi">3</span><span class="o">).</span><span class="n">traverse</span><span class="o">[</span><span class="kt">Id</span>, <span class="kt">Int</span><span class="o">]((</span><span class="n">x</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)</span>
+<span class="c1">//res11 = ???</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              31/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>Type signature of <code>traverse</code> in relation to <code>map</code> and <code>flatMap</code>:</p>
+<div class="highlight"><pre><span></span><span class="k">def</span>      <span class="n">map</span><span class="o">(</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span>   <span class="n">B</span><span class="o">)</span> <span class="k">:</span> <span class="kt">F</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=&gt;</span>   <span class="n">F</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span>
+<span class="k">def</span> <span class="n">traverse</span><span class="o">(</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="n">G</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">F</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=&gt;</span> <span class="n">G</span><span class="o">[</span><span class="kt">F</span><span class="o">[</span><span class="kt">B</span><span class="o">]]</span>     
+<span class="k">def</span>  <span class="n">flatMap</span><span class="o">(</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="n">F</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">F</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=&gt;</span>   <span class="n">F</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              32/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>We’re still mapping a function over some embedded value(s), like <code>map</code>, but similar to <code>flatMap</code>, the function is itself generating more structure.
+<br />
+<br />
+However, unlike <code>flatMap</code>, the generated structure is of a different type than the embedded structure.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              33/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>Finally, note the implied relationship between <code>Foldable</code> and <code>Traverse</code>.</p>
+<ul>
+<li>
+<p><code>Foldable</code> does not extend <code>Monoid</code>, but has methods that rely on monoidal values (e.g. <code>def fold[A: Monoid](fa: F[A])</code>)</p>
+</li>
+<li>
+<p><code>Traverse</code> does not extend <code>Applicative</code>, but has methods that rely on applicative structures (e.g. <code>def traverse[G[_]: Applicative, A, B](fa: F[A])(f: A =&gt; G[B])</code>)</p>
+</li>
+</ul></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              34/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p><code>Traverse</code> can also express <code>foldMap</code> and by extension <code>foldLeft</code> and <code>foldRight</code>.
+<br />
+<br />
+Suppose that our <code>G</code> is a type constructor <code>Const</code> that takes any type to <code>Int</code>, so that <code>Const[A]</code> throws away its type argument <code>A</code> and just gives us an <code>Int</code>:</p>
+<div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">cats.data.Const</span>
+<span class="nc">Const</span><span class="o">(</span><span class="mi">1</span><span class="o">)</span>
+<span class="c1">//res12: Const[Int,Nothing] = Const(1)</span>
+<span class="nc">Const</span><span class="o">(</span><span class="mi">1</span><span class="o">)</span> <span class="n">map</span> <span class="o">{</span> <span class="o">(</span><span class="k">_:</span> <span class="kt">String</span><span class="o">)</span> <span class="o">+</span> <span class="s">&quot;!&quot;</span> <span class="o">}</span>
+<span class="c1">//res13: Const[Int,String]  = Const(1)</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              35/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>When <code>A</code> forms a <code>Semigroup</code>, an <code>Apply</code> is derived, and when <code>A</code> form a <code>Monoid</code>, an <code>Applicative</code> is derived automatically.</p>
+<div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">cats.syntax.apply._</span>
+<span class="nc">Const</span><span class="o">(</span><span class="mi">2</span><span class="o">).</span><span class="n">retag</span><span class="o">[</span><span class="kt">String</span> <span class="k">=&gt;</span> <span class="kt">String</span><span class="o">]</span> <span class="n">ap</span> <span class="nc">Const</span><span class="o">(</span><span class="mi">1</span><span class="o">).</span><span class="n">retag</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span>
+<span class="c1">//res14: Const[Int,String] = Const(3)</span>
+</pre></div>
+
+<p><br />
+<br /></p>
+<p>With a <code>Const</code> functor we can turn any <code>Monoid</code> into an <code>Applicative</code>, so with a <code>Monoid[M]</code> we should be able to get a <code>foldMap</code> from our <code>traverse</code>.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              36/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>If we instantiate <code>G</code> to be <code>Const[M, Nothing]</code>, <code>traverse</code> begins to look a lot like <code>foldMap</code> from <code>Foldable</code></p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">traverse</span><span class="o">[</span><span class="kt">A</span>,<span class="kt">B</span><span class="o">]</span>
+            <span class="o">(</span><span class="n">fa</span><span class="k">:</span> <span class="kt">F</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span>
+            <span class="o">(</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="nc">Const</span><span class="o">[</span><span class="kt">M</span>, <span class="kt">Nothing</span><span class="o">])</span><span class="k">:</span> <span class="kt">Const</span><span class="o">[</span><span class="kt">M</span>, <span class="kt">F</span><span class="o">[</span><span class="kt">Nothing</span><span class="o">]]</span>
+<span class="k">def</span> <span class="n">foldMap</span> <span class="o">[</span><span class="kt">A</span>,<span class="kt">B</span><span class="o">]</span>
+            <span class="o">(</span><span class="n">fa</span><span class="k">:</span> <span class="kt">F</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span>
+            <span class="o">(</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="n">M</span><span class="o">)</span><span class="k">:</span> <span class="kt">M</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              37/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">foldMap</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">M:</span> <span class="kt">Monoid</span>, <span class="kt">F</span><span class="o">[</span><span class="k">_</span><span class="o">]</span><span class="kt">:Traverse</span><span class="o">]</span>
+          <span class="o">(</span><span class="n">fa</span><span class="k">:</span> <span class="kt">F</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span>
+          <span class="o">(</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="n">M</span><span class="o">)</span><span class="k">:</span> <span class="kt">Const</span><span class="o">[</span><span class="kt">M</span>,<span class="kt">F</span><span class="o">[</span><span class="kt">Nothing</span><span class="o">]]</span> <span class="k">=</span>
+          <span class="n">fa</span> <span class="n">traverseU</span> <span class="o">{</span> <span class="o">(</span><span class="n">a</span><span class="k">:</span> <span class="kt">A</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nc">Const</span><span class="o">((</span><span class="n">f</span><span class="o">(</span><span class="n">a</span><span class="o">)))</span> <span class="o">}</span>
+<span class="o">}</span>
+<span class="n">foldMap</span><span class="o">(</span><span class="nc">List</span><span class="o">(</span><span class="sc">&#39;a&#39;</span><span class="o">,</span> <span class="sc">&#39;b&#39;</span><span class="o">,</span> <span class="sc">&#39;c&#39;</span><span class="o">))</span> <span class="o">{</span> <span class="n">c</span><span class="k">:</span> <span class="kt">Char</span> <span class="o">=&gt;</span> <span class="n">c</span><span class="o">.</span><span class="n">toInt</span> <span class="o">}</span>
+<span class="c1">//res15: Const[Int,List[Nothing]] = Const(294)</span>
+<span class="n">foldMap</span><span class="o">(</span><span class="nc">Nil</span><span class="o">)</span> <span class="o">{</span> <span class="n">c</span><span class="k">:</span> <span class="kt">Char</span> <span class="o">=&gt;</span> <span class="n">c</span><span class="o">.</span><span class="n">toInt</span> <span class="o">}</span>
+<span class="c1">//res16: Const[Int,List[Nothing]] = Const(0)</span>
+</pre></div>
+
+<p>Note that we are using <code>traverseU</code>, which is the <a href="http://eed3si9n.com/herding-cats/Unapply.html">Unapply variant</a> of <code>traverse</code>.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              38/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>If we let our aggregator exit the <code>Const</code> then we get <code>foldMap</code> exactly:</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">foldMap</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">M:</span> <span class="kt">Monoid</span>, <span class="kt">F</span><span class="o">[</span><span class="k">_</span><span class="o">]</span><span class="kt">:Traverse</span><span class="o">]</span>
+          <span class="o">(</span><span class="n">fa</span><span class="k">:</span> <span class="kt">F</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span>
+          <span class="o">(</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="n">M</span><span class="o">)</span><span class="k">:</span> <span class="kt">M</span> <span class="o">=</span>
+<span class="o">{</span>
+  <span class="k">val</span> <span class="n">x</span> <span class="k">=</span> <span class="n">fa</span> <span class="n">traverseU</span> <span class="o">{</span> <span class="o">(</span><span class="n">a</span><span class="k">:</span> <span class="kt">A</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nc">Const</span><span class="o">((</span><span class="n">f</span><span class="o">(</span><span class="n">a</span><span class="o">)))</span> <span class="o">}</span>
+  <span class="n">x</span><span class="o">.</span><span class="n">getConst</span>
+<span class="o">}</span>
+<span class="n">foldMap</span><span class="o">(</span><span class="nc">List</span><span class="o">(</span><span class="sc">&#39;a&#39;</span><span class="o">,</span> <span class="sc">&#39;b&#39;</span><span class="o">,</span> <span class="sc">&#39;c&#39;</span><span class="o">))</span> <span class="o">{</span> <span class="n">c</span><span class="k">:</span> <span class="kt">Char</span> <span class="o">=&gt;</span> <span class="n">c</span><span class="o">.</span><span class="n">toInt</span> <span class="o">}</span>
+<span class="c1">//res17: Int = 294</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              39/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            <header><h1>Traversing lists</h1></header>
+            
+            
+            <section><p>Here is the cats implementation of <code>traverse</code> for <code>List</code>:</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">traverse</span><span class="o">[</span><span class="kt">G</span><span class="o">[</span><span class="k">_</span><span class="o">]</span>, <span class="kt">A</span>, <span class="kt">B</span><span class="o">]</span>
+            <span class="o">(</span><span class="n">fa</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span>
+            <span class="o">(</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="n">G</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span>
+            <span class="o">(</span><span class="k">implicit</span> <span class="n">G</span><span class="k">:</span> <span class="kt">Applicative</span><span class="o">[</span><span class="kt">G</span><span class="o">])</span><span class="k">:</span> <span class="kt">G</span><span class="o">[</span><span class="kt">List</span><span class="o">[</span><span class="kt">B</span><span class="o">]]</span> <span class="k">=</span>
+  <span class="n">foldRight</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">G</span><span class="o">[</span><span class="kt">List</span><span class="o">[</span><span class="kt">B</span><span class="o">]]](</span><span class="n">fa</span><span class="o">,</span> <span class="nc">Always</span><span class="o">(</span><span class="n">G</span><span class="o">.</span><span class="n">pure</span><span class="o">(</span><span class="nc">List</span><span class="o">.</span><span class="n">empty</span><span class="o">)))</span> <span class="o">{</span>
+    <span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">glb</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">G</span><span class="o">.</span><span class="n">map2Eval</span><span class="o">(</span><span class="n">f</span><span class="o">(</span><span class="n">a</span><span class="o">),</span> <span class="n">glb</span><span class="o">)(</span><span class="k">_</span> <span class="o">::</span> <span class="k">_</span><span class="o">)</span>
+  <span class="o">}.</span><span class="n">value</span>
+</pre></div>
+
+<p><br />
+<br />
+Note that <code>map2Eval</code> is similar to <code>map2</code> but uses <code>Eval</code> to allow for laziness in the second argument.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              40/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>Here is a standalone implementation using <code>ap</code>:</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">myTraverse</span><span class="o">[</span><span class="kt">G</span><span class="o">[</span><span class="k">_</span><span class="o">]</span>, <span class="kt">A</span>, <span class="kt">B</span><span class="o">]</span>
+            <span class="o">(</span><span class="n">fa</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span>
+            <span class="o">(</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="n">G</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span>
+            <span class="o">(</span><span class="k">implicit</span> <span class="n">G</span><span class="k">:</span> <span class="kt">Applicative</span><span class="o">[</span><span class="kt">G</span><span class="o">])</span><span class="k">:</span> <span class="kt">G</span><span class="o">[</span><span class="kt">List</span><span class="o">[</span><span class="kt">B</span><span class="o">]]</span> <span class="k">=</span>
+  <span class="n">fa</span><span class="o">.</span><span class="n">foldRight</span><span class="o">[</span><span class="kt">G</span><span class="o">[</span><span class="kt">List</span><span class="o">[</span><span class="kt">B</span><span class="o">]]](</span><span class="n">G</span><span class="o">.</span><span class="n">pure</span><span class="o">(</span><span class="nc">List</span><span class="o">.</span><span class="n">empty</span><span class="o">))</span> <span class="o">{</span>
+    <span class="k">val</span> <span class="n">cons</span> <span class="k">=</span> <span class="o">(</span><span class="n">h</span><span class="k">:</span> <span class="kt">B</span><span class="o">,</span> <span class="n">t</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span> <span class="k">=&gt;</span> <span class="n">h</span> <span class="o">::</span> <span class="n">t</span>
+    <span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">glb</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">G</span><span class="o">.</span><span class="n">ap</span><span class="o">(</span><span class="n">f</span><span class="o">(</span><span class="n">a</span><span class="o">).</span><span class="n">map</span><span class="o">(</span><span class="n">cons</span><span class="o">.</span><span class="n">curried</span><span class="o">))(</span><span class="n">glb</span><span class="o">)</span>
+  <span class="o">}</span>
+</pre></div>
+
+<p><br />
+<br />
+Recall the <code>ap</code> type signature: <code>ap(f: F[A =&gt; B]): F[A] =&gt; F[B]</code>. What is being applied here?</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              41/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            <header><h1>Exercise</h1></header>
+            
+            
+            <section><p>Let's do a specific example where <code>A</code> and <code>B</code> are <code>Int</code>, and <code>G</code> is <code>Option</code>:</p>
+<div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">l</span> <span class="k">=</span> <span class="nc">List</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span><span class="mi">2</span><span class="o">,</span><span class="mi">3</span><span class="o">)</span>
+<span class="k">val</span> <span class="n">cons</span> <span class="k">=</span> <span class="o">(</span><span class="n">h</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">t</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Int</span><span class="o">])</span> <span class="k">=&gt;</span> <span class="n">h</span> <span class="o">::</span> <span class="n">t</span>
+<span class="nc">Apply</span><span class="o">[</span><span class="kt">Option</span><span class="o">].</span><span class="n">ap</span><span class="o">(</span><span class="nc">None</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">cons</span><span class="o">.</span><span class="n">curried</span><span class="o">))(</span><span class="n">l</span><span class="o">.</span><span class="n">some</span><span class="o">)</span>
+<span class="c1">//???</span>
+<span class="k">def</span> <span class="n">f</span><span class="o">(</span><span class="n">i</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="k">if</span><span class="o">(</span><span class="n">i</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="nc">Some</span><span class="o">(</span><span class="n">i</span><span class="o">)</span> <span class="k">else</span> <span class="nc">None</span>
+<span class="k">val</span> <span class="n">baz</span> <span class="k">=</span> <span class="o">(</span><span class="n">a</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">glb</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">List</span><span class="o">[</span><span class="kt">Int</span><span class="o">]])</span> <span class="k">=&gt;</span>     
+  <span class="nc">Apply</span><span class="o">[</span><span class="kt">Option</span><span class="o">].</span><span class="n">ap</span><span class="o">(</span><span class="n">f</span><span class="o">(</span><span class="n">a</span><span class="o">).</span><span class="n">map</span><span class="o">(</span><span class="n">cons</span><span class="o">.</span><span class="n">curried</span><span class="o">))(</span><span class="n">glb</span><span class="o">)</span>
+<span class="n">baz</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="nc">Some</span><span class="o">(</span><span class="n">l</span><span class="o">))</span>
+<span class="c1">//???</span>
+<span class="n">baz</span><span class="o">(</span><span class="mi">4</span><span class="o">,</span> <span class="nc">Some</span><span class="o">(</span><span class="n">l</span><span class="o">))</span>
+<span class="c1">//???</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              42/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            <header><h1>Exercise</h1></header>
+            
+            
+            <section><p>Quick <code>State</code> monad refresher:</p>
+<div class="highlight"><pre><span></span><span class="k">type</span> <span class="kt">IntState</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="nc">State</span><span class="o">[</span><span class="kt">Int</span>, <span class="kt">A</span><span class="o">]</span>
+<span class="k">def</span> <span class="n">pure</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">a</span><span class="k">:</span> <span class="kt">A</span><span class="o">)</span><span class="k">:</span> <span class="kt">IntState</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span>  <span class="k">=</span> <span class="nc">State</span><span class="o">(</span><span class="n">s</span> <span class="k">=&gt;</span> <span class="o">(</span><span class="n">s</span><span class="o">,</span> <span class="n">a</span> <span class="o">))</span>
+<span class="k">def</span> <span class="n">set</span><span class="o">(</span><span class="n">s</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">IntState</span><span class="o">[</span><span class="kt">Unit</span><span class="o">]</span> <span class="k">=</span> <span class="nc">State</span><span class="o">(</span><span class="k">_</span> <span class="k">=&gt;</span> <span class="o">(</span><span class="n">s</span><span class="o">,</span> <span class="o">()))</span>
+<span class="k">val</span> <span class="n">l</span> <span class="k">=</span> <span class="nc">List</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span><span class="mi">2</span><span class="o">,</span><span class="mi">3</span><span class="o">)</span>
+<span class="k">val</span> <span class="n">a</span> <span class="k">=</span> <span class="n">myTraverse</span><span class="o">(</span><span class="n">l</span><span class="o">)(</span><span class="n">pure</span><span class="o">)</span>
+<span class="n">a</span><span class="o">.</span><span class="n">run</span><span class="o">(</span><span class="mi">0</span><span class="o">).</span><span class="n">value</span>
+<span class="c1">//???</span>
+<span class="k">val</span> <span class="n">b</span> <span class="k">=</span> <span class="n">myTraverse</span><span class="o">(</span><span class="n">l</span><span class="o">)(</span><span class="n">set</span><span class="o">)</span>
+<span class="n">b</span><span class="o">.</span><span class="n">run</span><span class="o">(</span><span class="mi">0</span><span class="o">).</span><span class="n">value</span>
+<span class="c1">//???</span>
+</pre></div>
+
+<p><br />
+<br />
+We'll do a more involved example of traversing with <code>State</code> in the tutorial.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              43/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            <header><h1><code>Traverse</code> Laws</h1></header>
+            
+            
+            <section><p><code>Traverse[T[_]]</code> has two laws.
+<br />
+<br />
+There are many ways to state the laws, we present one way here, but you may see them in different configurations elsewhere.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              44/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            <header><h1>Identity</h1></header>
+            
+            
+            <section><p>The identity law for <code>Traverse</code> can be stated as:</p>
+<div class="highlight"><pre><span></span><span class="n">sequence</span><span class="o">[</span><span class="kt">Id</span>,<span class="kt">A</span><span class="o">](</span><span class="n">xs</span><span class="o">)</span> <span class="o">==</span> <span class="n">xs</span>
+</pre></div>
+
+<p>The identity law says that traversing in the identity applicative (<code>type Id[X] = X</code>) has no effect.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              45/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            <header><h1>Composition</h1></header>
+            
+            
+            <section><p>The composition law for <code>Traverse</code> can be stated as:</p>
+<div class="highlight"><pre><span></span><span class="n">sequence</span><span class="o">[</span><span class="kt">Lambda</span><span class="o">[</span><span class="kt">a</span> <span class="k">=&gt;</span> <span class="kt">F</span><span class="o">[</span><span class="kt">G</span><span class="o">[</span><span class="kt">a</span><span class="o">]]]</span>,<span class="kt">A</span><span class="o">](</span><span class="n">xs</span><span class="o">)</span> <span class="o">==</span>
+  <span class="n">map</span><span class="o">(</span><span class="n">sequence</span><span class="o">[</span><span class="kt">F</span>,<span class="kt">G</span><span class="o">[</span><span class="kt">A</span><span class="o">]](</span><span class="n">xs</span><span class="o">))(</span><span class="n">sequence</span><span class="o">[</span><span class="kt">G</span>,<span class="kt">A</span><span class="o">])</span>
+</pre></div>
+
+<p><br />
+<br />
+The fusion law says that traversal in <code>F[_]</code> followed by traversal in <code>G[_]</code> can be fused into one traversal in the composite applicative <code>F[G[_]]</code>.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              46/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            <header><h1>Traversable Monads</h1></header>
+            
+            
+            <section><p>Last week we tried to implement <code>flatMap</code> with a monad composition:</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">flatMap</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">](</span><span class="n">fa</span><span class="k">:</span> <span class="kt">M1</span><span class="o">[</span><span class="kt">M2</span><span class="o">[</span><span class="kt">A</span><span class="o">]])(</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="n">M1</span><span class="o">[</span><span class="kt">M2</span><span class="o">[</span><span class="kt">B</span><span class="o">]])</span><span class="k">:</span> <span class="kt">M1</span><span class="o">[</span><span class="kt">M2</span><span class="o">[</span><span class="kt">B</span><span class="o">]]</span>
+</pre></div>
+
+<p><br />
+<br /></p>
+<p>We saw that we'd end up with something of type <code>M1[M2[M1[M2[B]]]]</code>. This is normally irreducible,</p>
+<p>However if <code>M2</code> is traversable then we can use its sequence method to swap layers and  get something of type <code>M1[M1[M2[M2[B]]]]</code>, then use the <code>join</code>s from <code>M1</code> and <code>M2</code> to get a result of type <code>M1[M2[B]]</code>.  </p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              47/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>The tutorial contains an exercise on combining two monads into one composite monad when the inner monad has a <code>Traverse</code> instance.
+<br />
+<br />
+While the types always allow this, the result fails to meet the monad laws unless the traversable monad is also a <a href="https://wiki.haskell.org/Monad#Commutative_monads"><em>commutative monad</em></a>.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              48/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>Two examples of commutative monads are <code>Reader</code> and <code>Option</code>.
+<br />
+<br />
+Two examples of monads that are <em>not</em> commutative are <code>List</code> and <code>State</code>.
+<br />
+<br />
+See the <a href="http://en.wikipedia.org/wiki/Distributive_law_between_monads">Wikipedia article on the "distributive law between monads"</a> and <a href="http://ncatlab.org/nlab/show/distributive+law">a more in-depth article on n-lab</a>.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              49/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            <header><h1>Example: Futures</h1></header>
+            
+            
+            <section><p>Going back to our earlier <code>Future</code> example, we can write an <code>Applicative</code> instance for <code>Future</code> that runs each <code>Future</code> concurrently.
+<br />
+<br />
+Then when we traverse a <code>List[A]</code> with an <code>A =&gt; Future[B]</code>, we perform a <a href="https://en.wikipedia.org/wiki/Gather-scatter_(vector_addressing)">scatter-gather</a> operation
+<br />
+<br />
+Each <code>A</code> creates a concurrent computation that will produce a <code>B</code> (the scatter), and as the futures complete they will be gathered back into a list.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              50/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            <header><h1>Example: Parsers</h1></header>
+            
+            
+            <section><div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">cats.Semigroup</span>
+<span class="k">import</span> <span class="nn">cats.data.</span><span class="o">{</span><span class="nc">NonEmptyList</span><span class="o">,</span> <span class="nc">OneAnd</span><span class="o">,</span> <span class="nc">Xor</span><span class="o">}</span>
+<span class="k">import</span> <span class="nn">cats.data.</span><span class="o">{</span><span class="nc">Validated</span><span class="o">,</span> <span class="nc">ValidatedNel</span><span class="o">}</span>
+<span class="k">import</span> <span class="nn">cats.std.list._</span>
+<span class="k">import</span> <span class="nn">cats.syntax.traverse._</span>
+<span class="k">def</span> <span class="n">parseIntXor</span><span class="o">(</span><span class="n">s</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span><span class="k">:</span> <span class="kt">Xor</span><span class="o">[</span><span class="kt">NumberFormatException</span>, <span class="kt">Int</span><span class="o">]</span> <span class="k">=</span>
+  <span class="nc">Xor</span><span class="o">.</span><span class="n">catchOnly</span><span class="o">[</span><span class="kt">NumberFormatException</span><span class="o">](</span><span class="n">s</span><span class="o">.</span><span class="n">toInt</span><span class="o">)</span>
+<span class="k">val</span> <span class="n">x1</span> <span class="k">=</span> <span class="nc">List</span><span class="o">(</span><span class="s">&quot;1&quot;</span><span class="o">,</span> <span class="s">&quot;2&quot;</span><span class="o">,</span> <span class="s">&quot;3&quot;</span><span class="o">).</span><span class="n">traverseU</span><span class="o">(</span><span class="n">parseIntXor</span><span class="o">)</span>
+<span class="c1">//Right(List(1, 2, 3))</span>
+<span class="k">val</span> <span class="n">x2</span> <span class="k">=</span> <span class="nc">List</span><span class="o">(</span><span class="s">&quot;1&quot;</span><span class="o">,</span> <span class="s">&quot;abc&quot;</span><span class="o">,</span> <span class="s">&quot;def&quot;</span><span class="o">).</span><span class="n">traverseU</span><span class="o">(</span><span class="n">parseIntXor</span><span class="o">)</span>
+<span class="c1">//Left(NumberFormatException: For input string: &quot;abc&quot;)</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              51/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>Traversal behavior is closely tied with the behavior of the underlying <code>Applicative</code>.</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">parseIntValidated</span><span class="o">(</span><span class="n">s</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span><span class="k">:</span>
+  <span class="kt">ValidatedNel</span><span class="o">[</span><span class="kt">NumberFormatException</span>, <span class="kt">Int</span><span class="o">]</span> <span class="k">=</span>
+  <span class="nc">Validated</span><span class="o">.</span><span class="n">catchOnly</span><span class="o">[</span><span class="kt">NumberFormatException</span><span class="o">](</span><span class="n">s</span><span class="o">.</span><span class="n">toInt</span><span class="o">)</span>
+           <span class="o">.</span><span class="n">toValidatedNel</span>   
+<span class="nc">List</span><span class="o">(</span><span class="s">&quot;1&quot;</span><span class="o">,</span> <span class="s">&quot;2&quot;</span><span class="o">,</span> <span class="s">&quot;3&quot;</span><span class="o">).</span><span class="n">traverseU</span><span class="o">(</span><span class="n">parseIntValidated</span><span class="o">)</span>
+<span class="c1">//Valid(List(1, 2, 3))</span>
+<span class="k">val</span> <span class="n">v3</span> <span class="k">=</span> <span class="nc">List</span><span class="o">(</span><span class="s">&quot;1&quot;</span><span class="o">,</span> <span class="s">&quot;abc&quot;</span><span class="o">,</span> <span class="s">&quot;def&quot;</span><span class="o">).</span><span class="n">traverseU</span><span class="o">(</span><span class="n">parseIntValidated</span><span class="o">)</span>
+<span class="c1">//Invalid(OneAnd(NumberFormatException: For input string:</span>
+<span class="c1">//&quot;abc&quot;,List(NumberFormatException: For input string: &quot;def&quot;)))</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              52/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            <header><h1>Example: Readers</h1></header>
+            
+            
+            <section><p>Another interesting effect we can use is <code>Reader</code>. Recall that a <code>Reader[E, A]</code> is a type alias for <code>Kleisli[Id, E, A]</code> which is a wrapper around <code>E =&gt; A</code>.
+<br />
+<br />
+If we fix <code>E</code> to be some sort of environment or configuration, we can use the <code>Reader</code> applicative in our traverse.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              53/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>Imagine we have a data pipeline that processes a bunch of data, each piece of data being categorized by a topic.
+<br />
+<br />
+Given a specific topic, we produce a <code>Job</code> that processes that topic:</p>
+<div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">cats.data.Reader</span>
+<span class="k">trait</span> <span class="nc">Context</span>
+<span class="k">trait</span> <span class="nc">Topic</span>
+<span class="k">trait</span> <span class="nc">Result</span>
+<span class="k">type</span> <span class="kt">Job</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Reader</span><span class="o">[</span><span class="kt">Context</span>, <span class="kt">A</span><span class="o">]</span>
+<span class="k">def</span> <span class="n">processTopic</span><span class="o">(</span><span class="n">topic</span><span class="k">:</span> <span class="kt">Topic</span><span class="o">)</span><span class="k">:</span> <span class="kt">Job</span><span class="o">[</span><span class="kt">Result</span><span class="o">]</span> <span class="k">=</span> <span class="o">???</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              54/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>We'd like to aggregate many topics (a <code>List[Topic]</code>) and compose the resulting <code>Job</code>s together into one <code>Job[List[Result]]</code>.
+<br />
+<br />
+Since <code>Reader</code> has an <code>Applicative</code> instance, we can do this by traversing over the list with <code>processTopic</code>:</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">processTopics</span><span class="o">(</span><span class="n">topics</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Topic</span><span class="o">])</span> <span class="k">=</span>
+  <span class="n">topics</span><span class="o">.</span><span class="n">traverse</span><span class="o">(</span><span class="n">processTopic</span><span class="o">)</span>
+<span class="c1">//returns Job[List[Result]]</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              55/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>When our new job's <code>run</code> method is called, it will go through each topic and run its topic-specific job, collecting results as it goes.
+<br />
+<br />
+Note that our job's run method has type signature <code>Context =&gt; Result</code>, so it requires a <code>Context</code> before producing the value we want.
+<br />
+<br />
+For example, in Spark the information needed to run a Spark job (where the master node is, memory allocated, etc.) resides in a <code>SparkContext</code>.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              56/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>Going back to the above example, we can see how one may define topic-specific Spark jobs (type <code>Job[A] = Reader[SparkContext, A]</code>) and then run several Spark jobs on a collection of topics via <code>traverse</code>.
+<br />
+<br />
+We then get back a <code>Job[List[Result]]</code>, which is equivalent to <code>SparkContext =&gt; List[Result]</code>.
+<br />
+<br />
+When finally passed a <code>SparkContext</code>, we can run the job and get our results back.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              57/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>Moreover, the fact that our aggregate job is not tied to any specific <code>SparkContext</code> allows us to pass in a <code>SparkContext</code> pointing to a production cluster, or (using the exact same job) pass in a test <code>SparkContext</code> that just runs locally across threads. This makes testing large jobs easy.
+<br />
+<br />
+Finally, this encoding ensures that all the jobs for each topic run on the exact same cluster. At no point do we manually pass in or thread a <code>SparkContext</code> through - that is taken care for us by the (applicative) effect of <code>Reader</code> and therefore by <code>traverse</code>.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              58/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture12a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            <header><h1>Links</h1></header>
+            
+            
+            <section><p><a href="http://web.comlab.ox.ac.uk/oucl/work/jeremy.gibbons/publications/#iterator">The Essence of the Iterator Pattern</a>, by Jeremy Gibbons and Bruno Oliveira. Published in <em>Mathematically-Structured Functional Programming</em>, 2006.
+<br />
+<br />
+<a href="http://arxiv.org/pdf/1202.2919">An Investigation of the Laws of Traversals</a>, by Mauro Jaskelioff and Ondrej Rypacek, published in <em>Mathematically-Structured Functional Programming</em>, 2012.
+<br />
+<br />
+<a href="http://www.haskell.org/haskellwiki/Typeclassopedia">Typeclassopedia</a> is a great resource on <code>Monad</code>, <code>Applicative</code>, <code>Traverse</code> and other type classes.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture12a.md">lecture12a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              59/59
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+  <div id="toc" class="sidebar hidden">
+    <h2>Table of Contents</h2>
+    <table>
+      <caption>Table of Contents</caption>
+      
+      <tr id="toc-row-1">
+        <th><a href="#slide1">Lecture 12a: Traversable Functors</a></th>
+        <td><a href="#slide1">1</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-2">
+        <th><a href="#slide2">Foldable</a></th>
+        <td><a href="#slide2">2</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-3">
+        <th><a href="#slide3">-</a></th>
+        <td><a href="#slide3">3</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-4">
+        <th><a href="#slide4">-</a></th>
+        <td><a href="#slide4">4</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-5">
+        <th><a href="#slide5">-</a></th>
+        <td><a href="#slide5">5</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-6">
+        <th><a href="#slide6">-</a></th>
+        <td><a href="#slide6">6</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-7">
+        <th><a href="#slide7">-</a></th>
+        <td><a href="#slide7">7</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-8">
+        <th><a href="#slide8">-</a></th>
+        <td><a href="#slide8">8</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-9">
+        <th><a href="#slide9">-</a></th>
+        <td><a href="#slide9">9</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-10">
+        <th><a href="#slide10">-</a></th>
+        <td><a href="#slide10">10</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-11">
+        <th><a href="#slide11">-</a></th>
+        <td><a href="#slide11">11</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-12">
+        <th><a href="#slide12">Folding with Monoids</a></th>
+        <td><a href="#slide12">12</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-13">
+        <th><a href="#slide13">-</a></th>
+        <td><a href="#slide13">13</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-14">
+        <th><a href="#slide14">-</a></th>
+        <td><a href="#slide14">14</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-15">
+        <th><a href="#slide15">-</a></th>
+        <td><a href="#slide15">15</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-16">
+        <th><a href="#slide16">-</a></th>
+        <td><a href="#slide16">16</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-17">
+        <th><a href="#slide17">-</a></th>
+        <td><a href="#slide17">17</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-18">
+        <th><a href="#slide18">-</a></th>
+        <td><a href="#slide18">18</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-19">
+        <th><a href="#slide19">-</a></th>
+        <td><a href="#slide19">19</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-20">
+        <th><a href="#slide20">-</a></th>
+        <td><a href="#slide20">20</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-21">
+        <th><a href="#slide21">Traverse</a></th>
+        <td><a href="#slide21">21</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-22">
+        <th><a href="#slide22">-</a></th>
+        <td><a href="#slide22">22</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-23">
+        <th><a href="#slide23">-</a></th>
+        <td><a href="#slide23">23</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-24">
+        <th><a href="#slide24">-</a></th>
+        <td><a href="#slide24">24</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-25">
+        <th><a href="#slide25">-</a></th>
+        <td><a href="#slide25">25</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-26">
+        <th><a href="#slide26">-</a></th>
+        <td><a href="#slide26">26</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-27">
+        <th><a href="#slide27">-</a></th>
+        <td><a href="#slide27">27</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-28">
+        <th><a href="#slide28">-</a></th>
+        <td><a href="#slide28">28</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-29">
+        <th><a href="#slide29">-</a></th>
+        <td><a href="#slide29">29</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-30">
+        <th><a href="#slide30">-</a></th>
+        <td><a href="#slide30">30</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-31">
+        <th><a href="#slide31">-</a></th>
+        <td><a href="#slide31">31</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-32">
+        <th><a href="#slide32">-</a></th>
+        <td><a href="#slide32">32</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-33">
+        <th><a href="#slide33">-</a></th>
+        <td><a href="#slide33">33</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-34">
+        <th><a href="#slide34">-</a></th>
+        <td><a href="#slide34">34</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-35">
+        <th><a href="#slide35">-</a></th>
+        <td><a href="#slide35">35</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-36">
+        <th><a href="#slide36">-</a></th>
+        <td><a href="#slide36">36</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-37">
+        <th><a href="#slide37">-</a></th>
+        <td><a href="#slide37">37</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-38">
+        <th><a href="#slide38">-</a></th>
+        <td><a href="#slide38">38</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-39">
+        <th><a href="#slide39">-</a></th>
+        <td><a href="#slide39">39</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-40">
+        <th><a href="#slide40">Traversing lists</a></th>
+        <td><a href="#slide40">40</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-41">
+        <th><a href="#slide41">-</a></th>
+        <td><a href="#slide41">41</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-42">
+        <th><a href="#slide42">Exercise</a></th>
+        <td><a href="#slide42">42</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-43">
+        <th><a href="#slide43">Exercise</a></th>
+        <td><a href="#slide43">43</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-44">
+        <th><a href="#slide44"><code>Traverse</code> Laws</a></th>
+        <td><a href="#slide44">44</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-45">
+        <th><a href="#slide45">Identity</a></th>
+        <td><a href="#slide45">45</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-46">
+        <th><a href="#slide46">Composition</a></th>
+        <td><a href="#slide46">46</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-47">
+        <th><a href="#slide47">Traversable Monads</a></th>
+        <td><a href="#slide47">47</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-48">
+        <th><a href="#slide48">-</a></th>
+        <td><a href="#slide48">48</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-49">
+        <th><a href="#slide49">-</a></th>
+        <td><a href="#slide49">49</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-50">
+        <th><a href="#slide50">Example: Futures</a></th>
+        <td><a href="#slide50">50</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-51">
+        <th><a href="#slide51">Example: Parsers</a></th>
+        <td><a href="#slide51">51</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-52">
+        <th><a href="#slide52">-</a></th>
+        <td><a href="#slide52">52</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-53">
+        <th><a href="#slide53">Example: Readers</a></th>
+        <td><a href="#slide53">53</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-54">
+        <th><a href="#slide54">-</a></th>
+        <td><a href="#slide54">54</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-55">
+        <th><a href="#slide55">-</a></th>
+        <td><a href="#slide55">55</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-56">
+        <th><a href="#slide56">-</a></th>
+        <td><a href="#slide56">56</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-57">
+        <th><a href="#slide57">-</a></th>
+        <td><a href="#slide57">57</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-58">
+        <th><a href="#slide58">-</a></th>
+        <td><a href="#slide58">58</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-59">
+        <th><a href="#slide59">Links</a></th>
+        <td><a href="#slide59">59</a></td>
+      </tr>
+      
+      
+    </table>
+  </div>
+  
+  <div id="help" class="sidebar hidden">
+    <h2>Help</h2>
+    <table>
+      <caption>Help</caption>
+      <tr>
+        <th>Table of Contents</th>
+        <td>t</td>
+      </tr>
+      <tr>
+        <th>Exposé</th>
+        <td>ESC</td>
+      </tr>
+      <tr>
+        <th>Full screen slides</th>
+        <td>e</td>
+      </tr>
+      <tr>
+        <th>Presenter View</th>
+        <td>p</td>
+      </tr>
+      <tr>
+        <th>Source Files</th>
+        <td>s</td>
+      </tr>
+      <tr>
+        <th>Slide Numbers</th>
+        <td>n</td>
+      </tr>
+      <tr>
+        <th>Toggle screen blanking</th>
+        <td>b</td>
+      </tr>
+      <tr>
+        <th>Show/hide slide context</th>
+        <td>c</td>
+      </tr>
+      <tr>
+        <th>Notes</th>
+        <td>2</td>
+      </tr>
+      <tr>
+        <th>Help</th>
+        <td>h</td>
+      </tr>
+    </table>
+  </div>
+  <script>main()</script>
+</body>
+</html>

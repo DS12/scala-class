@@ -608,13 +608,13 @@ Fix `CountMe`s flatMap so that it is a valid monad.
 Note that this improvement essentially makes our new `CountMe` monad into a specialized version of `Writer`.
 <br />
 <br />
-Another 'improvement' would have been to drop the count altogether. This would have created a `CountMe` monad equivalent to `Reader`.
+Another 'improvement' would have been to drop the count altogether. This would have created a `CountMe` monad equivalent to `Id`.
 
 ---
 
 #Writer vs Reader
 
-These improvements to `CountMe` are an indication that the `Writer` and `Reader` monads are actually closely related as well.
+Finally, the `Writer` and `Reader` monads are somewhat closely related as well.
 
 We'll discuss this in more depth when we cover comonads and adjoint functors in lecture 11.
 
