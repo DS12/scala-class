@@ -25,7 +25,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Lecture 4: Combinators</title>
+    <title>Lecture 4: Options</title>
     <!-- Styles -->
     
     <link rel="stylesheet" media="print" href="theme/css/print.css">
@@ -39,6 +39,21 @@
     
     
     <!-- /Javascripts -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          processEscapes: true
+        },
+        "HTML-CSS": { availableFonts: ["TeX"] }
+      });
+    </script>
+    <script type="text/javascript"
+        src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
 </head>
 <body style="!important;">
   <div id="blank"></div>
@@ -53,8 +68,10 @@
         <div class="slide">
           <div class="inner">
             
-            <header><h1>Lecture 4: Combinators</h1></header>
+            <header><h1>Lecture 4: Options</h1></header>
             
+            
+            <section><p><img alt="" src="images/lecture4/maybe.png" /></p></section>
             
           </div>
           <div class="presenter_notes">
@@ -72,7 +89,7 @@
             </aside>
             
             <aside class="page_number">
-              1/70
+              1/48
             </aside>
 
           </footer>
@@ -84,15 +101,13 @@
         <div class="slide">
           <div class="inner">
             
-            <header><h1>Guy Steele</h1></header>
+            <header><h1>Imperative Error Handling</h1></header>
             
             
-            <section><p><img alt="" src="images/lecture4/guy_steele.jpg" /></p>
-<p>"A language design can no longer be a thing. It must be a pattern – a pattern for growth – a
-pattern for growing the pattern for defining the patterns that programmers can
-use for their real work and their main goal."</p>
-<ul>
-<li><a href="http://dl.acm.org/citation.cfm?id=346922">Growing a Language</a>, 1998 ACM Conference on Object-Oriented Programming</li>
+            <section><ul>
+<li>Exceptions</li>
+<li>Sentinel Values</li>
+<li>flagged arguments</li>
 </ul></section>
             
           </div>
@@ -111,353 +126,7 @@ use for their real work and their main goal."</p>
             </aside>
             
             <aside class="page_number">
-              2/70
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4.md -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            <header><h1>Functional Combinators</h1></header>
-            
-            
-            <section><h2>on a "Container"</h2></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4.md">lecture4.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              3/70
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4.md -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            <header><h1>map</h1></header>
-            
-            
-            <section><p>Evaluates a function over each element in the list, returning a list with the same number of elements.</p>
-<pre><code>scala&gt; numbers.map((i: Int) =&gt; i * 2)
-res0: List[Int] = List(2, 4, 6, 8)
-</code></pre></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4.md">lecture4.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              4/70
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4.md -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            <header><h1>foreach</h1></header>
-            
-            
-            <section><p><code>foreach</code> is like <code>map</code> but returns nothing. <code>foreach</code> is intended for side-effects only.</p>
-<pre><code>scala&gt; numbers.foreach((i: Int) =&gt; i * 2)
-scala&gt; val doubled = numbers.foreach((i: Int) =&gt; i * 2)
-doubled: Unit = ()
-</code></pre></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4.md">lecture4.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              5/70
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4.md -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            <header><h1>filter</h1></header>
-            
-            
-            <section><p>removes any elements where the function you pass in evaluates to false.</p>
-<pre><code>scala&gt; numbers.filter((i: Int) =&gt; i % 2 == 0)
-res0: List[Int] = List(2, 4)
-scala&gt; def isEven(i: Int): Boolean = i % 2 == 0
-isEven: (i: Int)Boolean
-scala&gt; numbers.filter(isEven _)
-res2: List[Int] = List(2, 4)
-</code></pre></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4.md">lecture4.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              6/70
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4.md -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            <header><h1>partition</h1></header>
-            
-            
-            <section><p><code>partition</code> splits a list based on where it falls with respect to the predicate function.</p>
-<pre><code>scala&gt; val numbers = List(1, 2, 3, 4, 5, 6)
-scala&gt; numbers.partition(_ % 2 == 0)
-res0: (List[Int], List[Int]) = 
-  (List(2, 4, 6),List(1, 3, 5))
-</code></pre></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4.md">lecture4.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              7/70
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4.md -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            <header><h1>exists</h1></header>
-            
-            
-            <section><p><code>exists</code> determines whether there exists an element satisfying the predicate function.</p>
-<pre><code>scala&gt; List(1,2,3) exists (_%2 ==0)
-res69: Boolean = true
-</code></pre></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4.md">lecture4.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              8/70
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4.md -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            <header><h1>dropWhile</h1></header>
-            
-            
-            <section><p><code>dropWhile</code> removes the first elements that match a predicate function.</p>
-<pre><code>scala&gt; numbers.dropWhile(_ % 2 != 0)
-res0: List[Int] = List(2, 3, 4, 5, 6)
-</code></pre></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4.md">lecture4.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              9/70
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4.md -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            <header><h1>foldLeft</h1></header>
-            
-            
-            <section><p>0 is the starting value (Remember that numbers is a <code>List[Int]</code>), and <code>m</code> acts as an accumulator.</p>
-<pre><code>scala&gt; numbers.foldLeft(0) {
-     |   (m: Int, n: Int) =&gt;
-     |   println("m: " + m + " n: " + n); m + n
-     | }
-m: 0 n: 1
-m: 1 n: 2
-m: 3 n: 3
-m: 6 n: 4
-m: 10 n: 5
-m: 15 n: 6
-res0: Int = 21
-</code></pre></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4.md">lecture4.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              10/70
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4.md -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            <header><h1>foldRight</h1></header>
-            
-            
-            <section><p>runs in the opposite direction as <code>foldLeft</code>. Not tail-recursive.</p>
-<pre><code>scala&gt; numbers.foldRight(0) {
-     |   (m: Int, n: Int) =&gt;
-     |   println("m: " + m + " n: " + n); m + n
-     | }  
-m: 6 n: 0
-m: 5 n: 6
-m: 4 n: 11
-m: 3 n: 15
-m: 2 n: 18
-m: 1 n: 20
-res0: Int = 21
-</code></pre></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4.md">lecture4.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              11/70
+              2/48
             </aside>
 
           </footer>
@@ -469,12 +138,13 @@ res0: Int = 21
         <div class="slide has_code">
           <div class="inner">
             
-            <header><h1>groupBy</h1></header>
+            <header><h1>Exceptions</h1></header>
             
             
-            <section><p><code>groupBy</code> is another frequently used combinator groups the elements of a collection according to the range of a grouping function.</p>
-<div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">groupBy</span> <span class="o">[</span><span class="kt">K</span><span class="o">]</span> <span class="o">(</span><span class="n">f</span><span class="k">:</span> <span class="o">(</span><span class="kt">A</span><span class="o">)</span> <span class="o">⇒</span> <span class="n">K</span><span class="o">)</span><span class="k">:</span> 
-  <span class="kt">Map</span><span class="o">[</span><span class="kt">K</span>, <span class="kt">Traversable</span><span class="o">[</span><span class="kt">A</span><span class="o">]]</span>
+            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">mean</span><span class="o">(</span><span class="n">xs</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Double</span><span class="o">])</span><span class="k">:</span> <span class="kt">Double</span> <span class="o">=</span>
+  <span class="k">if</span> <span class="o">(</span><span class="n">xs</span><span class="o">.</span><span class="n">isEmpty</span><span class="o">)</span>
+    <span class="k">throw</span> <span class="k">new</span> <span class="nc">ArithmeticException</span><span class="o">(</span><span class="s">&quot;NaN&quot;</span><span class="o">)</span>
+  <span class="k">else</span> <span class="n">xs</span><span class="o">.</span><span class="n">sum</span> <span class="o">/</span> <span class="n">xs</span><span class="o">.</span><span class="n">length</span>
 </pre></div>
 </section>
             
@@ -494,7 +164,7 @@ res0: Int = 21
             </aside>
             
             <aside class="page_number">
-              12/70
+              3/48
             </aside>
 
           </footer>
@@ -507,20 +177,8 @@ res0: Int = 21
           <div class="inner">
             
             
-            <section><pre><code>scala&gt; val cats = 
-  List("Tiger", "Lion", "Puma", "Leopard",
-       "Jaguar", "Cheetah", "Bobcat")
-cats: List[String] = 
-  List(Tiger, Lion, Puma, Leopard, 
-       Jaguar, Cheetah, Bobcat)
-
-scala&gt; cats.groupBy(_.length)
-res0: Map[Int,List[String]] = 
-  Map(5 -&gt; List(Tiger),
-      4 -&gt; List(Lion, Puma),
-      7 -&gt; List(Leopard, Cheetah),
-      6 -&gt; List(Jaguar, Bobcat))
-</code></pre></section>
+            <section><p>The mean function is an example of what’s called a partial function: it’s not defined for some inputs.</p>
+<p>A function is typically partial because it makes some assumptions about its inputs that aren’t implied by the input types.</p></section>
             
           </div>
           <div class="presenter_notes">
@@ -538,83 +196,7 @@ res0: Map[Int,List[String]] =
             </aside>
             
             <aside class="page_number">
-              13/70
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4.md -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            <header><h1>flatten</h1></header>
-            
-            
-            <section><p><code>flatten</code> collapses one level of nested structure.</p>
-<pre><code>scala&gt; List(List(1, 2), List(3, 4)).flatten
-res0: List[Int] = List(1, 2, 3, 4)
-</code></pre></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4.md">lecture4.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              14/70
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4.md -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            <header><h1>flatMap</h1></header>
-            
-            
-            <section><p><code>flatMap</code> is a frequently used combinator that combines mapping and flattening.</p>
-<pre><code>scala&gt; val nestedNumbers = 
-  List(List(1, 2), List(3, 4))
-nestedNumbers: List[List[Int]] = 
-  List(List(1, 2), List(3, 4))
-scala&gt; nestedNumbers.flatMap(x =&gt; x.map(_ * 2))
-res0: List[Int] = List(2, 4, 6, 8)
-</code></pre></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4.md">lecture4.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              15/70
+              4/48
             </aside>
 
           </footer>
@@ -626,10 +208,12 @@ res0: List[Int] = List(2, 4, 6, 8)
         <div class="slide has_code">
           <div class="inner">
             
+            <header><h1>Sentinel Values</h1></header>
             
-            <section><p><code>flatMap</code> is frequently available in nontraditional collections such as <code>Future</code> and <code>Option</code>.</p>
-<p>For a <code>Container[A]</code>, its signature is:</p>
-<div class="highlight"><pre><span></span><span class="n">flatMap</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="nc">Container</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">Container</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span>
+            
+            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">mean1</span><span class="o">(</span><span class="n">xs</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Double</span><span class="o">])</span><span class="k">:</span> <span class="kt">Double</span> <span class="o">=</span>
+  <span class="k">if</span> <span class="o">(</span><span class="n">xs</span><span class="o">.</span><span class="n">isEmpty</span><span class="o">)</span> <span class="nc">Double</span><span class="o">.</span><span class="nc">NaN</span>
+  <span class="k">else</span> <span class="n">xs</span><span class="o">.</span><span class="n">sum</span> <span class="o">/</span> <span class="n">xs</span><span class="o">.</span><span class="n">length</span>
 </pre></div>
 </section>
             
@@ -649,7 +233,7 @@ res0: List[Int] = List(2, 4, 6, 8)
             </aside>
             
             <aside class="page_number">
-              16/70
+              5/48
             </aside>
 
           </footer>
@@ -661,15 +245,12 @@ res0: List[Int] = List(2, 4, 6, 8)
         <div class="slide has_code">
           <div class="inner">
             
+            <header><h1>Flagged Arguments</h1></header>
             
-            <section><p>For example, to get all permutations of two character strings that aren't the same character repeated twice:</p>
-<div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">chars</span> <span class="k">=</span> <span class="sc">&#39;a&#39;</span> <span class="n">to</span> <span class="sc">&#39;z&#39;</span>
-<span class="k">val</span> <span class="n">perms</span> <span class="k">=</span> <span class="n">chars</span> <span class="n">flatMap</span> <span class="o">{</span> <span class="n">a</span> <span class="k">=&gt;</span>
-  <span class="n">chars</span> <span class="n">flatMap</span> <span class="o">{</span> <span class="n">b</span> <span class="k">=&gt;</span>
-    <span class="k">if</span> <span class="o">(</span><span class="n">a</span> <span class="o">!=</span> <span class="n">b</span><span class="o">)</span> <span class="nc">Seq</span><span class="o">(</span><span class="s">&quot;%c%c&quot;</span><span class="o">.</span><span class="n">format</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">))</span>
-    <span class="k">else</span> <span class="nc">Seq</span><span class="o">()</span>
-  <span class="o">}</span>
-<span class="o">}</span>
+            
+            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">mean2</span><span class="o">(</span><span class="n">xs</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Double</span><span class="o">],</span> <span class="n">empty</span><span class="k">:</span> <span class="kt">Double</span><span class="o">)</span><span class="k">:</span> <span class="kt">Double</span> <span class="o">=</span>
+  <span class="k">if</span> <span class="o">(</span><span class="n">xs</span><span class="o">.</span><span class="n">isEmpty</span><span class="o">)</span> <span class="n">empty</span>
+  <span class="k">else</span> <span class="n">xs</span><span class="o">.</span><span class="n">sum</span> <span class="o">/</span> <span class="n">xs</span><span class="o">.</span><span class="n">length</span>
 </pre></div>
 </section>
             
@@ -689,213 +270,7 @@ res0: List[Int] = List(2, 4, 6, 8)
             </aside>
             
             <aside class="page_number">
-              17/70
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code">
-          <div class="inner">
-            
-            
-            <section><p>This is equivalent to the more concise for-comprehension (which is — roughly — syntactical sugar for the above):</p>
-<div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">perms</span> <span class="k">=</span> <span class="k">for</span> <span class="o">{</span>
-  <span class="n">a</span> <span class="k">&lt;-</span> <span class="n">chars</span>
-  <span class="n">b</span> <span class="k">&lt;-</span> <span class="n">chars</span>
-  <span class="k">if</span> <span class="n">a</span> <span class="o">!=</span> <span class="n">b</span>
-<span class="o">}</span> <span class="k">yield</span> <span class="s">&quot;%c%c&quot;</span><span class="o">.</span><span class="n">format</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">)</span>
-</pre></div>
-</section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4.md">lecture4.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              18/70
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4.md -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            <header><h1>Scala Style</h1></header>
-            
-            
-            <section><p>Functional programming encourages pipelining transformations of an immutable collection to shape it to its desired result.</p>
-<p>This often leads to very succinct solutions, but can also be confusing to the reader.</p>
-<p>These transformations occur inside a "container."</p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4.md">lecture4.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              19/70
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code has_notes">
-          <div class="inner">
-            
-            
-            <section><div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">votes</span> <span class="k">=</span> 
-  <span class="nc">Seq</span><span class="o">((</span><span class="s">&quot;a&quot;</span><span class="o">,</span> <span class="mi">1</span><span class="o">),</span> <span class="o">(</span><span class="s">&quot;b&quot;</span><span class="o">,</span> <span class="mi">4</span><span class="o">),</span> <span class="o">(</span><span class="s">&quot;a&quot;</span><span class="o">,</span> <span class="mi">10</span><span class="o">),</span>
-      <span class="o">(</span><span class="s">&quot;b&quot;</span><span class="o">,</span> <span class="mi">1</span><span class="o">),</span> <span class="o">(</span><span class="s">&quot;c&quot;</span><span class="o">,</span> <span class="mi">10</span><span class="o">))</span>
-<span class="k">val</span> <span class="n">orderedVotes</span> <span class="k">=</span> <span class="n">votes</span>
-  <span class="o">.</span><span class="n">groupBy</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">_1</span><span class="o">)</span>
-  <span class="o">.</span><span class="n">map</span> <span class="o">{</span> <span class="k">case</span> <span class="o">(</span><span class="n">which</span><span class="o">,</span> <span class="n">counts</span><span class="o">)</span> <span class="k">=&gt;</span>
-    <span class="o">(</span><span class="n">which</span><span class="o">,</span> <span class="n">counts</span><span class="o">.</span><span class="n">foldLeft</span><span class="o">(</span><span class="mi">0</span><span class="o">)(</span><span class="k">_</span> <span class="o">+</span> <span class="k">_</span><span class="o">.</span><span class="n">_2</span><span class="o">))</span>
-  <span class="o">}.</span><span class="n">toSeq</span>
-  <span class="o">.</span><span class="n">sortBy</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">_2</span><span class="o">)</span>
-  <span class="o">.</span><span class="n">reverse</span>
-</pre></div>
-
-<p class="notes">this is both succinct and correct, but nearly every reader will have a difficult time recovering the original intent of the author. A strategy that often serves to clarify is to name intermediate results and parameters:</p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4.md">lecture4.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              20/70
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code has_notes">
-          <div class="inner">
-            
-            
-            <section><div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">votesByLang</span> <span class="k">=</span> 
-  <span class="n">votes</span> <span class="n">groupBy</span> <span class="o">{</span> <span class="k">case</span> <span class="o">(</span><span class="n">lang</span><span class="o">,</span> <span class="k">_</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">lang</span> <span class="o">}</span>
-<span class="k">val</span> <span class="n">sumByLang</span> <span class="k">=</span> 
-  <span class="n">votesByLang</span> <span class="n">map</span> <span class="o">{</span> 
-    <span class="k">case</span> <span class="o">(</span><span class="n">lang</span><span class="o">,</span> <span class="n">counts</span><span class="o">)</span> <span class="k">=&gt;</span>
-      <span class="k">val</span> <span class="n">countsOnly</span> <span class="k">=</span> <span class="n">counts</span> <span class="n">map</span> <span class="o">{</span> 
-        <span class="k">case</span> <span class="o">(</span><span class="k">_</span><span class="o">,</span> <span class="n">count</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">count</span> 
-      <span class="o">}</span>
-      <span class="o">(</span><span class="n">lang</span><span class="o">,</span> <span class="n">countsOnly</span><span class="o">.</span><span class="n">sum</span><span class="o">)</span>
-  <span class="o">}</span>
-<span class="k">val</span> <span class="n">orderedVotes</span> <span class="k">=</span> <span class="n">sumByLang</span><span class="o">.</span><span class="n">toSeq</span>
-  <span class="o">.</span><span class="n">sortBy</span> <span class="o">{</span> <span class="k">case</span> <span class="o">(</span><span class="k">_</span><span class="o">,</span> <span class="n">count</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">count</span> <span class="o">}</span>
-  <span class="o">.</span><span class="n">reverse</span>
-</pre></div>
-
-<p class="notes">the code is nearly as succinct, but much more clearly expresses both the transformations take place (by naming intermediate values), and the structure of the data being operated on (by naming parameters). If you worry about namespace pollution with this style, group expressions with {}</p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4.md">lecture4.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              21/70
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code">
-          <div class="inner">
-            
-            
-            <section><p>Syntax seen in the two slides prior</p>
-<div class="highlight"><pre><span></span><span class="o">...</span>
-<span class="o">.</span><span class="n">map</span> <span class="o">{</span> <span class="k">case</span> <span class="o">(</span><span class="n">which</span><span class="o">,</span> <span class="n">counts</span><span class="o">)</span> <span class="k">=&gt;</span> 
-    <span class="o">...</span>
-<span class="o">}</span>
-<span class="o">...</span>
-</pre></div>
-
-<p>This inline <code>case</code> statement, with no preceding <code>match</code>, is syntactic sugar for <code>PartialFunction</code>.</p>
-<p><code>PartialFunction[A,B]</code> is a subtype of <code>A =&gt; B</code>, so <code>PartialFunction[A,B]</code> can be given as an argument to <code>map</code>, which expects <code>A =&gt; B</code>.</p>
-<blockquote>
-<p>A partial function of type PartialFunction[A, B] is a unary function where the domain does not necessarily include all values of type <code>A</code>. 
-  -- <a href="http://www.scala-lang.org/api/current/#scala.PartialFunction">Scala API</a></p>
-</blockquote></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4.md">lecture4.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              22/70
+              6/48
             </aside>
 
           </footer>
@@ -908,22 +283,8 @@ res0: List[Int] = List(2, 4, 6, 8)
           <div class="inner">
             
             
-            <section><p><code>PartialFunction[A,B]</code> will throw a runtime exception if <code>A</code> is not in its domain.</p>
-<pre><code>scala&gt; val capitalAscii: 
-  PartialFunction[Int, Char] =
-  { case (i: Int) if i&gt;=65 &amp;&amp; i&lt;=90 =&gt; i.toChar }
-capitalAscii: PartialFunction[Int,Char] = 
-  &lt;function1&gt;
-
-scala&gt; capitalAscii(66)
-res2: Char = B
-
-scala&gt; capitalAscii(100)
-scala.MatchError: 100 (of class java.lang.Integer)
-  at scala.PartialFunction$$anon$1...
-  at scala.PartialFunction$$anon$1...
-  ...
-</code></pre></section>
+            <section><p>Exceptions are not type-safe or referentially transparent.</p>
+<p>The type of <code>mean</code>, <code>Seq[Double]) =&gt; Double</code> tells us nothing about the fact that exceptions may occur, and the compiler will not force callers of <code>mean</code> to make a decision about how to handle those exceptions.</p></section>
             
           </div>
           <div class="presenter_notes">
@@ -941,7 +302,7 @@ scala.MatchError: 100 (of class java.lang.Integer)
             </aside>
             
             <aside class="page_number">
-              23/70
+              7/48
             </aside>
 
           </footer>
@@ -952,8 +313,6 @@ scala.MatchError: 100 (of class java.lang.Integer)
       <div class="slide-wrapper">
         <div class="slide">
           <div class="inner">
-            
-            <header><h1>Option</h1></header>
             
             
             <section><p><code>Option</code> is a <em>container</em> that may or may not hold something.</p>
@@ -975,7 +334,7 @@ scala.MatchError: 100 (of class java.lang.Integer)
             </aside>
             
             <aside class="page_number">
-              24/70
+              8/48
             </aside>
 
           </footer>
@@ -990,14 +349,10 @@ scala.MatchError: 100 (of class java.lang.Integer)
             
             <section><p><code>Option</code> itself is generic and has two subclasses: Some[T] or None</p>
 <div class="highlight"><pre><span></span><span class="k">trait</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">+A</span><span class="o">]</span> <span class="c1">//base trait</span>
-<span class="k">case</span> <span class="k">class</span> <span class="nc">Some</span><span class="o">[</span><span class="kt">+A</span><span class="o">](</span><span class="n">get</span><span class="k">:</span> <span class="kt">A</span><span class="o">)</span> 
-  <span class="k">extends</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span>
-<span class="k">case</span> <span class="k">object</span> <span class="nc">None</span> 
-  <span class="k">extends</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">Nothing</span><span class="o">]</span>
+<span class="k">case</span> <span class="k">class</span> <span class="nc">Some</span><span class="o">[</span><span class="kt">+A</span><span class="o">](</span><span class="n">get</span><span class="k">:</span> <span class="kt">A</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span>
+<span class="k">case</span> <span class="k">object</span> <span class="nc">None</span> <span class="k">extends</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">Nothing</span><span class="o">]</span>
 </pre></div>
-
-<p><code>case class</code> and <code>case object</code> provide built-in constructors and pattern-matching.
-<code>class</code> and <code>object</code> do not.</p></section>
+</section>
             
           </div>
           <div class="presenter_notes">
@@ -1015,7 +370,7 @@ scala.MatchError: 100 (of class java.lang.Integer)
             </aside>
             
             <aside class="page_number">
-              25/70
+              9/48
             </aside>
 
           </footer>
@@ -1030,9 +385,9 @@ scala.MatchError: 100 (of class java.lang.Integer)
             
             <section><p><code>Option</code>s are like <code>List</code>s with at most a single element.</p>
 <div class="highlight"><pre><span></span><span class="k">trait</span> <span class="nc">List</span><span class="o">[</span><span class="kt">+A</span><span class="o">]</span> <span class="c1">//base trait</span>
-<span class="k">case</span> <span class="k">class</span> <span class="nc">Cons</span><span class="o">[</span><span class="kt">+A</span><span class="o">](</span><span class="n">head</span><span class="k">:</span> <span class="kt">A</span><span class="o">,</span> <span class="n">tail</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span> 
+<span class="k">case</span> <span class="k">class</span> <span class="nc">Cons</span><span class="o">[</span><span class="kt">+A</span><span class="o">](</span><span class="n">head</span><span class="k">:</span> <span class="kt">A</span><span class="o">,</span> <span class="n">tail</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span>
   <span class="k">extends</span> <span class="nc">List</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span>
-<span class="k">case</span> <span class="k">object</span> <span class="nc">Nil</span> 
+<span class="k">case</span> <span class="k">object</span> <span class="nc">Nil</span>
   <span class="k">extends</span> <span class="nc">List</span><span class="o">[</span><span class="kt">Nothing</span><span class="o">]</span>
 </pre></div>
 </section>
@@ -1053,7 +408,7 @@ scala.MatchError: 100 (of class java.lang.Integer)
             </aside>
             
             <aside class="page_number">
-              26/70
+              10/48
             </aside>
 
           </footer>
@@ -1069,12 +424,12 @@ scala.MatchError: 100 (of class java.lang.Integer)
             
             
             <section><p><code>Option</code> tells you that a function might not return what you’re asking for.</p>
-<pre><code>scala&gt; val numbers = Map("one" -&gt; 1, "two" -&gt; 2)
-numbers: Map(one -&gt; 1, two -&gt; 2)
-scala&gt; numbers.get("two")
-res0: Option[Int] = Some(2)
-scala&gt; numbers.get("three")
-res1: Option[Int] = None
+<pre><code>val numbers = Map("one" -&gt; 1, "two" -&gt; 2)
+//numbers: Map(one -&gt; 1, two -&gt; 2)
+numbers.get("two")
+//res0: Option[Int] = Some(2)
+numbers.get("three")
+//res1: Option[Int] = None
 </code></pre></section>
             
           </div>
@@ -1093,152 +448,7 @@ res1: Option[Int] = None
             </aside>
             
             <aside class="page_number">
-              27/70
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4.md -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            <header><h1>"Container" pattern</h1></header>
-            
-            
-            <section><p><code>Option</code> follows this pattern, along with other types this class will encounter.</p>
-<p>Containers have many methods.  Some of these methods fulfill one of these two purposes:</p>
-<ul>
-<li>combinators for entering the Container</li>
-<li>combinators for exiting the Container -- safely</li>
-</ul></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4.md">lecture4.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              28/70
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4.md -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            
-            <section><p>Combinators for entering the Container</p>
-<ul>
-<li><code>unit</code> -- <code>def unit[A](a: A): Option[A]</code></li>
-<li><a href="http://www.scala-lang.org/api/current/index.html#scala.Option$@apply[A](x:A):Option[A]"><code>apply</code></a> -- equivalent to <code>unit</code></li>
-<li><code>apply</code> provides syntactic sugar.  <code>Foo.apply(123)</code> and <code>Foo(123)</code> are equivalent.</li>
-<li><code>lift</code> -- <code>def lift[A,B](f: A =&gt; B): Option[A] =&gt; Option[B]</code></li>
-</ul></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4.md">lecture4.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              29/70
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4.md -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            
-            <section><p>Combinators for exiting the Container -- safely</p>
-<ul>
-<li><a href="http://www.scala-lang.org/api/current/index.html#scala.Option@fold[B](ifEmpty:=%3EB)(f:A=%3EB):B"><code>fold</code></a> -- <code>def fold[A,B](ifEmpty: =&gt; B)(f: (A) =&gt; B): B</code></li>
-<li><code>foldLeft</code></li>
-<li><code>foldRight</code></li>
-<li><a href="http://www.scala-lang.org/api/current/index.html#scala.Option@getOrElse[B%3E:A]%28default:=%3EB%29:B"><code>getOrElse</code></a> -- Given <code>Option[A]</code>, <code>getOrElse(alternativeA: A): A</code></li>
-</ul></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4.md">lecture4.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              30/70
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4.md -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            <header><h1>C, Java, and Python-style Error Handling (in chronological order)</h1></header>
-            
-            
-            <section><p>...</p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4.md">lecture4.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              31/70
+              11/48
             </aside>
 
           </footer>
@@ -1275,48 +485,7 @@ res1: Option[Int] = None
             </aside>
             
             <aside class="page_number">
-              32/70
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code has_notes">
-          <div class="inner">
-            
-            
-            <section><p>The basic interface for Option consists of three methods:</p>
-<div class="highlight"><pre><span></span><span class="k">trait</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">+A</span><span class="o">]</span> <span class="o">{</span>
-  <span class="k">def</span> <span class="n">map</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="n">B</span><span class="o">)</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span>
-  <span class="k">def</span> <span class="n">flatMap</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span>
-  <span class="k">def</span> <span class="n">getOrElse</span><span class="o">[</span><span class="kt">B</span> <span class="k">&gt;:</span> <span class="kt">A</span><span class="o">](</span><span class="n">default</span><span class="k">:</span> <span class="o">=&gt;</span> <span class="n">B</span><span class="o">)</span><span class="k">:</span> <span class="kt">B</span>
-  <span class="k">def</span> <span class="n">orElse</span><span class="o">[</span><span class="kt">B</span> <span class="k">&gt;:</span> <span class="kt">A</span><span class="o">](</span><span class="n">ob</span><span class="k">:</span> <span class="o">=&gt;</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span>
-<span class="o">}</span>
-</pre></div>
-
-<p>Next lecture will explain the necessity of the lower type bound generic <code>B</code> in the <code>getOrElse</code> and <code>orElse</code> combinators.</p>
-<p class="notes">Note the parallels between map, flatMap, getOrElse and orElse</p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4.md">lecture4.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              33/70
+              12/48
             </aside>
 
           </footer>
@@ -1329,17 +498,13 @@ res1: Option[Int] = None
           <div class="inner">
             
             
-            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">getOrElse</span><span class="o">[</span><span class="kt">B</span><span class="k">&gt;:</span><span class="kt">A</span><span class="o">](</span><span class="n">default</span><span class="k">:</span> <span class="o">=&gt;</span> <span class="n">B</span><span class="o">)</span><span class="k">:</span> <span class="kt">B</span> <span class="o">=</span> 
-  <span class="k">this</span> <span class="k">match</span> <span class="o">{</span>
-    <span class="k">case</span> <span class="nc">None</span> <span class="k">=&gt;</span> <span class="n">default</span>
-    <span class="k">case</span> <span class="nc">Some</span><span class="o">(</span><span class="n">a</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">a</span>
-  <span class="o">}</span>
-
-<span class="k">def</span> <span class="n">map</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="n">B</span><span class="o">)</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span> <span class="k">=</span> 
-  <span class="k">this</span> <span class="k">match</span> <span class="o">{</span>
-    <span class="k">case</span> <span class="nc">None</span> <span class="k">=&gt;</span> <span class="nc">None</span>
-    <span class="k">case</span> <span class="nc">Some</span><span class="o">(</span><span class="n">a</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nc">Some</span><span class="o">(</span><span class="n">f</span><span class="o">(</span><span class="n">a</span><span class="o">))</span>
-  <span class="o">}</span>
+            <section><p>The basic interface for Option consists of three methods:</p>
+<div class="highlight"><pre><span></span><span class="k">trait</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">+A</span><span class="o">]</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="n">unit</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">a</span><span class="k">:</span> <span class="kt">A</span><span class="o">)</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span>
+  <span class="k">def</span> <span class="n">flatMap</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span>
+  <span class="k">def</span> <span class="n">map</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="n">B</span><span class="o">)</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span> <span class="k">=</span>
+    <span class="n">flatMap</span><span class="o">(</span><span class="n">f</span> <span class="n">andThen</span> <span class="n">unit</span><span class="o">)</span>
+<span class="o">}</span>
 </pre></div>
 </section>
             
@@ -1359,7 +524,7 @@ res1: Option[Int] = None
             </aside>
             
             <aside class="page_number">
-              34/70
+              13/48
             </aside>
 
           </footer>
@@ -1368,20 +533,18 @@ res1: Option[Int] = None
       
       <!-- slide source: lecture4.md -->
       <div class="slide-wrapper">
-        <div class="slide">
+        <div class="slide has_code">
           <div class="inner">
             
-            <header><h1>Maps on Options</h1></header>
             
-            
-            <section><pre><code>scala&gt; val a = Some(3)
-a: Some[Int] = Some(3)
-scala&gt; a map (_+2)
-res8: Option[Int] = Some(5)
-</code></pre>
-<p>Making the wildcard function (<code>_ + 2</code>) explicit,</p>
-<pre><code>a.map { (i: Int) =&gt; i+2 }
-</code></pre></section>
+            <section><p>Here is a hard-coded version of <code>map</code>:</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">map</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="n">B</span><span class="o">)</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span> <span class="k">=</span>
+  <span class="k">this</span> <span class="k">match</span> <span class="o">{</span>
+      <span class="k">case</span> <span class="nc">None</span> <span class="k">=&gt;</span> <span class="nc">None</span>
+      <span class="k">case</span> <span class="nc">Some</span><span class="o">(</span><span class="n">a</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nc">Some</span><span class="o">(</span><span class="n">f</span><span class="o">(</span><span class="n">a</span><span class="o">))</span>
+    <span class="o">}</span>
+</pre></div>
+</section>
             
           </div>
           <div class="presenter_notes">
@@ -1399,42 +562,7 @@ res8: Option[Int] = Some(5)
             </aside>
             
             <aside class="page_number">
-              35/70
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4.md -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            
-            <section><pre><code>scala&gt; val b: Option[Int] = None
-b: Option[Int] = None
-scala&gt; b map (_+2)
-res47: Option[Int] = None
-</code></pre></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4.md">lecture4.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              36/70
+              14/48
             </aside>
 
           </footer>
@@ -1449,11 +577,11 @@ res47: Option[Int] = None
             <header><h1><code>flatMap</code> for <code>Option</code></h1></header>
             
             
-            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">flatMap</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span> <span class="k">=</span> 
+            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">flatMap</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span> <span class="k">=</span>
   <span class="k">this</span> <span class="k">match</span> <span class="o">{</span>
-    <span class="k">case</span> <span class="nc">None</span> <span class="k">=&gt;</span> <span class="nc">None</span>
-    <span class="k">case</span> <span class="nc">Some</span><span class="o">(</span><span class="n">a</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">f</span><span class="o">(</span><span class="n">a</span><span class="o">)</span>
-  <span class="o">}</span>
+      <span class="k">case</span> <span class="nc">None</span> <span class="k">=&gt;</span> <span class="nc">None</span>
+      <span class="k">case</span> <span class="nc">Some</span><span class="o">(</span><span class="n">a</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">f</span><span class="o">(</span><span class="n">a</span><span class="o">)</span>
+    <span class="o">}</span>
 </pre></div>
 </section>
             
@@ -1473,7 +601,7 @@ res47: Option[Int] = None
             </aside>
             
             <aside class="page_number">
-              37/70
+              15/48
             </aside>
 
           </footer>
@@ -1485,11 +613,12 @@ res47: Option[Int] = None
         <div class="slide">
           <div class="inner">
             
-            <header><h1>Challenge Question</h1></header>
             
-            
-            <section><p>Implement <code>flatMap</code> using the other 3 core methods <code>map</code>, <code>orElse</code>, &amp; <code>getOrElse</code>.</p>
-<p>Note which combinators are implemented using other combinators.  The combinators which are implemented "from scratch," we will call "core" or "primitive."  This has implications for the Container pattern.</p></section>
+            <section><p>Combinators for safely exiting the <code>Option</code> monad:</p>
+<ul>
+<li><a href="https://github.com/typelevel/cats/blob/master/core/src/main/scala/cats/Foldable.scala"><code>fold</code></a></li>
+<li><a href="https://github.com/typelevel/cats/blob/master/core/src/main/scala/cats/data/OptionT.scala"><code>getOrElse</code></a></li>
+</ul></section>
             
           </div>
           <div class="presenter_notes">
@@ -1507,7 +636,78 @@ res47: Option[Int] = None
             </aside>
             
             <aside class="page_number">
-              38/70
+              16/48
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">getOrElse</span><span class="o">[</span><span class="kt">B</span><span class="k">&gt;:</span><span class="kt">A</span><span class="o">](</span><span class="n">default</span><span class="k">:</span> <span class="o">=&gt;</span> <span class="n">B</span><span class="o">)</span><span class="k">:</span> <span class="kt">B</span> <span class="o">=</span>
+  <span class="k">this</span> <span class="k">match</span> <span class="o">{</span>
+      <span class="k">case</span> <span class="nc">None</span> <span class="k">=&gt;</span> <span class="n">default</span>
+      <span class="k">case</span> <span class="nc">Some</span><span class="o">(</span><span class="n">a</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">a</span>
+    <span class="o">}</span>
+</pre></div>
+
+<p>We will explain the necessity of the lower type bound generic <code>B</code> in the <code>getOrElse</code> combinator in a bit.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4.md">lecture4.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              17/48
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            <header><h1>Exercise</h1></header>
+            
+            
+            <section><p>Implement <code>flatMap</code> using <code>map</code> &amp; <code>getOrElse</code>.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4.md">lecture4.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              18/48
             </aside>
 
           </footer>
@@ -1532,7 +732,7 @@ res47: Option[Int] = None
           <footer>
             
             <aside class="page_number">
-              /70
+              /48
             </aside>
 
           </footer>
@@ -1566,7 +766,207 @@ res47: Option[Int] = None
             </aside>
             
             <aside class="page_number">
-              39/70
+              19/48
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            <header><h1>Try</h1></header>
+            
+            
+            <section><p><code>Try</code> is a general-purpose function for converting from an exception-based API to a container-based API.</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nc">Try</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">a</span><span class="k">:</span> <span class="o">=&gt;</span> <span class="n">A</span><span class="o">)</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span>
+  <span class="k">try</span> <span class="o">{</span> <span class="nc">Some</span><span class="o">(</span><span class="n">a</span><span class="o">)</span> <span class="o">}</span>
+  <span class="k">catch</span> <span class="o">{</span> <span class="k">case</span> <span class="n">e</span><span class="k">:</span> <span class="kt">Exception</span> <span class="o">=&gt;</span> <span class="nc">None</span> <span class="o">}</span>
+</pre></div>
+
+<p>The <code>None</code> returned is not informative about the exception thrown.  Next lecture's type <code>Either</code> fixes this.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4.md">lecture4.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              20/48
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p><code>=&gt;</code> in a function argument means the argument is lazy.  <code>=&gt;</code> does not memoize.
+If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation would be outside the try-catch clause.</p>
+<p>Think of lazy argument <code>a: =&gt; A</code> as a function with no input: <code>() =&gt; A</code>.</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nc">Try</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">lazyA</span><span class="k">:</span> <span class="o">()</span> <span class="o">=&gt;</span> <span class="n">A</span><span class="o">)</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span>
+  <span class="k">try</span> <span class="o">{</span> <span class="nc">Some</span><span class="o">(</span> <span class="n">lazyA</span><span class="o">()</span> <span class="o">)</span> <span class="o">}</span>
+  <span class="k">catch</span> <span class="o">{</span> <span class="k">case</span> <span class="n">e</span><span class="k">:</span> <span class="kt">Exception</span> <span class="o">=&gt;</span> <span class="nc">None</span> <span class="o">}</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4.md">lecture4.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              21/48
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>Note that the Scala std lib has a type constructor <code>Try[_]</code>, but it is not monadic:</p>
+<div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">scala.util.</span><span class="o">{</span><span class="nc">Try</span><span class="o">,</span> <span class="nc">Success</span><span class="o">}</span>
+<span class="k">def</span> <span class="n">verify</span><span class="o">(</span><span class="n">n</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Try</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span>
+  <span class="k">if</span> <span class="o">(</span><span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="n">sys</span><span class="o">.</span><span class="n">error</span><span class="o">(</span><span class="s">&quot;nope&quot;</span><span class="o">)</span> <span class="k">else</span> <span class="nc">Success</span><span class="o">(</span><span class="n">n</span><span class="o">)</span>
+<span class="k">val</span> <span class="n">x</span> <span class="k">=</span> <span class="nc">Try</span><span class="o">(</span><span class="mi">0</span><span class="o">).</span><span class="n">flatMap</span><span class="o">(</span><span class="n">verify</span><span class="o">)</span>
+<span class="c1">//x: Try[Int] = Failure(RuntimeException: nope)</span>
+<span class="k">val</span> <span class="n">y</span> <span class="k">=</span> <span class="n">verify</span><span class="o">(</span><span class="mi">0</span><span class="o">)</span>
+<span class="c1">//RuntimeException: nope</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4.md">lecture4.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              22/48
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>We'll see another way to wrap a <code>Try</code> when we discuss the <a href="https://github.com/typelevel/cats/blob/master/core/src/main/scala/cats/data/Validated.scala"><code>Validated</code> applicative</a>:</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">fromTry</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">t</span><span class="k">:</span> <span class="kt">Try</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span><span class="k">:</span> <span class="kt">Validated</span><span class="o">[</span><span class="kt">Throwable</span>, <span class="kt">A</span><span class="o">]</span> <span class="k">=</span>
+  <span class="n">t</span> <span class="k">match</span> <span class="o">{</span>
+    <span class="k">case</span> <span class="nc">Failure</span><span class="o">(</span><span class="n">e</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">invalid</span><span class="o">(</span><span class="n">e</span><span class="o">)</span>
+    <span class="k">case</span> <span class="nc">Success</span><span class="o">(</span><span class="n">v</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">valid</span><span class="o">(</span><span class="n">v</span><span class="o">)</span>
+<span class="o">}</span>
+<span class="k">def</span> <span class="n">fromEither</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">](</span><span class="n">e</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">Validated</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">]</span> <span class="k">=</span>
+  <span class="n">e</span><span class="o">.</span><span class="n">fold</span><span class="o">(</span><span class="n">invalid</span><span class="o">,</span> <span class="n">valid</span><span class="o">)</span>
+<span class="k">def</span> <span class="n">fromOption</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">](</span><span class="n">o</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">],</span> <span class="n">ifNone</span><span class="k">:</span> <span class="o">=&gt;</span> <span class="n">A</span><span class="o">)</span><span class="k">:</span> <span class="kt">Validated</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">]</span> <span class="k">=</span>     
+  <span class="n">o</span><span class="o">.</span><span class="n">fold</span><span class="o">(</span><span class="n">invalid</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">](</span><span class="n">ifNone</span><span class="o">))(</span><span class="n">valid</span><span class="o">)</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4.md">lecture4.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              23/48
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            <header><h1><code>Option</code> in Cats</h1></header>
+            
+            
+            <section><div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">cats.syntax.option._</span>
+<span class="nc">Some</span><span class="o">(</span><span class="mi">3</span><span class="o">)</span>
+<span class="c1">//res0: Some[Int] = Some(3)</span>
+<span class="mf">3.</span><span class="n">some</span>
+<span class="c1">//res1: Option[Int] = Some(3)</span>
+<span class="mf">3.</span><span class="n">some</span><span class="o">.</span><span class="n">map</span> <span class="o">{</span> <span class="o">(</span><span class="n">i</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">i</span><span class="o">+</span><span class="mi">2</span> <span class="o">}</span>
+<span class="c1">//res2: Option[Int] = Some(5)</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4.md">lecture4.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              24/48
             </aside>
 
           </footer>
@@ -1582,10 +982,11 @@ res47: Option[Int] = None
             
             
             <section><div class="highlight"><pre><span></span><span class="k">for</span> <span class="o">{</span>
-  <span class="n">i</span> <span class="k">&lt;-</span> <span class="nc">List</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">1</span><span class="o">)</span>
+  <span class="n">i</span> <span class="k">&lt;-</span> <span class="nc">List</span><span class="o">(</span><span class="mi">0</span><span class="o">)</span>
 <span class="o">}</span> <span class="k">yield</span><span class="o">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)</span>
-
-<span class="nc">List</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">1</span><span class="o">)</span> <span class="n">map</span> <span class="o">{</span><span class="n">i</span> <span class="k">=&gt;</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">}</span>
+<span class="c1">//res0: List[Int] = List(1)</span>
+<span class="nc">List</span><span class="o">(</span><span class="mi">0</span><span class="o">)</span> <span class="n">map</span> <span class="o">{</span><span class="n">i</span> <span class="k">=&gt;</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">}</span>
+<span class="c1">//res1: List[Int] = List(1)</span>
 </pre></div>
 </section>
             
@@ -1605,7 +1006,7 @@ res47: Option[Int] = None
             </aside>
             
             <aside class="page_number">
-              40/70
+              25/48
             </aside>
 
           </footer>
@@ -1619,15 +1020,16 @@ res47: Option[Int] = None
             
             
             <section><div class="highlight"><pre><span></span><span class="k">for</span> <span class="o">{</span>
-  <span class="n">i</span> <span class="k">&lt;-</span> <span class="nc">List</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">1</span><span class="o">)</span>
-  <span class="n">j</span> <span class="k">&lt;-</span> <span class="nc">List</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="mi">3</span><span class="o">)</span>
-<span class="o">}</span> <span class="k">yield</span><span class="o">(</span><span class="n">i</span> <span class="o">*</span> <span class="n">j</span><span class="o">)</span>
-
-<span class="nc">List</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">1</span><span class="o">)</span> <span class="n">flatMap</span> <span class="o">{</span>
-  <span class="n">i</span> <span class="k">=&gt;</span> <span class="nc">List</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="mi">3</span><span class="o">)</span> <span class="n">map</span> <span class="o">{</span>
-    <span class="n">j</span> <span class="k">=&gt;</span> <span class="n">i</span> <span class="o">*</span> <span class="n">j</span>
+  <span class="n">i</span> <span class="k">&lt;-</span> <span class="nc">List</span><span class="o">(</span><span class="mi">1</span><span class="o">)</span>
+  <span class="n">j</span> <span class="k">&lt;-</span> <span class="nc">List</span><span class="o">(</span><span class="mi">2</span><span class="o">)</span>
+<span class="o">}</span> <span class="k">yield</span> <span class="o">(</span><span class="n">i</span><span class="o">,</span> <span class="n">j</span><span class="o">)</span>
+<span class="c1">//res2: List[(Int, Int)] = List((1,2))</span>
+<span class="nc">List</span><span class="o">(</span><span class="mi">1</span><span class="o">)</span> <span class="n">flatMap</span> <span class="o">{</span>
+  <span class="n">i</span> <span class="k">=&gt;</span> <span class="nc">List</span><span class="o">(</span><span class="mi">2</span><span class="o">)</span> <span class="n">map</span> <span class="o">{</span>
+    <span class="n">j</span> <span class="k">=&gt;</span> <span class="o">(</span><span class="n">i</span><span class="o">,</span> <span class="n">j</span><span class="o">)</span>
   <span class="o">}</span>
 <span class="o">}</span>
+<span class="c1">//res3: List[(Int, Int)] = List((1,2))</span>
 </pre></div>
 </section>
             
@@ -1647,7 +1049,7 @@ res47: Option[Int] = None
             </aside>
             
             <aside class="page_number">
-              41/70
+              26/48
             </aside>
 
           </footer>
@@ -1656,279 +1058,21 @@ res47: Option[Int] = None
       
       <!-- slide source: lecture4.md -->
       <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            
-            <section><p><code>flatMap</code> is similarly useful when dealing with Options — it will collapse chains of options down to one.</p>
-<p>We will talk much more in depth about this pattern when we get to Monads.</p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4.md">lecture4.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              42/70
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4.md -->
-      <div class="slide-wrapper">
-        <div class="slide">
+        <div class="slide has_code">
           <div class="inner">
             
             <header><h1>'Looping' over Options</h1></header>
             
             
-            <section><p>Given <code>def foo(x: Int, y: Int): Int = x+y</code></p>
-<pre><code>scala&gt;  val a = Some(3); val b = Some(4)
-a: Some[Int] = Some(3)
-b: Some[Int] = Some(4)
-scala&gt;   for {
-     |     x &lt;- a
-     |     y &lt;- b
-     |   } yield { foo(x, y) }
-res2: Option[Int] = Some(7)
-</code></pre></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4.md">lecture4.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              43/70
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4.md -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            
-            <section><p>Equivalently</p>
-<p>Given <code>def foo(x: Int, y: Int): Int = x+y</code></p>
-<pre><code>scala&gt;  val opA = Some(3); val opB = Some(4)
-opA: Some[Int] = Some(3)
-opB: Some[Int] = Some(4)
-
-scala&gt; opA.flatMap { a =&gt;
-            opB.map { b =&gt; foo(a,b) }
-        }
-
-res2: Option[Int] = Some(7)
-</code></pre>
-<p>Why use <code>map</code> on <code>opB</code>, rather than <code>flatMap</code>?  What does this indicate about for-comprehensions?</p>
-<p><a href="http://docs.scala-lang.org/tutorials/FAQ/yield.html">for-comp syntactic sugar</a></p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4.md">lecture4.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              44/70
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4.md -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            
-            <section><p>A different <code>foo</code></p>
-<p><code>def foo(x: Int, y: Int): Option[Int] = if(x&lt;0) Some(x+y) else None</code></p>
-<pre><code>scala&gt;  val opA = Some(3); val opB = Some(4)
-opA: Some[Int] = Some(3)
-opB: Some[Int] = Some(4)
-
-scala&gt; opA.flatMap { a =&gt;
-            opB.flatMap { b =&gt; foo(a,b) }
-        }
-
-res2: Option[Int] = None
-</code></pre></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4.md">lecture4.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              45/70
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4.md -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            
-            <section><pre><code>scala&gt; val c = None
-c: None.type = None
-scala&gt;   for {
-     |     x &lt;- a
-     |     y &lt;- c
-     |   } yield foo(x, y)
-res3: Option[Int] = None
-</code></pre></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4.md">lecture4.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              46/70
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code">
-          <div class="inner">
-            
-            <header><h1>Challenge Question</h1></header>
-            
-            
-            <section><p>Provided a function <code>mean</code>,</p>
-<div class="highlight"><pre><span></span><span class="n">mean</span><span class="o">(</span><span class="n">xs</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Double</span><span class="o">])</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Double</span><span class="o">]</span> <span class="k">=</span> <span class="o">...</span>
-</pre></div>
-
-<p>implement a <code>variance</code> function with the following signature:</p>
-<div class="highlight"><pre><span></span><span class="n">variance</span><span class="o">(</span><span class="n">xs</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Double</span><span class="o">])</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Double</span><span class="o">]</span>
-</pre></div>
-
-<p>It is an exercise in using <code>flatMap</code></p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4.md">lecture4.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              47/70
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source:  -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="page_number">
-              /70
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code">
-          <div class="inner">
-            
-            
-            <section><p>Concise solution</p>
-<div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">variance</span><span class="o">(</span><span class="n">xs</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Double</span><span class="o">])</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Double</span><span class="o">]</span> <span class="k">=</span>
-  <span class="n">mean</span><span class="o">(</span><span class="n">xs</span><span class="o">)</span> <span class="n">flatMap</span> <span class="o">{</span> <span class="n">m</span> <span class="k">=&gt;</span> 
-    <span class="n">mean</span><span class="o">(</span><span class="n">xs</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">x</span> <span class="k">=&gt;</span> <span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="o">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">m</span><span class="o">,</span> <span class="mi">2</span><span class="o">)))</span>
-  <span class="o">}</span>
+            <section><div class="highlight"><pre><span></span><span class="k">for</span> <span class="o">{</span>
+  <span class="n">x</span> <span class="k">&lt;-</span> <span class="mf">3.</span><span class="n">some</span>
+  <span class="n">y</span> <span class="k">&lt;-</span> <span class="mf">4.</span><span class="n">some</span>
+<span class="o">}</span> <span class="k">yield</span> <span class="n">x</span><span class="o">+</span><span class="n">y</span>
+<span class="c1">//res0: Option[Int] = Some(7)</span>
+<span class="mf">3.</span><span class="n">some</span><span class="o">.</span><span class="n">flatMap</span> <span class="o">{</span> <span class="n">x</span> <span class="k">=&gt;</span>
+  <span class="mf">4.</span><span class="n">some</span><span class="o">.</span><span class="n">map</span> <span class="o">{</span> <span class="n">y</span> <span class="k">=&gt;</span> <span class="n">x</span><span class="o">+</span><span class="n">y</span> <span class="o">}</span>
+<span class="o">}</span>           
+<span class="c1">//res1: Option[Int] = Some(7)</span>
 </pre></div>
 </section>
             
@@ -1948,7 +1092,7 @@ res3: Option[Int] = None
             </aside>
             
             <aside class="page_number">
-              48/70
+              27/48
             </aside>
 
           </footer>
@@ -1961,19 +1105,12 @@ res3: Option[Int] = None
           <div class="inner">
             
             
-            <section><p>Expanded solution</p>
-<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nc">_variance</span><span class="o">(</span><span class="n">xs</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Double</span><span class="o">])</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Double</span><span class="o">]</span> <span class="k">=</span>
-<span class="k">if</span> <span class="o">(</span><span class="n">xs</span><span class="o">.</span><span class="n">isEmpty</span><span class="o">)</span> <span class="nc">None</span>
-<span class="k">else</span> <span class="o">{</span>
-  <span class="k">val</span> <span class="n">opMean</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Double</span><span class="o">]</span> <span class="k">=</span> <span class="n">mean</span><span class="o">(</span><span class="n">xs</span><span class="o">)</span>
-  <span class="k">val</span> <span class="n">opVariance</span> <span class="k">=</span> <span class="n">opMean</span><span class="o">.</span><span class="n">flatMap</span> <span class="o">{</span> <span class="o">(</span><span class="n">m</span><span class="k">:</span> <span class="kt">Double</span><span class="o">)</span> <span class="k">=&gt;</span> 
-    <span class="k">val</span> <span class="n">subMSquared</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Double</span><span class="o">]</span> <span class="k">=</span> <span class="n">xs</span><span class="o">.</span><span class="n">map</span> <span class="o">{</span> <span class="n">s</span> <span class="k">=&gt;</span>
-      <span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="o">(</span><span class="n">s</span><span class="o">-</span><span class="n">m</span><span class="o">,</span> <span class="mi">2</span><span class="o">)</span> 
-    <span class="o">}</span>
-    <span class="n">mean</span><span class="o">(</span><span class="n">subMSquared</span><span class="o">)</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Double</span><span class="o">]</span>
-  <span class="o">}</span>
-  <span class="n">opVariance</span>
-<span class="o">}</span>
+            <section><div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">error</span> <span class="k">=</span> <span class="n">none</span>
+<span class="k">for</span> <span class="o">{</span>
+  <span class="n">x</span> <span class="k">&lt;-</span> <span class="mf">3.</span><span class="n">some</span>
+  <span class="n">y</span> <span class="k">&lt;-</span> <span class="n">error</span>
+<span class="o">}</span> <span class="k">yield</span> <span class="o">(</span><span class="n">x</span><span class="o">,</span><span class="n">y</span><span class="o">)</span>
+<span class="c1">//res0: Option[(Int, Nothing)] = None</span>
 </pre></div>
 </section>
             
@@ -1993,7 +1130,7 @@ res3: Option[Int] = None
             </aside>
             
             <aside class="page_number">
-              49/70
+              28/48
             </aside>
 
           </footer>
@@ -2005,16 +1142,12 @@ res3: Option[Int] = None
         <div class="slide has_code">
           <div class="inner">
             
-            <header><h1>Lifting Functions</h1></header>
             
-            
-            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">lift</span><span class="o">[</span><span class="kt">A</span>,<span class="kt">B</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="n">B</span><span class="o">)</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=&gt;</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span> <span class="k">=</span> 
-  <span class="k">_</span> <span class="n">map</span> <span class="n">f</span>
-</pre></div>
-
-<p>The wildcard above is an anonymous function</p>
-<div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">lift</span><span class="o">[</span><span class="kt">A</span>,<span class="kt">B</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="n">B</span><span class="o">)</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=&gt;</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span> <span class="k">=</span>
-  <span class="o">(</span><span class="n">opA</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span> <span class="k">=&gt;</span> <span class="n">opA</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">f</span><span class="o">)</span>
+            <section><div class="highlight"><pre><span></span><span class="k">for</span> <span class="o">{</span>
+  <span class="n">i</span> <span class="k">&lt;-</span> <span class="nc">List</span><span class="o">(</span><span class="mi">1</span><span class="o">)</span>
+  <span class="n">j</span> <span class="k">&lt;-</span> <span class="nc">List</span><span class="o">()</span>
+<span class="o">}</span> <span class="k">yield</span> <span class="o">(</span><span class="n">i</span><span class="o">,</span><span class="n">j</span><span class="o">)</span>
+<span class="c1">//res1: List[(Int, Nothing)] = List()</span>
 </pre></div>
 </section>
             
@@ -2034,44 +1167,7 @@ res3: Option[Int] = None
             </aside>
             
             <aside class="page_number">
-              50/70
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4.md -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            
-            <section><pre><code>scala&gt; lift(math.abs)
-res48: Option[Int] =&gt; Option[Int] = &lt;function1&gt;
-scala&gt; lift(math.pow)
-&lt;console&gt;:38: error: type mismatch;
- found   : (Double, Double) =&gt; Double
- required: ? =&gt; ?
-</code></pre></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4.md">lecture4.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              51/70
+              29/48
             </aside>
 
           </footer>
@@ -2083,7 +1179,7 @@ scala&gt; lift(math.pow)
         <div class="slide has_code">
           <div class="inner">
             
-            <header><h1>Challenge Question</h1></header>
+            <header><h1>Exercise</h1></header>
             
             
             <section><p>Implement a <code>map2</code> function with the following signature:</p>
@@ -2108,7 +1204,7 @@ scala&gt; lift(math.pow)
             </aside>
             
             <aside class="page_number">
-              52/70
+              30/48
             </aside>
 
           </footer>
@@ -2133,7 +1229,7 @@ scala&gt; lift(math.pow)
           <footer>
             
             <aside class="page_number">
-              /70
+              /48
             </aside>
 
           </footer>
@@ -2147,7 +1243,7 @@ scala&gt; lift(math.pow)
             
             
             <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">map2</span><span class="o">[</span><span class="kt">A</span>,<span class="kt">B</span>,<span class="kt">C</span><span class="o">](</span><span class="n">a</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">A</span><span class="o">],</span> <span class="n">b</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span>
-    <span class="o">(</span><span class="n">f</span><span class="k">:</span> <span class="o">(</span><span class="kt">A</span><span class="o">,</span> <span class="kt">B</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">C</span><span class="o">)</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">C</span><span class="o">]</span> <span class="k">=</span>
+   <span class="o">(</span><span class="n">f</span><span class="k">:</span> <span class="o">(</span><span class="kt">A</span><span class="o">,</span> <span class="kt">B</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">C</span><span class="o">)</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">C</span><span class="o">]</span> <span class="k">=</span>
   <span class="n">a</span> <span class="n">flatMap</span> <span class="o">(</span><span class="n">aa</span> <span class="k">=&gt;</span> <span class="n">b</span> <span class="n">map</span> <span class="o">(</span><span class="n">bb</span> <span class="k">=&gt;</span> <span class="n">f</span><span class="o">(</span><span class="n">aa</span><span class="o">,</span> <span class="n">bb</span><span class="o">)))</span>
 </pre></div>
 </section>
@@ -2168,48 +1264,7 @@ scala&gt; lift(math.pow)
             </aside>
             
             <aside class="page_number">
-              53/70
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code">
-          <div class="inner">
-            
-            <header><h1>this pattern may look familiar</h1></header>
-            
-            
-            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">map2</span><span class="o">[</span><span class="kt">A</span>,<span class="kt">B</span>,<span class="kt">C</span><span class="o">](</span><span class="n">a</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">A</span><span class="o">],</span> <span class="n">b</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span>
-  <span class="o">(</span><span class="n">f</span><span class="k">:</span> <span class="o">(</span><span class="kt">A</span><span class="o">,</span> <span class="kt">B</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">C</span><span class="o">)</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">C</span><span class="o">]</span> <span class="k">=</span>
-  <span class="n">a</span> <span class="n">flatMap</span> <span class="o">{</span>
-    <span class="n">i</span> <span class="k">=&gt;</span> <span class="n">b</span> <span class="n">map</span> <span class="o">{</span>
-      <span class="n">j</span> <span class="k">=&gt;</span> <span class="n">f</span><span class="o">(</span><span class="n">i</span><span class="o">,</span> <span class="n">j</span><span class="o">)</span>
-    <span class="o">}</span>
-  <span class="o">}</span>
-</pre></div>
-</section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4.md">lecture4.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              54/70
+              31/48
             </aside>
 
           </footer>
@@ -2222,49 +1277,7 @@ scala&gt; lift(math.pow)
           <div class="inner">
             
             
-            <section><div class="highlight"><pre><span></span><span class="k">for</span> <span class="o">{</span>
-  <span class="n">i</span> <span class="k">&lt;-</span> <span class="nc">List</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">1</span><span class="o">)</span>
-  <span class="n">j</span> <span class="k">&lt;-</span> <span class="nc">List</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="mi">3</span><span class="o">)</span>
-<span class="o">}</span> <span class="k">yield</span><span class="o">(</span><span class="n">i</span> <span class="o">*</span> <span class="n">j</span><span class="o">)</span>
-
-<span class="nc">List</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">1</span><span class="o">)</span> <span class="n">flatMap</span> <span class="o">{</span>
-  <span class="n">i</span> <span class="k">=&gt;</span> <span class="nc">List</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="mi">3</span><span class="o">)</span> <span class="n">map</span> <span class="o">{</span>
-    <span class="n">j</span> <span class="k">=&gt;</span> <span class="n">i</span> <span class="o">*</span> <span class="n">j</span>
-  <span class="o">}</span>
-<span class="o">}</span>
-</pre></div>
-</section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4.md">lecture4.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              55/70
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code">
-          <div class="inner">
-            
-            
-            <section><p>We could even implement <code>map2</code> with a for-comprehension:</p>
+            <section><p>We could also implement <code>map2</code> with a for-comprehension:</p>
 <div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">map2</span><span class="o">[</span><span class="kt">A</span>,<span class="kt">B</span>,<span class="kt">C</span><span class="o">](</span><span class="n">a</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">A</span><span class="o">],</span> <span class="n">b</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span>
   <span class="o">(</span><span class="n">f</span><span class="k">:</span> <span class="o">(</span><span class="kt">A</span><span class="o">,</span> <span class="kt">B</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">C</span><span class="o">)</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">C</span><span class="o">]</span> <span class="k">=</span>   
   <span class="k">for</span> <span class="o">{</span>
@@ -2290,7 +1303,7 @@ scala&gt; lift(math.pow)
             </aside>
             
             <aside class="page_number">
-              56/70
+              32/48
             </aside>
 
           </footer>
@@ -2302,12 +1315,15 @@ scala&gt; lift(math.pow)
         <div class="slide has_code">
           <div class="inner">
             
-            <header><h1>Challenge Question</h1></header>
+            <header><h1>Exercise</h1></header>
             
             
-            <section><p>Implement a <code>map3</code> function, using <code>flatMap</code> or a for-comprehension:</p>
-<div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">map3</span><span class="o">[</span><span class="kt">A</span>,<span class="kt">B</span>,<span class="kt">C</span>,<span class="kt">D</span><span class="o">](</span><span class="n">opA</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">A</span><span class="o">],</span> <span class="n">opB</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">],</span> <span class="n">opC</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">C</span><span class="o">])</span>
-  <span class="o">(</span><span class="n">f</span><span class="k">:</span> <span class="o">(</span><span class="kt">A</span><span class="o">,</span> <span class="kt">B</span><span class="o">,</span> <span class="n">C</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">D</span><span class="o">)</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">D</span><span class="o">]</span>
+            <section><p>Provided a function <code>mean</code>,</p>
+<div class="highlight"><pre><span></span><span class="n">mean</span><span class="o">(</span><span class="n">xs</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Double</span><span class="o">])</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Double</span><span class="o">]</span> <span class="k">=</span> <span class="o">...</span>
+</pre></div>
+
+<p>implement a <code>variance</code> function with the following signature:</p>
+<div class="highlight"><pre><span></span><span class="n">variance</span><span class="o">(</span><span class="n">xs</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Double</span><span class="o">])</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Double</span><span class="o">]</span>
 </pre></div>
 </section>
             
@@ -2327,295 +1343,7 @@ scala&gt; lift(math.pow)
             </aside>
             
             <aside class="page_number">
-              57/70
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code">
-          <div class="inner">
-            
-            <header><h1>Try</h1></header>
-            
-            
-            <section><p>Common pattern in <em>FP in Scala</em>: wrapping a side-effecting API or function in a purely functional data structure.</p>
-<p>Let's wrap a function that may throw an error in an <code>Option</code>.</p>
-<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nc">Try</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">a</span><span class="k">:</span> <span class="o">=&gt;</span> <span class="n">A</span><span class="o">)</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> 
-  <span class="k">try</span> <span class="o">{</span> <span class="nc">Some</span><span class="o">(</span><span class="n">a</span><span class="o">)</span> <span class="o">}</span>
-  <span class="k">catch</span> <span class="o">{</span> <span class="k">case</span> <span class="n">e</span><span class="k">:</span> <span class="kt">Exception</span> <span class="o">=&gt;</span> <span class="nc">None</span> <span class="o">}</span>
-</pre></div>
-
-<p>We use a try-catch clause from Java.  The <code>catch</code> syntax is slightly different in Scala.</p>
-<p>The <code>None</code> returned is not informative about the exception thrown.  Next lecture's type <code>Either</code> fixes this.</p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4.md">lecture4.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              58/70
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code">
-          <div class="inner">
-            
-            
-            <section><p><code>=&gt;</code> in a function argument means the argument is lazy.  <code>=&gt;</code> does not memoize.
-If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation would be outside the try-catch clause.</p>
-<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nc">Try</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">a</span><span class="k">:</span> <span class="kt">A</span><span class="o">)</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> 
-  <span class="k">try</span> <span class="o">{</span> <span class="nc">Some</span><span class="o">(</span><span class="n">a</span><span class="o">)</span> <span class="o">}</span>
-  <span class="k">catch</span> <span class="o">{</span> <span class="k">case</span> <span class="n">e</span><span class="k">:</span> <span class="kt">Exception</span> <span class="o">=&gt;</span> <span class="nc">None</span> <span class="o">}</span>
-</pre></div>
-</section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4.md">lecture4.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              59/70
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code">
-          <div class="inner">
-            
-            
-            <section><p>Think of lazy argument <code>a: =&gt; A</code> as a function with no input: <code>() =&gt; A</code>.</p>
-<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nc">Try</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">lazyA</span><span class="k">:</span> <span class="o">()</span> <span class="o">=&gt;</span> <span class="n">A</span><span class="o">)</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> 
-  <span class="k">try</span> <span class="o">{</span> <span class="nc">Some</span><span class="o">(</span> <span class="n">lazyA</span><span class="o">()</span> <span class="o">)</span> <span class="o">}</span>
-  <span class="k">catch</span> <span class="o">{</span> <span class="k">case</span> <span class="n">e</span><span class="k">:</span> <span class="kt">Exception</span> <span class="o">=&gt;</span> <span class="nc">None</span> <span class="o">}</span>
-</pre></div>
-</section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4.md">lecture4.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              60/70
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4.md -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            <header><h1><code>sequence</code> and <code>traverse</code></h1></header>
-            
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4.md">lecture4.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              61/70
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code">
-          <div class="inner">
-            
-            
-            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">sequence</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">a</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Option</span><span class="o">[</span><span class="kt">A</span><span class="o">]])</span><span class="k">:</span> 
-  <span class="kt">Option</span><span class="o">[</span><span class="kt">List</span><span class="o">[</span><span class="kt">A</span><span class="o">]]</span>
-</pre></div>
-</section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4.md">lecture4.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              62/70
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code">
-          <div class="inner">
-            
-            
-            <section><p>Can be implemented with <code>sequence</code></p>
-<div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">traverse</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">](</span><span class="n">a</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">A</span><span class="o">])(</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span><span class="k">:</span> 
-  <span class="kt">Option</span><span class="o">[</span><span class="kt">List</span><span class="o">[</span><span class="kt">B</span><span class="o">]]</span>
-</pre></div>
-</section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4.md">lecture4.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              63/70
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4.md -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            
-            <section><pre><code>scala&gt; def foo(x: Int) = 
-  if (x==2) None else Some(x)
-foo: (x: Int)Option[Int]
-
-scala&gt; traverse(List(1,2,3))(foo)
-res55: Option[List[Int]] = None
-scala&gt; traverse(List(1,3,4))(foo)
-res56: Option[List[Int]] = Some(List(1, 3, 4))
-</code></pre></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4.md">lecture4.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              64/70
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4.md -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            <header><h1>Challenge Question</h1></header>
-            
-            
-            <section><p>Implement <code>traverse</code> so that it traverses the list only once.</p>
-<p>Use <code>sequence</code> to implement <code>traverse</code> more efficiently.  Of course, there cannot be a circular dependency.</p>
-<p>This is exercise 4.5 in <em>FP in Scala</em>.</p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4.md">lecture4.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              65/70
+              33/48
             </aside>
 
           </footer>
@@ -2640,7 +1368,415 @@ res56: Option[List[Int]] = Some(List(1, 3, 4))
           <footer>
             
             <aside class="page_number">
-              /70
+              /48
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">variance</span><span class="o">(</span><span class="n">xs</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Double</span><span class="o">])</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Double</span><span class="o">]</span> <span class="k">=</span>
+  <span class="n">mean</span><span class="o">(</span><span class="n">xs</span><span class="o">)</span> <span class="n">flatMap</span> <span class="o">{</span> <span class="n">m</span> <span class="k">=&gt;</span>
+    <span class="n">mean</span><span class="o">(</span><span class="n">xs</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">x</span> <span class="k">=&gt;</span> <span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="o">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">m</span><span class="o">,</span> <span class="mi">2</span><span class="o">)))</span>
+  <span class="o">}</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4.md">lecture4.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              34/48
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            <header><h1><code>sequence</code> and <code>traverse</code></h1></header>
+            
+            
+            <section><p><code>def sequence[A](a: List[Option[A]]): Option[List[A]]</code></p>
+<p><code>def traverse[A, B](a: List[A])(f: A =&gt; Option[B]): Option[List[B]]</code></p>
+<p>These are two combinators we will see repeatedly throughout the course.</p>
+<p>Both are derived from <code>flatMap</code> and <code>map</code>.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4.md">lecture4.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              35/48
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><pre><code>sequence(List(Some(1), Some(2)))
+res5: Option[List[Int]] = Some(List(1, 2))
+scala&gt; sequence(List(Some(1), None))
+res6: Option[List[Int]] = None
+</code></pre></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4.md">lecture4.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              36/48
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>Given <code>def foo(x: Int) = if (x==2) None else Some(x)</code></p>
+<pre><code>scala&gt; traverse(List(1,2,3))(foo)
+res7: Option[List[Int]] = None
+scala&gt; traverse(List(1,3,4))(foo)
+res8: Option[List[Int]] = Some(List(1, 3, 4))
+</code></pre></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4.md">lecture4.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              37/48
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            <header><h1>Exercise</h1></header>
+            
+            
+            <section><p>Implement <code>sequence[A](a: List[Option[A]]): Option[List[A]]</code>.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4.md">lecture4.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              38/48
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source:  -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="page_number">
+              /48
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">sequence</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">a</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Option</span><span class="o">[</span><span class="kt">A</span><span class="o">]])</span><span class="k">:</span>
+<span class="kt">Option</span><span class="o">[</span><span class="kt">List</span><span class="o">[</span><span class="kt">A</span><span class="o">]]</span> <span class="k">=</span>
+  <span class="n">a</span><span class="o">.</span><span class="n">foldRight</span><span class="o">[</span><span class="kt">Option</span><span class="o">[</span><span class="kt">List</span><span class="o">[</span><span class="kt">A</span><span class="o">]]]</span>
+    <span class="o">(</span><span class="nc">Some</span><span class="o">(</span><span class="nc">Nil</span><span class="o">))</span>
+    <span class="o">((</span><span class="n">x</span><span class="o">,</span><span class="n">y</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">map2</span><span class="o">(</span><span class="n">x</span><span class="o">,</span><span class="n">y</span><span class="o">)(</span><span class="k">_</span> <span class="o">::</span> <span class="k">_</span><span class="o">))</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4.md">lecture4.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              39/48
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">sequence1</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">a</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Option</span><span class="o">[</span><span class="kt">A</span><span class="o">]])</span><span class="k">:</span>
+<span class="kt">Option</span><span class="o">[</span><span class="kt">List</span><span class="o">[</span><span class="kt">A</span><span class="o">]]</span> <span class="k">=</span>
+  <span class="n">a</span> <span class="k">match</span> <span class="o">{</span>
+    <span class="k">case</span> <span class="nc">Nil</span> <span class="k">=&gt;</span> <span class="nc">Some</span><span class="o">(</span><span class="nc">Nil</span><span class="o">)</span>
+    <span class="k">case</span> <span class="n">h</span> <span class="o">::</span> <span class="n">t</span> <span class="k">=&gt;</span> <span class="n">h</span> <span class="n">flatMap</span> <span class="o">(</span><span class="n">hh</span> <span class="k">=&gt;</span> <span class="n">sequence</span><span class="o">(</span><span class="n">t</span><span class="o">)</span> <span class="n">map</span> <span class="o">(</span><span class="n">hh</span> <span class="o">::</span> <span class="k">_</span><span class="o">))</span>
+  <span class="o">}</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4.md">lecture4.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              40/48
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p><code>traverse</code> can be trivially implemented with <code>sequence</code> and <code>map</code>.</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">traverse1</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">](</span><span class="n">a</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">A</span><span class="o">])(</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span><span class="k">:</span>
+  <span class="kt">Option</span><span class="o">[</span><span class="kt">List</span><span class="o">[</span><span class="kt">B</span><span class="o">]]</span> <span class="k">=</span>
+  <span class="n">sequence</span> <span class="n">a</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">f</span><span class="o">)</span>
+</pre></div>
+
+<p>However this implementation is inefficient.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4.md">lecture4.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              41/48
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            <header><h1>Exercise</h1></header>
+            
+            
+            <section><p>Implement <code>traverse</code> so that it traverses the list only once.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4.md">lecture4.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              42/48
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source:  -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="page_number">
+              /48
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">traverse</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">]</span> <span class="o">(</span><span class="n">a</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">A</span><span class="o">])(</span>
+<span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">List</span><span class="o">[</span><span class="kt">B</span><span class="o">]]</span> <span class="k">=</span>
+    <span class="n">a</span><span class="o">.</span><span class="n">foldRight</span><span class="o">[</span><span class="kt">Option</span><span class="o">[</span><span class="kt">List</span><span class="o">[</span><span class="kt">B</span><span class="o">]]]</span> <span class="o">(</span><span class="nc">Some</span><span class="o">(</span><span class="nc">Nil</span><span class="o">))</span> <span class="o">{</span>
+      <span class="o">(</span><span class="n">h</span><span class="o">,</span><span class="n">t</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">map2</span><span class="o">(</span><span class="n">f</span><span class="o">(</span><span class="n">h</span><span class="o">),</span><span class="n">t</span><span class="o">)(</span><span class="k">_</span> <span class="o">::</span> <span class="k">_</span><span class="o">)</span>
+    <span class="o">}</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4.md">lecture4.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              43/48
             </aside>
 
           </footer>
@@ -2680,7 +1816,7 @@ res56: Option[List[Int]] = Some(List(1, 3, 4))
             </aside>
             
             <aside class="page_number">
-              66/70
+              44/48
             </aside>
 
           </footer>
@@ -2720,83 +1856,7 @@ res56: Option[List[Int]] = Some(List(1, 3, 4))
             </aside>
             
             <aside class="page_number">
-              67/70
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code">
-          <div class="inner">
-            
-            
-            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">traverse3</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">]</span> <span class="o">(</span><span class="n">a</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">A</span><span class="o">])(</span>
-  <span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">List</span><span class="o">[</span><span class="kt">B</span><span class="o">]]</span> <span class="k">=</span>
-  <span class="n">a</span> <span class="k">match</span> <span class="o">{</span>
-    <span class="k">case</span> <span class="nc">Nil</span> <span class="k">=&gt;</span> <span class="nc">Some</span><span class="o">(</span><span class="nc">Nil</span><span class="o">)</span>
-    <span class="k">case</span> <span class="n">h</span> <span class="o">::</span> <span class="n">t</span> <span class="k">=&gt;</span> 
-      <span class="n">map2</span><span class="o">(</span><span class="n">f</span><span class="o">(</span><span class="n">h</span><span class="o">),</span> <span class="n">traverse</span><span class="o">(</span><span class="n">t</span><span class="o">)(</span><span class="n">f</span><span class="o">))(</span><span class="k">_</span> <span class="o">::</span> <span class="k">_</span><span class="o">)</span>
-  <span class="o">}</span>
-</pre></div>
-</section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4.md">lecture4.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              68/70
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code">
-          <div class="inner">
-            
-            
-            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">traverse_4</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">]</span> <span class="o">(</span><span class="n">a</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">A</span><span class="o">])(</span>
-  <span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">List</span><span class="o">[</span><span class="kt">B</span><span class="o">]]</span> <span class="k">=</span>
-    <span class="n">a</span><span class="o">.</span><span class="n">foldRight</span><span class="o">[</span><span class="kt">Option</span><span class="o">[</span><span class="kt">List</span><span class="o">[</span><span class="kt">B</span><span class="o">]]]</span> <span class="o">(</span><span class="nc">Some</span><span class="o">(</span><span class="nc">Nil</span><span class="o">))</span> <span class="o">{</span>
-      <span class="o">(</span><span class="n">h</span><span class="o">,</span><span class="n">t</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">map2</span><span class="o">(</span><span class="n">f</span><span class="o">(</span><span class="n">h</span><span class="o">),</span><span class="n">t</span><span class="o">)(</span><span class="k">_</span> <span class="o">::</span> <span class="k">_</span><span class="o">)</span>
-    <span class="o">}</span>
-</pre></div>
-</section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4.md">lecture4.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              69/70
+              45/48
             </aside>
 
           </footer>
@@ -2809,18 +1869,9 @@ res56: Option[List[Int]] = Some(List(1, 3, 4))
           <div class="inner">
             
             
-            <section><p>Generally speaking, you know there is only one thing that can go wrong, use <code>Option</code> or its extension <code>Either</code>.
-<br />
-<br />
-<br /></p>
-<p>If you know there is multiple things that can go wrong, roll your own Trait.
-<br />
-<br />
-<br />
-Only use exceptions if you don't know what can go wrong.</p>
-<p>Some exceptions we do not want to catch, like fatal exceptions.  These will be handled by the JVM.</p>
-<p>The comparable types to <code>Option</code> in the <code>Scalaz</code> library encourage you not to catch fatal exceptions.</p>
-<p>Our <em>uninformative</em> <code>Try</code> method justifies <code>Either</code>, which has a feature <code>Option</code> does not have.</p></section>
+            <section><p>The fact that <code>traverse1</code> and <code>traverse2</code> are equivalent is a simple result of the Monad laws.</p>
+<p><code>traverse</code> is not equivalent to the other two, it uses only <code>map2</code> and is therefore an applicative functor.</p>
+<p>We'll discuss this more in the weeks to come.</p></section>
             
           </div>
           <div class="presenter_notes">
@@ -2838,7 +1889,76 @@ Only use exceptions if you don't know what can go wrong.</p>
             </aside>
             
             <aside class="page_number">
-              70/70
+              46/48
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            <header><h1>Homework</h1></header>
+            
+            
+            <section><p>Have a look at <code>Either</code> and <code>Validation</code> in <a href="https://github.com/typelevel/cats"><em>Cats</em></a>.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4.md">lecture4.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              47/48
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            <header><h1>Links</h1></header>
+            
+            
+            <section><ul>
+<li><a href="http://eed3si9n.com/herding-cats">Herding Cats</a></li>
+<li><a href="http://underscore.io/books/advanced-scala/">Advanced Scala with Cats</a></li>
+</ul></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4.md">lecture4.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              48/48
             </aside>
 
           </footer>
@@ -2854,73 +1974,73 @@ Only use exceptions if you don't know what can go wrong.</p>
       <caption>Table of Contents</caption>
       
       <tr id="toc-row-1">
-        <th><a href="#slide1">Lecture 4: Combinators</a></th>
+        <th><a href="#slide1">Lecture 4: Options</a></th>
         <td><a href="#slide1">1</a></td>
       </tr>
       
       
       <tr id="toc-row-2">
-        <th><a href="#slide2">Guy Steele</a></th>
+        <th><a href="#slide2">Imperative Error Handling</a></th>
         <td><a href="#slide2">2</a></td>
       </tr>
       
       
       <tr id="toc-row-3">
-        <th><a href="#slide3">Functional Combinators</a></th>
+        <th><a href="#slide3">Exceptions</a></th>
         <td><a href="#slide3">3</a></td>
       </tr>
       
       
       <tr id="toc-row-4">
-        <th><a href="#slide4">map</a></th>
+        <th><a href="#slide4">-</a></th>
         <td><a href="#slide4">4</a></td>
       </tr>
       
       
       <tr id="toc-row-5">
-        <th><a href="#slide5">foreach</a></th>
+        <th><a href="#slide5">Sentinel Values</a></th>
         <td><a href="#slide5">5</a></td>
       </tr>
       
       
       <tr id="toc-row-6">
-        <th><a href="#slide6">filter</a></th>
+        <th><a href="#slide6">Flagged Arguments</a></th>
         <td><a href="#slide6">6</a></td>
       </tr>
       
       
       <tr id="toc-row-7">
-        <th><a href="#slide7">partition</a></th>
+        <th><a href="#slide7">-</a></th>
         <td><a href="#slide7">7</a></td>
       </tr>
       
       
       <tr id="toc-row-8">
-        <th><a href="#slide8">exists</a></th>
+        <th><a href="#slide8">-</a></th>
         <td><a href="#slide8">8</a></td>
       </tr>
       
       
       <tr id="toc-row-9">
-        <th><a href="#slide9">dropWhile</a></th>
+        <th><a href="#slide9">-</a></th>
         <td><a href="#slide9">9</a></td>
       </tr>
       
       
       <tr id="toc-row-10">
-        <th><a href="#slide10">foldLeft</a></th>
+        <th><a href="#slide10">-</a></th>
         <td><a href="#slide10">10</a></td>
       </tr>
       
       
       <tr id="toc-row-11">
-        <th><a href="#slide11">foldRight</a></th>
+        <th><a href="#slide11">Failure is an <code>Option</code></a></th>
         <td><a href="#slide11">11</a></td>
       </tr>
       
       
       <tr id="toc-row-12">
-        <th><a href="#slide12">groupBy</a></th>
+        <th><a href="#slide12">Application: Computing a mean</a></th>
         <td><a href="#slide12">12</a></td>
       </tr>
       
@@ -2932,13 +2052,13 @@ Only use exceptions if you don't know what can go wrong.</p>
       
       
       <tr id="toc-row-14">
-        <th><a href="#slide14">flatten</a></th>
+        <th><a href="#slide14">-</a></th>
         <td><a href="#slide14">14</a></td>
       </tr>
       
       
       <tr id="toc-row-15">
-        <th><a href="#slide15">flatMap</a></th>
+        <th><a href="#slide15"><code>flatMap</code> for <code>Option</code></a></th>
         <td><a href="#slide15">15</a></td>
       </tr>
       
@@ -2956,19 +2076,19 @@ Only use exceptions if you don't know what can go wrong.</p>
       
       
       <tr id="toc-row-18">
-        <th><a href="#slide18">-</a></th>
+        <th><a href="#slide18">Exercise</a></th>
         <td><a href="#slide18">18</a></td>
       </tr>
       
       
       <tr id="toc-row-19">
-        <th><a href="#slide19">Scala Style</a></th>
+        <th><a href="#slide19">-</a></th>
         <td><a href="#slide19">19</a></td>
       </tr>
       
       
       <tr id="toc-row-20">
-        <th><a href="#slide20">-</a></th>
+        <th><a href="#slide20">Try</a></th>
         <td><a href="#slide20">20</a></td>
       </tr>
       
@@ -2992,13 +2112,13 @@ Only use exceptions if you don't know what can go wrong.</p>
       
       
       <tr id="toc-row-24">
-        <th><a href="#slide24">Option</a></th>
+        <th><a href="#slide24"><code>Option</code> in Cats</a></th>
         <td><a href="#slide24">24</a></td>
       </tr>
       
       
       <tr id="toc-row-25">
-        <th><a href="#slide25">-</a></th>
+        <th><a href="#slide25">Reduction of for loops</a></th>
         <td><a href="#slide25">25</a></td>
       </tr>
       
@@ -3010,13 +2130,13 @@ Only use exceptions if you don't know what can go wrong.</p>
       
       
       <tr id="toc-row-27">
-        <th><a href="#slide27">Failure is an <code>Option</code></a></th>
+        <th><a href="#slide27">'Looping' over Options</a></th>
         <td><a href="#slide27">27</a></td>
       </tr>
       
       
       <tr id="toc-row-28">
-        <th><a href="#slide28">"Container" pattern</a></th>
+        <th><a href="#slide28">-</a></th>
         <td><a href="#slide28">28</a></td>
       </tr>
       
@@ -3028,25 +2148,25 @@ Only use exceptions if you don't know what can go wrong.</p>
       
       
       <tr id="toc-row-30">
-        <th><a href="#slide30">-</a></th>
+        <th><a href="#slide30">Exercise</a></th>
         <td><a href="#slide30">30</a></td>
       </tr>
       
       
       <tr id="toc-row-31">
-        <th><a href="#slide31">C, Java, and Python-style Error Handling (in chronological order)</a></th>
+        <th><a href="#slide31">-</a></th>
         <td><a href="#slide31">31</a></td>
       </tr>
       
       
       <tr id="toc-row-32">
-        <th><a href="#slide32">Application: Computing a mean</a></th>
+        <th><a href="#slide32">-</a></th>
         <td><a href="#slide32">32</a></td>
       </tr>
       
       
       <tr id="toc-row-33">
-        <th><a href="#slide33">-</a></th>
+        <th><a href="#slide33">Exercise</a></th>
         <td><a href="#slide33">33</a></td>
       </tr>
       
@@ -3058,7 +2178,7 @@ Only use exceptions if you don't know what can go wrong.</p>
       
       
       <tr id="toc-row-35">
-        <th><a href="#slide35">Maps on Options</a></th>
+        <th><a href="#slide35"><code>sequence</code> and <code>traverse</code></a></th>
         <td><a href="#slide35">35</a></td>
       </tr>
       
@@ -3070,13 +2190,13 @@ Only use exceptions if you don't know what can go wrong.</p>
       
       
       <tr id="toc-row-37">
-        <th><a href="#slide37"><code>flatMap</code> for <code>Option</code></a></th>
+        <th><a href="#slide37">-</a></th>
         <td><a href="#slide37">37</a></td>
       </tr>
       
       
       <tr id="toc-row-38">
-        <th><a href="#slide38">Challenge Question</a></th>
+        <th><a href="#slide38">Exercise</a></th>
         <td><a href="#slide38">38</a></td>
       </tr>
       
@@ -3088,7 +2208,7 @@ Only use exceptions if you don't know what can go wrong.</p>
       
       
       <tr id="toc-row-40">
-        <th><a href="#slide40">Reduction of for loops</a></th>
+        <th><a href="#slide40">-</a></th>
         <td><a href="#slide40">40</a></td>
       </tr>
       
@@ -3100,13 +2220,13 @@ Only use exceptions if you don't know what can go wrong.</p>
       
       
       <tr id="toc-row-42">
-        <th><a href="#slide42">-</a></th>
+        <th><a href="#slide42">Exercise</a></th>
         <td><a href="#slide42">42</a></td>
       </tr>
       
       
       <tr id="toc-row-43">
-        <th><a href="#slide43">'Looping' over Options</a></th>
+        <th><a href="#slide43">-</a></th>
         <td><a href="#slide43">43</a></td>
       </tr>
       
@@ -3130,146 +2250,14 @@ Only use exceptions if you don't know what can go wrong.</p>
       
       
       <tr id="toc-row-47">
-        <th><a href="#slide47">Challenge Question</a></th>
+        <th><a href="#slide47">Homework</a></th>
         <td><a href="#slide47">47</a></td>
       </tr>
       
       
       <tr id="toc-row-48">
-        <th><a href="#slide48">-</a></th>
+        <th><a href="#slide48">Links</a></th>
         <td><a href="#slide48">48</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-49">
-        <th><a href="#slide49">-</a></th>
-        <td><a href="#slide49">49</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-50">
-        <th><a href="#slide50">Lifting Functions</a></th>
-        <td><a href="#slide50">50</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-51">
-        <th><a href="#slide51">-</a></th>
-        <td><a href="#slide51">51</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-52">
-        <th><a href="#slide52">Challenge Question</a></th>
-        <td><a href="#slide52">52</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-53">
-        <th><a href="#slide53">-</a></th>
-        <td><a href="#slide53">53</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-54">
-        <th><a href="#slide54">this pattern may look familiar</a></th>
-        <td><a href="#slide54">54</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-55">
-        <th><a href="#slide55">-</a></th>
-        <td><a href="#slide55">55</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-56">
-        <th><a href="#slide56">-</a></th>
-        <td><a href="#slide56">56</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-57">
-        <th><a href="#slide57">Challenge Question</a></th>
-        <td><a href="#slide57">57</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-58">
-        <th><a href="#slide58">Try</a></th>
-        <td><a href="#slide58">58</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-59">
-        <th><a href="#slide59">-</a></th>
-        <td><a href="#slide59">59</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-60">
-        <th><a href="#slide60">-</a></th>
-        <td><a href="#slide60">60</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-61">
-        <th><a href="#slide61"><code>sequence</code> and <code>traverse</code></a></th>
-        <td><a href="#slide61">61</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-62">
-        <th><a href="#slide62">-</a></th>
-        <td><a href="#slide62">62</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-63">
-        <th><a href="#slide63">-</a></th>
-        <td><a href="#slide63">63</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-64">
-        <th><a href="#slide64">-</a></th>
-        <td><a href="#slide64">64</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-65">
-        <th><a href="#slide65">Challenge Question</a></th>
-        <td><a href="#slide65">65</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-66">
-        <th><a href="#slide66">-</a></th>
-        <td><a href="#slide66">66</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-67">
-        <th><a href="#slide67">-</a></th>
-        <td><a href="#slide67">67</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-68">
-        <th><a href="#slide68">-</a></th>
-        <td><a href="#slide68">68</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-69">
-        <th><a href="#slide69">-</a></th>
-        <td><a href="#slide69">69</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-70">
-        <th><a href="#slide70">-</a></th>
-        <td><a href="#slide70">70</a></td>
       </tr>
       
       

@@ -1,13 +1,8 @@
 
 #Lecture 4: Options
 
----
+![](images/lecture4/maybe.png)
 
-![](images/lecture1/john_backus.jpg)
-
-"Conventional programming languages are growing ever more enormous, but not stronger. An alternative functional style of programming is founded on the use of combining forms for creating programs. Combining forms can use high level programs to build still higher level ones in a style not possible in conventional languages."
-
--  John Backus, [Can Programming Be Liberated from the von Neumann Style?](http://dl.acm.org/citation.cfm?id=359579), 1978 ACM Turing Award Lecture
 
 ---
 
@@ -69,13 +64,9 @@ The type of `mean`, `Seq[Double]) => Double` tells us nothing about the fact tha
 
     !scala
     trait Option[+A] //base trait
-    case class Some[+A](get: A)
-	  extends Option[A]
-    case object None
-	  extends Option[Nothing]
+    case class Some[+A](get: A) extends Option[A]
+    case object None extends Option[Nothing]
 
-`case class` and `case object` provide built-in constructors and pattern-matching.
-`class` and `object` do not.
 
 ---
 
@@ -124,6 +115,29 @@ The basic interface for Option consists of three methods:
 
 ---
 
+Here is a hard-coded version of `map`:
+
+    !scala
+    def map[B](f: A => B): Option[B] =
+  	  this match {
+          case None => None
+          case Some(a) => Some(f(a))
+        }
+
+---
+
+
+#`flatMap` for `Option`
+
+    !scala
+    def flatMap[B](f: A => Option[B]): Option[B] =
+  	  this match {
+          case None => None
+          case Some(a) => f(a)
+        }
+
+---
+
 Combinators for safely exiting the `Option` monad:
 
 * [`fold`](https://github.com/typelevel/cats/blob/master/core/src/main/scala/cats/Foldable.scala)
@@ -143,60 +157,9 @@ We will explain the necessity of the lower type bound generic `B` in the `getOrE
 
 ---
 
-#Maps on Options
-
-    !scala
-    def map[B](f: A => B): Option[B] =
-  	  this match {
-          case None => None
-          case Some(a) => Some(f(a))
-        }
-
----
-
-    scala> val a = Some(3)
-    a: Some[Int] = Some(3)
-    scala> a map (_+2)
-    res0: Option[Int] = Some(5)
-
-Making the wildcard function (`_ + 2`) explicit,
-
-	a.map { (i: Int) => i+2 }
-
-
----
-
-    scala> val b: Option[Int] = None
-    b: Option[Int] = None
-    scala> b map (_+2)
-    res1: Option[Int] = None
-
----
-
-
-#`flatMap` for `Option`
-
-    !scala
-    def flatMap[B](f: A => Option[B]): Option[B] =
-  	  this match {
-          case None => None
-          case Some(a) => f(a)
-        }
-
----
-
-`flatMap` is extremely useful when dealing with Options — it will collapse chains of options down to one.
-
-We will talk much more in depth about this pattern when we get to Monads.
-
----
-
 #Exercise
 
-Implement `flatMap` using the other core methods `map` & `getOrElse`.
-
-
-Going forward, it will be increasingly important to note which combinators can be implemented using other combinators.  
+Implement `flatMap` using `map` & `getOrElse`.
 
 ---
 
@@ -208,83 +171,164 @@ Going forward, it will be increasingly important to note which combinators can b
 
 ---
 
+# Try
+
+`Try` is a general-purpose function for converting from an exception-based API to a container-based API.
+
+  	!scala
+  	def Try[A](a: => A): Option[A] =
+  	  try { Some(a) }
+  	  catch { case e: Exception => None }
+
+
+The `None` returned is not informative about the exception thrown.  Next lecture's type `Either` fixes this.
+
+---
+
+`=>` in a function argument means the argument is lazy.  `=>` does not memoize.
+If `a` were evaluated eagerly, an exception thrown in its evaluation would be outside the try-catch clause.
+
+Think of lazy argument `a: => A` as a function with no input: `() => A`.
+
+  	!scala
+  	def Try[A](lazyA: () => A): Option[A] =
+  	  try { Some( lazyA() ) }
+  	  catch { case e: Exception => None }
+
+---
+
+Note that the Scala std lib has a type constructor `Try[_]`, but it is not monadic:
+
+    !scala
+    import scala.util.{Try, Success}
+    def verify(n: Int): Try[Int] =
+      if (n == 0) sys.error("nope") else Success(n)
+    val x = Try(0).flatMap(verify)
+    //x: Try[Int] = Failure(RuntimeException: nope)
+    val y = verify(0)
+    //RuntimeException: nope
+
+---
+
+We'll see another way to wrap a `Try` when we discuss the [`Validated` applicative](https://github.com/typelevel/cats/blob/master/core/src/main/scala/cats/data/Validated.scala):
+
+    !scala
+    def fromTry[A](t: Try[A]): Validated[Throwable, A] =
+      t match {
+        case Failure(e) => invalid(e)
+        case Success(v) => valid(v)
+    }
+    def fromEither[A, B](e: Either[A, B]): Validated[A, B] =
+      e.fold(invalid, valid)
+    def fromOption[A, B](o: Option[B], ifNone: => A): Validated[A, B] =     
+      o.fold(invalid[A, B](ifNone))(valid)
+
+---
+
+#`Option` in Cats
+
+    !scala
+    import cats.syntax.option._
+    Some(3)
+    //res0: Some[Int] = Some(3)
+    3.some
+    //res1: Option[Int] = Some(3)
+    3.some.map { (i: Int) => i+2 }
+    //res2: Option[Int] = Some(5)
+
+---
+
 #Reduction of for loops
 
     !scala
     for {
-      i <- List(0, 1)
+      i <- List(0)
     } yield(i + 1)
-
-    List(0, 1) map {i => i + 1}
+    //res0: List[Int] = List(1)
+    List(0) map {i => i + 1}
+    //res1: List[Int] = List(1)
 
 ---
 
     !scala
     for {
-      i <- List(0, 1)
-      j <- List(2, 3)
-    } yield(i * j)
-
-    List(0, 1) flatMap {
-      i => List(2, 3) map {
-        j => i * j
+      i <- List(1)
+      j <- List(2)
+    } yield (i, j)
+    //res2: List[(Int, Int)] = List((1,2))
+    List(1) flatMap {
+      i => List(2) map {
+        j => (i, j)
       }
     }
+    //res3: List[(Int, Int)] = List((1,2))
 
 ---
 
 #'Looping' over Options
 
-Given `def foo(x: Int, y: Int): Int = x+y`
-
-    scala>  val a = Some(3); val b = Some(4)
-    a: Some[Int] = Some(3)
-    b: Some[Int] = Some(4)
-    scala>   for {
-         |     x <- a
-         |     y <- b
-         |   } yield { foo(x, y) }
-    res0: Option[Int] = Some(7)
-
----
-
-Equivalently
-
-Given `def foo(x: Int, y: Int): Int = x+y`
-
-    scala>  val opA = Some(3); val opB = Some(4)
-    opA: Some[Int] = Some(3)
-    opB: Some[Int] = Some(4)
-  	scala> opA.flatMap { a =>
-  	        	opB.map { b => foo(a,b) }
-      		}  			
-    res1: Option[Int] = Some(7)
-
-Why use `map` on `opB`, rather than `flatMap`?  
+    !scala
+    for {
+      x <- 3.some
+      y <- 4.some
+    } yield x+y
+    //res0: Option[Int] = Some(7)
+    3.some.flatMap { x =>
+      4.some.map { y => x+y }
+    }  			
+    //res1: Option[Int] = Some(7)
 
 ---
 
-A different `foo`
-
-`def foo(x: Int, y: Int): Option[Int] = if(x<0) Some(x+y) else None`
-
-    scala> val opA = Some(3); val opB = Some(4)
-    opA: Some[Int] = Some(3)
-    opB: Some[Int] = Some(4)
-  	scala> opA.flatMap { a =>
-          		opB.flatMap { b => foo(a,b) }
-      		}			
-    res2: Option[Int] = None
+    !scala
+    val error = none
+    for {
+      x <- 3.some
+      y <- error
+    } yield (x,y)
+    //res0: Option[(Int, Nothing)] = None
 
 ---
 
-    scala> val c = None
-    c: None.type = None
-    scala>   for {
-         |     x <- a
-         |     y <- c
-         |   } yield foo(x, y)
-    res3: Option[Int] = None
+    !scala
+    for {
+      i <- List(1)
+      j <- List()
+    } yield (i,j)
+    //res1: List[(Int, Nothing)] = List()
+
+---
+
+
+#Exercise
+
+Implement a `map2` function with the following signature:
+
+    !scala
+    def map2[A,B,C](a: Option[A], b: Option[B])
+      (f: (A, B) => C): Option[C]
+
+---
+
+---
+
+    !scala
+    def map2[A,B,C](a: Option[A], b: Option[B])
+	   (f: (A, B) => C): Option[C] =
+      a flatMap (aa => b map (bb => f(aa, bb)))
+
+---
+
+We could also implement `map2` with a for-comprehension:
+
+    !scala
+    def map2[A,B,C](a: Option[A], b: Option[B])
+	  (f: (A, B) => C): Option[C] =   
+      for {
+        i <- a
+        j <- b
+      } yield f(i, j)
+
 
 ---
 
@@ -313,126 +357,31 @@ implement a `variance` function with the following signature:
 
 ---
 
-#Lifting Functions
-
-    !scala
-    def lift[A,B](f: A => B): Option[A] => Option[B] =
-      _ map f
-
-The wildcard above is an anonymous function
-
-  	!scala
-  	def lift[A,B](f: A => B): Option[A] => Option[B] =
-  	  (opA: Option[A]) => opA.map(f)
-
-
----
-
-    scala> lift(math.abs)
-    res4: Option[Int] => Option[Int] = <function1>
-    scala> lift(math.pow)
-    <console>:38: error: type mismatch;
-     found   : (Double, Double) => Double
-     required: ? => ?
-
----
-
-#Exercise
-
-Implement a `map2` function with the following signature:
-
-    !scala
-    def map2[A,B,C](a: Option[A], b: Option[B])
-    (f: (A, B) => C): Option[C]
-
----
-
----
-
-    !scala
-    def map2[A,B,C](a: Option[A], b: Option[B])
-	  (f: (A, B) => C): Option[C] =
-      a flatMap (aa => b map (bb => f(aa, bb)))
-
----
-
-#this pattern may look familiar
-
-    !scala
-    def map2[A,B,C](a: Option[A], b: Option[B])
-	  (f: (A, B) => C): Option[C] =
-      a flatMap {
-        i => b map {
-          j => f(i, j)
-        }
-      }
-
----
-
-We could even implement `map2` with a for-comprehension:
-
-    !scala
-    def map2[A,B,C](a: Option[A], b: Option[B])
-	  (f: (A, B) => C): Option[C] =   
-      for {
-        i <- a
-        j <- b
-      } yield f(i, j)
-
-
----
-
-# Try
-
-`Try` is a general-purpose function for converting from an exception-based API to a container-based API. This is a common pattern in *FP in Scala*.
-
-  	!scala
-  	def Try[A](a: => A): Option[A] =
-  	  try { Some(a) }
-  	  catch { case e: Exception => None }
-
-
-The `None` returned is not informative about the exception thrown.  Next lecture's type `Either` fixes this.
-
----
-
-`=>` in a function argument means the argument is lazy.  `=>` does not memoize.
-If `a` were evaluated eagerly, an exception thrown in its evaluation would be outside the try-catch clause.
-
-Think of lazy argument `a: => A` as a function with no input: `() => A`.
-
-  	!scala
-  	def Try[A](lazyA: () => A): Option[A] =
-  	  try { Some( lazyA() ) }
-  	  catch { case e: Exception => None }
-
----
-
 #`sequence` and `traverse`
 
-`def sequence[A](a: List[Option[A]]): Option[List[A]]`
+These are two combinators we will see repeatedly throughout the course:
 
-`def traverse[A, B](a: List[A])(f: A => Option[B]): Option[List[B]]`
+    !scala
+    def sequence[A](a: List[Option[A]]): Option[List[A]]
+    def traverse[A, B](a: List[A])(f: A => Option[B]): Option[List[B]]
 
-These are two combinators we will see repeatedly throughout the course.
-
-Both are derived from `flatMap` and `map`.
-
----
-
-    scala> sequence(List(Some(1), Some(2)))
-    res5: Option[List[Int]] = Some(List(1, 2))
-    scala> sequence(List(Some(1), None))
-    res6: Option[List[Int]] = None
 
 ---
 
-Given `def foo(x: Int) = if (x==2) None else Some(x)`
+    !scala
+    sequence(List(Some(1), Some(2)))
+    //res0: Option[List[Int]] = Some(List(1, 2))
+    sequence(List(Some(1), None))
+    //res1: Option[List[Int]] = None
 
-    scala> traverse(List(1,2,3))(foo)
-    res7: Option[List[Int]] = None
-    scala> traverse(List(1,3,4))(foo)
-    res8: Option[List[Int]] = Some(List(1, 3, 4))
+---
+
+    !scala
+    def foo(x: Int) = if (x==2) None else Some(x)
+    traverse(List(1,2,3))(foo)
+    //res2: Option[List[Int]] = None
+    traverse(List(1,3,4))(foo)
+    //res3: Option[List[Int]] = Some(List(1, 3, 4))
 
 ---
 
@@ -444,31 +393,33 @@ Implement `sequence[A](a: List[Option[A]]): Option[List[A]]`.
 
 ---
 
+
     !scala
     def sequence[A](a: List[Option[A]]):
-    Option[List[A]] =
-      a.foldRight[Option[List[A]]]
-        (Some(Nil))
-        ((x,y) => map2(x,y)(_ :: _))
+      Option[List[A]] =
+        a.foldRight[Option[List[A]]]
+          (Some(Nil))
+          ((x,y) => map2(x,y)(_ :: _))
+
 
 ---
 
     !scala
     def sequence1[A](a: List[Option[A]]):
-    Option[List[A]] =
-      a match {
-        case Nil => Some(Nil)
-        case h :: t => h flatMap (hh => sequence(t) map (hh :: _))
-      }
+      Option[List[A]] =
+        a match {
+          case Nil => Some(Nil)
+          case h :: t => h flatMap (hh => sequence(t) map (hh :: _))
+        }
 
 ---
 
 `traverse` can be trivially implemented with `sequence` and `map`.
 
     !scala
-    def traverse1[A, B](a: List[A])(f: A => Option[B]):
-	  Option[List[B]] =
-      sequence a.map(f)
+    def traverse[A, B](a: List[A])(f: A => Option[B]):
+  	  Option[List[B]] =
+        sequence a.map(f)
 
 However this implementation is inefficient.
 
@@ -476,15 +427,15 @@ However this implementation is inefficient.
 
 #Exercise
 
-Implement `traverse` so that it traverses the list only once.
+Reimplement `traverse` so that it traverses the list only once.
 
 ---
 
 ---
 
     !scala
-    def traverse[A, B] (a: List[A])(
-    f: A => Option[B]): Option[List[B]] =
+    def traverse[A, B] (a: List[A])(f: A => Option[B]):
+      Option[List[B]] =
         a.foldRight[Option[List[B]]] (Some(Nil)) {
           (h,t) => map2(f(h),t)(_ :: _)
         }
@@ -492,14 +443,14 @@ Implement `traverse` so that it traverses the list only once.
 ---
 
     !scala
-    def traverse1[A, B] (a: List[A])(
-	  f: A => Option[B]): Option[List[B]] =
-      a match {
-        case Nil => Some(Nil)
-        case h :: t => f(h) flatMap {
-          x: B => traverse(t)(f) map { xt => x :: xt }
+    def traverse1[A, B] (a: List[A])(f: A => Option[B]):
+      Option[List[B]] =
+        a match {
+          case Nil => Some(Nil)
+          case h :: t => f(h) flatMap {
+            x: B => traverse(t)(f) map { xt => x :: xt }
+          }
         }
-      }
 
 ---
 
@@ -518,7 +469,7 @@ Implement `traverse` so that it traverses the list only once.
 
 The fact that `traverse1` and `traverse2` are equivalent is a simple result of the Monad laws.
 
-`traverse` is not equivalent to the other two, it uses only `map2` and is therefore an applicative functor.
+Note also that `traverse` is not equivalent to the other two, it uses only `map2` and is therefore an applicative functor.
 
 We'll discuss this more in the weeks to come.
 
@@ -526,7 +477,7 @@ We'll discuss this more in the weeks to come.
 
 #Homework
 
-Have a look at `Either` and `Validation` in [*Cats*](https://github.com/typelevel/cats).
+Have a look at `Xor` and `Validated` in [*Cats*](https://github.com/typelevel/cats).
 
 ---
 
