@@ -89,7 +89,7 @@
             </aside>
             
             <aside class="page_number">
-              1/48
+              1/47
             </aside>
 
           </footer>
@@ -126,7 +126,7 @@
             </aside>
             
             <aside class="page_number">
-              2/48
+              2/47
             </aside>
 
           </footer>
@@ -164,7 +164,7 @@
             </aside>
             
             <aside class="page_number">
-              3/48
+              3/47
             </aside>
 
           </footer>
@@ -196,7 +196,7 @@
             </aside>
             
             <aside class="page_number">
-              4/48
+              4/47
             </aside>
 
           </footer>
@@ -233,7 +233,7 @@
             </aside>
             
             <aside class="page_number">
-              5/48
+              5/47
             </aside>
 
           </footer>
@@ -270,7 +270,7 @@
             </aside>
             
             <aside class="page_number">
-              6/48
+              6/47
             </aside>
 
           </footer>
@@ -302,39 +302,7 @@
             </aside>
             
             <aside class="page_number">
-              7/48
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4.md -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            
-            <section><p><code>Option</code> is a <em>container</em> that may or may not hold something.</p>
-<p><code>Option</code> containers can be <em>chained</em> together, with <code>flatMap</code>.</p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4.md">lecture4.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              8/48
+              7/47
             </aside>
 
           </footer>
@@ -344,93 +312,20 @@
       <!-- slide source: lecture4.md -->
       <div class="slide-wrapper">
         <div class="slide has_code">
-          <div class="inner">
-            
-            
-            <section><p><code>Option</code> itself is generic and has two subclasses: Some[T] or None</p>
-<div class="highlight"><pre><span></span><span class="k">trait</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">+A</span><span class="o">]</span> <span class="c1">//base trait</span>
-<span class="k">case</span> <span class="k">class</span> <span class="nc">Some</span><span class="o">[</span><span class="kt">+A</span><span class="o">](</span><span class="n">get</span><span class="k">:</span> <span class="kt">A</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span>
-<span class="k">case</span> <span class="k">object</span> <span class="nc">None</span> <span class="k">extends</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">Nothing</span><span class="o">]</span>
-</pre></div>
-</section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4.md">lecture4.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              9/48
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code">
-          <div class="inner">
-            
-            
-            <section><p><code>Option</code>s are like <code>List</code>s with at most a single element.</p>
-<div class="highlight"><pre><span></span><span class="k">trait</span> <span class="nc">List</span><span class="o">[</span><span class="kt">+A</span><span class="o">]</span> <span class="c1">//base trait</span>
-<span class="k">case</span> <span class="k">class</span> <span class="nc">Cons</span><span class="o">[</span><span class="kt">+A</span><span class="o">](</span><span class="n">head</span><span class="k">:</span> <span class="kt">A</span><span class="o">,</span> <span class="n">tail</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span>
-  <span class="k">extends</span> <span class="nc">List</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span>
-<span class="k">case</span> <span class="k">object</span> <span class="nc">Nil</span>
-  <span class="k">extends</span> <span class="nc">List</span><span class="o">[</span><span class="kt">Nothing</span><span class="o">]</span>
-</pre></div>
-</section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4.md">lecture4.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              10/48
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4.md -->
-      <div class="slide-wrapper">
-        <div class="slide">
           <div class="inner">
             
             <header><h1>Failure is an <code>Option</code></h1></header>
             
             
-            <section><p><code>Option</code> tells you that a function might not return what you’re asking for.</p>
-<pre><code>val numbers = Map("one" -&gt; 1, "two" -&gt; 2)
-//numbers: Map(one -&gt; 1, two -&gt; 2)
-numbers.get("two")
-//res0: Option[Int] = Some(2)
-numbers.get("three")
-//res1: Option[Int] = None
-</code></pre></section>
+            <section><p><code>Option</code> is a monadic <em>container</em> that may or may not hold something. It tells you that a function might not return what you’re asking for.</p>
+<div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">numbers</span> <span class="k">=</span> <span class="nc">Map</span><span class="o">(</span><span class="s">&quot;one&quot;</span> <span class="o">-&gt;</span> <span class="mi">1</span><span class="o">,</span> <span class="s">&quot;two&quot;</span> <span class="o">-&gt;</span> <span class="mi">2</span><span class="o">)</span>
+<span class="c1">//numbers: Map(one -&gt; 1, two -&gt; 2)</span>
+<span class="n">numbers</span><span class="o">.</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;two&quot;</span><span class="o">)</span>
+<span class="c1">//res0: Option[Int] = Some(2)</span>
+<span class="n">numbers</span><span class="o">.</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;three&quot;</span><span class="o">)</span>
+<span class="c1">//res1: Option[Int] = None</span>
+</pre></div>
+</section>
             
           </div>
           <div class="presenter_notes">
@@ -448,7 +343,7 @@ numbers.get("three")
             </aside>
             
             <aside class="page_number">
-              11/48
+              8/47
             </aside>
 
           </footer>
@@ -485,7 +380,7 @@ numbers.get("three")
             </aside>
             
             <aside class="page_number">
-              12/48
+              9/47
             </aside>
 
           </footer>
@@ -498,13 +393,10 @@ numbers.get("three")
           <div class="inner">
             
             
-            <section><p>The basic interface for Option consists of three methods:</p>
-<div class="highlight"><pre><span></span><span class="k">trait</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">+A</span><span class="o">]</span> <span class="o">{</span>
-  <span class="k">def</span> <span class="n">unit</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">a</span><span class="k">:</span> <span class="kt">A</span><span class="o">)</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span>
-  <span class="k">def</span> <span class="n">flatMap</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span>
-  <span class="k">def</span> <span class="n">map</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="n">B</span><span class="o">)</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span> <span class="k">=</span>
-    <span class="n">flatMap</span><span class="o">(</span><span class="n">f</span> <span class="n">andThen</span> <span class="n">unit</span><span class="o">)</span>
-<span class="o">}</span>
+            <section><p><code>Option</code> itself is generic and has two subclasses: <code>Some[T]</code> or <code>None</code></p>
+<div class="highlight"><pre><span></span><span class="k">trait</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">+A</span><span class="o">]</span> <span class="c1">//base trait</span>
+<span class="k">case</span> <span class="k">class</span> <span class="nc">Some</span><span class="o">[</span><span class="kt">+A</span><span class="o">](</span><span class="n">get</span><span class="k">:</span> <span class="kt">A</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span>
+<span class="k">case</span> <span class="k">object</span> <span class="nc">None</span> <span class="k">extends</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">Nothing</span><span class="o">]</span>
 </pre></div>
 </section>
             
@@ -524,7 +416,88 @@ numbers.get("three")
             </aside>
             
             <aside class="page_number">
-              13/48
+              10/47
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p><code>Option</code>s are like <code>List</code>s with at most a single element.</p>
+<div class="highlight"><pre><span></span><span class="k">trait</span> <span class="nc">List</span><span class="o">[</span><span class="kt">+A</span><span class="o">]</span> <span class="c1">//base trait</span>
+<span class="k">case</span> <span class="k">class</span> <span class="nc">Cons</span><span class="o">[</span><span class="kt">+A</span><span class="o">](</span><span class="n">head</span><span class="k">:</span> <span class="kt">A</span><span class="o">,</span> <span class="n">tail</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span> <span class="k">extends</span> <span class="nc">List</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span>
+<span class="k">case</span> <span class="k">object</span> <span class="nc">Nil</span> <span class="k">extends</span> <span class="nc">List</span><span class="o">[</span><span class="kt">Nothing</span><span class="o">]</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4.md">lecture4.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              11/47
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>Here is a toy implementation of <code>Option</code>:</p>
+<div class="highlight"><pre><span></span><span class="k">trait</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">+A</span><span class="o">]</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="n">unit</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">a</span><span class="k">:</span> <span class="kt">A</span><span class="o">)</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Some</span><span class="o">(</span><span class="n">a</span><span class="o">)</span>
+  <span class="k">def</span> <span class="n">flatMap</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span> <span class="k">=</span>
+    <span class="k">this</span> <span class="k">match</span> <span class="o">{</span>
+      <span class="k">case</span> <span class="nc">None</span> <span class="k">=&gt;</span> <span class="nc">None</span>
+      <span class="k">case</span> <span class="nc">Some</span><span class="o">(</span><span class="n">a</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">f</span><span class="o">(</span><span class="n">a</span><span class="o">)</span>
+    <span class="o">}</span>
+  <span class="k">def</span> <span class="n">map</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="n">B</span><span class="o">)</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span> <span class="k">=</span>
+    <span class="n">flatMap</span><span class="o">(</span><span class="n">f</span> <span class="n">andThen</span> <span class="n">unit</span><span class="o">)</span>
+<span class="o">}</span>
+<span class="k">case</span> <span class="k">class</span> <span class="nc">Some</span><span class="o">[</span><span class="kt">+A</span><span class="o">](</span><span class="n">get</span><span class="k">:</span> <span class="kt">A</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span>
+<span class="k">case</span> <span class="k">object</span> <span class="nc">None</span> <span class="k">extends</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">Nothing</span><span class="o">]</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4.md">lecture4.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              12/47
             </aside>
 
           </footer>
@@ -562,7 +535,7 @@ numbers.get("three")
             </aside>
             
             <aside class="page_number">
-              14/48
+              13/47
             </aside>
 
           </footer>
@@ -578,10 +551,6 @@ numbers.get("three")
             
             
             <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">flatMap</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span> <span class="k">=</span>
-  <span class="k">this</span> <span class="k">match</span> <span class="o">{</span>
-      <span class="k">case</span> <span class="nc">None</span> <span class="k">=&gt;</span> <span class="nc">None</span>
-      <span class="k">case</span> <span class="nc">Some</span><span class="o">(</span><span class="n">a</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">f</span><span class="o">(</span><span class="n">a</span><span class="o">)</span>
-    <span class="o">}</span>
 </pre></div>
 </section>
             
@@ -601,7 +570,7 @@ numbers.get("three")
             </aside>
             
             <aside class="page_number">
-              15/48
+              14/47
             </aside>
 
           </footer>
@@ -636,7 +605,7 @@ numbers.get("three")
             </aside>
             
             <aside class="page_number">
-              16/48
+              15/47
             </aside>
 
           </footer>
@@ -674,7 +643,7 @@ numbers.get("three")
             </aside>
             
             <aside class="page_number">
-              17/48
+              16/47
             </aside>
 
           </footer>
@@ -707,7 +676,7 @@ numbers.get("three")
             </aside>
             
             <aside class="page_number">
-              18/48
+              17/47
             </aside>
 
           </footer>
@@ -732,7 +701,7 @@ numbers.get("three")
           <footer>
             
             <aside class="page_number">
-              /48
+              /47
             </aside>
 
           </footer>
@@ -766,7 +735,7 @@ numbers.get("three")
             </aside>
             
             <aside class="page_number">
-              19/48
+              18/47
             </aside>
 
           </footer>
@@ -805,7 +774,7 @@ numbers.get("three")
             </aside>
             
             <aside class="page_number">
-              20/48
+              19/47
             </aside>
 
           </footer>
@@ -843,7 +812,7 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
             </aside>
             
             <aside class="page_number">
-              21/48
+              20/47
             </aside>
 
           </footer>
@@ -883,7 +852,7 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
             </aside>
             
             <aside class="page_number">
-              22/48
+              21/47
             </aside>
 
           </footer>
@@ -925,7 +894,7 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
             </aside>
             
             <aside class="page_number">
-              23/48
+              22/47
             </aside>
 
           </footer>
@@ -966,7 +935,7 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
             </aside>
             
             <aside class="page_number">
-              24/48
+              23/47
             </aside>
 
           </footer>
@@ -1006,7 +975,7 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
             </aside>
             
             <aside class="page_number">
-              25/48
+              24/47
             </aside>
 
           </footer>
@@ -1049,7 +1018,7 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
             </aside>
             
             <aside class="page_number">
-              26/48
+              25/47
             </aside>
 
           </footer>
@@ -1092,7 +1061,7 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
             </aside>
             
             <aside class="page_number">
-              27/48
+              26/47
             </aside>
 
           </footer>
@@ -1130,7 +1099,7 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
             </aside>
             
             <aside class="page_number">
-              28/48
+              27/47
             </aside>
 
           </footer>
@@ -1167,7 +1136,7 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
             </aside>
             
             <aside class="page_number">
-              29/48
+              28/47
             </aside>
 
           </footer>
@@ -1204,7 +1173,7 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
             </aside>
             
             <aside class="page_number">
-              30/48
+              29/47
             </aside>
 
           </footer>
@@ -1229,7 +1198,7 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
           <footer>
             
             <aside class="page_number">
-              /48
+              /47
             </aside>
 
           </footer>
@@ -1264,7 +1233,7 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
             </aside>
             
             <aside class="page_number">
-              31/48
+              30/47
             </aside>
 
           </footer>
@@ -1303,7 +1272,7 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
             </aside>
             
             <aside class="page_number">
-              32/48
+              31/47
             </aside>
 
           </footer>
@@ -1343,7 +1312,7 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
             </aside>
             
             <aside class="page_number">
-              33/48
+              32/47
             </aside>
 
           </footer>
@@ -1368,7 +1337,7 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
           <footer>
             
             <aside class="page_number">
-              /48
+              /47
             </aside>
 
           </footer>
@@ -1404,7 +1373,7 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
             </aside>
             
             <aside class="page_number">
-              34/48
+              33/47
             </aside>
 
           </footer>
@@ -1413,16 +1382,17 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
       
       <!-- slide source: lecture4.md -->
       <div class="slide-wrapper">
-        <div class="slide">
+        <div class="slide has_code">
           <div class="inner">
             
             <header><h1><code>sequence</code> and <code>traverse</code></h1></header>
             
             
-            <section><p><code>def sequence[A](a: List[Option[A]]): Option[List[A]]</code></p>
-<p><code>def traverse[A, B](a: List[A])(f: A =&gt; Option[B]): Option[List[B]]</code></p>
-<p>These are two combinators we will see repeatedly throughout the course.</p>
-<p>Both are derived from <code>flatMap</code> and <code>map</code>.</p></section>
+            <section><p>These are two combinators we will see repeatedly throughout the course:</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">sequence</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">a</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Option</span><span class="o">[</span><span class="kt">A</span><span class="o">]])</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">List</span><span class="o">[</span><span class="kt">A</span><span class="o">]]</span>
+<span class="k">def</span> <span class="n">traverse</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">](</span><span class="n">a</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">A</span><span class="o">])(</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">List</span><span class="o">[</span><span class="kt">B</span><span class="o">]]</span>
+</pre></div>
+</section>
             
           </div>
           <div class="presenter_notes">
@@ -1440,7 +1410,7 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
             </aside>
             
             <aside class="page_number">
-              35/48
+              34/47
             </aside>
 
           </footer>
@@ -1449,15 +1419,16 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
       
       <!-- slide source: lecture4.md -->
       <div class="slide-wrapper">
-        <div class="slide">
+        <div class="slide has_code">
           <div class="inner">
             
             
-            <section><pre><code>sequence(List(Some(1), Some(2)))
-res5: Option[List[Int]] = Some(List(1, 2))
-scala&gt; sequence(List(Some(1), None))
-res6: Option[List[Int]] = None
-</code></pre></section>
+            <section><div class="highlight"><pre><span></span><span class="n">sequence</span><span class="o">(</span><span class="nc">List</span><span class="o">(</span><span class="nc">Some</span><span class="o">(</span><span class="mi">1</span><span class="o">),</span> <span class="nc">Some</span><span class="o">(</span><span class="mi">2</span><span class="o">)))</span>
+<span class="c1">//res0: Option[List[Int]] = Some(List(1, 2))</span>
+<span class="n">sequence</span><span class="o">(</span><span class="nc">List</span><span class="o">(</span><span class="nc">Some</span><span class="o">(</span><span class="mi">1</span><span class="o">),</span> <span class="nc">None</span><span class="o">))</span>
+<span class="c1">//res1: Option[List[Int]] = None</span>
+</pre></div>
+</section>
             
           </div>
           <div class="presenter_notes">
@@ -1475,7 +1446,7 @@ res6: Option[List[Int]] = None
             </aside>
             
             <aside class="page_number">
-              36/48
+              35/47
             </aside>
 
           </footer>
@@ -1484,16 +1455,17 @@ res6: Option[List[Int]] = None
       
       <!-- slide source: lecture4.md -->
       <div class="slide-wrapper">
-        <div class="slide">
+        <div class="slide has_code">
           <div class="inner">
             
             
-            <section><p>Given <code>def foo(x: Int) = if (x==2) None else Some(x)</code></p>
-<pre><code>scala&gt; traverse(List(1,2,3))(foo)
-res7: Option[List[Int]] = None
-scala&gt; traverse(List(1,3,4))(foo)
-res8: Option[List[Int]] = Some(List(1, 3, 4))
-</code></pre></section>
+            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">foo</span><span class="o">(</span><span class="n">x</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span> <span class="k">=</span> <span class="k">if</span> <span class="o">(</span><span class="n">x</span><span class="o">==</span><span class="mi">2</span><span class="o">)</span> <span class="nc">None</span> <span class="k">else</span> <span class="nc">Some</span><span class="o">(</span><span class="n">x</span><span class="o">)</span>
+<span class="n">traverse</span><span class="o">(</span><span class="nc">List</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span><span class="mi">2</span><span class="o">,</span><span class="mi">3</span><span class="o">))(</span><span class="n">foo</span><span class="o">)</span>
+<span class="c1">//res2: Option[List[Int]] = None</span>
+<span class="n">traverse</span><span class="o">(</span><span class="nc">List</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span><span class="mi">3</span><span class="o">,</span><span class="mi">4</span><span class="o">))(</span><span class="n">foo</span><span class="o">)</span>
+<span class="c1">//res3: Option[List[Int]] = Some(List(1, 3, 4))</span>
+</pre></div>
+</section>
             
           </div>
           <div class="presenter_notes">
@@ -1511,7 +1483,7 @@ res8: Option[List[Int]] = Some(List(1, 3, 4))
             </aside>
             
             <aside class="page_number">
-              37/48
+              36/47
             </aside>
 
           </footer>
@@ -1544,7 +1516,7 @@ res8: Option[List[Int]] = Some(List(1, 3, 4))
             </aside>
             
             <aside class="page_number">
-              38/48
+              37/47
             </aside>
 
           </footer>
@@ -1569,7 +1541,7 @@ res8: Option[List[Int]] = Some(List(1, 3, 4))
           <footer>
             
             <aside class="page_number">
-              /48
+              /47
             </aside>
 
           </footer>
@@ -1583,10 +1555,10 @@ res8: Option[List[Int]] = Some(List(1, 3, 4))
             
             
             <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">sequence</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">a</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Option</span><span class="o">[</span><span class="kt">A</span><span class="o">]])</span><span class="k">:</span>
-<span class="kt">Option</span><span class="o">[</span><span class="kt">List</span><span class="o">[</span><span class="kt">A</span><span class="o">]]</span> <span class="k">=</span>
-  <span class="n">a</span><span class="o">.</span><span class="n">foldRight</span><span class="o">[</span><span class="kt">Option</span><span class="o">[</span><span class="kt">List</span><span class="o">[</span><span class="kt">A</span><span class="o">]]]</span>
-    <span class="o">(</span><span class="nc">Some</span><span class="o">(</span><span class="nc">Nil</span><span class="o">))</span>
-    <span class="o">((</span><span class="n">x</span><span class="o">,</span><span class="n">y</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">map2</span><span class="o">(</span><span class="n">x</span><span class="o">,</span><span class="n">y</span><span class="o">)(</span><span class="k">_</span> <span class="o">::</span> <span class="k">_</span><span class="o">))</span>
+  <span class="kt">Option</span><span class="o">[</span><span class="kt">List</span><span class="o">[</span><span class="kt">A</span><span class="o">]]</span> <span class="k">=</span>
+    <span class="n">a</span><span class="o">.</span><span class="n">foldRight</span><span class="o">[</span><span class="kt">Option</span><span class="o">[</span><span class="kt">List</span><span class="o">[</span><span class="kt">A</span><span class="o">]]]</span>
+      <span class="o">(</span><span class="nc">Some</span><span class="o">(</span><span class="nc">Nil</span><span class="o">))</span>
+      <span class="o">((</span><span class="n">x</span><span class="o">,</span><span class="n">y</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">map2</span><span class="o">(</span><span class="n">x</span><span class="o">,</span><span class="n">y</span><span class="o">)(</span><span class="k">_</span> <span class="o">::</span> <span class="k">_</span><span class="o">))</span>
 </pre></div>
 </section>
             
@@ -1606,7 +1578,7 @@ res8: Option[List[Int]] = Some(List(1, 3, 4))
             </aside>
             
             <aside class="page_number">
-              39/48
+              38/47
             </aside>
 
           </footer>
@@ -1620,11 +1592,11 @@ res8: Option[List[Int]] = Some(List(1, 3, 4))
             
             
             <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">sequence1</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">a</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Option</span><span class="o">[</span><span class="kt">A</span><span class="o">]])</span><span class="k">:</span>
-<span class="kt">Option</span><span class="o">[</span><span class="kt">List</span><span class="o">[</span><span class="kt">A</span><span class="o">]]</span> <span class="k">=</span>
-  <span class="n">a</span> <span class="k">match</span> <span class="o">{</span>
-    <span class="k">case</span> <span class="nc">Nil</span> <span class="k">=&gt;</span> <span class="nc">Some</span><span class="o">(</span><span class="nc">Nil</span><span class="o">)</span>
-    <span class="k">case</span> <span class="n">h</span> <span class="o">::</span> <span class="n">t</span> <span class="k">=&gt;</span> <span class="n">h</span> <span class="n">flatMap</span> <span class="o">(</span><span class="n">hh</span> <span class="k">=&gt;</span> <span class="n">sequence</span><span class="o">(</span><span class="n">t</span><span class="o">)</span> <span class="n">map</span> <span class="o">(</span><span class="n">hh</span> <span class="o">::</span> <span class="k">_</span><span class="o">))</span>
-  <span class="o">}</span>
+  <span class="kt">Option</span><span class="o">[</span><span class="kt">List</span><span class="o">[</span><span class="kt">A</span><span class="o">]]</span> <span class="k">=</span>
+    <span class="n">a</span> <span class="k">match</span> <span class="o">{</span>
+      <span class="k">case</span> <span class="nc">Nil</span> <span class="k">=&gt;</span> <span class="nc">Some</span><span class="o">(</span><span class="nc">Nil</span><span class="o">)</span>
+      <span class="k">case</span> <span class="n">h</span> <span class="o">::</span> <span class="n">t</span> <span class="k">=&gt;</span> <span class="n">h</span> <span class="n">flatMap</span> <span class="o">(</span><span class="n">hh</span> <span class="k">=&gt;</span> <span class="n">sequence</span><span class="o">(</span><span class="n">t</span><span class="o">)</span> <span class="n">map</span> <span class="o">(</span><span class="n">hh</span> <span class="o">::</span> <span class="k">_</span><span class="o">))</span>
+    <span class="o">}</span>
 </pre></div>
 </section>
             
@@ -1644,7 +1616,7 @@ res8: Option[List[Int]] = Some(List(1, 3, 4))
             </aside>
             
             <aside class="page_number">
-              40/48
+              39/47
             </aside>
 
           </footer>
@@ -1658,9 +1630,9 @@ res8: Option[List[Int]] = Some(List(1, 3, 4))
             
             
             <section><p><code>traverse</code> can be trivially implemented with <code>sequence</code> and <code>map</code>.</p>
-<div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">traverse1</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">](</span><span class="n">a</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">A</span><span class="o">])(</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span><span class="k">:</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">traverse</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">](</span><span class="n">a</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">A</span><span class="o">])(</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span><span class="k">:</span>
   <span class="kt">Option</span><span class="o">[</span><span class="kt">List</span><span class="o">[</span><span class="kt">B</span><span class="o">]]</span> <span class="k">=</span>
-  <span class="n">sequence</span> <span class="n">a</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">f</span><span class="o">)</span>
+    <span class="n">sequence</span> <span class="n">a</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">f</span><span class="o">)</span>
 </pre></div>
 
 <p>However this implementation is inefficient.</p></section>
@@ -1681,7 +1653,7 @@ res8: Option[List[Int]] = Some(List(1, 3, 4))
             </aside>
             
             <aside class="page_number">
-              41/48
+              40/47
             </aside>
 
           </footer>
@@ -1696,7 +1668,7 @@ res8: Option[List[Int]] = Some(List(1, 3, 4))
             <header><h1>Exercise</h1></header>
             
             
-            <section><p>Implement <code>traverse</code> so that it traverses the list only once.</p></section>
+            <section><p>Reimplement <code>traverse</code> so that it traverses the list only once.</p></section>
             
           </div>
           <div class="presenter_notes">
@@ -1714,7 +1686,7 @@ res8: Option[List[Int]] = Some(List(1, 3, 4))
             </aside>
             
             <aside class="page_number">
-              42/48
+              41/47
             </aside>
 
           </footer>
@@ -1739,7 +1711,7 @@ res8: Option[List[Int]] = Some(List(1, 3, 4))
           <footer>
             
             <aside class="page_number">
-              /48
+              /47
             </aside>
 
           </footer>
@@ -1752,8 +1724,8 @@ res8: Option[List[Int]] = Some(List(1, 3, 4))
           <div class="inner">
             
             
-            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">traverse</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">]</span> <span class="o">(</span><span class="n">a</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">A</span><span class="o">])(</span>
-<span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">List</span><span class="o">[</span><span class="kt">B</span><span class="o">]]</span> <span class="k">=</span>
+            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">traverse</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">]</span> <span class="o">(</span><span class="n">a</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">A</span><span class="o">])(</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span><span class="k">:</span>
+  <span class="kt">Option</span><span class="o">[</span><span class="kt">List</span><span class="o">[</span><span class="kt">B</span><span class="o">]]</span> <span class="k">=</span>
     <span class="n">a</span><span class="o">.</span><span class="n">foldRight</span><span class="o">[</span><span class="kt">Option</span><span class="o">[</span><span class="kt">List</span><span class="o">[</span><span class="kt">B</span><span class="o">]]]</span> <span class="o">(</span><span class="nc">Some</span><span class="o">(</span><span class="nc">Nil</span><span class="o">))</span> <span class="o">{</span>
       <span class="o">(</span><span class="n">h</span><span class="o">,</span><span class="n">t</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">map2</span><span class="o">(</span><span class="n">f</span><span class="o">(</span><span class="n">h</span><span class="o">),</span><span class="n">t</span><span class="o">)(</span><span class="k">_</span> <span class="o">::</span> <span class="k">_</span><span class="o">)</span>
     <span class="o">}</span>
@@ -1776,7 +1748,7 @@ res8: Option[List[Int]] = Some(List(1, 3, 4))
             </aside>
             
             <aside class="page_number">
-              43/48
+              42/47
             </aside>
 
           </footer>
@@ -1789,14 +1761,14 @@ res8: Option[List[Int]] = Some(List(1, 3, 4))
           <div class="inner">
             
             
-            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">traverse1</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">]</span> <span class="o">(</span><span class="n">a</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">A</span><span class="o">])(</span>
-  <span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">List</span><span class="o">[</span><span class="kt">B</span><span class="o">]]</span> <span class="k">=</span>
-  <span class="n">a</span> <span class="k">match</span> <span class="o">{</span>
-    <span class="k">case</span> <span class="nc">Nil</span> <span class="k">=&gt;</span> <span class="nc">Some</span><span class="o">(</span><span class="nc">Nil</span><span class="o">)</span>
-    <span class="k">case</span> <span class="n">h</span> <span class="o">::</span> <span class="n">t</span> <span class="k">=&gt;</span> <span class="n">f</span><span class="o">(</span><span class="n">h</span><span class="o">)</span> <span class="n">flatMap</span> <span class="o">{</span>
-      <span class="n">x</span><span class="k">:</span> <span class="kt">B</span> <span class="o">=&gt;</span> <span class="n">traverse</span><span class="o">(</span><span class="n">t</span><span class="o">)(</span><span class="n">f</span><span class="o">)</span> <span class="n">map</span> <span class="o">{</span> <span class="n">xt</span> <span class="k">=&gt;</span> <span class="n">x</span> <span class="o">::</span> <span class="n">xt</span> <span class="o">}</span>
+            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">traverse1</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">]</span> <span class="o">(</span><span class="n">a</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">A</span><span class="o">])(</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span><span class="k">:</span>
+  <span class="kt">Option</span><span class="o">[</span><span class="kt">List</span><span class="o">[</span><span class="kt">B</span><span class="o">]]</span> <span class="k">=</span>
+    <span class="n">a</span> <span class="k">match</span> <span class="o">{</span>
+      <span class="k">case</span> <span class="nc">Nil</span> <span class="k">=&gt;</span> <span class="nc">Some</span><span class="o">(</span><span class="nc">Nil</span><span class="o">)</span>
+      <span class="k">case</span> <span class="n">h</span> <span class="o">::</span> <span class="n">t</span> <span class="k">=&gt;</span> <span class="n">f</span><span class="o">(</span><span class="n">h</span><span class="o">)</span> <span class="n">flatMap</span> <span class="o">{</span>
+        <span class="n">x</span><span class="k">:</span> <span class="kt">B</span> <span class="o">=&gt;</span> <span class="n">traverse</span><span class="o">(</span><span class="n">t</span><span class="o">)(</span><span class="n">f</span><span class="o">)</span> <span class="n">map</span> <span class="o">{</span> <span class="n">xt</span> <span class="k">=&gt;</span> <span class="n">x</span> <span class="o">::</span> <span class="n">xt</span> <span class="o">}</span>
+      <span class="o">}</span>
     <span class="o">}</span>
-  <span class="o">}</span>
 </pre></div>
 </section>
             
@@ -1816,7 +1788,7 @@ res8: Option[List[Int]] = Some(List(1, 3, 4))
             </aside>
             
             <aside class="page_number">
-              44/48
+              43/47
             </aside>
 
           </footer>
@@ -1856,7 +1828,7 @@ res8: Option[List[Int]] = Some(List(1, 3, 4))
             </aside>
             
             <aside class="page_number">
-              45/48
+              44/47
             </aside>
 
           </footer>
@@ -1870,7 +1842,7 @@ res8: Option[List[Int]] = Some(List(1, 3, 4))
             
             
             <section><p>The fact that <code>traverse1</code> and <code>traverse2</code> are equivalent is a simple result of the Monad laws.</p>
-<p><code>traverse</code> is not equivalent to the other two, it uses only <code>map2</code> and is therefore an applicative functor.</p>
+<p>Note also that <code>traverse</code> is not equivalent to the other two, it uses only <code>map2</code> and is therefore an applicative functor.</p>
 <p>We'll discuss this more in the weeks to come.</p></section>
             
           </div>
@@ -1889,7 +1861,7 @@ res8: Option[List[Int]] = Some(List(1, 3, 4))
             </aside>
             
             <aside class="page_number">
-              46/48
+              45/47
             </aside>
 
           </footer>
@@ -1904,7 +1876,7 @@ res8: Option[List[Int]] = Some(List(1, 3, 4))
             <header><h1>Homework</h1></header>
             
             
-            <section><p>Have a look at <code>Either</code> and <code>Validation</code> in <a href="https://github.com/typelevel/cats"><em>Cats</em></a>.</p></section>
+            <section><p>Have a look at <code>Xor</code> and <code>Validated</code> in <a href="https://github.com/typelevel/cats"><em>Cats</em></a>.</p></section>
             
           </div>
           <div class="presenter_notes">
@@ -1922,7 +1894,7 @@ res8: Option[List[Int]] = Some(List(1, 3, 4))
             </aside>
             
             <aside class="page_number">
-              47/48
+              46/47
             </aside>
 
           </footer>
@@ -1958,7 +1930,7 @@ res8: Option[List[Int]] = Some(List(1, 3, 4))
             </aside>
             
             <aside class="page_number">
-              48/48
+              47/47
             </aside>
 
           </footer>
@@ -2016,13 +1988,13 @@ res8: Option[List[Int]] = Some(List(1, 3, 4))
       
       
       <tr id="toc-row-8">
-        <th><a href="#slide8">-</a></th>
+        <th><a href="#slide8">Failure is an <code>Option</code></a></th>
         <td><a href="#slide8">8</a></td>
       </tr>
       
       
       <tr id="toc-row-9">
-        <th><a href="#slide9">-</a></th>
+        <th><a href="#slide9">Application: Computing a mean</a></th>
         <td><a href="#slide9">9</a></td>
       </tr>
       
@@ -2034,13 +2006,13 @@ res8: Option[List[Int]] = Some(List(1, 3, 4))
       
       
       <tr id="toc-row-11">
-        <th><a href="#slide11">Failure is an <code>Option</code></a></th>
+        <th><a href="#slide11">-</a></th>
         <td><a href="#slide11">11</a></td>
       </tr>
       
       
       <tr id="toc-row-12">
-        <th><a href="#slide12">Application: Computing a mean</a></th>
+        <th><a href="#slide12">-</a></th>
         <td><a href="#slide12">12</a></td>
       </tr>
       
@@ -2052,13 +2024,13 @@ res8: Option[List[Int]] = Some(List(1, 3, 4))
       
       
       <tr id="toc-row-14">
-        <th><a href="#slide14">-</a></th>
+        <th><a href="#slide14"><code>flatMap</code> for <code>Option</code></a></th>
         <td><a href="#slide14">14</a></td>
       </tr>
       
       
       <tr id="toc-row-15">
-        <th><a href="#slide15"><code>flatMap</code> for <code>Option</code></a></th>
+        <th><a href="#slide15">-</a></th>
         <td><a href="#slide15">15</a></td>
       </tr>
       
@@ -2070,25 +2042,25 @@ res8: Option[List[Int]] = Some(List(1, 3, 4))
       
       
       <tr id="toc-row-17">
-        <th><a href="#slide17">-</a></th>
+        <th><a href="#slide17">Exercise</a></th>
         <td><a href="#slide17">17</a></td>
       </tr>
       
       
       <tr id="toc-row-18">
-        <th><a href="#slide18">Exercise</a></th>
+        <th><a href="#slide18">-</a></th>
         <td><a href="#slide18">18</a></td>
       </tr>
       
       
       <tr id="toc-row-19">
-        <th><a href="#slide19">-</a></th>
+        <th><a href="#slide19">Try</a></th>
         <td><a href="#slide19">19</a></td>
       </tr>
       
       
       <tr id="toc-row-20">
-        <th><a href="#slide20">Try</a></th>
+        <th><a href="#slide20">-</a></th>
         <td><a href="#slide20">20</a></td>
       </tr>
       
@@ -2106,31 +2078,31 @@ res8: Option[List[Int]] = Some(List(1, 3, 4))
       
       
       <tr id="toc-row-23">
-        <th><a href="#slide23">-</a></th>
+        <th><a href="#slide23"><code>Option</code> in Cats</a></th>
         <td><a href="#slide23">23</a></td>
       </tr>
       
       
       <tr id="toc-row-24">
-        <th><a href="#slide24"><code>Option</code> in Cats</a></th>
+        <th><a href="#slide24">Reduction of for loops</a></th>
         <td><a href="#slide24">24</a></td>
       </tr>
       
       
       <tr id="toc-row-25">
-        <th><a href="#slide25">Reduction of for loops</a></th>
+        <th><a href="#slide25">-</a></th>
         <td><a href="#slide25">25</a></td>
       </tr>
       
       
       <tr id="toc-row-26">
-        <th><a href="#slide26">-</a></th>
+        <th><a href="#slide26">'Looping' over Options</a></th>
         <td><a href="#slide26">26</a></td>
       </tr>
       
       
       <tr id="toc-row-27">
-        <th><a href="#slide27">'Looping' over Options</a></th>
+        <th><a href="#slide27">-</a></th>
         <td><a href="#slide27">27</a></td>
       </tr>
       
@@ -2142,13 +2114,13 @@ res8: Option[List[Int]] = Some(List(1, 3, 4))
       
       
       <tr id="toc-row-29">
-        <th><a href="#slide29">-</a></th>
+        <th><a href="#slide29">Exercise</a></th>
         <td><a href="#slide29">29</a></td>
       </tr>
       
       
       <tr id="toc-row-30">
-        <th><a href="#slide30">Exercise</a></th>
+        <th><a href="#slide30">-</a></th>
         <td><a href="#slide30">30</a></td>
       </tr>
       
@@ -2160,25 +2132,25 @@ res8: Option[List[Int]] = Some(List(1, 3, 4))
       
       
       <tr id="toc-row-32">
-        <th><a href="#slide32">-</a></th>
+        <th><a href="#slide32">Exercise</a></th>
         <td><a href="#slide32">32</a></td>
       </tr>
       
       
       <tr id="toc-row-33">
-        <th><a href="#slide33">Exercise</a></th>
+        <th><a href="#slide33">-</a></th>
         <td><a href="#slide33">33</a></td>
       </tr>
       
       
       <tr id="toc-row-34">
-        <th><a href="#slide34">-</a></th>
+        <th><a href="#slide34"><code>sequence</code> and <code>traverse</code></a></th>
         <td><a href="#slide34">34</a></td>
       </tr>
       
       
       <tr id="toc-row-35">
-        <th><a href="#slide35"><code>sequence</code> and <code>traverse</code></a></th>
+        <th><a href="#slide35">-</a></th>
         <td><a href="#slide35">35</a></td>
       </tr>
       
@@ -2190,13 +2162,13 @@ res8: Option[List[Int]] = Some(List(1, 3, 4))
       
       
       <tr id="toc-row-37">
-        <th><a href="#slide37">-</a></th>
+        <th><a href="#slide37">Exercise</a></th>
         <td><a href="#slide37">37</a></td>
       </tr>
       
       
       <tr id="toc-row-38">
-        <th><a href="#slide38">Exercise</a></th>
+        <th><a href="#slide38">-</a></th>
         <td><a href="#slide38">38</a></td>
       </tr>
       
@@ -2214,13 +2186,13 @@ res8: Option[List[Int]] = Some(List(1, 3, 4))
       
       
       <tr id="toc-row-41">
-        <th><a href="#slide41">-</a></th>
+        <th><a href="#slide41">Exercise</a></th>
         <td><a href="#slide41">41</a></td>
       </tr>
       
       
       <tr id="toc-row-42">
-        <th><a href="#slide42">Exercise</a></th>
+        <th><a href="#slide42">-</a></th>
         <td><a href="#slide42">42</a></td>
       </tr>
       
@@ -2244,20 +2216,14 @@ res8: Option[List[Int]] = Some(List(1, 3, 4))
       
       
       <tr id="toc-row-46">
-        <th><a href="#slide46">-</a></th>
+        <th><a href="#slide46">Homework</a></th>
         <td><a href="#slide46">46</a></td>
       </tr>
       
       
       <tr id="toc-row-47">
-        <th><a href="#slide47">Homework</a></th>
+        <th><a href="#slide47">Links</a></th>
         <td><a href="#slide47">47</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-48">
-        <th><a href="#slide48">Links</a></th>
-        <td><a href="#slide48">48</a></td>
       </tr>
       
       

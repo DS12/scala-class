@@ -54,37 +54,11 @@ The type of `mean`, `Seq[Double]) => Double` tells us nothing about the fact tha
 
 ---
 
-`Option` is a *container* that may or may not hold something.
-
-`Option` containers can be *chained* together, with `flatMap`.
-
----
-
-`Option` itself is generic and has two subclasses: Some[T] or None
-
-    !scala
-    trait Option[+A] //base trait
-    case class Some[+A](get: A) extends Option[A]
-    case object None extends Option[Nothing]
-
-
----
-
-`Option`s are like `List`s with at most a single element.
-
-    !scala
-    trait List[+A] //base trait
-    case class Cons[+A](head: A, tail: List[A])
-	  extends List[A]
-    case object Nil
-	  extends List[Nothing]
-
----
-
 #Failure is an `Option`
 
-`Option` tells you that a function might not return what you’re asking for.
+`Option` is a monadic *container* that may or may not hold something. It tells you that a function might not return what you’re asking for.
 
+    !scala
     val numbers = Map("one" -> 1, "two" -> 2)
     //numbers: Map(one -> 1, two -> 2)
     numbers.get("two")
@@ -103,15 +77,41 @@ The type of `mean`, `Seq[Double]) => Double` tells us nothing about the fact tha
 
 ---
 
-The basic interface for Option consists of three methods:
+
+`Option` itself is generic and has two subclasses: `Some[T]` or `None`
+
+    !scala
+    trait Option[+A] //base trait
+    case class Some[+A](get: A) extends Option[A]
+    case object None extends Option[Nothing]
+
+
+---
+
+`Option`s are like `List`s with at most a single element.
+
+    !scala
+    trait List[+A] //base trait
+    case class Cons[+A](head: A, tail: List[A]) extends List[A]
+    case object Nil extends List[Nothing]
+
+---
+
+Here is a toy implementation of `Option`:
 
     !scala
     trait Option[+A] {
-      def unit[A](a: A): Option[A]
-      def flatMap[B](f: A => Option[B]): Option[B]
+      def unit[A](a: A): Option[A] = Some(a)
+      def flatMap[B](f: A => Option[B]): Option[B] =
+        this match {
+          case None => None
+          case Some(a) => f(a)
+        }
       def map[B](f: A => B): Option[B] =
         flatMap(f andThen unit)
     }
+    case class Some[+A](get: A) extends Option[A]
+    case object None extends Option[Nothing]
 
 ---
 
@@ -131,10 +131,7 @@ Here is a hard-coded version of `map`:
 
     !scala
     def flatMap[B](f: A => Option[B]): Option[B] =
-  	  this match {
-          case None => None
-          case Some(a) => f(a)
-        }
+
 
 ---
 
