@@ -1,4 +1,4 @@
-package tutorials.lecture11
+package com.datascience.education.tutorials.lecture3
 
 import scala.concurrent._
 

@@ -1,4 +1,5 @@
-package tutorials.lecture11
+package com.datascience.education.tutorials.lecture3
+
 
 import cats.data.Reader
 import cats.syntax.applicative._
