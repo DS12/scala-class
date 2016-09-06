@@ -1,0 +1,1810 @@
+<!DOCTYPE html>
+<!--
+  Copyright 2010 Google Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+  Original slides: Marcin Wichary (mwichary@google.com)
+  Modifications: Ernest Delgado (ernestd@google.com)
+                 Alex Russell (slightlyoff@chromium.org)
+
+  landslide modifications: Adam Zapletal (adamzap@gmail.com)
+                           Nicolas Perriault (nperriault@gmail.com)
+-->
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Monad Transformers</title>
+    <!-- Styles -->
+    
+    <link rel="stylesheet" media="print" href="theme/css/print.css">
+    <link rel="stylesheet" media="screen, projection" href="theme/css/screen.css">
+    
+    
+    <!-- /Styles -->
+    <!-- Javascripts -->
+    
+    <script type="text/javascript" src="theme/js/slides.js"></script>
+    
+    
+    <!-- /Javascripts -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          processEscapes: true
+        },
+        "HTML-CSS": { availableFonts: ["TeX"] }
+      });
+    </script>
+    <script type="text/javascript"
+        src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+</head>
+<body style="!important;">
+  <div id="blank"></div>
+  <div class="presentation">
+    <div id="current_presenter_notes">
+      <div id="presenter_note"></div>
+    </div>
+    <div class="slides">
+      
+      <!-- slide source: lecture11a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            <header><h1>Monad Transformers</h1></header>
+            
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture11a.md">lecture11a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              1/38
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture11a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>Next week we will see that this is also possible to do with arbitrary applicatives.
+<br />
+<br />
+That is, given arbitrary applicatives <code>A1[_]</code> and <code>A2[_]</code> and no other knowledge we can contsruct an applicative on <code>A1[A2[_]]</code>.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture11a.md">lecture11a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              2/38
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture11a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>Can we do the same with monads? That is, given two monads, can we make one monad out of them in a generic way?</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">compose</span><span class="o">[</span><span class="kt">M1</span><span class="o">[</span><span class="k">_</span><span class="o">]</span> <span class="kt">:</span> <span class="kt">Monad</span>, <span class="kt">M2</span><span class="o">[</span><span class="k">_</span><span class="o">]</span> <span class="kt">:</span> <span class="kt">Monad</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
+    <span class="k">new</span> <span class="nc">Monad</span><span class="o">[</span><span class="kt">M1</span><span class="o">[</span><span class="kt">M2</span><span class="o">[</span><span class="k">_</span><span class="o">]]]</span> <span class="o">{</span>
+        <span class="k">def</span> <span class="n">pure</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">a</span><span class="k">:</span> <span class="kt">A</span><span class="o">)</span><span class="k">:</span> <span class="kt">M1</span><span class="o">[</span><span class="kt">M2</span><span class="o">[</span><span class="kt">A</span><span class="o">]]</span> <span class="k">=</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">pure</span><span class="o">[</span><span class="kt">M2</span><span class="o">].</span><span class="n">pure</span><span class="o">[</span><span class="kt">M1</span><span class="o">]</span>
+        <span class="k">def</span> <span class="n">flatMap</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">](</span><span class="n">fa</span><span class="k">:</span> <span class="kt">M1</span><span class="o">[</span><span class="kt">M2</span><span class="o">[</span><span class="kt">A</span><span class="o">]])</span>
+        <span class="o">(</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="n">M1</span><span class="o">[</span><span class="kt">M2</span><span class="o">[</span><span class="kt">B</span><span class="o">]])</span><span class="k">:</span> <span class="kt">M1</span><span class="o">[</span><span class="kt">M2</span><span class="o">[</span><span class="kt">B</span><span class="o">]]</span> <span class="k">=</span> <span class="o">???</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture11a.md">lecture11a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              3/38
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture11a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>Applying <code>f</code> to the internals of <code>fa</code>, we'd end up with something of type <code>M1[M2[M1[M2[B]]]]</code>.
+<br />
+<br />
+We would then like to swap layers to get something of type <code>M1[M1[M2[M2[B]]]]</code>, then use the <code>join</code>s from <code>M1</code> and <code>M2</code> to get a result of type <code>M1[M2[B]]</code>.                                              <br />
+<br />
+However there's nothing in the monad API that will allow us to do that for arbitrary monads <code>M1</code> and <code>M2</code>.
+<br />
+<br />
+So we can’t compose monads in general.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture11a.md">lecture11a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              4/38
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture11a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>This is not greatly surprising because we use monads to model effects and effects don’t in general compose.
+<br />
+<br />
+However, many monads can be made to compose with monad-specific glue code. For these cases we can use monad transformers to compose them.
+<br />
+<br />
+Monad transformers allow us to squash together monads, creating one monad where we previously had two or more. With this transformed monad we can avoid nested calls to flatMap.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture11a.md">lecture11a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              5/38
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture11a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>The basic transformer pattern enables us to cope with the following type transitions, where <code>M2</code> is the polymorphic outer structure, and <code>M1</code> is the concrete type that the transformer was built for.</p>
+<div class="highlight"><pre><span></span><span class="n">M2</span><span class="o">[</span><span class="kt">M1</span><span class="o">[</span><span class="kt">M2</span><span class="o">[</span><span class="kt">B</span><span class="o">]]]</span> <span class="k">=&gt;</span>
+<span class="n">M2</span><span class="o">[</span><span class="kt">M2</span><span class="o">[</span><span class="kt">B</span><span class="o">]]</span> <span class="k">=&gt;</span>
+<span class="n">M2</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span> <span class="k">=&gt;</span>
+<span class="n">M1</span><span class="o">[</span><span class="kt">M2</span><span class="o">[</span><span class="kt">B</span><span class="o">]]</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture11a.md">lecture11a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              6/38
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture11a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>Lets have a look at how this works for the identity monad's transformer:</p>
+<div class="highlight"><pre><span></span><span class="k">case</span> <span class="k">class</span> <span class="nc">IdT</span><span class="o">[</span><span class="kt">F</span><span class="o">[</span><span class="k">_</span><span class="o">]</span>, <span class="kt">A</span><span class="o">](</span><span class="n">value</span><span class="k">:</span> <span class="kt">F</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="n">pure</span><span class="o">[</span><span class="kt">F</span><span class="o">[</span><span class="k">_</span><span class="o">]</span>, <span class="kt">A</span><span class="o">](</span><span class="n">a</span><span class="k">:</span> <span class="kt">A</span><span class="o">)</span>
+        <span class="o">(</span><span class="k">implicit</span> <span class="n">F</span><span class="k">:</span> <span class="kt">Applicative</span><span class="o">[</span><span class="kt">F</span><span class="o">])</span><span class="k">:</span> <span class="kt">IdT</span><span class="o">[</span><span class="kt">F</span>, <span class="kt">A</span><span class="o">]</span> <span class="k">=</span>
+            <span class="nc">IdT</span><span class="o">(</span><span class="n">F</span><span class="o">.</span><span class="n">pure</span><span class="o">(</span><span class="n">a</span><span class="o">))</span>
+  <span class="k">def</span> <span class="n">flatMap</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="nc">IdT</span><span class="o">[</span><span class="kt">F</span>, <span class="kt">B</span><span class="o">])</span>
+        <span class="o">(</span><span class="k">implicit</span> <span class="n">F</span><span class="k">:</span> <span class="kt">FlatMap</span><span class="o">[</span><span class="kt">F</span><span class="o">])</span><span class="k">:</span> <span class="kt">IdT</span><span class="o">[</span><span class="kt">F</span>, <span class="kt">B</span><span class="o">]</span> <span class="k">=</span>
+        <span class="nc">IdT</span><span class="o">(</span><span class="n">F</span><span class="o">.</span><span class="n">flatMap</span><span class="o">(</span><span class="n">value</span><span class="o">)(</span><span class="n">f</span><span class="o">.</span><span class="n">andThen</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">value</span><span class="o">)))</span>
+<span class="o">}</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture11a.md">lecture11a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              7/38
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture11a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>Many data types have a monad transformer equivalent that allows us to compose the Monad instance of the data type with any other Monad instance.
+<br />
+<br />
+For instance, <code>OptionT[F[_], A]</code> allows us to compose the monadic properties of <code>Option</code> with any other <code>F[_]</code>, such as a <code>List</code>.
+<br />
+<br />
+This allows us to work with nested contexts/effects in a nice way (for example, in for-comprehensions).</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture11a.md">lecture11a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              8/38
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture11a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>We can create instances with pure as usual:</p>
+<div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">cats.data.OptionT</span>
+<span class="k">type</span> <span class="kt">ListOption</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="nc">OptionT</span><span class="o">[</span><span class="kt">List</span>, <span class="kt">A</span><span class="o">]</span>
+<span class="c1">// defined type alias ListOption</span>
+</pre></div>
+
+<p>Cats provides a library of such transformers: <code>XorT</code> for composing <code>Xor</code> with other monads, <code>OptionT</code> for composing <code>Option</code>, and so on.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture11a.md">lecture11a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              9/38
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture11a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p><code>ListOption</code> is a monad that combines the properties of <code>List</code> and <code>Option</code>.</p>
+<div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">cats.Monad</span>
+<span class="k">import</span> <span class="nn">cats.std.list._</span>
+<span class="k">import</span> <span class="nn">cats.syntax.applicative._</span>
+<span class="k">val</span> <span class="n">a</span><span class="k">:</span> <span class="kt">ListOption</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="mf">42.</span><span class="n">pure</span><span class="o">[</span><span class="kt">ListOption</span><span class="o">]</span>
+<span class="c1">//a: ListOption[Int] = OptionT(List(Some(42)))</span>
+</pre></div>
+
+<p>Note how we build it from the inside out: we pass <code>List</code>, the type of the outer monad, as a parameter to <code>OptionT</code>, the transformer for the inner monad.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture11a.md">lecture11a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              10/38
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture11a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            <header><h1>Quick Aside</h1></header>
+            
+            
+            <section><p>Note the imports in the code samples above—they hint at how everything bolts together.
+<br />
+<br />
+We import <code>cats.syntax.applicative</code> to get the pure syntax. pure requires an implicit parameter of type <code>Applicative[ListOption]</code>.
+<br />
+<br />
+We haven’t met applicatives yet, but all monads are also applicatives so we can ignore that difference for now.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture11a.md">lecture11a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              11/38
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture11a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>We need an <code>Applicative[ListOption]</code> to call <code>pure</code>. We already have <code>cats.data.OptionT</code> in scope, which provides the implicits for <code>OptionT</code>.
+<br />
+<br />
+However, in order to generate our <code>Applicative[ListOption]</code>, the implicits for <code>OptionT</code> also require an <code>Applicative</code> for <code>List</code>.
+<br />
+<br />
+Hence the additional import from <code>cats.std.list</code>.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture11a.md">lecture11a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              12/38
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture11a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>Notice we’re not importing <code>cats.syntax.functor</code> or <code>cats.syntax.flatMap</code>.
+<br />
+<br />
+This is because <code>OptionT</code> is a concrete data type with its own explicit <code>map</code> and <code>flatMap</code> methods.
+<br />
+<br />
+However it wouldn’t hurt to import the syntax—the compiler will simply ignore it in favour of the explicit methods.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture11a.md">lecture11a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              13/38
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture11a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            <header><h1>Monad Transformers in Cats</h1></header>
+            
+            
+            <section><p>So monad transformers don’t have their own type class. This makes them a bit different from the other abstractions we’ve seen.
+<br />
+<br />
+We use monad transformers to <em>build</em> monads, which we then use via the <code>Monad</code> type class.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture11a.md">lecture11a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              14/38
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture11a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>The transformed <code>map</code> and <code>flatMap</code> methods allow us to use both component monads without having to recursively unpack and repack values at each stage in the computation.</p>
+<div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">a</span> <span class="k">=</span> <span class="mf">10.</span><span class="n">pure</span><span class="o">[</span><span class="kt">ListOption</span><span class="o">]</span>
+<span class="c1">// a: ListOption[Int] = OptionT(List(Some(10)))</span>
+<span class="k">val</span> <span class="n">b</span> <span class="k">=</span> <span class="mf">32.</span><span class="n">pure</span><span class="o">[</span><span class="kt">ListOption</span><span class="o">]</span>
+<span class="c1">// b: ListOption[Int] = OptionT(List(Some(32)))</span>
+<span class="n">a</span> <span class="n">flatMap</span> <span class="o">{</span> <span class="o">(</span><span class="n">x</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span> <span class="k">=&gt;</span>
+  <span class="n">b</span> <span class="n">map</span> <span class="o">{</span> <span class="o">(</span><span class="n">y</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span> <span class="k">=&gt;</span>
+    <span class="n">x</span><span class="o">+</span><span class="n">y</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture11a.md">lecture11a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              15/38
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture11a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>The main points of interest when using monad transformers are:</p>
+<ul>
+<li>the available transformer classes</li>
+<li>building stacks of monads using transformers</li>
+<li>constructing instances of a monad stack</li>
+<li>pulling apart a stack to access the wrapped monads</li>
+</ul></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture11a.md">lecture11a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              16/38
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture11a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>By convention, in Cats a monad <code>Foo</code> will have a transformer class called <code>FooT</code>.
+<br />
+<br />
+Some of the available instances are:</p>
+<ul>
+<li><code>cats.data.OptionT</code> for <code>Option</code>;</li>
+<li><code>cats.data.XorT</code> for <code>Xor</code>;</li>
+<li><code>cats.data.ReaderT</code>, <code>cats.data.WriterT</code>, and <code>cats.data.StateT</code>;</li>
+<li><code>cats.data.IdT</code> for the <code>Id</code> monad.</li>
+</ul>
+<p>In fact, many monads in Cats are defined by combining a monad transformer with the Id monad.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture11a.md">lecture11a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              17/38
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture11a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>The first type parameter to a monad transformer is the outer monad in the stack—the transformer itself provides the inner monad.
+<br />
+<br />
+For example, our <code>ListOption</code> type above was built using <code>OptionT[List, A]</code> but the result was effectively a <code>List[Option[A]]</code>.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture11a.md">lecture11a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              18/38
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture11a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>Many monads and all transformers have at least two type parameters, so we have to define type aliases for intermediate stages.
+<br />
+<br />
+For example, suppose we want to wrap <code>Xor</code> around <code>Option</code>. <code>Option</code> is the innermost type so we want to use the <code>OptionT</code> monad transformer.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture11a.md">lecture11a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              19/38
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture11a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>We need to use <code>Xor</code> as the first type parameter. However, <code>Xor</code> itself has two type parameters and monads only have one.</p>
+<p>Therefore we need a type alias to make everything the correct shape:</p>
+<div class="highlight"><pre><span></span><span class="k">type</span> <span class="kt">ErrorOr</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="nc">String</span> <span class="nc">Xor</span> <span class="n">A</span>
+<span class="k">type</span> <span class="kt">ErrorOptionOr</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="nc">OptionT</span><span class="o">[</span><span class="kt">ErrorOr</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span>, <span class="kt">A</span><span class="o">]</span>
+<span class="c1">//error: ErrorOr[A] takes no type parameters, expected: one</span>
+<span class="k">type</span> <span class="kt">ErrorOptionOr</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="nc">OptionT</span><span class="o">[</span><span class="kt">ErrorOr</span>, <span class="kt">A</span><span class="o">]</span>
+<span class="k">val</span> <span class="n">a</span> <span class="k">=</span> <span class="mf">41.</span><span class="n">pure</span><span class="o">[</span><span class="kt">ErrorOptionOr</span><span class="o">]</span>
+<span class="k">val</span> <span class="n">b</span> <span class="k">=</span> <span class="n">a</span><span class="o">.</span><span class="n">flatMap</span><span class="o">(</span><span class="n">x</span> <span class="k">=&gt;</span> <span class="o">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="o">).</span><span class="n">pure</span><span class="o">[</span><span class="kt">ErrorOptionOr</span><span class="o">])</span>
+<span class="c1">//b = ???</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture11a.md">lecture11a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              20/38
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture11a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>Now let’s add another monad into our stack. We create a <code>Future</code> of an <code>Xor</code> of <code>Option</code>. Again we build this from the inside out with an <code>OptionT</code> of a <code>XorT</code> of <code>Future</code>.</p>
+<div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">scala.concurrent.Future</span>
+<span class="k">import</span> <span class="nn">cats.data.</span><span class="o">{</span><span class="nc">XorT</span><span class="o">,</span> <span class="nc">OptionT</span><span class="o">}</span>
+<span class="k">type</span> <span class="kt">FutureXor</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="nc">XorT</span><span class="o">[</span><span class="kt">Future</span>, <span class="kt">String</span>, <span class="kt">A</span><span class="o">]</span>
+<span class="k">type</span> <span class="kt">FutureXorOption</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="nc">OptionT</span><span class="o">[</span><span class="kt">FutureXor</span>, <span class="kt">A</span><span class="o">]</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture11a.md">lecture11a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              21/38
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture11a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>Our <code>map</code> and <code>flatMap</code> methods on <code>FutureXorOption</code> now cut through three layers of abstraction:</p>
+<div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">scala.concurrent.ExecutionContext.Implicits.global</span>
+<span class="k">import</span> <span class="nn">cats.std.future._</span>
+<span class="k">val</span> <span class="n">answer</span><span class="k">:</span> <span class="kt">FutureXorOption</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="k">for</span> <span class="o">{</span>
+      <span class="n">a</span> <span class="k">&lt;-</span> <span class="mf">10.</span><span class="n">pure</span><span class="o">[</span><span class="kt">FutureXorOption</span><span class="o">]</span>
+        <span class="n">b</span> <span class="k">&lt;-</span> <span class="mf">32.</span><span class="n">pure</span><span class="o">[</span><span class="kt">FutureXorOption</span><span class="o">]</span>
+    <span class="o">}</span> <span class="k">yield</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+<span class="c1">//???</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture11a.md">lecture11a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              22/38
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source:  -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="page_number">
+              /38
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture11a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><div class="highlight"><pre><span></span><span class="n">answer</span>
+<span class="c1">//res0 = OptionT(XorT(Success(Right(Some(42)))))</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture11a.md">lecture11a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              23/38
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture11a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>Once we’ve used a monad transformer, we can unpack it using its value method.</p>
+<p>Each call to value unpacks a single monad transformer, so we may need more than one call to completely unpack a large stack:</p>
+<div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">cats.data.</span><span class="o">{</span><span class="nc">Writer</span><span class="o">,</span> <span class="nc">XorT</span><span class="o">,</span> <span class="nc">OptionT</span><span class="o">}</span>
+<span class="k">type</span> <span class="kt">Logged</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Writer</span><span class="o">[</span><span class="kt">List</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span>, <span class="kt">A</span><span class="o">]</span>
+<span class="k">type</span> <span class="kt">LoggedFallable</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="nc">XorT</span><span class="o">[</span><span class="kt">Logged</span>, <span class="kt">String</span>, <span class="kt">A</span><span class="o">]</span>
+<span class="k">type</span> <span class="kt">LoggedFallableOpt</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="nc">OptionT</span><span class="o">[</span><span class="kt">LoggedFallable</span>, <span class="kt">A</span><span class="o">]</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture11a.md">lecture11a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              24/38
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture11a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">packed</span> <span class="k">=</span> <span class="mf">123.</span><span class="n">pure</span><span class="o">[</span><span class="kt">LoggedFallableOpt</span><span class="o">]</span>
+<span class="k">val</span> <span class="n">foo</span> <span class="k">=</span> <span class="n">packed</span><span class="o">.</span><span class="n">value</span>
+<span class="c1">//???</span>
+<span class="k">val</span> <span class="n">bar</span> <span class="k">=</span> <span class="n">foo</span><span class="o">.</span><span class="n">value</span>
+<span class="c1">//???</span>
+<span class="k">val</span> <span class="n">baz</span> <span class="k">=</span> <span class="n">bar</span><span class="o">.</span><span class="n">value</span>
+<span class="c1">//???</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture11a.md">lecture11a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              25/38
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture11a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            <header><h1>Default Instances</h1></header>
+            
+            
+            <section><p>Many monads in Cats are defined using the corresponding transformer and the <code>Id</code> monad. This is reassuring as it confirms that the APIs for these monads and transformers are identical.</p>
+<p><code>Reader</code>, <code>Writer</code>, and <code>State</code> are all defined in the following way:</p>
+<div class="highlight"><pre><span></span><span class="k">type</span> <span class="kt">Reader</span><span class="o">[</span><span class="kt">E</span>, <span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="nc">ReaderT</span><span class="o">[</span><span class="kt">Id</span>, <span class="kt">E</span>, <span class="kt">A</span><span class="o">]</span>
+<span class="k">type</span> <span class="kt">Writer</span><span class="o">[</span><span class="kt">W</span>, <span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="nc">WriterT</span><span class="o">[</span><span class="kt">Id</span>, <span class="kt">W</span>, <span class="kt">A</span><span class="o">]</span>
+<span class="k">type</span> <span class="kt">State</span><span class="o">[</span><span class="kt">S</span>, <span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="nc">StateT</span><span class="o">[</span><span class="kt">Id</span>, <span class="kt">S</span>, <span class="kt">A</span><span class="o">]</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture11a.md">lecture11a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              26/38
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture11a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>In other cases monad transformers have separate definitions to their corresponding monads. In these cases, the methods of the transformer tend to mirror the methods on the monad.
+<br />
+<br />
+For example, <code>OptionT</code> defines <code>getOrElse</code>, and <code>XorT</code> defines <code>fold</code>, <code>bimap</code>, <code>swap</code>, and other useful methods.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture11a.md">lecture11a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              27/38
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture11a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            <header><h1>Kleisli Arrows</h1></header>
+            
+            
+            <section><p>One of the most useful properties of functions is that they compose. That is, given a function <code>A =&gt; B</code> and a function <code>B =&gt; C</code>, we can combine them to create a new function <code>A =&gt; C</code>.
+<br />
+<br />
+It is through this compositional property that we are able to write many small functions and compose them together to create a larger one that suits our needs.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture11a.md">lecture11a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              28/38
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture11a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>Sometimes however, our functions will need to return monadic values. For instance, consider the following set of functions.</p>
+<div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">parse</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=&gt;</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span>
+  <span class="n">s</span> <span class="k">=&gt;</span>  <span class="k">if</span> <span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="n">matches</span><span class="o">(</span><span class="s">&quot;-?[0-9]+&quot;</span><span class="o">))</span>
+                    <span class="nc">Some</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="n">toInt</span><span class="o">)</span>
+                <span class="k">else</span> <span class="nc">None</span>           
+<span class="k">val</span> <span class="n">reciprocal</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=&gt;</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">Double</span><span class="o">]</span> <span class="k">=</span>
+  <span class="n">i</span> <span class="k">=&gt;</span>  <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">!=</span> <span class="mi">0</span><span class="o">)</span> <span class="nc">Some</span><span class="o">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">i</span><span class="o">)</span>
+                <span class="k">else</span> <span class="nc">None</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture11a.md">lecture11a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              29/38
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture11a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>As it stands we cannot use <code>Function1.compose</code> to compose these two functions. The output type of parse is <code>Option[Int]</code> whereas the input type of reciprocal is <code>Int</code>.
+<br />
+<br />
+<code>Kleisli</code> enables composition of functions that return a monadic value, for instance an <code>Option[Int]</code> or a <code>Xor[String, List[Double]]</code>, without having functions take an <code>Option</code> or <code>Xor</code> as a parameter.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture11a.md">lecture11a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              30/38
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture11a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>Depending on the properties of the <code>F[_]</code>, we can do different things with <code>Kleisli</code>s.
+<br />
+<br />
+For instance, if <code>F[_]</code> has a <code>FlatMap[F]</code> instance (we can call <code>flatMap</code> on <code>F[A]</code> values), we can compose two <code>Kleisli</code>s much like we can two functions.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture11a.md">lecture11a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              31/38
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture11a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">cats.FlatMap</span>
+<span class="k">import</span> <span class="nn">cats.syntax.flatMap._</span>
+<span class="k">case</span> <span class="k">class</span> <span class="nc">Kleisli</span><span class="o">[</span><span class="kt">F</span><span class="o">[</span><span class="k">_</span><span class="o">]</span>, <span class="kt">A</span>, <span class="kt">B</span><span class="o">](</span><span class="n">run</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="n">F</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="n">compose</span><span class="o">[</span><span class="kt">Z</span><span class="o">](</span><span class="n">k</span><span class="k">:</span> <span class="kt">Kleisli</span><span class="o">[</span><span class="kt">F</span>, <span class="kt">Z</span>, <span class="kt">A</span><span class="o">])</span>
+        <span class="o">(</span><span class="k">implicit</span> <span class="n">F</span><span class="k">:</span> <span class="kt">FlatMap</span><span class="o">[</span><span class="kt">F</span><span class="o">])</span><span class="k">:</span> <span class="kt">Kleisli</span><span class="o">[</span><span class="kt">F</span>, <span class="kt">Z</span>, <span class="kt">B</span><span class="o">]</span> <span class="k">=</span>
+        <span class="nc">Kleisli</span><span class="o">[</span><span class="kt">F</span>, <span class="kt">Z</span>, <span class="kt">B</span><span class="o">](</span><span class="n">z</span> <span class="k">=&gt;</span> <span class="n">k</span><span class="o">.</span><span class="n">run</span><span class="o">(</span><span class="n">z</span><span class="o">).</span><span class="n">flatMap</span><span class="o">(</span><span class="n">run</span><span class="o">))</span>
+<span class="o">}</span>
+</pre></div>
+
+<p>What is the type of <code>k.run(z)</code>? Why is <code>compose</code> parametrized by <code>Z</code>?</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture11a.md">lecture11a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              32/38
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture11a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>Returning to our earlier example:</p>
+<div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">cats.std.option._</span>
+<span class="k">val</span> <span class="n">parse</span> <span class="k">=</span> <span class="nc">Kleisli</span><span class="o">(</span>
+  <span class="o">(</span><span class="n">s</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="k">try</span> <span class="o">{</span>
+    <span class="nc">Some</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="n">toInt</span><span class="o">)</span> <span class="o">}</span> <span class="k">catch</span> <span class="o">{</span>
+      <span class="k">case</span> <span class="k">_:</span> <span class="kt">NumberFormatException</span> <span class="o">=&gt;</span> <span class="nc">None</span>
+      <span class="o">})</span>
+<span class="k">val</span> <span class="n">reciprocal</span> <span class="k">=</span> <span class="nc">Kleisli</span><span class="o">(</span>
+  <span class="o">(</span><span class="n">i</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="nc">None</span>
+              <span class="k">else</span> <span class="nc">Some</span><span class="o">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">i</span><span class="o">)</span>
+              <span class="o">)</span>
+<span class="k">val</span> <span class="n">foo</span> <span class="k">=</span> <span class="n">reciprocal</span><span class="o">.</span><span class="n">compose</span><span class="o">(</span><span class="n">parse</span><span class="o">)</span>
+<span class="n">foo</span><span class="o">.</span><span class="n">run</span><span class="o">(</span><span class="s">&quot;5&quot;</span><span class="o">)</span>
+<span class="c1">//res0 = ???</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture11a.md">lecture11a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              33/38
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture11a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>Like <code>Reader[A,B]</code>, <code>Kleisli[F[_], A, B]</code> is essentially a wrapper around a function. The only difference is that the function has type <code>A =&gt; F[B]</code> instead of type A<code>=&gt; B</code>.
+<br />
+<br />
+Thus <code>Kleisli</code> can be viewed as the monad transformer for functions.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture11a.md">lecture11a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              34/38
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture11a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>Cats defines a <code>ReaderT</code> type alias along the lines of:</p>
+<div class="highlight"><pre><span></span><span class="k">type</span> <span class="kt">Id</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="n">A</span>
+<span class="k">type</span> <span class="kt">ReaderT</span><span class="o">[</span><span class="kt">F</span><span class="o">[</span><span class="k">_</span><span class="o">]</span>, <span class="kt">A</span>, <span class="kt">B</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Kleisli</span><span class="o">[</span><span class="kt">F</span>, <span class="kt">A</span>, <span class="kt">B</span><span class="o">]</span>
+<span class="k">type</span> <span class="kt">Reader</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Kleisli</span><span class="o">[</span><span class="kt">Id</span>, <span class="kt">A</span>, <span class="kt">B</span><span class="o">]</span>
+<span class="k">object</span> <span class="nc">Reader</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="n">apply</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="n">B</span><span class="o">)</span><span class="k">:</span> <span class="kt">Reader</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">]</span> <span class="k">=</span>
+        <span class="nc">Kleisli</span><span class="o">[</span><span class="kt">Id</span>, <span class="kt">A</span>, <span class="kt">B</span><span class="o">](</span><span class="n">f</span><span class="o">)</span>
+<span class="o">}</span>
+</pre></div>
+
+<p>The <code>ReaderT</code> type alias exists to allow users to use the <code>Kleisli</code> companion object as if it were <code>ReaderT</code>.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture11a.md">lecture11a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              35/38
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture11a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>Why not just rename <code>Kleisli</code> to <code>Reader</code>?
+<br />
+<br />
+<a href="https://github.com/typelevel/cats/issues/382">Historical reasons</a> for one, but its also worth noting that <code>F[_]</code> having a <code>FlatMap</code> (or a <code>Monad</code>) instance is not a hard requirement for Cats' <code>Kleisli</code>.
+<br />
+<br />
+We can also do useful things with weaker requirements on Kleisli arrows, for example <a href="https://twitter.github.io/finagle/">Finagle</a> represents RPC services as <code>A =&gt; Future[B]</code>, and it's useful to be able to work with these things as Kleisli arrows.</p>
+<p>The <code>A</code> in this case isn't an environment—it's just the input to a function.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture11a.md">lecture11a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              36/38
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture11a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>One simple example is mapping over ranges, which only requires that <code>F[_]</code> have a <code>Functor</code> instance (e.g. is equipped with map: <code>F[A] =&gt; (A =&gt; B) =&gt; F[B]</code>).</p>
+<div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">cats.Functor</span>
+<span class="k">final</span> <span class="k">case</span> <span class="k">class</span> <span class="nc">Kleisli</span><span class="o">[</span><span class="kt">F</span><span class="o">[</span><span class="k">_</span><span class="o">]</span>, <span class="kt">A</span>, <span class="kt">B</span><span class="o">](</span><span class="n">run</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="n">F</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="n">map</span><span class="o">[</span><span class="kt">C</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">B</span> <span class="o">=&gt;</span> <span class="n">C</span><span class="o">)</span>
+        <span class="o">(</span><span class="k">implicit</span> <span class="n">F</span><span class="k">:</span> <span class="kt">Functor</span><span class="o">[</span><span class="kt">F</span><span class="o">])</span><span class="k">:</span> <span class="kt">Kleisli</span><span class="o">[</span><span class="kt">F</span>, <span class="kt">A</span>, <span class="kt">C</span><span class="o">]</span> <span class="k">=</span>
+        <span class="nc">Kleisli</span><span class="o">[</span><span class="kt">F</span>, <span class="kt">A</span>, <span class="kt">C</span><span class="o">](</span><span class="n">a</span> <span class="k">=&gt;</span> <span class="n">F</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">run</span><span class="o">(</span><span class="n">a</span><span class="o">))(</span><span class="n">f</span><span class="o">))</span>
+<span class="o">}</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture11a.md">lecture11a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              37/38
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture11a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>This is an area of active research!
+<br />
+<br />
+Daniel Spiewak's<a href="https://github.com/djspiewak/emm">emm</a>(following <a href="http://okmij.org/ftp/Haskell/extensible/">eff</a>) offers an interesting alternative to monad transformers in Scala.</p>
+<p>From the <code>README</code>:</p>
+<blockquote>
+<p>The Emm monad provides a syntactically lightweight, type-inference friendly data type for composing effects. The general motivation is very similar to monad transformers, but the end result is far more user friendly and also significantly more general.</p>
+</blockquote></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture11a.md">lecture11a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              38/38
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+  <div id="toc" class="sidebar hidden">
+    <h2>Table of Contents</h2>
+    <table>
+      <caption>Table of Contents</caption>
+      
+      <tr id="toc-row-1">
+        <th><a href="#slide1">Monad Transformers</a></th>
+        <td><a href="#slide1">1</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-2">
+        <th><a href="#slide2">-</a></th>
+        <td><a href="#slide2">2</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-3">
+        <th><a href="#slide3">-</a></th>
+        <td><a href="#slide3">3</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-4">
+        <th><a href="#slide4">-</a></th>
+        <td><a href="#slide4">4</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-5">
+        <th><a href="#slide5">-</a></th>
+        <td><a href="#slide5">5</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-6">
+        <th><a href="#slide6">-</a></th>
+        <td><a href="#slide6">6</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-7">
+        <th><a href="#slide7">-</a></th>
+        <td><a href="#slide7">7</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-8">
+        <th><a href="#slide8">-</a></th>
+        <td><a href="#slide8">8</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-9">
+        <th><a href="#slide9">-</a></th>
+        <td><a href="#slide9">9</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-10">
+        <th><a href="#slide10">-</a></th>
+        <td><a href="#slide10">10</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-11">
+        <th><a href="#slide11">Quick Aside</a></th>
+        <td><a href="#slide11">11</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-12">
+        <th><a href="#slide12">-</a></th>
+        <td><a href="#slide12">12</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-13">
+        <th><a href="#slide13">-</a></th>
+        <td><a href="#slide13">13</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-14">
+        <th><a href="#slide14">Monad Transformers in Cats</a></th>
+        <td><a href="#slide14">14</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-15">
+        <th><a href="#slide15">-</a></th>
+        <td><a href="#slide15">15</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-16">
+        <th><a href="#slide16">-</a></th>
+        <td><a href="#slide16">16</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-17">
+        <th><a href="#slide17">-</a></th>
+        <td><a href="#slide17">17</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-18">
+        <th><a href="#slide18">-</a></th>
+        <td><a href="#slide18">18</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-19">
+        <th><a href="#slide19">-</a></th>
+        <td><a href="#slide19">19</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-20">
+        <th><a href="#slide20">-</a></th>
+        <td><a href="#slide20">20</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-21">
+        <th><a href="#slide21">-</a></th>
+        <td><a href="#slide21">21</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-22">
+        <th><a href="#slide22">-</a></th>
+        <td><a href="#slide22">22</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-23">
+        <th><a href="#slide23">-</a></th>
+        <td><a href="#slide23">23</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-24">
+        <th><a href="#slide24">-</a></th>
+        <td><a href="#slide24">24</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-25">
+        <th><a href="#slide25">-</a></th>
+        <td><a href="#slide25">25</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-26">
+        <th><a href="#slide26">Default Instances</a></th>
+        <td><a href="#slide26">26</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-27">
+        <th><a href="#slide27">-</a></th>
+        <td><a href="#slide27">27</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-28">
+        <th><a href="#slide28">Kleisli Arrows</a></th>
+        <td><a href="#slide28">28</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-29">
+        <th><a href="#slide29">-</a></th>
+        <td><a href="#slide29">29</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-30">
+        <th><a href="#slide30">-</a></th>
+        <td><a href="#slide30">30</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-31">
+        <th><a href="#slide31">-</a></th>
+        <td><a href="#slide31">31</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-32">
+        <th><a href="#slide32">-</a></th>
+        <td><a href="#slide32">32</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-33">
+        <th><a href="#slide33">-</a></th>
+        <td><a href="#slide33">33</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-34">
+        <th><a href="#slide34">-</a></th>
+        <td><a href="#slide34">34</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-35">
+        <th><a href="#slide35">-</a></th>
+        <td><a href="#slide35">35</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-36">
+        <th><a href="#slide36">-</a></th>
+        <td><a href="#slide36">36</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-37">
+        <th><a href="#slide37">-</a></th>
+        <td><a href="#slide37">37</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-38">
+        <th><a href="#slide38">-</a></th>
+        <td><a href="#slide38">38</a></td>
+      </tr>
+      
+      
+    </table>
+  </div>
+  
+  <div id="help" class="sidebar hidden">
+    <h2>Help</h2>
+    <table>
+      <caption>Help</caption>
+      <tr>
+        <th>Table of Contents</th>
+        <td>t</td>
+      </tr>
+      <tr>
+        <th>Exposé</th>
+        <td>ESC</td>
+      </tr>
+      <tr>
+        <th>Full screen slides</th>
+        <td>e</td>
+      </tr>
+      <tr>
+        <th>Presenter View</th>
+        <td>p</td>
+      </tr>
+      <tr>
+        <th>Source Files</th>
+        <td>s</td>
+      </tr>
+      <tr>
+        <th>Slide Numbers</th>
+        <td>n</td>
+      </tr>
+      <tr>
+        <th>Toggle screen blanking</th>
+        <td>b</td>
+      </tr>
+      <tr>
+        <th>Show/hide slide context</th>
+        <td>c</td>
+      </tr>
+      <tr>
+        <th>Notes</th>
+        <td>2</td>
+      </tr>
+      <tr>
+        <th>Help</th>
+        <td>h</td>
+      </tr>
+    </table>
+  </div>
+  <script>main()</script>
+</body>
+</html>

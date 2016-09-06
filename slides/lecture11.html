@@ -25,7 +25,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Lecture 3: Monads</title>
+    <title>Lecture 11: Monads</title>
     <!-- Styles -->
     
     <link rel="stylesheet" media="print" href="theme/css/print.css">
@@ -63,15 +63,13 @@
     </div>
     <div class="slides">
       
-      <!-- slide source: lecture3.md -->
+      <!-- slide source: lecture11.md -->
       <div class="slide-wrapper">
         <div class="slide">
           <div class="inner">
             
-            <header><h1>Lecture 3: Monads</h1></header>
+            <header><h1>Lecture 11: Monads</h1></header>
             
-            
-            <section><p><img src="images/lecture3/gang-of-four-monads.png"  height="400" ></p></section>
             
           </div>
           <div class="presenter_notes">
@@ -85,30 +83,177 @@
           <footer>
             
             <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
+              Source: <a href="lecture11.md">lecture11.md</a>
             </aside>
             
             <aside class="page_number">
-              1/58
+              1/60
             </aside>
 
           </footer>
         </div>
       </div>
       
-      <!-- slide source: lecture3.md -->
+      <!-- slide source: lecture11.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>Monads are one of the most common abstractions in Scala, and one that most Scala programmers are familiar with even if they don’t know the name.
+<br />
+<br />
+We even have special syntax in Scala to support monads: for comprehensions.
+<br />
+<br />
+Despite the ubiquity of the concept, Scala lacks a concrete type to encompass things that can be flatMapped. This is one of the benefits of Cats.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture11.md">lecture11.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              2/60
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture11.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>Formally, a monad for a type <code>F[A]</code> has:</p>
+<ul>
+<li>an operation <code>flatMap</code> with type <code>(F[A], A =&gt; F[B]) =&gt; F[B]</code></li>
+<li>an operation <code>pure</code> with type <code>A =&gt; F[A]</code>.
+<br />
+<br />
+Most of the constructs we consider in this class are monadic: <code>List</code>, <code>Vector</code>, <code>Option</code>, <code>Xor</code>, <code>State</code>, <code>Future</code>, <code>Parser</code>, <code>Reader</code>, <code>Writer</code>, <code>IO</code> etc.</li>
+</ul></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture11.md">lecture11.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              3/60
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture11.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p><code>pure</code> (often referred to as <code>unit</code> or <code>return</code>) abstracts over the constructor of our monad.
+<br />
+<br />
+<code>flatMap</code> (often referred to as <code>bind</code> and given the infix notation <code>&gt;&gt;=</code>) chains structured computations together in a way that allows interference between the structure and computation layers.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture11.md">lecture11.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              4/60
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture11.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p><code>pure</code> and <code>flatMap</code> must obey three laws:</p>
+<ol>
+<li>Left identity: <code>pure(a) flatMap f == f(a)</code></li>
+<li>Right identity: <code>m flatMap pure == m</code></li>
+<li>Associativity: <code>(m flatMap f) flatMap g == m flatMap (x=&gt;f(x) flatMap g)</code></li>
+</ol></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture11.md">lecture11.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              5/60
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture11.md -->
       <div class="slide-wrapper">
         <div class="slide has_code">
           <div class="inner">
             
-            <header><h1>The Monad Type Class</h1></header>
+            <header><h1>Exercise</h1></header>
             
             
-            <section><p>Last time we saw that in Haskell the monad type class is written as follows:</p>
-<div class="highlight"><pre><span></span><span class="kr">class</span> <span class="kt">Applicative</span> <span class="n">m</span> <span class="ow">=&gt;</span> <span class="kt">Monad</span> <span class="n">m</span> <span class="kr">where</span>
-    <span class="p">(</span><span class="o">&gt;&gt;=</span><span class="p">)</span>       <span class="ow">::</span> <span class="n">m</span> <span class="n">a</span> <span class="ow">-&gt;</span> <span class="p">(</span><span class="n">a</span> <span class="ow">-&gt;</span> <span class="n">m</span> <span class="n">b</span><span class="p">)</span> <span class="ow">-&gt;</span> <span class="n">m</span> <span class="n">b</span>
-    <span class="n">return</span>      <span class="ow">::</span> <span class="n">a</span> <span class="ow">-&gt;</span> <span class="n">m</span> <span class="n">a</span>
-    <span class="n">return</span>      <span class="ow">=</span> <span class="n">pure</span>
+            <section><p>A monad is also a functor. Given implementations of <code>flatMap</code> and <code>pure</code>, write an implementation of <code>map</code>:</p>
+<div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">scala.language.higherKinds</span>
+<span class="k">def</span> <span class="n">flatMap</span><span class="o">[</span><span class="kt">F</span><span class="o">[</span><span class="k">_</span><span class="o">]</span>, <span class="kt">A</span>, <span class="kt">B</span><span class="o">](</span><span class="n">value</span><span class="k">:</span> <span class="kt">F</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span>
+  <span class="o">(</span><span class="n">func</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="n">F</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">F</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span>
+<span class="k">def</span> <span class="n">pure</span><span class="o">[</span><span class="kt">F</span><span class="o">[</span><span class="k">_</span><span class="o">]</span>, <span class="kt">A</span><span class="o">](</span><span class="n">value</span><span class="k">:</span> <span class="kt">A</span><span class="o">)</span><span class="k">:</span> <span class="kt">F</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span>
+<span class="k">def</span> <span class="n">map</span><span class="o">[</span><span class="kt">F</span><span class="o">[</span><span class="k">_</span><span class="o">]</span>, <span class="kt">A</span>, <span class="kt">B</span><span class="o">](</span><span class="n">value</span><span class="k">:</span> <span class="kt">F</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span>
+  <span class="o">(</span><span class="n">func</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="n">B</span><span class="o">)</span><span class="k">:</span> <span class="kt">F</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span> <span class="k">=</span> <span class="o">???</span>
 </pre></div>
 </section>
             
@@ -124,21 +269,189 @@
           <footer>
             
             <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
+              Source: <a href="lecture11.md">lecture11.md</a>
             </aside>
             
             <aside class="page_number">
-              2/58
+              6/60
             </aside>
 
           </footer>
         </div>
       </div>
       
-      <!-- slide source: lecture3.md -->
+      <!-- slide source:  -->
       <div class="slide-wrapper">
         <div class="slide">
           <div class="inner">
+            
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="page_number">
+              /60
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture11.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">map</span><span class="o">[</span><span class="kt">F</span><span class="o">[</span><span class="k">_</span><span class="o">]</span>, <span class="kt">A</span>, <span class="kt">B</span><span class="o">](</span><span class="n">value</span><span class="k">:</span> <span class="kt">F</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span>
+  <span class="o">(</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="n">B</span><span class="o">)</span><span class="k">:</span> <span class="kt">F</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span> <span class="k">=</span>
+  <span class="n">flatMap</span><span class="o">(</span><span class="n">value</span><span class="o">)(</span><span class="n">a</span> <span class="k">=&gt;</span> <span class="n">pure</span><span class="o">(</span><span class="n">f</span><span class="o">(</span><span class="n">a</span><span class="o">)))</span>
+</pre></div>
+
+<p>This factorization demonstrates the inherent lack of interference between the structure and computation layers in <code>map</code>.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture11.md">lecture11.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              7/60
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture11.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            <header><h1>Exercise</h1></header>
+            
+            
+            <section><p>There are several ways to define a monad in terms of combinations of primitive combinators. The combination we've seen most often is <code>unit</code>, <code>map</code>, and <code>flatMap</code>.
+<br />
+<br />
+A second combination is <code>unit</code>, <code>map</code>, and <code>join</code>, where <code>join</code> has the following type signature:</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">join</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">mma</span><span class="k">:</span> <span class="kt">F</span><span class="o">[</span><span class="kt">F</span><span class="o">[</span><span class="kt">A</span><span class="o">]])</span><span class="k">:</span> <span class="kt">F</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="o">???</span>
+</pre></div>
+
+<p>Implement <code>join</code> in terms of <code>unit</code>, <code>map</code>, and/or <code>flatMap</code>.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture11.md">lecture11.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              8/60
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture11.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>As an aside, this is the <a href="https://en.wikipedia.org/wiki/Monad_(category_theory)">definition of a monad</a> used in category theory.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture11.md">lecture11.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              9/60
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture11.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">join</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">mma</span><span class="k">:</span> <span class="kt">F</span><span class="o">[</span><span class="kt">F</span><span class="o">[</span><span class="kt">A</span><span class="o">]])</span><span class="k">:</span> <span class="kt">F</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span>
+  <span class="n">flatMap</span><span class="o">(</span><span class="n">mma</span><span class="o">)(</span><span class="n">ma</span> <span class="k">=&gt;</span> <span class="n">ma</span><span class="o">)</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture11.md">lecture11.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              10/60
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture11.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            <header><h1>The Monad Type Class</h1></header>
             
             
             <section><p>The Cats monad type class is <code>cats.Monad</code>.
@@ -147,7 +460,7 @@
 Monad extends two other type classes: <code>FlatMap</code>, which provides the <code>flatMap</code> method, and <code>Applicative</code>, which extends <code>Functor</code>.
 <br />
 <br />
-Monads are essentially applicative functors with a <code>join</code>. We’ll discuss applicatives later in the course.</p></section>
+Monads are essentially applicative functors with a <code>join</code>. We’ll discuss applicatives next week.</p></section>
             
           </div>
           <div class="presenter_notes">
@@ -161,23 +474,23 @@ Monads are essentially applicative functors with a <code>join</code>. We’ll di
           <footer>
             
             <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
+              Source: <a href="lecture11.md">lecture11.md</a>
             </aside>
             
             <aside class="page_number">
-              3/58
+              11/60
             </aside>
 
           </footer>
         </div>
       </div>
       
-      <!-- slide source: lecture3.md -->
+      <!-- slide source: lecture11.md -->
       <div class="slide-wrapper">
         <div class="slide">
           <div class="inner">
             
-            <header><h1>Monads in Cats</h1></header>
+            <header><h1>Monad Syntax</h1></header>
             
             
             <section><p>The syntax for monads comes from three places:</p>
@@ -186,7 +499,7 @@ Monads are essentially applicative functors with a <code>join</code>. We’ll di
 <li><code>cats.syntax.functor</code> provides syntax for <code>map</code>;</li>
 <li><code>cats.syntax.applicative</code> provides syntax for <code>pure</code>.</li>
 </ul>
-<p>This derives from the layout of the functor, applicative, and monad type classes in Haskell.</p></section>
+<p>This derives from the layout of the equivalent typeclasses in Haskell.</p></section>
             
           </div>
           <div class="presenter_notes">
@@ -200,18 +513,18 @@ Monads are essentially applicative functors with a <code>join</code>. We’ll di
           <footer>
             
             <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
+              Source: <a href="lecture11.md">lecture11.md</a>
             </aside>
             
             <aside class="page_number">
-              4/58
+              12/60
             </aside>
 
           </footer>
         </div>
       </div>
       
-      <!-- slide source: lecture3.md -->
+      <!-- slide source: lecture11.md -->
       <div class="slide-wrapper">
         <div class="slide has_code">
           <div class="inner">
@@ -240,18 +553,18 @@ Monads are essentially applicative functors with a <code>join</code>. We’ll di
           <footer>
             
             <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
+              Source: <a href="lecture11.md">lecture11.md</a>
             </aside>
             
             <aside class="page_number">
-              5/58
+              13/60
             </aside>
 
           </footer>
         </div>
       </div>
       
-      <!-- slide source: lecture3.md -->
+      <!-- slide source: lecture11.md -->
       <div class="slide-wrapper">
         <div class="slide has_code">
           <div class="inner">
@@ -260,7 +573,10 @@ Monads are essentially applicative functors with a <code>join</code>. We’ll di
             
             
             <section><p>Cats provides instances for all the monads in the standard library (<code>Option</code>, <code>List</code>, <code>Vector</code> and so on) via <code>cats.std</code>:</p>
-<div class="highlight"><pre><span></span><span class="nc">Monad</span><span class="o">[</span><span class="kt">Option</span><span class="o">].</span><span class="n">pure</span><span class="o">(</span><span class="mi">3</span><span class="o">)</span>
+<div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">cats.Monad</span>
+<span class="k">import</span> <span class="nn">cats.std.list._</span>
+<span class="k">import</span> <span class="nn">cats.std.option</span>
+<span class="nc">Monad</span><span class="o">[</span><span class="kt">Option</span><span class="o">].</span><span class="n">pure</span><span class="o">(</span><span class="mi">3</span><span class="o">)</span>
 <span class="c1">//res0: Option[Int] = Some(3)</span>
 <span class="nc">Monad</span><span class="o">[</span><span class="kt">Option</span><span class="o">].</span><span class="n">flatMap</span><span class="o">(</span><span class="n">res0</span><span class="o">)(</span><span class="n">a</span> <span class="k">=&gt;</span> <span class="nc">Some</span><span class="o">(</span><span class="n">a</span> <span class="o">+</span> <span class="mi">2</span><span class="o">))</span>
 <span class="c1">//res1: Option[Int] = Some(5)</span>
@@ -283,18 +599,18 @@ Monads are essentially applicative functors with a <code>join</code>. We’ll di
           <footer>
             
             <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
+              Source: <a href="lecture11.md">lecture11.md</a>
             </aside>
             
             <aside class="page_number">
-              6/58
+              14/60
             </aside>
 
           </footer>
         </div>
       </div>
       
-      <!-- slide source: lecture3.md -->
+      <!-- slide source: lecture11.md -->
       <div class="slide-wrapper">
         <div class="slide has_code">
           <div class="inner">
@@ -325,18 +641,18 @@ Monads are essentially applicative functors with a <code>join</code>. We’ll di
           <footer>
             
             <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
+              Source: <a href="lecture11.md">lecture11.md</a>
             </aside>
             
             <aside class="page_number">
-              7/58
+              15/60
             </aside>
 
           </footer>
         </div>
       </div>
       
-      <!-- slide source: lecture3.md -->
+      <!-- slide source: lecture11.md -->
       <div class="slide-wrapper">
         <div class="slide has_code">
           <div class="inner">
@@ -360,18 +676,18 @@ Monads are essentially applicative functors with a <code>join</code>. We’ll di
           <footer>
             
             <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
+              Source: <a href="lecture11.md">lecture11.md</a>
             </aside>
             
             <aside class="page_number">
-              8/58
+              16/60
             </aside>
 
           </footer>
         </div>
       </div>
       
-      <!-- slide source: lecture3.md -->
+      <!-- slide source: lecture11.md -->
       <div class="slide-wrapper">
         <div class="slide has_code">
           <div class="inner">
@@ -402,18 +718,18 @@ Monads are essentially applicative functors with a <code>join</code>. We’ll di
           <footer>
             
             <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
+              Source: <a href="lecture11.md">lecture11.md</a>
             </aside>
             
             <aside class="page_number">
-              9/58
+              17/60
             </aside>
 
           </footer>
         </div>
       </div>
       
-      <!-- slide source: lecture3.md -->
+      <!-- slide source: lecture11.md -->
       <div class="slide-wrapper">
         <div class="slide">
           <div class="inner">
@@ -436,18 +752,18 @@ Understanding what makes sense structurally for a <code>Functor</code>, <code>Ap
           <footer>
             
             <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
+              Source: <a href="lecture11.md">lecture11.md</a>
             </aside>
             
             <aside class="page_number">
-              10/58
+              18/60
             </aside>
 
           </footer>
         </div>
       </div>
       
-      <!-- slide source: lecture3.md -->
+      <!-- slide source: lecture11.md -->
       <div class="slide-wrapper">
         <div class="slide has_code">
           <div class="inner">
@@ -482,11 +798,11 @@ Understanding what makes sense structurally for a <code>Functor</code>, <code>Ap
           <footer>
             
             <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
+              Source: <a href="lecture11.md">lecture11.md</a>
             </aside>
             
             <aside class="page_number">
-              11/58
+              19/60
             </aside>
 
           </footer>
@@ -511,21 +827,20 @@ Understanding what makes sense structurally for a <code>Functor</code>, <code>Ap
           <footer>
             
             <aside class="page_number">
-              /58
+              /60
             </aside>
 
           </footer>
         </div>
       </div>
       
-      <!-- slide source: lecture3.md -->
+      <!-- slide source: lecture11.md -->
       <div class="slide-wrapper">
         <div class="slide has_code">
           <div class="inner">
             
             
-            <section><div class="highlight"><pre><span></span><span class="c1">//Left identity: `flatMap pure(a) f == f(a)`</span>
-<span class="k">def</span> <span class="n">foo</span><span class="o">(</span><span class="n">a</span><span class="k">:</span> <span class="kt">Char</span><span class="o">)</span> <span class="k">=</span> <span class="nc">CountMe</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span><span class="n">a</span><span class="o">.</span><span class="n">toInt</span><span class="o">)</span>
+            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">foo</span><span class="o">(</span><span class="n">a</span><span class="k">:</span> <span class="kt">Char</span><span class="o">)</span> <span class="k">=</span> <span class="nc">CountMe</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span><span class="n">a</span><span class="o">.</span><span class="n">toInt</span><span class="o">)</span>
 <span class="k">val</span> <span class="n">a</span> <span class="k">=</span> <span class="n">countMeMonad</span><span class="o">.</span><span class="n">pure</span><span class="o">(</span><span class="sc">&#39;a&#39;</span><span class="o">)</span>
 <span class="n">countMeMonad</span><span class="o">.</span><span class="n">flatMap</span><span class="o">(</span><span class="n">a</span><span class="o">)(</span><span class="n">foo</span> <span class="k">_</span><span class="o">)</span>
 <span class="c1">//res7: CountMe[Int] = CountMe(1,97)</span>
@@ -546,18 +861,18 @@ Understanding what makes sense structurally for a <code>Functor</code>, <code>Ap
           <footer>
             
             <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
+              Source: <a href="lecture11.md">lecture11.md</a>
             </aside>
             
             <aside class="page_number">
-              12/58
+              20/60
             </aside>
 
           </footer>
         </div>
       </div>
       
-      <!-- slide source: lecture3.md -->
+      <!-- slide source: lecture11.md -->
       <div class="slide-wrapper">
         <div class="slide has_code">
           <div class="inner">
@@ -590,18 +905,18 @@ Understanding what makes sense structurally for a <code>Functor</code>, <code>Ap
           <footer>
             
             <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
+              Source: <a href="lecture11.md">lecture11.md</a>
             </aside>
             
             <aside class="page_number">
-              13/58
+              21/60
             </aside>
 
           </footer>
         </div>
       </div>
       
-      <!-- slide source: lecture3.md -->
+      <!-- slide source: lecture11.md -->
       <div class="slide-wrapper">
         <div class="slide has_code">
           <div class="inner">
@@ -626,18 +941,18 @@ Understanding what makes sense structurally for a <code>Functor</code>, <code>Ap
           <footer>
             
             <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
+              Source: <a href="lecture11.md">lecture11.md</a>
             </aside>
             
             <aside class="page_number">
-              14/58
+              22/60
             </aside>
 
           </footer>
         </div>
       </div>
       
-      <!-- slide source: lecture3.md -->
+      <!-- slide source: lecture11.md -->
       <div class="slide-wrapper">
         <div class="slide">
           <div class="inner">
@@ -659,11 +974,11 @@ Understanding what makes sense structurally for a <code>Functor</code>, <code>Ap
           <footer>
             
             <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
+              Source: <a href="lecture11.md">lecture11.md</a>
             </aside>
             
             <aside class="page_number">
-              15/58
+              23/60
             </aside>
 
           </footer>
@@ -688,14 +1003,14 @@ Understanding what makes sense structurally for a <code>Functor</code>, <code>Ap
           <footer>
             
             <aside class="page_number">
-              /58
+              /60
             </aside>
 
           </footer>
         </div>
       </div>
       
-      <!-- slide source: lecture3.md -->
+      <!-- slide source: lecture11.md -->
       <div class="slide-wrapper">
         <div class="slide has_code">
           <div class="inner">
@@ -721,18 +1036,18 @@ Understanding what makes sense structurally for a <code>Functor</code>, <code>Ap
           <footer>
             
             <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
+              Source: <a href="lecture11.md">lecture11.md</a>
             </aside>
             
             <aside class="page_number">
-              16/58
+              24/60
             </aside>
 
           </footer>
         </div>
       </div>
       
-      <!-- slide source: lecture3.md -->
+      <!-- slide source: lecture11.md -->
       <div class="slide-wrapper">
         <div class="slide has_code">
           <div class="inner">
@@ -757,18 +1072,18 @@ Understanding what makes sense structurally for a <code>Functor</code>, <code>Ap
           <footer>
             
             <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
+              Source: <a href="lecture11.md">lecture11.md</a>
             </aside>
             
             <aside class="page_number">
-              17/58
+              25/60
             </aside>
 
           </footer>
         </div>
       </div>
       
-      <!-- slide source: lecture3.md -->
+      <!-- slide source: lecture11.md -->
       <div class="slide-wrapper">
         <div class="slide">
           <div class="inner">
@@ -796,18 +1111,18 @@ We can use it to record messages, errors, or additional data about a computation
           <footer>
             
             <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
+              Source: <a href="lecture11.md">lecture11.md</a>
             </aside>
             
             <aside class="page_number">
-              18/58
+              26/60
             </aside>
 
           </footer>
         </div>
       </div>
       
-      <!-- slide source: lecture3.md -->
+      <!-- slide source: lecture11.md -->
       <div class="slide-wrapper">
         <div class="slide">
           <div class="inner">
@@ -830,18 +1145,18 @@ With a <code>Writer</code> the log for the computation is appended to the result
           <footer>
             
             <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
+              Source: <a href="lecture11.md">lecture11.md</a>
             </aside>
             
             <aside class="page_number">
-              19/58
+              27/60
             </aside>
 
           </footer>
         </div>
       </div>
       
-      <!-- slide source: lecture3.md -->
+      <!-- slide source: lecture11.md -->
       <div class="slide-wrapper">
         <div class="slide has_code">
           <div class="inner">
@@ -868,18 +1183,18 @@ With a <code>Writer</code> the log for the computation is appended to the result
           <footer>
             
             <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
+              Source: <a href="lecture11.md">lecture11.md</a>
             </aside>
             
             <aside class="page_number">
-              20/58
+              28/60
             </aside>
 
           </footer>
         </div>
       </div>
       
-      <!-- slide source: lecture3.md -->
+      <!-- slide source: lecture11.md -->
       <div class="slide-wrapper">
         <div class="slide">
           <div class="inner">
@@ -902,18 +1217,18 @@ With a <code>Writer</code> the log for the computation is appended to the result
           <footer>
             
             <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
+              Source: <a href="lecture11.md">lecture11.md</a>
             </aside>
             
             <aside class="page_number">
-              21/58
+              29/60
             </aside>
 
           </footer>
         </div>
       </div>
       
-      <!-- slide source: lecture3.md -->
+      <!-- slide source: lecture11.md -->
       <div class="slide-wrapper">
         <div class="slide has_code">
           <div class="inner">
@@ -940,18 +1255,18 @@ With a <code>Writer</code> the log for the computation is appended to the result
           <footer>
             
             <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
+              Source: <a href="lecture11.md">lecture11.md</a>
             </aside>
             
             <aside class="page_number">
-              22/58
+              30/60
             </aside>
 
           </footer>
         </div>
       </div>
       
-      <!-- slide source: lecture3.md -->
+      <!-- slide source: lecture11.md -->
       <div class="slide-wrapper">
         <div class="slide has_code">
           <div class="inner">
@@ -976,18 +1291,18 @@ With a <code>Writer</code> the log for the computation is appended to the result
           <footer>
             
             <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
+              Source: <a href="lecture11.md">lecture11.md</a>
             </aside>
             
             <aside class="page_number">
-              23/58
+              31/60
             </aside>
 
           </footer>
         </div>
       </div>
       
-      <!-- slide source: lecture3.md -->
+      <!-- slide source: lecture11.md -->
       <div class="slide-wrapper">
         <div class="slide has_code">
           <div class="inner">
@@ -1014,18 +1329,18 @@ With a <code>Writer</code> the log for the computation is appended to the result
           <footer>
             
             <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
+              Source: <a href="lecture11.md">lecture11.md</a>
             </aside>
             
             <aside class="page_number">
-              24/58
+              32/60
             </aside>
 
           </footer>
         </div>
       </div>
       
-      <!-- slide source: lecture3.md -->
+      <!-- slide source: lecture11.md -->
       <div class="slide-wrapper">
         <div class="slide">
           <div class="inner">
@@ -1050,18 +1365,18 @@ val log = a.written
           <footer>
             
             <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
+              Source: <a href="lecture11.md">lecture11.md</a>
             </aside>
             
             <aside class="page_number">
-              25/58
+              33/60
             </aside>
 
           </footer>
         </div>
       </div>
       
-      <!-- slide source: lecture3.md -->
+      <!-- slide source: lecture11.md -->
       <div class="slide-wrapper">
         <div class="slide has_code">
           <div class="inner">
@@ -1085,18 +1400,18 @@ val log = a.written
           <footer>
             
             <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
+              Source: <a href="lecture11.md">lecture11.md</a>
             </aside>
             
             <aside class="page_number">
-              26/58
+              34/60
             </aside>
 
           </footer>
         </div>
       </div>
       
-      <!-- slide source: lecture3.md -->
+      <!-- slide source: lecture11.md -->
       <div class="slide-wrapper">
         <div class="slide">
           <div class="inner">
@@ -1121,18 +1436,18 @@ For this reason it’s good practice to use a log type that has an efficient app
           <footer>
             
             <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
+              Source: <a href="lecture11.md">lecture11.md</a>
             </aside>
             
             <aside class="page_number">
-              27/58
+              35/60
             </aside>
 
           </footer>
         </div>
       </div>
       
-      <!-- slide source: lecture3.md -->
+      <!-- slide source: lecture11.md -->
       <div class="slide-wrapper">
         <div class="slide has_code">
           <div class="inner">
@@ -1161,18 +1476,18 @@ For this reason it’s good practice to use a log type that has an efficient app
           <footer>
             
             <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
+              Source: <a href="lecture11.md">lecture11.md</a>
             </aside>
             
             <aside class="page_number">
-              28/58
+              36/60
             </aside>
 
           </footer>
         </div>
       </div>
       
-      <!-- slide source: lecture3.md -->
+      <!-- slide source: lecture11.md -->
       <div class="slide-wrapper">
         <div class="slide has_code">
           <div class="inner">
@@ -1198,18 +1513,18 @@ For this reason it’s good practice to use a log type that has an efficient app
           <footer>
             
             <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
+              Source: <a href="lecture11.md">lecture11.md</a>
             </aside>
             
             <aside class="page_number">
-              29/58
+              37/60
             </aside>
 
           </footer>
         </div>
       </div>
       
-      <!-- slide source: lecture3.md -->
+      <!-- slide source: lecture11.md -->
       <div class="slide-wrapper">
         <div class="slide has_code">
           <div class="inner">
@@ -1217,11 +1532,11 @@ For this reason it’s good practice to use a log type that has an efficient app
             
             <section><p>We can also transform both log and result simultaneously using <code>bimap</code> or <code>mapBoth</code>.
 <code>bimap</code> takes two function parameters, one for the log and one for the result. <code>mapBoth</code> takes a single function of two parameters:</p>
-<div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">writer2</span> <span class="k">=</span> <span class="n">writer1</span><span class="o">.</span><span class="n">bimap</span><span class="o">(</span>
+<div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">writer3</span> <span class="k">=</span> <span class="n">writer1</span><span class="o">.</span><span class="n">bimap</span><span class="o">(</span>
   <span class="n">log</span> <span class="k">=&gt;</span> <span class="n">log</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">toUpperCase</span><span class="o">),</span>
   <span class="n">result</span> <span class="k">=&gt;</span> <span class="n">result</span> <span class="o">*</span> <span class="mi">100</span>
 <span class="o">)</span>
-<span class="n">writer2</span><span class="o">.</span><span class="n">run</span>
+<span class="n">writer3</span><span class="o">.</span><span class="n">run</span>
 <span class="c1">//???</span>
 </pre></div>
 </section>
@@ -1238,26 +1553,65 @@ For this reason it’s good practice to use a log type that has an efficient app
           <footer>
             
             <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
+              Source: <a href="lecture11.md">lecture11.md</a>
             </aside>
             
             <aside class="page_number">
-              30/58
+              38/60
             </aside>
 
           </footer>
         </div>
       </div>
       
-      <!-- slide source: lecture3.md -->
+      <!-- slide source: lecture11.md -->
       <div class="slide-wrapper">
         <div class="slide has_code">
           <div class="inner">
             
             
-            <section><p>Interestingly, we can also swap the log and the result.</p>
-<div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">writer3</span> <span class="k">=</span> <span class="n">writer1</span><span class="o">.</span><span class="n">swap</span>
-<span class="n">writer3</span><span class="o">.</span><span class="n">run</span>
+            <section><div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">writer4</span> <span class="k">=</span> <span class="n">writer1</span><span class="o">.</span><span class="n">mapBoth</span> <span class="o">{</span>
+  <span class="o">(</span><span class="n">log</span><span class="o">,</span> <span class="n">result</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="k">val</span> <span class="n">log2</span> <span class="k">=</span> <span class="n">log</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span> <span class="o">+</span> <span class="s">&quot;!&quot;</span><span class="o">)</span>
+    <span class="k">val</span> <span class="n">result2</span> <span class="k">=</span> <span class="n">result</span> <span class="o">*</span> <span class="mi">1000</span>
+    <span class="o">(</span><span class="n">log2</span><span class="o">,</span> <span class="n">result2</span><span class="o">)</span>
+<span class="o">}</span>
+<span class="n">writer4</span><span class="o">.</span><span class="n">run</span>
+<span class="c1">//???</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture11.md">lecture11.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              39/60
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture11.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>We can swap the log and the result.</p>
+<div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">writer6</span> <span class="k">=</span> <span class="n">writer1</span><span class="o">.</span><span class="n">swap</span>
+<span class="n">writer6</span><span class="o">.</span><span class="n">run</span>
 <span class="c1">//res18 = (42,Vector(a, b, x, y))</span>
 </pre></div>
 </section>
@@ -1274,18 +1628,18 @@ For this reason it’s good practice to use a log type that has an efficient app
           <footer>
             
             <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
+              Source: <a href="lecture11.md">lecture11.md</a>
             </aside>
             
             <aside class="page_number">
-              31/58
+              40/60
             </aside>
 
           </footer>
         </div>
       </div>
       
-      <!-- slide source: lecture3.md -->
+      <!-- slide source: lecture11.md -->
       <div class="slide-wrapper">
         <div class="slide has_code">
           <div class="inner">
@@ -1293,7 +1647,7 @@ For this reason it’s good practice to use a log type that has an efficient app
             
             <section><p>This requires a new monoid for the log, which cats provides implicitly.</p>
 <div class="highlight"><pre><span></span><span class="k">for</span> <span class="o">{</span>
-  <span class="n">a</span> <span class="k">&lt;-</span> <span class="n">writer3</span>
+  <span class="n">a</span> <span class="k">&lt;-</span> <span class="n">writer6</span>
   <span class="k">_</span> <span class="k">&lt;-</span> <span class="mf">10.</span><span class="n">tell</span>
 <span class="o">}</span> <span class="k">yield</span> <span class="n">a</span>
 <span class="c1">//res19 = ???</span>
@@ -1312,26 +1666,26 @@ For this reason it’s good practice to use a log type that has an efficient app
           <footer>
             
             <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
+              Source: <a href="lecture11.md">lecture11.md</a>
             </aside>
             
             <aside class="page_number">
-              32/58
+              41/60
             </aside>
 
           </footer>
         </div>
       </div>
       
-      <!-- slide source: lecture3.md -->
+      <!-- slide source: lecture11.md -->
       <div class="slide-wrapper">
         <div class="slide has_code">
           <div class="inner">
             
             
             <section><p>Finally, we can clear the log with the <code>reset</code> method.</p>
-<div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">writer4</span> <span class="k">=</span> <span class="n">writer1</span><span class="o">.</span><span class="n">reset</span>
-<span class="n">writer4</span><span class="o">.</span><span class="n">run</span>
+<div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">writer5</span> <span class="k">=</span> <span class="n">writer1</span><span class="o">.</span><span class="n">reset</span>
+<span class="n">writer5</span><span class="o">.</span><span class="n">run</span>
 <span class="c1">//res20 = (Vector(),42)</span>
 </pre></div>
 </section>
@@ -1348,43 +1702,18 @@ For this reason it’s good practice to use a log type that has an efficient app
           <footer>
             
             <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
+              Source: <a href="lecture11.md">lecture11.md</a>
             </aside>
             
             <aside class="page_number">
-              33/58
+              42/60
             </aside>
 
           </footer>
         </div>
       </div>
       
-      <!-- slide source:  -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="page_number">
-              /58
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture3.md -->
+      <!-- slide source: lecture11.md -->
       <div class="slide-wrapper">
         <div class="slide">
           <div class="inner">
@@ -1409,18 +1738,18 @@ Instances of <code>Reader</code> wrap up functions of one argument, providing us
           <footer>
             
             <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
+              Source: <a href="lecture11.md">lecture11.md</a>
             </aside>
             
             <aside class="page_number">
-              34/58
+              43/60
             </aside>
 
           </footer>
         </div>
       </div>
       
-      <!-- slide source: lecture3.md -->
+      <!-- slide source: lecture11.md -->
       <div class="slide-wrapper">
         <div class="slide">
           <div class="inner">
@@ -1446,25 +1775,25 @@ The <code>Reader</code> produces one large operation that accepts the configurat
           <footer>
             
             <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
+              Source: <a href="lecture11.md">lecture11.md</a>
             </aside>
             
             <aside class="page_number">
-              35/58
+              44/60
             </aside>
 
           </footer>
         </div>
       </div>
       
-      <!-- slide source: lecture3.md -->
+      <!-- slide source: lecture11.md -->
       <div class="slide-wrapper">
         <div class="slide has_code">
           <div class="inner">
             
             
-            <section><p>Let's first have a look at a toy implementation:</p>
-<div class="highlight"><pre><span></span><span class="k">case</span> <span class="k">class</span> <span class="nc">Reader</span><span class="o">[</span><span class="kt">E</span>,<span class="kt">A</span><span class="o">](</span><span class="n">run</span><span class="k">:</span> <span class="kt">E</span> <span class="o">=&gt;</span> <span class="n">A</span><span class="o">)</span> <span class="o">{</span>
+            <section><div class="highlight"><pre><span></span><span class="c1">//basic implementation</span>
+<span class="k">case</span> <span class="k">class</span> <span class="nc">Reader</span><span class="o">[</span><span class="kt">E</span>,<span class="kt">A</span><span class="o">](</span><span class="n">run</span><span class="k">:</span> <span class="kt">E</span> <span class="o">=&gt;</span> <span class="n">A</span><span class="o">)</span> <span class="o">{</span>
   <span class="k">def</span> <span class="n">flatMap</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="nc">Reader</span><span class="o">[</span><span class="kt">E</span>,<span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">Reader</span><span class="o">[</span><span class="kt">E</span>,<span class="kt">B</span><span class="o">]</span> <span class="k">=</span>
     <span class="nc">Reader</span><span class="o">[</span><span class="kt">E</span>,<span class="kt">B</span><span class="o">]</span> <span class="o">{</span> <span class="n">e</span> <span class="k">=&gt;</span> <span class="n">f</span><span class="o">(</span><span class="n">run</span><span class="o">(</span><span class="n">e</span><span class="o">)).</span><span class="n">run</span><span class="o">(</span><span class="n">e</span><span class="o">)</span> <span class="o">}</span>
   <span class="k">def</span> <span class="n">map</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="n">B</span><span class="o">)</span><span class="k">:</span> <span class="kt">Reader</span><span class="o">[</span><span class="kt">E</span>,<span class="kt">B</span><span class="o">]</span> <span class="k">=</span>
@@ -1488,30 +1817,32 @@ The <code>Reader</code> produces one large operation that accepts the configurat
           <footer>
             
             <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
+              Source: <a href="lecture11.md">lecture11.md</a>
             </aside>
             
             <aside class="page_number">
-              36/58
+              45/60
             </aside>
 
           </footer>
         </div>
       </div>
       
-      <!-- slide source: lecture3.md -->
+      <!-- slide source: lecture11.md -->
       <div class="slide-wrapper">
         <div class="slide has_code">
           <div class="inner">
             
             
-            <section><p>We can create a <code>Reader[A, B]</code> from a function of type <code>A =&gt; B</code> and run it like so:</p>
+            <section><p>We can create a <code>Reader[A, B]</code> from a function of type <code>A =&gt; B</code> using the <code>Reader.apply</code> constructor:</p>
 <div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">cats.data.Reader</span>
 <span class="k">def</span> <span class="n">double</span><span class="o">(</span><span class="n">a</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="n">a</span><span class="o">*</span><span class="mi">2</span>
 <span class="k">val</span> <span class="n">doubleReader</span><span class="k">:</span> <span class="kt">Reader</span><span class="o">[</span><span class="kt">Int</span>, <span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Reader</span><span class="o">(</span><span class="n">double</span><span class="o">)</span>
 <span class="c1">// doubleReader: Reader[Int,Int] = Kleisli(&lt;function1&gt;)</span>
-<span class="n">doubleReader</span><span class="o">.</span><span class="n">run</span><span class="o">(</span><span class="mi">21</span><span class="o">)</span>
-<span class="c1">//res0: Id[Int] = 42 //note the Id monad wrapper</span>
+<span class="k">val</span> <span class="n">double2</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=&gt;</span> <span class="nc">Int</span> <span class="k">=</span> <span class="n">doubleReader</span><span class="o">.</span><span class="n">run</span>
+<span class="c1">// double2: Int =&gt; Int = &lt;function1&gt;</span>
+<span class="n">double2</span><span class="o">(</span><span class="mi">10</span><span class="o">)</span>
+<span class="c1">// res0: Int = 20</span>
 </pre></div>
 </section>
             
@@ -1527,27 +1858,30 @@ The <code>Reader</code> produces one large operation that accepts the configurat
           <footer>
             
             <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
+              Source: <a href="lecture11.md">lecture11.md</a>
             </aside>
             
             <aside class="page_number">
-              37/58
+              46/60
             </aside>
 
           </footer>
         </div>
       </div>
       
-      <!-- slide source: lecture3.md -->
+      <!-- slide source: lecture11.md -->
       <div class="slide-wrapper">
         <div class="slide">
           <div class="inner">
             
             
-            <section><p>Note also that <code>Reader</code> is implemented in terms of another type called <code>Kleisli</code>.
+            <section><p>Note that <code>Reader</code> is implemented in terms of another type called <code>Kleisli</code>.
 <br />
 <br />
-<code>Kleisli</code> arrows are a more general form of the <code>Reader</code> monad that generalize over the type constructor of the result type.</p></section>
+<code>Kleisli</code> arrows are a more general form of the <code>Reader</code> monad that generalize over the type constructor of the result type. We will discuss these more when we get to monad transformers.
+<br />
+<br />
+The type name <code>Kleisli</code> refers to a <a href="https://en.wikipedia.org/wiki/Kleisli_category">Kleisli Category</a>.</p></section>
             
           </div>
           <div class="presenter_notes">
@@ -1561,52 +1895,18 @@ The <code>Reader</code> produces one large operation that accepts the configurat
           <footer>
             
             <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
+              Source: <a href="lecture11.md">lecture11.md</a>
             </aside>
             
             <aside class="page_number">
-              38/58
+              47/60
             </aside>
 
           </footer>
         </div>
       </div>
       
-      <!-- slide source: lecture3.md -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            
-            <section><p>The type name here refers to a <a href="https://en.wikipedia.org/wiki/Kleisli_category">Kleisli Category</a>.
-<br />
-<br />
-We will discuss <code>Kleisli</code>s more in lecture 11a when we get to monad transformers.</p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              39/58
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture3.md -->
+      <!-- slide source: lecture11.md -->
       <div class="slide-wrapper">
         <div class="slide has_code">
           <div class="inner">
@@ -1614,10 +1914,11 @@ We will discuss <code>Kleisli</code>s more in lecture 11a when we get to monad t
             <header><h1>Composing Readers</h1></header>
             
             
-            <section><p>The power of readers comes from their <code>map</code> and <code>flatMap</code> methods, both of which represent kinds of function composition.</p>
+            <section><p>The power of <code>Reader</code>s comes from their <code>map</code> and <code>flatMap</code> methods, both of which represent kinds of function composition.</p>
 <p>The <code>map</code> method simply extends the computation in the <code>Reader</code> by passing its result through a function:</p>
-<div class="highlight"><pre><span></span><span class="n">doubleReader</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span> <span class="o">+</span> <span class="s">&quot;!&quot;</span><span class="o">).</span><span class="n">run</span><span class="o">(</span><span class="mi">21</span><span class="o">)</span>
-<span class="c1">//res1: Id[String] = 42!</span>
+<div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">mapReader</span> <span class="k">=</span> <span class="n">doubleReader</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span> <span class="o">+</span> <span class="s">&quot;!&quot;</span><span class="o">)</span>
+<span class="n">mapReader</span><span class="o">.</span><span class="n">run</span><span class="o">(</span><span class="mi">10</span><span class="o">)</span>
+<span class="c1">//???</span>
 </pre></div>
 </section>
             
@@ -1633,136 +1934,29 @@ We will discuss <code>Kleisli</code>s more in lecture 11a when we get to monad t
           <footer>
             
             <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
+              Source: <a href="lecture11.md">lecture11.md</a>
             </aside>
             
             <aside class="page_number">
-              40/58
+              48/60
             </aside>
 
           </footer>
         </div>
       </div>
       
-      <!-- slide source: lecture3.md -->
+      <!-- slide source: lecture11.md -->
       <div class="slide-wrapper">
         <div class="slide has_code">
           <div class="inner">
             
             
             <section><p>The <code>flatMap</code> method is more interesting. It allows us to combine two readers that depend on the same input type:</p>
-<div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">addKReader</span><span class="o">(</span><span class="n">k</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Reader</span><span class="o">[</span><span class="kt">Int</span>,<span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Reader</span><span class="o">(</span><span class="k">_</span> <span class="o">+</span> <span class="n">k</span><span class="o">)</span>
-<span class="k">val</span> <span class="n">foo</span> <span class="k">=</span> <span class="n">doubleReader</span><span class="o">.</span><span class="n">flatMap</span><span class="o">(</span><span class="n">addKReader</span> <span class="k">_</span><span class="o">)</span>
-<span class="c1">//foo: Kleisli[Id,Int,Int] = Kleisli(&lt;function1&gt;)</span>
-<span class="n">foo</span><span class="o">.</span><span class="n">run</span><span class="o">(</span><span class="mi">14</span><span class="o">)</span>
-<span class="c1">//res2: Id[Int] = 42</span>
-</pre></div>
-</section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              41/58
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture3.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code">
-          <div class="inner">
-            
-            
-            <section><p>To see what's happening here it's useful to refer back to <code>Reader</code>s implementation of <code>flatMap</code>:</p>
-<div class="highlight"><pre><span></span><span class="c1">//28 + 14 = 42</span>
-<span class="k">def</span> <span class="n">flatMap</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="nc">Reader</span><span class="o">[</span><span class="kt">E</span>,<span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">Reader</span><span class="o">[</span><span class="kt">E</span>,<span class="kt">B</span><span class="o">]</span> <span class="k">=</span>
-  <span class="nc">Reader</span><span class="o">[</span><span class="kt">E</span>,<span class="kt">B</span><span class="o">]</span> <span class="o">{</span> <span class="n">e</span> <span class="k">=&gt;</span> <span class="n">f</span><span class="o">(</span><span class="n">run</span><span class="o">(</span><span class="n">e</span><span class="o">)).</span><span class="n">run</span><span class="o">(</span><span class="n">e</span><span class="o">)</span> <span class="o">}</span>
-</pre></div>
-</section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              42/58
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture3.md -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            
-            <section><p>Notice that the same input value is passed to both <code>doubleReader</code> and <code>addKReader</code>.
-<br />
-<br />
-This is the value of the <code>Reader</code> monad, which ensures that the same “configuration” (in this case an input number) is passed to each part of the system.</p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              43/58
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture3.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code">
-          <div class="inner">
-            
-            
-            <section><p>We can also combine readers using for comprehensions:</p>
-<div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">addReaders</span><span class="k">:</span> <span class="kt">Reader</span><span class="o">[</span><span class="kt">Int</span>, <span class="kt">Int</span><span class="o">]</span> <span class="k">=</span>
+<div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">add1Reader</span><span class="k">:</span> <span class="kt">Reader</span><span class="o">[</span><span class="kt">Int</span>, <span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Reader</span><span class="o">(</span><span class="k">_</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)</span>
+<span class="k">val</span> <span class="n">addReaders</span><span class="k">:</span> <span class="kt">Reader</span><span class="o">[</span><span class="kt">Int</span>, <span class="kt">Int</span><span class="o">]</span> <span class="k">=</span>
   <span class="k">for</span> <span class="o">{</span>
     <span class="n">x</span> <span class="k">&lt;-</span> <span class="n">doubleReader</span>
-    <span class="n">y</span> <span class="k">&lt;-</span> <span class="n">addKReader</span><span class="o">(</span><span class="n">x</span><span class="o">)</span>
+    <span class="n">y</span> <span class="k">&lt;-</span> <span class="n">add1Reader</span>
   <span class="o">}</span> <span class="k">yield</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
 <span class="n">addReaders</span><span class="o">.</span><span class="n">run</span><span class="o">(</span><span class="mi">10</span><span class="o">)</span>
 <span class="c1">//???</span>
@@ -1781,29 +1975,63 @@ This is the value of the <code>Reader</code> monad, which ensures that the same 
           <footer>
             
             <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
+              Source: <a href="lecture11.md">lecture11.md</a>
             </aside>
             
             <aside class="page_number">
-              44/58
+              49/60
             </aside>
 
           </footer>
         </div>
       </div>
       
-      <!-- slide source: lecture3.md -->
+      <!-- slide source: lecture11.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>Notice that the same input value is passed to both <code>doubleReader</code> and <code>add1Reader</code>.
+<br />
+<br />
+This is the value of the <code>Reader</code> monad, which ensures that the same “configuration” (in this case an input number) is passed to each part of the system.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture11.md">lecture11.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              50/60
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture11.md -->
       <div class="slide-wrapper">
         <div class="slide has_code">
           <div class="inner">
             
             
-            <section><p>In particular we can use the output of a prior step to determine which <code>Reader</code> to run next:</p>
+            <section><p>We can use the output of the prior step to determine which step to run next. For example:</p>
 <div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">sub5Reader</span><span class="k">:</span> <span class="kt">Reader</span><span class="o">[</span><span class="kt">Int</span>, <span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Reader</span><span class="o">(</span><span class="k">_</span> <span class="o">-</span> <span class="mi">5</span><span class="o">)</span>
 <span class="k">val</span> <span class="n">sequencingEx</span><span class="k">:</span> <span class="kt">Reader</span><span class="o">[</span><span class="kt">Int</span>, <span class="o">(</span><span class="kt">Int</span>, <span class="kt">Int</span><span class="o">)]</span> <span class="k">=</span>
   <span class="k">for</span> <span class="o">{</span>
     <span class="n">x</span> <span class="k">&lt;-</span> <span class="n">doubleReader</span>
-    <span class="n">y</span> <span class="k">&lt;-</span> <span class="k">if</span><span class="o">(</span><span class="n">x</span> <span class="o">&lt;</span> <span class="mi">20</span><span class="o">)</span> <span class="n">sub5Reader</span> <span class="k">else</span> <span class="n">addKReader</span><span class="o">(</span><span class="n">x</span><span class="o">)</span>
+    <span class="n">y</span> <span class="k">&lt;-</span> <span class="k">if</span><span class="o">(</span><span class="n">x</span> <span class="o">&gt;</span> <span class="mi">20</span><span class="o">)</span> <span class="n">sub5Reader</span> <span class="k">else</span> <span class="n">add1Reader</span>
   <span class="o">}</span> <span class="k">yield</span> <span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">)</span>
 <span class="n">sequencingEx</span><span class="o">.</span><span class="n">run</span><span class="o">(</span><span class="mi">5</span><span class="o">)</span>
 <span class="c1">//???</span>
@@ -1824,23 +2052,23 @@ This is the value of the <code>Reader</code> monad, which ensures that the same 
           <footer>
             
             <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
+              Source: <a href="lecture11.md">lecture11.md</a>
             </aside>
             
             <aside class="page_number">
-              45/58
+              51/60
             </aside>
 
           </footer>
         </div>
       </div>
       
-      <!-- slide source: lecture3.md -->
+      <!-- slide source: lecture11.md -->
       <div class="slide-wrapper">
         <div class="slide has_code">
           <div class="inner">
             
-            <header><h1>Application: Dependency Injection</h1></header>
+            <header><h1>Exercise: Dependency Injection</h1></header>
             
             
             <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">areaR</span><span class="o">(</span><span class="n">r</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Reader</span><span class="o">[</span><span class="kt">Double</span>,<span class="kt">Double</span><span class="o">]</span> <span class="k">=</span>
@@ -1853,6 +2081,7 @@ This is the value of the <code>Reader</code> monad, which ensures that the same 
   <span class="o">}</span>
 <span class="k">val</span> <span class="n">volumeRRR</span> <span class="k">=</span> <span class="nc">Reader</span> <span class="o">{</span> <span class="n">h</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=&gt;</span> <span class="n">volumeRR</span><span class="o">(</span><span class="n">h</span><span class="o">)</span> <span class="o">}</span>
 <span class="c1">//Reader[Int,Reader[Int,Reader[Double,Double]]] = Kleisli(&lt;function1&gt;)</span>
+<span class="c1">//What does this remind you of?</span>
 </pre></div>
 </section>
             
@@ -1868,18 +2097,18 @@ This is the value of the <code>Reader</code> monad, which ensures that the same 
           <footer>
             
             <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
+              Source: <a href="lecture11.md">lecture11.md</a>
             </aside>
             
             <aside class="page_number">
-              46/58
+              52/60
             </aside>
 
           </footer>
         </div>
       </div>
       
-      <!-- slide source: lecture3.md -->
+      <!-- slide source: lecture11.md -->
       <div class="slide-wrapper">
         <div class="slide has_code">
           <div class="inner">
@@ -1904,11 +2133,11 @@ This is the value of the <code>Reader</code> monad, which ensures that the same 
           <footer>
             
             <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
+              Source: <a href="lecture11.md">lecture11.md</a>
             </aside>
             
             <aside class="page_number">
-              47/58
+              53/60
             </aside>
 
           </footer>
@@ -1933,27 +2162,27 @@ This is the value of the <code>Reader</code> monad, which ensures that the same 
           <footer>
             
             <aside class="page_number">
-              /58
+              /60
             </aside>
 
           </footer>
         </div>
       </div>
       
-      <!-- slide source: lecture3.md -->
+      <!-- slide source: lecture11.md -->
       <div class="slide-wrapper">
         <div class="slide has_code">
           <div class="inner">
             
             
             <section><div class="highlight"><pre><span></span><span class="n">volumeRR</span><span class="o">(</span><span class="mi">2</span><span class="o">)</span> <span class="n">run</span> <span class="mi">1</span>
-<span class="c1">//res0: Id[Reader[Double,Double]] = Kleisli(&lt;function1&gt;)</span>
-<span class="n">volumeRRR</span> <span class="n">run</span> <span class="mi">2</span> <span class="n">run</span> <span class="mi">1</span>
 <span class="c1">//res1: Id[Reader[Double,Double]] = Kleisli(&lt;function1&gt;)</span>
+<span class="n">volumeRRR</span> <span class="n">run</span> <span class="mi">2</span> <span class="n">run</span> <span class="mi">1</span>
+<span class="c1">//res2: Id[Reader[Double,Double]] = Kleisli(&lt;function1&gt;)</span>
 <span class="n">volumeRR</span><span class="o">(</span><span class="mi">2</span><span class="o">)</span> <span class="n">run</span> <span class="mi">1</span> <span class="n">run</span> <span class="mf">3.14</span>
-<span class="c1">//res2: Id[Double] = 6.28</span>
-<span class="n">volumeRRR</span> <span class="n">run</span> <span class="mi">2</span> <span class="n">run</span> <span class="mi">1</span> <span class="n">run</span> <span class="mf">3.14</span>
 <span class="c1">//res3: Id[Double] = 6.28</span>
+<span class="n">volumeRRR</span> <span class="n">run</span> <span class="mi">2</span> <span class="n">run</span> <span class="mi">1</span> <span class="n">run</span> <span class="mf">3.14</span>
+<span class="c1">//res4: Id[Double] = 6.28</span>
 </pre></div>
 </section>
             
@@ -1969,18 +2198,18 @@ This is the value of the <code>Reader</code> monad, which ensures that the same 
           <footer>
             
             <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
+              Source: <a href="lecture11.md">lecture11.md</a>
             </aside>
             
             <aside class="page_number">
-              48/58
+              54/60
             </aside>
 
           </footer>
         </div>
       </div>
       
-      <!-- slide source: lecture3.md -->
+      <!-- slide source: lecture11.md -->
       <div class="slide-wrapper">
         <div class="slide has_code">
           <div class="inner">
@@ -1988,8 +2217,7 @@ This is the value of the <code>Reader</code> monad, which ensures that the same 
             <header><h1>Reader vs State</h1></header>
             
             
-            <section><p>We'll discuss the <code>State</code> monad in detail in lectures 6 and 6a.</p>
-<div class="highlight"><pre><span></span><span class="c1">//Reader[S,A] has a run: S =&gt; A</span>
+            <section><div class="highlight"><pre><span></span><span class="c1">//Reader[S,A] has a run: S =&gt; A</span>
 <span class="k">def</span> <span class="n">flatMap</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="nc">Reader</span><span class="o">[</span><span class="kt">S</span>, <span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">Reader</span><span class="o">[</span><span class="kt">S</span>, <span class="kt">B</span><span class="o">]</span> <span class="k">=</span>
   <span class="nc">Reader</span><span class="o">[</span><span class="kt">S</span>, <span class="kt">B</span><span class="o">]</span> <span class="o">{</span> <span class="n">s</span> <span class="k">=&gt;</span> <span class="o">{</span>
   <span class="k">val</span> <span class="n">a</span> <span class="k">=</span> <span class="n">run</span><span class="o">(</span><span class="n">s</span><span class="o">)</span>
@@ -2016,18 +2244,18 @@ This is the value of the <code>Reader</code> monad, which ensures that the same 
           <footer>
             
             <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
+              Source: <a href="lecture11.md">lecture11.md</a>
             </aside>
             
             <aside class="page_number">
-              49/58
+              55/60
             </aside>
 
           </footer>
         </div>
       </div>
       
-      <!-- slide source: lecture3.md -->
+      <!-- slide source: lecture11.md -->
       <div class="slide-wrapper">
         <div class="slide">
           <div class="inner">
@@ -2041,7 +2269,7 @@ This is the value of the <code>Reader</code> monad, which ensures that the same 
 The difference is that <code>Writer</code> is much more limited, in that it doesn't allow you to read the accumulated state.
 <br />
 <br />
-The only thing you can do with the state in a Writer is use the monoid to append things into the log.</p></section>
+The only thing you can do with the state in a Writer is use the monoid to tack more stuff onto the end.</p></section>
             
           </div>
           <div class="presenter_notes">
@@ -2055,18 +2283,18 @@ The only thing you can do with the state in a Writer is use the monoid to append
           <footer>
             
             <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
+              Source: <a href="lecture11.md">lecture11.md</a>
             </aside>
             
             <aside class="page_number">
-              50/58
+              56/60
             </aside>
 
           </footer>
         </div>
       </div>
       
-      <!-- slide source: lecture3.md -->
+      <!-- slide source: lecture11.md -->
       <div class="slide-wrapper">
         <div class="slide has_code">
           <div class="inner">
@@ -2076,6 +2304,7 @@ The only thing you can do with the state in a Writer is use the monoid to append
             
             <section><p>Fix <code>CountMe</code>s flatMap so that it is a valid monad.</p>
 <div class="highlight"><pre><span></span><span class="k">case</span> <span class="k">class</span> <span class="nc">CountMe</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">count</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">data</span><span class="k">:</span> <span class="kt">A</span><span class="o">)</span>
+
 <span class="k">val</span> <span class="n">countMeMonad</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">Monad</span><span class="o">[</span><span class="kt">CountMe</span><span class="o">]</span> <span class="o">{</span>
   <span class="k">def</span> <span class="n">flatMap</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">](</span><span class="n">value</span><span class="k">:</span> <span class="kt">CountMe</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span>
     <span class="o">(</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="nc">CountMe</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">CountMe</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
@@ -2100,11 +2329,11 @@ The only thing you can do with the state in a Writer is use the monoid to append
           <footer>
             
             <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
+              Source: <a href="lecture11.md">lecture11.md</a>
             </aside>
             
             <aside class="page_number">
-              51/58
+              57/60
             </aside>
 
           </footer>
@@ -2129,20 +2358,21 @@ The only thing you can do with the state in a Writer is use the monoid to append
           <footer>
             
             <aside class="page_number">
-              /58
+              /60
             </aside>
 
           </footer>
         </div>
       </div>
       
-      <!-- slide source: lecture3.md -->
+      <!-- slide source: lecture11.md -->
       <div class="slide-wrapper">
         <div class="slide has_code">
           <div class="inner">
             
             
             <section><div class="highlight"><pre><span></span><span class="k">case</span> <span class="k">class</span> <span class="nc">CountMe</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">count</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">data</span><span class="k">:</span> <span class="kt">A</span><span class="o">)</span>
+
 <span class="k">val</span> <span class="n">countMeMonad2</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">Monad</span><span class="o">[</span><span class="kt">CountMe</span><span class="o">]</span> <span class="o">{</span>
   <span class="k">def</span> <span class="n">flatMap</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">](</span><span class="n">value</span><span class="k">:</span> <span class="kt">CountMe</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span>
     <span class="o">(</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="nc">CountMe</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">CountMe</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
@@ -2167,18 +2397,18 @@ The only thing you can do with the state in a Writer is use the monoid to append
           <footer>
             
             <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
+              Source: <a href="lecture11.md">lecture11.md</a>
             </aside>
             
             <aside class="page_number">
-              52/58
+              58/60
             </aside>
 
           </footer>
         </div>
       </div>
       
-      <!-- slide source: lecture3.md -->
+      <!-- slide source: lecture11.md -->
       <div class="slide-wrapper">
         <div class="slide has_code">
           <div class="inner">
@@ -2205,27 +2435,27 @@ The only thing you can do with the state in a Writer is use the monoid to append
           <footer>
             
             <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
+              Source: <a href="lecture11.md">lecture11.md</a>
             </aside>
             
             <aside class="page_number">
-              53/58
+              59/60
             </aside>
 
           </footer>
         </div>
       </div>
       
-      <!-- slide source: lecture3.md -->
+      <!-- slide source: lecture11.md -->
       <div class="slide-wrapper">
         <div class="slide">
           <div class="inner">
             
             
-            <section><p>Note that this improvement essentially makes our new <code>CountMe</code> monad into a specialized version of <code>Writer</code>.
+            <section><p>Note that this improvement essentially makes our new <code>CountMe</code> monad a specialized <code>Writer</code>.
 <br />
 <br />
-Another 'improvement' would have been to drop the count altogether. This would have created a <code>CountMe</code> monad equivalent to <code>Id</code>.</p></section>
+Another 'improvement' would have been to drop the count altogether. This would have created a <code>CountMe</code> monad equivalent to <code>Reader</code>.</p></section>
             
           </div>
           <div class="presenter_notes">
@@ -2239,147 +2469,11 @@ Another 'improvement' would have been to drop the count altogether. This would h
           <footer>
             
             <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
+              Source: <a href="lecture11.md">lecture11.md</a>
             </aside>
             
             <aside class="page_number">
-              54/58
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture3.md -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            <header><h1>Writer vs Reader</h1></header>
-            
-            
-            <section><p>Finally, the <code>Writer</code> and <code>Reader</code> monads are somewhat closely related as well.</p>
-<p>We'll discuss this in more depth when we cover comonads and adjoint functors in lecture 11.</p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              55/58
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture3.md -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            
-            <section><p>For now, let's just have a look at their type classes in Haskell:</p>
-<p><img src="images/lecture11/adjoints.png" width="750"></p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              56/58
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture3.md -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            <header><h1>Homework</h1></header>
-            
-            
-            <section><p>Read Chapter 4 of <em>Functional Programming in Scala</em>.</p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              57/58
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture3.md -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            <header><h1>Links</h1></header>
-            
-            
-            <section><ul>
-<li><a href="http://eed3si9n.com/herding-cats">Herding Cats</a></li>
-<li><a href="http://underscore.io/books/advanced-scala/">Advanced Scala with Cats</a></li>
-<li><a href="http://www.haskell.org/haskellwiki/Typeclassopedia">Typeclassopedia</a></li>
-</ul></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture3.md">lecture3.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              58/58
+              60/60
             </aside>
 
           </footer>
@@ -2395,13 +2489,13 @@ Another 'improvement' would have been to drop the count altogether. This would h
       <caption>Table of Contents</caption>
       
       <tr id="toc-row-1">
-        <th><a href="#slide1">Lecture 3: Monads</a></th>
+        <th><a href="#slide1">Lecture 11: Monads</a></th>
         <td><a href="#slide1">1</a></td>
       </tr>
       
       
       <tr id="toc-row-2">
-        <th><a href="#slide2">The Monad Type Class</a></th>
+        <th><a href="#slide2">-</a></th>
         <td><a href="#slide2">2</a></td>
       </tr>
       
@@ -2413,7 +2507,7 @@ Another 'improvement' would have been to drop the count altogether. This would h
       
       
       <tr id="toc-row-4">
-        <th><a href="#slide4">Monads in Cats</a></th>
+        <th><a href="#slide4">-</a></th>
         <td><a href="#slide4">4</a></td>
       </tr>
       
@@ -2425,7 +2519,7 @@ Another 'improvement' would have been to drop the count altogether. This would h
       
       
       <tr id="toc-row-6">
-        <th><a href="#slide6">Default Instances</a></th>
+        <th><a href="#slide6">Exercise</a></th>
         <td><a href="#slide6">6</a></td>
       </tr>
       
@@ -2437,13 +2531,13 @@ Another 'improvement' would have been to drop the count altogether. This would h
       
       
       <tr id="toc-row-8">
-        <th><a href="#slide8">-</a></th>
+        <th><a href="#slide8">Exercise</a></th>
         <td><a href="#slide8">8</a></td>
       </tr>
       
       
       <tr id="toc-row-9">
-        <th><a href="#slide9">Defining Custom Monads</a></th>
+        <th><a href="#slide9">-</a></th>
         <td><a href="#slide9">9</a></td>
       </tr>
       
@@ -2455,31 +2549,31 @@ Another 'improvement' would have been to drop the count altogether. This would h
       
       
       <tr id="toc-row-11">
-        <th><a href="#slide11">Exercise</a></th>
+        <th><a href="#slide11">The Monad Type Class</a></th>
         <td><a href="#slide11">11</a></td>
       </tr>
       
       
       <tr id="toc-row-12">
-        <th><a href="#slide12">-</a></th>
+        <th><a href="#slide12">Monad Syntax</a></th>
         <td><a href="#slide12">12</a></td>
       </tr>
       
       
       <tr id="toc-row-13">
-        <th><a href="#slide13">Identity Monad</a></th>
+        <th><a href="#slide13">-</a></th>
         <td><a href="#slide13">13</a></td>
       </tr>
       
       
       <tr id="toc-row-14">
-        <th><a href="#slide14">-</a></th>
+        <th><a href="#slide14">Default Instances</a></th>
         <td><a href="#slide14">14</a></td>
       </tr>
       
       
       <tr id="toc-row-15">
-        <th><a href="#slide15">Exercise</a></th>
+        <th><a href="#slide15">-</a></th>
         <td><a href="#slide15">15</a></td>
       </tr>
       
@@ -2491,19 +2585,19 @@ Another 'improvement' would have been to drop the count altogether. This would h
       
       
       <tr id="toc-row-17">
-        <th><a href="#slide17">-</a></th>
+        <th><a href="#slide17">Defining Custom Monads</a></th>
         <td><a href="#slide17">17</a></td>
       </tr>
       
       
       <tr id="toc-row-18">
-        <th><a href="#slide18">Writer Monad</a></th>
+        <th><a href="#slide18">-</a></th>
         <td><a href="#slide18">18</a></td>
       </tr>
       
       
       <tr id="toc-row-19">
-        <th><a href="#slide19">-</a></th>
+        <th><a href="#slide19">Exercise</a></th>
         <td><a href="#slide19">19</a></td>
       </tr>
       
@@ -2515,7 +2609,7 @@ Another 'improvement' would have been to drop the count altogether. This would h
       
       
       <tr id="toc-row-21">
-        <th><a href="#slide21">-</a></th>
+        <th><a href="#slide21">Identity Monad</a></th>
         <td><a href="#slide21">21</a></td>
       </tr>
       
@@ -2527,7 +2621,7 @@ Another 'improvement' would have been to drop the count altogether. This would h
       
       
       <tr id="toc-row-23">
-        <th><a href="#slide23">-</a></th>
+        <th><a href="#slide23">Exercise</a></th>
         <td><a href="#slide23">23</a></td>
       </tr>
       
@@ -2545,13 +2639,13 @@ Another 'improvement' would have been to drop the count altogether. This would h
       
       
       <tr id="toc-row-26">
-        <th><a href="#slide26">-</a></th>
+        <th><a href="#slide26">Writer Monad</a></th>
         <td><a href="#slide26">26</a></td>
       </tr>
       
       
       <tr id="toc-row-27">
-        <th><a href="#slide27">Composing and Transforming Writers</a></th>
+        <th><a href="#slide27">-</a></th>
         <td><a href="#slide27">27</a></td>
       </tr>
       
@@ -2593,13 +2687,13 @@ Another 'improvement' would have been to drop the count altogether. This would h
       
       
       <tr id="toc-row-34">
-        <th><a href="#slide34">Reader Monad</a></th>
+        <th><a href="#slide34">-</a></th>
         <td><a href="#slide34">34</a></td>
       </tr>
       
       
       <tr id="toc-row-35">
-        <th><a href="#slide35">-</a></th>
+        <th><a href="#slide35">Composing and Transforming Writers</a></th>
         <td><a href="#slide35">35</a></td>
       </tr>
       
@@ -2629,7 +2723,7 @@ Another 'improvement' would have been to drop the count altogether. This would h
       
       
       <tr id="toc-row-40">
-        <th><a href="#slide40">Composing Readers</a></th>
+        <th><a href="#slide40">-</a></th>
         <td><a href="#slide40">40</a></td>
       </tr>
       
@@ -2647,7 +2741,7 @@ Another 'improvement' would have been to drop the count altogether. This would h
       
       
       <tr id="toc-row-43">
-        <th><a href="#slide43">-</a></th>
+        <th><a href="#slide43">Reader Monad</a></th>
         <td><a href="#slide43">43</a></td>
       </tr>
       
@@ -2665,7 +2759,7 @@ Another 'improvement' would have been to drop the count altogether. This would h
       
       
       <tr id="toc-row-46">
-        <th><a href="#slide46">Application: Dependency Injection</a></th>
+        <th><a href="#slide46">-</a></th>
         <td><a href="#slide46">46</a></td>
       </tr>
       
@@ -2677,31 +2771,31 @@ Another 'improvement' would have been to drop the count altogether. This would h
       
       
       <tr id="toc-row-48">
-        <th><a href="#slide48">-</a></th>
+        <th><a href="#slide48">Composing Readers</a></th>
         <td><a href="#slide48">48</a></td>
       </tr>
       
       
       <tr id="toc-row-49">
-        <th><a href="#slide49">Reader vs State</a></th>
+        <th><a href="#slide49">-</a></th>
         <td><a href="#slide49">49</a></td>
       </tr>
       
       
       <tr id="toc-row-50">
-        <th><a href="#slide50">Writer vs State</a></th>
+        <th><a href="#slide50">-</a></th>
         <td><a href="#slide50">50</a></td>
       </tr>
       
       
       <tr id="toc-row-51">
-        <th><a href="#slide51">Exercise</a></th>
+        <th><a href="#slide51">-</a></th>
         <td><a href="#slide51">51</a></td>
       </tr>
       
       
       <tr id="toc-row-52">
-        <th><a href="#slide52">-</a></th>
+        <th><a href="#slide52">Exercise: Dependency Injection</a></th>
         <td><a href="#slide52">52</a></td>
       </tr>
       
@@ -2719,26 +2813,38 @@ Another 'improvement' would have been to drop the count altogether. This would h
       
       
       <tr id="toc-row-55">
-        <th><a href="#slide55">Writer vs Reader</a></th>
+        <th><a href="#slide55">Reader vs State</a></th>
         <td><a href="#slide55">55</a></td>
       </tr>
       
       
       <tr id="toc-row-56">
-        <th><a href="#slide56">-</a></th>
+        <th><a href="#slide56">Writer vs State</a></th>
         <td><a href="#slide56">56</a></td>
       </tr>
       
       
       <tr id="toc-row-57">
-        <th><a href="#slide57">Homework</a></th>
+        <th><a href="#slide57">Exercise</a></th>
         <td><a href="#slide57">57</a></td>
       </tr>
       
       
       <tr id="toc-row-58">
-        <th><a href="#slide58">Links</a></th>
+        <th><a href="#slide58">-</a></th>
         <td><a href="#slide58">58</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-59">
+        <th><a href="#slide59">-</a></th>
+        <td><a href="#slide59">59</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-60">
+        <th><a href="#slide60">-</a></th>
+        <td><a href="#slide60">60</a></td>
       </tr>
       
       
