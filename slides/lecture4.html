@@ -141,7 +141,7 @@
             <header><h1>Flagged Arguments</h1></header>
             
             
-            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">mean2</span><span class="o">(</span><span class="n">xs</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Double</span><span class="o">],</span> <span class="n">empty</span><span class="k">:</span> <span class="kt">Double</span><span class="o">)</span><span class="k">:</span> <span class="kt">Double</span> <span class="o">=</span>
+            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">mean</span><span class="o">(</span><span class="n">xs</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Double</span><span class="o">],</span> <span class="n">empty</span><span class="k">:</span> <span class="kt">Double</span><span class="o">)</span><span class="k">:</span> <span class="kt">Double</span> <span class="o">=</span>
   <span class="k">if</span> <span class="o">(</span><span class="n">xs</span><span class="o">.</span><span class="n">isEmpty</span><span class="o">)</span> <span class="n">empty</span>
   <span class="k">else</span> <span class="n">xs</span><span class="o">.</span><span class="n">sum</span> <span class="o">/</span> <span class="n">xs</span><span class="o">.</span><span class="n">length</span>
 </pre></div>
@@ -178,7 +178,7 @@
             <header><h1>Sentinel Values</h1></header>
             
             
-            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">mean1</span><span class="o">(</span><span class="n">xs</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Double</span><span class="o">])</span><span class="k">:</span> <span class="kt">Double</span> <span class="o">=</span>
+            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">mean</span><span class="o">(</span><span class="n">xs</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Double</span><span class="o">])</span><span class="k">:</span> <span class="kt">Double</span> <span class="o">=</span>
   <span class="k">if</span> <span class="o">(</span><span class="n">xs</span><span class="o">.</span><span class="n">isEmpty</span><span class="o">)</span> <span class="nc">Double</span><span class="o">.</span><span class="nc">NaN</span>
   <span class="k">else</span> <span class="n">xs</span><span class="o">.</span><span class="n">sum</span> <span class="o">/</span> <span class="n">xs</span><span class="o">.</span><span class="n">length</span>
 </pre></div>
@@ -513,9 +513,9 @@
             <section><p>Here is a hard-coded version of <code>map</code>:</p>
 <div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">map</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="n">B</span><span class="o">)</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span> <span class="k">=</span>
   <span class="k">this</span> <span class="k">match</span> <span class="o">{</span>
-      <span class="k">case</span> <span class="nc">None</span> <span class="k">=&gt;</span> <span class="nc">None</span>
-      <span class="k">case</span> <span class="nc">Some</span><span class="o">(</span><span class="n">a</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nc">Some</span><span class="o">(</span><span class="n">f</span><span class="o">(</span><span class="n">a</span><span class="o">))</span>
-    <span class="o">}</span>
+    <span class="k">case</span> <span class="nc">None</span> <span class="k">=&gt;</span> <span class="nc">None</span>
+    <span class="k">case</span> <span class="nc">Some</span><span class="o">(</span><span class="n">a</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nc">Some</span><span class="o">(</span><span class="n">f</span><span class="o">(</span><span class="n">a</span><span class="o">))</span>
+  <span class="o">}</span>
 </pre></div>
 </section>
             
@@ -585,9 +585,9 @@
             
             <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">getOrElse</span><span class="o">[</span><span class="kt">B</span><span class="k">&gt;:</span><span class="kt">A</span><span class="o">](</span><span class="n">default</span><span class="k">:</span> <span class="o">=&gt;</span> <span class="n">B</span><span class="o">)</span><span class="k">:</span> <span class="kt">B</span> <span class="o">=</span>
   <span class="k">this</span> <span class="k">match</span> <span class="o">{</span>
-      <span class="k">case</span> <span class="nc">None</span> <span class="k">=&gt;</span> <span class="n">default</span>
-      <span class="k">case</span> <span class="nc">Some</span><span class="o">(</span><span class="n">a</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">a</span>
-    <span class="o">}</span>
+    <span class="k">case</span> <span class="nc">None</span> <span class="k">=&gt;</span> <span class="n">default</span>
+    <span class="k">case</span> <span class="nc">Some</span><span class="o">(</span><span class="n">a</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">a</span>
+  <span class="o">}</span>
 </pre></div>
 </section>
             
@@ -719,8 +719,7 @@
   <span class="k">try</span> <span class="o">{</span> <span class="nc">Some</span><span class="o">(</span><span class="n">a</span><span class="o">)</span> <span class="o">}</span>
   <span class="k">catch</span> <span class="o">{</span> <span class="k">case</span> <span class="n">e</span><span class="k">:</span> <span class="kt">Exception</span> <span class="o">=&gt;</span> <span class="nc">None</span> <span class="o">}</span>
 </pre></div>
-
-<p>The <code>None</code> returned is not informative about the exception thrown.  Next lecture's type <code>Either</code> fixes this.</p></section>
+</section>
             
           </div>
           <div class="presenter_notes">
@@ -747,18 +746,12 @@
       
       <!-- slide source: lecture4.md -->
       <div class="slide-wrapper">
-        <div class="slide has_code">
+        <div class="slide">
           <div class="inner">
             
             
-            <section><p><code>=&gt;</code> in a function argument means the argument is lazy.  <code>=&gt;</code> does not memoize.
-If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation would be outside the try-catch clause.</p>
-<p>Think of lazy argument <code>a: =&gt; A</code> as a function with no input: <code>() =&gt; A</code>.</p>
-<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nc">Try</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">lazyA</span><span class="k">:</span> <span class="o">()</span> <span class="o">=&gt;</span> <span class="n">A</span><span class="o">)</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span>
-  <span class="k">try</span> <span class="o">{</span> <span class="nc">Some</span><span class="o">(</span> <span class="n">lazyA</span><span class="o">()</span> <span class="o">)</span> <span class="o">}</span>
-  <span class="k">catch</span> <span class="o">{</span> <span class="k">case</span> <span class="n">e</span><span class="k">:</span> <span class="kt">Exception</span> <span class="o">=&gt;</span> <span class="nc">None</span> <span class="o">}</span>
-</pre></div>
-</section>
+            <section><p>The argument here must be lazy, otherwise <code>Try</code> will not function.</p>
+<p>The <code>None</code> returned is not informative about the exception thrown.  Next lecture's type <code>Either</code> fixes this.</p></section>
             
           </div>
           <div class="presenter_notes">
