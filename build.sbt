@@ -8,6 +8,8 @@ spIgnoreProvided := true
 
 lazy val root = project.in(file(".")).
   settings(Common.settings).
+  settings(unidocSettings: _*).
+  settings(Common.additionalUnidocSettings).
   aggregate(common, slideCode, lab, labAnswer, tutorial, tutorialAnswer)
 
 lazy val common = (project in file("common")).
