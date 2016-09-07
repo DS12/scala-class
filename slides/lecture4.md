@@ -126,16 +126,7 @@ Here is a hard-coded version of `map`:
 
 ---
 
-
-#`flatMap` for `Option`
-
-    !scala
-    def flatMap[B](f: A => Option[B]): Option[B] =
-
-
----
-
-Combinators for safely exiting the `Option` monad:
+There are a number of 'non-proper' combinators for safely exiting the `Option` monad. Two examples:
 
 * [`fold`](https://github.com/typelevel/cats/blob/master/core/src/main/scala/cats/Foldable.scala)
 * [`getOrElse`](https://github.com/typelevel/cats/blob/master/core/src/main/scala/cats/data/OptionT.scala)
@@ -406,7 +397,7 @@ Implement `sequence[A](a: List[Option[A]]): Option[List[A]]`.
       Option[List[A]] =
         a match {
           case Nil => Some(Nil)
-          case h :: t => h flatMap (hh => sequence(t) map (hh :: _))
+          case h :: t => h flatMap (hh => sequence1(t) map (hh :: _))
         }
 
 ---
