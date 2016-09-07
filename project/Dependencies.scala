@@ -6,12 +6,17 @@ object Dependencies {
   import Common.scalaVer
 
   
-  val catsVersion = "0.6.1"
+  val catsVersion = "0.7.2"
   val dogsVersion = "0.2.2"
   val algebirdVersion = "0.12.1"
-  val shapelessVersion = "2.3.1"
+  val shapelessVersion = "2.3.2"
   val framelessVersion = "0.1.0"
   val summingbirdVersion = "0.11.0-RC1"
+  val breezeVersion = "0.12"
+  val spireVersion = "0.12.0"
+  val json4sVersion = "3.4.0"
+
+  val scalatestVersion = "3.0.0"
 
   // will use Spark 2.0 and Scala 2.11
   // Spark 1.6, Scala 2.10 could be delicately joined with the rest of the 2.11 repo
@@ -32,12 +37,12 @@ object Dependencies {
     "io.github.adelbertc" %% "frameless-cats"      % framelessVersion,
     "io.github.adelbertc" %% "frameless-dataset"   % framelessVersion,
     "io.github.adelbertc" %% "frameless-dataframe" % framelessVersion,
-    "org.scalatest" %% "scalatest" % "3.0.0" % "test",
-    "org.scalacheck" % "scalacheck_2.11" % "1.13.2" % "test",
-    "org.scalanlp" %% "breeze" % "0.12",
-    "org.scalanlp" %% "breeze-natives" % "0.12",
-    "org.scalanlp" %% "breeze-viz" % "0.12",
-    "org.spire-math" %% "spire" % "0.11.0",
+    "org.scalatest" %% "scalatest" % scalatestVersion % "test",
+    //"org.scalacheck" % "scalacheck_2.11" % "1.13.2" % "test",
+    "org.scalanlp" %% "breeze" % breezeVersion,
+    "org.scalanlp" %% "breeze-natives" % breezeVersion,
+    "org.scalanlp" %% "breeze-viz" % breezeVersion,
+    "org.spire-math" %% "spire" % spireVersion,
     "de.svenkubiak" % "jBCrypt" % "0.4.1",
     "com.twitter" %% "summingbird" % summingbirdVersion,
     "com.twitter" %% "summingbird-example" % summingbirdVersion,
@@ -47,7 +52,7 @@ object Dependencies {
     "com.twitter" %% "summingbird-batch" % summingbirdVersion,
     "com.twitter" %% "summingbird-builder" % summingbirdVersion,
     "com.twitter" %% "summingbird-storm" % summingbirdVersion,
-    "org.json4s" %% "json4s-native" % "3.3.0",
+    "org.json4s" %% "json4s-native" % json4sVersion,
     kindProjector,
     si2712
   )

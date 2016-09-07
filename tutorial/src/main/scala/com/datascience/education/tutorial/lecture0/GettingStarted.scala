@@ -1,4 +1,4 @@
-package com.datascience.education.tutorials.lecture0
+package com.datascience.education.tutorial.lecture0
 
 
 object GettingStarted {

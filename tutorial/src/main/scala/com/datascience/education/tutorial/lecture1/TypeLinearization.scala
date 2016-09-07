@@ -1,4 +1,4 @@
-package com.datascience.education.tutorials.lecture1
+package com.datascience.education.tutorial.lecture1
 
 object TypeLinearization {
 

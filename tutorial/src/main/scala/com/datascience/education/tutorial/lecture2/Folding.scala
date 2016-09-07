@@ -1,5 +1,5 @@
 
-package com.datascience.education.tutorials.lecture2
+package com.datascience.education.tutorial.lecture2
 
 import scala.language.postfixOps
 
