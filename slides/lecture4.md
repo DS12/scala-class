@@ -17,7 +17,7 @@
 #Flagged Arguments
 
     !scala
-    def mean2(xs: Seq[Double], empty: Double): Double =
+    def mean(xs: Seq[Double], empty: Double): Double =
       if (xs.isEmpty) empty
       else xs.sum / xs.length
 
@@ -26,7 +26,7 @@
 #Sentinel Values
 
     !scala
-    def mean1(xs: Seq[Double]): Double =
+    def mean(xs: Seq[Double]): Double =
       if (xs.isEmpty) Double.NaN
       else xs.sum / xs.length
 
@@ -120,9 +120,9 @@ Here is a hard-coded version of `map`:
     !scala
     def map[B](f: A => B): Option[B] =
   	  this match {
-          case None => None
-          case Some(a) => Some(f(a))
-        }
+        case None => None
+        case Some(a) => Some(f(a))
+      }
 
 ---
 
@@ -137,9 +137,9 @@ There are a number of 'non-proper' combinators for safely exiting the `Option` m
     !scala
     def getOrElse[B>:A](default: => B): B =
   	  this match {
-          case None => default
-          case Some(a) => a
-        }
+        case None => default
+        case Some(a) => a
+      }
 
 ---
 
@@ -166,20 +166,12 @@ Implement `flatMap` using `map` & `getOrElse`.
   	  try { Some(a) }
   	  catch { case e: Exception => None }
 
-
-The `None` returned is not informative about the exception thrown.  Next lecture's type `Either` fixes this.
-
 ---
 
-`=>` in a function argument means the argument is lazy.  `=>` does not memoize.
-If `a` were evaluated eagerly, an exception thrown in its evaluation would be outside the try-catch clause.
+The argument here must be lazy, otherwise `Try` will not function.
 
-Think of lazy argument `a: => A` as a function with no input: `() => A`.
 
-  	!scala
-  	def Try[A](lazyA: () => A): Option[A] =
-  	  try { Some( lazyA() ) }
-  	  catch { case e: Exception => None }
+The `None` returned is not informative about the exception thrown.  Next lecture's type `Either` fixes this.
 
 ---
 
