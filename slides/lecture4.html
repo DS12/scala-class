@@ -589,8 +589,7 @@
       <span class="k">case</span> <span class="nc">Some</span><span class="o">(</span><span class="n">a</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">a</span>
     <span class="o">}</span>
 </pre></div>
-
-<p>We will explain the necessity of the lower type bound generic <code>B</code> in the <code>getOrElse</code> combinator in a bit.</p></section>
+</section>
             
           </div>
           <div class="presenter_notes">
@@ -1560,7 +1559,7 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
   <span class="kt">Option</span><span class="o">[</span><span class="kt">List</span><span class="o">[</span><span class="kt">A</span><span class="o">]]</span> <span class="k">=</span>
     <span class="n">a</span> <span class="k">match</span> <span class="o">{</span>
       <span class="k">case</span> <span class="nc">Nil</span> <span class="k">=&gt;</span> <span class="nc">Some</span><span class="o">(</span><span class="nc">Nil</span><span class="o">)</span>
-      <span class="k">case</span> <span class="n">h</span> <span class="o">::</span> <span class="n">t</span> <span class="k">=&gt;</span> <span class="n">h</span> <span class="n">flatMap</span> <span class="o">(</span><span class="n">hh</span> <span class="k">=&gt;</span> <span class="n">sequence</span><span class="o">(</span><span class="n">t</span><span class="o">)</span> <span class="n">map</span> <span class="o">(</span><span class="n">hh</span> <span class="o">::</span> <span class="k">_</span><span class="o">))</span>
+      <span class="k">case</span> <span class="n">h</span> <span class="o">::</span> <span class="n">t</span> <span class="k">=&gt;</span> <span class="n">h</span> <span class="n">flatMap</span> <span class="o">(</span><span class="n">hh</span> <span class="k">=&gt;</span> <span class="n">sequence1</span><span class="o">(</span><span class="n">t</span><span class="o">)</span> <span class="n">map</span> <span class="o">(</span><span class="n">hh</span> <span class="o">::</span> <span class="k">_</span><span class="o">))</span>
     <span class="o">}</span>
 </pre></div>
 </section>

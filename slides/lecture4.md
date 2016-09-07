@@ -141,8 +141,6 @@ There are a number of 'non-proper' combinators for safely exiting the `Option` m
           case Some(a) => a
         }
 
-We will explain the necessity of the lower type bound generic `B` in the `getOrElse` combinator in a bit.
-
 ---
 
 #Exercise
