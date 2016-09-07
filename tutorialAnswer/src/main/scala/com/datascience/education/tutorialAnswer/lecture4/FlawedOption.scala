@@ -10,6 +10,7 @@ import scala.{ None => _ }
 sealed trait FlawedOption[A] {
   import FlawedOption._
 
+  // See FlawedOptionSpec
   // Task (5a)
 
   // def map[B](f: A => B): FlawedOption[B] = this match {
@@ -29,8 +30,8 @@ sealed trait FlawedOption[A] {
 object FlawedOption {
 
 
-  case class Some[A](get: A) extends FlawedOption[A]
-  case object None extends FlawedOption[Nothing]
+  case class FlawedSome[A](get: A) extends FlawedOption[A]
+  case object FlawedNone extends FlawedOption[Nothing]
 
 }
 

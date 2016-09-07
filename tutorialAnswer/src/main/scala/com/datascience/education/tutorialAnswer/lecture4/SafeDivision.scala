@@ -12,16 +12,16 @@ object SafeDivision {
 
   // Task (2a)
   // answer
-  // def safeDiv(x: Int, y: Int): Option[Double] =
-  //   try {
-  //     val d: Double = x.toDouble / y
-  //     if (d.isNaN || d.isPosInfinity || d.isNegInfinity)
-  //       None
-  //     else
-  //       Some(d)
-  //   } catch {
-  //     case ae: java.lang.ArithmeticException => None
-  //   }
+  def safeDiv(x: Int, y: Int): Option[Double] =
+    try {
+      val d: Double = x.toDouble / y
+      if (d.isNaN || d.isPosInfinity || d.isNegInfinity)
+        None
+      else
+        Some(d)
+    } catch {
+      case ae: java.lang.ArithmeticException => None
+    }
 
   def safeDivInt(numerator: Int, denominator: Int): Option[Int] =
     try {
@@ -78,7 +78,7 @@ object SafeDivisionTraversalExamples extends App {
 
   val a = (6 to 11).toList
   val b = (-3 to 2).toList
-  val fracsFailing: List[Tuple2[Int, Int]] = a.zip(b)
+  val fracsFailing: List[(Int, Int)] = a.zip(b)
 
   val optionDoubles1: Option[List[Double]] =
     traverseFractions(fracsFailing)
@@ -91,7 +91,7 @@ object SafeDivisionTraversalExamples extends App {
   println("-----------------")
   val c = (6 to 11).toList
   val d = (2 to 7).toList
-  val fracsSuccessful: List[Tuple2[Int, Int]] = c.zip(d)
+  val fracsSuccessful: List[(Int, Int)] = c.zip(d)
 
   println("These fractions do not include an undefined number")
   val optionList2: Option[List[Double]] =

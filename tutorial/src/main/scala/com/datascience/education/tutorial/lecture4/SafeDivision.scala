@@ -13,7 +13,6 @@ import cats.instances.list._
 object SafeDivision {
 
   // Task (2a)
-  // answer
   def safeDiv(x: Int, y: Int): Option[Double] =
     ???
 
