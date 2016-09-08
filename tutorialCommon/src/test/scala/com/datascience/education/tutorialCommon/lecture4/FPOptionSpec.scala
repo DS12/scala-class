@@ -1,23 +1,22 @@
-// package com.datascience.education.tutorialTest.lecture4
+package com.datascience.education.tutorialCommon.lecture4
 
-// import org.scalatest._
-// import org.scalatest.{FunSuite, Matchers}
-
-
-// //import FPOption._
-
-// trait FPOptionSpec extends FunSuite with Matchers {
+import org.scalatest._
+import org.scalatest.{FunSuite, Matchers}
 
 
-//   val optionHello: FPOption[String] = FPSome("hello")
-//   val option65: FPOption[Int] = FPSome(65)
-//   val option64: FPOption[Int] = unit(64) // alternative construction  
-//   val noInt: FPOption[Int] = FPNone
+//import FPOption._
+// import cats.Monad
+
+// class FPOptionSpec[
+//   FPOption[_], FPSome[_] <: FPOption[_], FPNone[_] <: FPOption[_]
+// ](
+//   implicit
+//     FPOption : Monad[FPOption],
+//   fpOptionTypeclass: FPOptionTypeclass[FPOption, FPSome, FPNone])
+//     extends FunSuite with Matchers {
 
 
-//   def capitalLetter(i: Int): FPOption[Char] =
-//     if (i >= 65 && i <= 90) FPSome(i.toChar) // use unit here
-//     else FPNone
+//   import fpOptionTypeclass._
 
 //   test(s"The inner type of $option65 .getOrElse($optionHello) is raised to common ancestor `Any`") {
 //     "option65.orElse(optionHello): FPOption[Any]" should compile

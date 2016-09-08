@@ -17,8 +17,6 @@ import Employees._
 
 import com.datascience.education.tutorialCommon.lecture4.EmployeeTypeclass
 import com.datascience.education.tutorialCommon.lecture4.EmployeesTypeclass
-import EmployeesTypeclass._
-
 
 object EmployeesSpec {
   implicit def employeeTypeclass(e: Employee): EmployeeTypeclass[Email] =

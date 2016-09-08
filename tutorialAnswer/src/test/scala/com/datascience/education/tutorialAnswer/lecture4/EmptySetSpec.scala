@@ -1,4 +1,4 @@
-package com.datascience.education.tutorial.lecture4
+package com.datascience.education.tutorialAnswer.lecture4
 
 import com.datascience.education.tutorialCommon.lecture4.EmptySetTypeclass
 import com.datascience.education.tutorialCommon.lecture4.CommonEmptySetSpec
@@ -29,5 +29,5 @@ object EmptySetSpec {
 
 import EmptySetSpec._
 
-// class EmptySetSpec
-//     extends CommonEmptySetSpec()(emptySetTypeclass)
+class EmptySetSpec
+    extends CommonEmptySetSpec()(emptySetTypeclass)

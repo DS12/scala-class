@@ -17,8 +17,6 @@ import Employees._
 
 import com.datascience.education.tutorialCommon.lecture4.EmployeeTypeclass
 import com.datascience.education.tutorialCommon.lecture4.EmployeesTypeclass
-import EmployeesTypeclass._
-
 
 object EmployeesSpec {
   implicit def employeeTypeclass(e: Employee): EmployeeTypeclass[Email] =
@@ -39,10 +37,6 @@ object EmployeesSpec {
 }
 
 import EmployeesSpec._
-
-// class EmployeesSpec
-//     extends CommonEmployeesSpec[Employee, Employees, Email](
-//   employeeTypeclass, employeesTypeclass)
 
 class EmployeesSpec
     extends CommonEmployeesSpec()(employeeTypeclass, employeesTypeclass)

@@ -2,25 +2,24 @@ package com.datascience.education.tutorialCommon.lecture4
 
 import java.util.UUID
 
-object EmployeesTypeclass {
+/*
+ With duplicate definitions of Email, Employee, 
+ and the object that contains the exercises - Employees, 
+ all three of these must be abstractly referenced in these test definitions.
+ Employee and Employees both necessitate their own typeclass.
 
-  //type Email = String
+ */
 
-  //case class Employee(id: UUID, firstName: String, email: Email, ssnLast4: Short)
-
-}
-
-trait EmployeeTypeclass[Eml] {
+trait EmployeeTypeclass[Email] {
   val id: UUID
-  val email: Eml
+  val email: Email
 }
 
-abstract class EmployeesTypeclass[Emp, Email](
-  implicit et: Emp => EmployeeTypeclass[Email]) {
-  import EmployeesTypeclass._
+abstract class EmployeesTypeclass[Employee, Email](
+  implicit et: Employee => EmployeeTypeclass[Email]) {
   
-  val prianna: Emp
-  val peter: Emp
+  val prianna: Employee
+  val peter: Employee
   val chrisId: UUID
 
   def employeeEmail(id: UUID): Option[Email]
