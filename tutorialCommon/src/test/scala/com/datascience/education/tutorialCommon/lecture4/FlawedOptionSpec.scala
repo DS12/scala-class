@@ -1,4 +1,4 @@
-// package com.datascience.education.tutorialTest.lecture4
+// package com.datascience.education.tutorialCommon.lecture4
 
 // import org.scalatest._
 // import org.scalatest.{FunSuite, Matchers}

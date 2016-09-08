@@ -1,9 +1,12 @@
-package com.datascience.education.tutorial.lecture4
+package com.datascience.education.tutorialAnswer.lecture4
 
 import org.scalatest._
 import org.scalatest.{FunSuite, Matchers}
 
-class FlawedOptionSpec extends FunSuite with Matchers {
+
+//import FlawedOption._
+
+trait FlawedOptionSpec extends FunSuite with Matchers {
 
   test("`map` should not compile when the type parameter of `FlawedOption` is invariant") {
      """
