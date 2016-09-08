@@ -38,7 +38,7 @@ object Dependencies {
     "io.github.adelbertc" %% "frameless-dataset"   % framelessVersion,
     "io.github.adelbertc" %% "frameless-dataframe" % framelessVersion,
     "org.scalatest" %% "scalatest" % scalatestVersion % "test",
-    //"org.scalacheck" % "scalacheck_2.11" % "1.13.2" % "test",
+    "org.scalacheck" % "scalacheck_2.11" % "1.13.2" % "test",
     "org.scalanlp" %% "breeze" % breezeVersion,
     "org.scalanlp" %% "breeze-natives" % breezeVersion,
     "org.scalanlp" %% "breeze-viz" % breezeVersion,

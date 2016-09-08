@@ -12,7 +12,7 @@ object QuickSort {
   // Task 4c
   // Answer 4c
   def quickSort(si: Stream[Int]): Stream[Int] = {
-    println("call")
+    //println("call")
     // ensure that `Empty` and `Stream` refer to our implementations,
     // not Scala Collections implementations
     si match {
