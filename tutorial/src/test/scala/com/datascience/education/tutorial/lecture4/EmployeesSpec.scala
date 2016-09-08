@@ -11,29 +11,36 @@ import java.util.UUID
 
 import scala.language.implicitConversions
 
+import com.datascience.education.tutorialCommon.lecture4.{EmployeesSpec => CommonEmployeesSpec}
+
 import Employees._
 
-// http://www.scalatest.org/user_guide/using_matchers
-
+import com.datascience.education.tutorialCommon.lecture4.EmployeeTypeclass
 import com.datascience.education.tutorialCommon.lecture4.EmployeesTypeclass
 import EmployeesTypeclass._
 
 
 object EmployeesSpec {
-
-  implicit def employee(e: Employee): EmployeeTypeclass =
-    new EmployeeTypeclass {
-      val id: UUID = e.id
-      val email: Email = e.email
+  implicit def employeeTypeclass(e: Employee): EmployeeTypeclass[Email] =
+    new EmployeeTypeclass[Email] {
+      val id = e.id
+      val email = e.email
     }
 
-  implicit def employees: EmployeesTypeclass = new EmployeesTypeclass {
-    def employeeEmail(id: UUID): Option[Email] =
+  implicit def employeesTypeclass:
+      EmployeesTypeclass[Employee, Email] =
+    new EmployeesTypeclass[Employee, Email] {
+      val prianna: Employee = Employees.prianna
+      val peter: Employee = Employees.peter
+      val chrisId: UUID = Employees.chrisId
+      def employeeEmail(id: UUID): Option[Email] =
       Employees.employeeEmail(id)
-  }
+    }
 }
 
 import EmployeesSpec._
 
-
+// uncomment when ready to test
+// class EmployeesSpec
+//     extends CommonEmployeesSpec()(employeeTypeclass, employeesTypeclass)
 
