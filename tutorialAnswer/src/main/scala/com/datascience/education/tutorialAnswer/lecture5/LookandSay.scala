@@ -55,7 +55,7 @@ object LookAndSay {
   def f(priorList: List[BigInt]): Option[(String, List[BigInt])] = {
     val nextList: List[BigInt] = next(priorList)
 
-    println("nextList = " + nextList)
+    //println("nextList = " + nextList)
     if (nextList.isEmpty) None
     else Some((bigIntListToString(priorList), nextList))
   }
