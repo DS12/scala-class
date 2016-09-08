@@ -3,32 +3,47 @@ package com.datascience.education.tutorialAnswer.lecture4
 import org.scalatest._
 import org.scalatest.{FunSuite, Matchers}
 
-import Employees._
-
 import scala.Option
 import scala.Some
 import scala.None
 
-// http://www.scalatest.org/user_guide/using_matchers
+import java.util.UUID
 
-class EmployeesSpec extends FunSuite with Matchers {
+import scala.language.implicitConversions
 
-//   type application is not allowed for postfix operators
-//   test("Peter's email should return a Some") {
-//     employeeEmail(peter) should be a [Some]
-//   }
+import com.datascience.education.tutorialCommon.lecture4.{EmployeesSpec => CommonEmployeesSpec}
 
+import Employees._
 
-  test("Peter's email should be wrapped in a Some") {
-    employeeEmail(peter.id) should be (Some(peter.email))
-  }
-
-  test("Chris's email should be a None") {
-    employeeEmail(chrisId) should be (None)
-  }
+import com.datascience.education.tutorialCommon.lecture4.EmployeeTypeclass
+import com.datascience.education.tutorialCommon.lecture4.EmployeesTypeclass
+import EmployeesTypeclass._
 
 
+object EmployeesSpec {
+  implicit def employeeTypeclass(e: Employee): EmployeeTypeclass[Email] =
+    new EmployeeTypeclass[Email] {
+      val id = e.id
+      val email = e.email
+    }
 
+  implicit def employeesTypeclass:
+      EmployeesTypeclass[Employee, Email] =
+    new EmployeesTypeclass[Employee, Email] {
+      val prianna: Employee = Employees.prianna
+      val peter: Employee = Employees.peter
+      val chrisId: UUID = Employees.chrisId
+      def employeeEmail(id: UUID): Option[Email] =
+      Employees.employeeEmail(id)
+    }
 }
 
+import EmployeesSpec._
+
+// class EmployeesSpec
+//     extends CommonEmployeesSpec[Employee, Employees, Email](
+//   employeeTypeclass, employeesTypeclass)
+
+class EmployeesSpec
+    extends CommonEmployeesSpec()(employeeTypeclass, employeesTypeclass)
 

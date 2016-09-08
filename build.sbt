@@ -40,19 +40,35 @@ lazy val labAnswer = (project in file("labAnswer")).
   ).settings(Common.settings).dependsOn(common)
 
 
+
+lazy val tutorialCommon = (project in file("tutorialCommon")).
+  settings(
+    name := "tutorialCommon",
+    scalaVersion := Common.scalaVer,
+    description := "Tutorial common"
+  ).settings(Common.settings).dependsOn(common)//.dependsOn(labAnswer)
+
 lazy val tutorial = (project in file("tutorial")).
   settings(
     name := "tutorial",
     scalaVersion := Common.scalaVer,
     description := "Tutorial exercises"
-  ).settings(Common.settings).dependsOn(common).dependsOn(lab)
+  ).
+  settings(Common.settings).
+  dependsOn(common).
+  dependsOn(tutorialCommon % "compile->compile;test->test").
+  dependsOn(lab)
 
 lazy val tutorialAnswer = (project in file("tutorialAnswer")).
   settings(
     name := "tutorialAnswer",
     scalaVersion := Common.scalaVer,
     description := "Tutorial answers"
-  ).settings(Common.settings).dependsOn(common).dependsOn(labAnswer)
+  ).
+  settings(Common.settings).
+  dependsOn(common).
+  dependsOn(tutorialCommon % "compile->compile;test->test").  
+  dependsOn(labAnswer)
 
 
 // assemblyMergeStrategy in assembly := {

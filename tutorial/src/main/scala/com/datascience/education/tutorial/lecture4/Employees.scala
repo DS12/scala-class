@@ -10,7 +10,7 @@ import scala.collection.Map
 
 import java.util.UUID
 
-object Employees {
+object Employees  {
 
 
   type Email = String

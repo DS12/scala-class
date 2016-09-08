@@ -1,4 +1,4 @@
-package com.datascience.education.tutorialAnswer.lecture4
+package com.datascience.education.tutorial.lecture4
 
 import org.scalatest.{FunSuite, Matchers}
 
