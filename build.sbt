@@ -8,7 +8,9 @@ spIgnoreProvided := true
 
 lazy val root = project.in(file(".")).
   settings(Common.settings).
-  aggregate(common, labExercises, slideCode, tutorials)
+  settings(unidocSettings: _*).
+  settings(Common.additionalUnidocSettings).
+  aggregate(common, slideCode, lab, labAnswer, tutorial, tutorialAnswer)
 
 lazy val common = (project in file("common")).
   settings(
@@ -23,18 +25,50 @@ lazy val slideCode = (project in file("slideCode")).
     scalaVersion := Common.scalaVer
   ).settings(Common.settings).dependsOn(common)
 
-lazy val labExercises = (project in file("labExercises")).
+lazy val lab = (project in file("lab")).
   settings(
-    name := "labExercises",
-    scalaVersion := Common.scalaVer
+    name := "lab",
+    scalaVersion := Common.scalaVer,
+    description := "Lab exercises"
+  ).settings(Common.settings).dependsOn(common)
+
+lazy val labAnswer = (project in file("labAnswer")).
+  settings(
+    name := "labAnswer",
+    scalaVersion := Common.scalaVer,
+    description := "Lab answers"
   ).settings(Common.settings).dependsOn(common)
 
 
-lazy val tutorials = (project in file("tutorials")).
+
+lazy val tutorialCommon = (project in file("tutorialCommon")).
   settings(
-    name := "tutorials",
-    scalaVersion := Common.scalaVer
-  ).settings(Common.settings).dependsOn(common).dependsOn(labExercises)
+    name := "tutorialCommon",
+    scalaVersion := Common.scalaVer,
+    description := "Tutorial common"
+  ).settings(Common.settings).dependsOn(common)//.dependsOn(labAnswer)
+
+lazy val tutorial = (project in file("tutorial")).
+  settings(
+    name := "tutorial",
+    scalaVersion := Common.scalaVer,
+    description := "Tutorial exercises"
+  ).
+  settings(Common.settings).
+  dependsOn(common).
+  dependsOn(tutorialCommon % "compile->compile;test->test").
+  dependsOn(lab)
+
+lazy val tutorialAnswer = (project in file("tutorialAnswer")).
+  settings(
+    name := "tutorialAnswer",
+    scalaVersion := Common.scalaVer,
+    description := "Tutorial answers"
+  ).
+  settings(Common.settings).
+  dependsOn(common).
+  dependsOn(tutorialCommon % "compile->compile;test->test").  
+  dependsOn(labAnswer)
 
 
 // assemblyMergeStrategy in assembly := {
