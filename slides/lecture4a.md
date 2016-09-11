@@ -576,7 +576,7 @@ We can create instances directly using their `apply` methods:
 
 ---
 
-Again, it is better for type inference to use the `valid` and `invalid` smart constructors, which return a type of `Validated`:
+It is better for type inference to use the `valid` and `invalid` smart constructors, which return a type of `Validated`:
 
 	!scala
   import Validated.{valid, invalid}

@@ -2024,18 +2024,19 @@ This means Cats can provide an error-accumulating implementation of product for 
       
       <!-- slide source: lecture4a.md -->
       <div class="slide-wrapper">
-        <div class="slide">
+        <div class="slide has_code">
           <div class="inner">
             
             
             <section><p>And again we can import enriched <code>valid</code> and <code>invalid</code> methods from <code>cats.syntax.validated</code> to get some syntactic sugar:</p>
-<pre><code>    !scala
-  import cats.syntax.validated._
+<div class="highlight"><pre><span></span>
+</pre></div>
+
+<p>import cats.syntax.validated._
   123.valid[String]
   //res0: Validated[String,Int] = Valid(123)
   "message".invalid[Int]
-  //res1: Validated[String,Int] = Invalid(message)
-</code></pre></section>
+  //res1: Validated[String,Int] = Invalid(message)</p></section>
             
           </div>
           <div class="presenter_notes">
