@@ -537,18 +537,25 @@ If we model this with a monad like `Xor`, we fail fast and lose errors.
 
 ---
 
+#Example: Parsing
+
+	!scala
+	def parseInt(str: String): String Xor Int =
+		Xor.catchOnly[NumberFormatException](str.toInt)
+			 .leftMap(_ => s"Couldn't read $str")
+	//parseInt: (str: String)cats.data.Xor[String,Int]
+
+---
+
 The situation is the same with for comprehensions. The code below fails on the first call to `parseInt` and doesn’t go any further:
 
 	!scala
-  def parseInt(str: String): String Xor Int =       
-    Xor.catchOnly[NumberFormatException](str.toInt)
-       .leftMap(_ => s"Couldn't read $str")
-  for {
-    a <- parseInt("a")
-    b <- parseInt("b")
-    c <- parseInt("c")
-  } yield (a + b + c)
-  //res0: Xor[String,Int] = Left(Couldn't read a)
+	for {
+		a <- parseInt("a")
+		b <- parseInt("b")
+		c <- parseInt("c")
+	} yield (a + b + c)
+	//res0: Xor[String,Int] = Left(Couldn't read a)
 
 ---
 
@@ -563,48 +570,38 @@ This means Cats can provide an error-accumulating implementation of product for 
 
 ---
 
-`Validated` has two subtypes, `Validated.Valid` and `Validated.Invalid`, that correspond loosely to `Xor.Right` and `Xor.Left`.
+`Validated` has two subtypes, `Validated.Valid` and `Validated.Invalid`, that correspond to `Xor.Right` and `Xor.Left`.
 
 We can create instances directly using their `apply` methods:
 
 	!scala
-  import cats.data.Validated
-  val v = Validated.Valid(123)
-  //v: cats.data.Validated.Valid[Int] = Valid(123)
-  val i = Validated.Invalid("oops")
-  //i: cats.data.Validated.Invalid[String] = Invalid(oops)
+	import cats.data.Validated
+	val v = Validated.Valid(123)
+	//v: cats.data.Validated.Valid[Int] = Valid(123)
+	val i = Validated.Invalid("oops")
+	//i: cats.data.Validated.Invalid[String] = Invalid(oops)
 
 ---
 
-It is better for type inference to use the `valid` and `invalid` smart constructors, which return a type of `Validated`:
+It is better for type inference to use smart constructors:
 
 	!scala
-  import Validated.{valid, invalid}
-  val v = valid[String, Int](123)
-  //v: Validated[String,Int] = Valid(123)
-  val i = invalid[String, Int]("oops")
-  //i: Validated[String,Int] = Invalid(oops)
+	import Validated.{valid, invalid}
+	val v = valid[String, Int](123)
+	//v: Validated[String,Int] = Valid(123)
+	val i = invalid[String, Int]("oops")
+	//i: Validated[String,Int] = Invalid(oops)
 
 ---
 
-And again we can import enriched `valid` and `invalid` methods from `cats.syntax.validated` to get some syntactic sugar:
+And again we can import enriched `valid` and `invalid` methods from `cats.syntax.validated`:
 
 	!scala
-  import cats.syntax.validated._
-  123.valid[String]
-  //res0: Validated[String,Int] = Valid(123)
-  "message".invalid[Int]
-  //res1: Validated[String,Int] = Invalid(message)
-
----
-
-A toy implementation of `Validated`:
-
-	!scala
-	sealed trait Validated[+E, +A]
-	case class Invalid[E](head: E, tail: Vector[E] = Vector())
-	  extends Validated[E, Nothing]
-	case class Valid[A](a: A) extends Validated[Nothing, A]
+	import cats.syntax.validated._
+	123.valid[String]
+	//res0: Validated[String,Int] = Valid(123)
+	"oops".invalid[Int]
+	//res1: Validated[String,Int] = Invalid(oops)
 
 ---
 
@@ -612,7 +609,6 @@ Unlike the `Xor`’s monad, which cuts the calculation short, `Validated` keeps 
 
 	!scala
 	import cats.data.Validated
-	import cats.instances.list._
 	import cats.syntax.cartesian._
 	type ErrorOr[A] = Validated[String,A]
 	val a: ErrorOr[Nothing] = Validated.Invalid("foo")
@@ -622,8 +618,7 @@ Unlike the `Xor`’s monad, which cuts the calculation short, `Validated` keeps 
 
 ---
 
-
-Validated accumulates errors using a `Semigroup` (the append part of a `Monoid`).
+Similar to `Writer`, `Validated` accumulates errors using a `Semigroup` (the append part of a `Monoid`).
 
 This means we can use any `Monoid` as an error type, including `String`, `List`, and `Vector`, as well as pure semigroups like `NonEmptyList`s.
 
