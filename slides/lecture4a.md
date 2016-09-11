@@ -243,19 +243,14 @@ It gives us a fixed set of expected error types and a catch-all for anything els
 
 ---
 
-Now we get precise type checking on any pattern matching:
-
 	!scala
-	def handleError(error: LoginError): Unit = error match {
-		case UserNotFound(u) => println(s"User not found: $u")
-		case PasswordIncorrect(u) => println(s"Password: $u")
-		case _ : UnexpectedError => println(s"Unexpected error")
-	}
 	User("cem3394", "passw0rd").right
 	//res0: Xor[Nothing,User] = Right(User(cem3394,passw0rd))
 	UserNotFound("cem3394").left
 	//res1: Xor[UserNotFound,Nothing] = Left(UserNotFound(cem3394))
-
+	PasswordIncorrect("cem3394").left
+	//res2: PasswordIncorrect,Nothing] = Left(PasswordIncorrect(cem3394))
+	
 ---
 
 #Cartesian

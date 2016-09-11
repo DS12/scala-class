@@ -909,16 +909,12 @@ http://danielwestheide.com/blog/2012/12/26/the-neophytes-guide-to-scala-part-6-e
           <div class="inner">
             
             
-            <section><p>Now we get precise type checking on any pattern matching:</p>
-<div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">handleError</span><span class="o">(</span><span class="n">error</span><span class="k">:</span> <span class="kt">LoginError</span><span class="o">)</span><span class="k">:</span> <span class="kt">Unit</span> <span class="o">=</span> <span class="n">error</span> <span class="k">match</span> <span class="o">{</span>
-    <span class="k">case</span> <span class="nc">UserNotFound</span><span class="o">(</span><span class="n">u</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">println</span><span class="o">(</span><span class="s">s&quot;User not found: </span><span class="si">$u</span><span class="s">&quot;</span><span class="o">)</span>
-    <span class="k">case</span> <span class="nc">PasswordIncorrect</span><span class="o">(</span><span class="n">u</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">println</span><span class="o">(</span><span class="s">s&quot;Password: </span><span class="si">$u</span><span class="s">&quot;</span><span class="o">)</span>
-    <span class="k">case</span> <span class="k">_</span> <span class="k">:</span> <span class="kt">UnexpectedError</span> <span class="o">=&gt;</span> <span class="n">println</span><span class="o">(</span><span class="s">s&quot;Unexpected error&quot;</span><span class="o">)</span>
-<span class="o">}</span>
-<span class="nc">User</span><span class="o">(</span><span class="s">&quot;cem3394&quot;</span><span class="o">,</span> <span class="s">&quot;passw0rd&quot;</span><span class="o">).</span><span class="n">right</span>
+            <section><div class="highlight"><pre><span></span><span class="nc">User</span><span class="o">(</span><span class="s">&quot;cem3394&quot;</span><span class="o">,</span> <span class="s">&quot;passw0rd&quot;</span><span class="o">).</span><span class="n">right</span>
 <span class="c1">//res0: Xor[Nothing,User] = Right(User(cem3394,passw0rd))</span>
 <span class="nc">UserNotFound</span><span class="o">(</span><span class="s">&quot;cem3394&quot;</span><span class="o">).</span><span class="n">left</span>
 <span class="c1">//res1: Xor[UserNotFound,Nothing] = Left(UserNotFound(cem3394))</span>
+<span class="nc">PasswordIncorrect</span><span class="o">(</span><span class="s">&quot;cem3394&quot;</span><span class="o">).</span><span class="n">left</span>
+<span class="c1">//res2: PasswordIncorrect,Nothing] = Left(PasswordIncorrect(cem3394))</span>
 </pre></div>
 </section>
             
