@@ -27,7 +27,7 @@ http://danielwestheide.com/blog/2012/12/26/the-neophytes-guide-to-scala-part-6-e
 ---
 
 	!scala
-	trait Either[+E,+A]
+	trait Either[+E,+A] //base trait
 	case class Left[+E](e: E) extends Either[E, Nothing]
 	case class Right[+A](a: A) extends Either[Nothing, A]
 
@@ -41,93 +41,58 @@ A `Right` instance of `Either` will have `Nothing` for its "left" type.
 
 The generic letter for the "left" type is "E" because it is usually a subtype of Java's `Exception`.
 
-Given an `Either[Exception, Integer]`, these combinators only let me operate on the `Integer`.  They are *right-biased*.
-
 ---
 
 	!scala
 	trait Either[+E,+A] {
 	 def map[B](f: A => B): Either[E, B] =
-	   this match {
-	     case Right(a) => Right(f(a))
-	     case Left(e) => Left(e)
-	   }
-
+		this match {
+		 case Left(e) => Left(e)
+		 case Right(a) => Right(f(a))
+		}
 	 def flatMap[EE >: E, B](f: A => Either[EE, B]): Either[EE, B] =
-	   this match {
-	     case Left(e) => Left(e)
-	     case Right(a) => f(a)
-	   }
+		this match {
+		 case Left(e) => Left(e)
+		 case Right(a) => f(a)
+		}
+	}
+
+---
+# Lower Type Bounds
+
+In chapter 4 of FPS, the authors note the necessity of the lower type bound generic `B` in the `getOrElse` and `orElse` combinators.
+
+	!scala
+	trait Option[+A] {
+		def getOrElse[B >: A](default: => B): B
+		def orElse[B >: A](ob: => Option[B]): Option[B]
 	}
 
 ---
 
+`B >: A` is a [*lower type bound*](http://docs.scala-lang.org/tutorials/tour/lower-type-bounds.html);
 
-# Lower Type Bound Generics
+Generic `B` can be a supertype of `A`, or an equal type to `A`.
 
-(Lower Type Bounds)
+It is likely you will use [*upper type bounds*](http://docs.scala-lang.org/tutorials/tour/upper-type-bounds.html) more frequently.
 
-Last lecture, we left unexplained the "the necessity of the lower type bound generic `B` in the `getOrElse` and `orElse` combinators."
-
-	!scala
-    trait Option[+A] {
-	  .
-	  .
-	  .
-      def getOrElse[B >: A](default: => B): B
-      def orElse[B >: A](ob: => Option[B]): Option[B]
-      .
-    }
 
 ---
-
-Here, in `Either`, we see the same pattern; lower type bound generic `EE`:
-
-
-	!scala
-    sealed trait Either[+E,+A] {
-      .
-	  .
-	  .
-      def flatMap[EE >: E, B](f: A => Either[EE, B]): Either[EE, B]
-
-	  // This combinator has two lower type bound generics:
-
-      def orElse[EE >: E, B >: A](b: => Either[EE, B]): Either[EE, B]
-	  .
-	  .
-    }
-
----
-
-First, the explanation for the lower type bound generic in `getOrElse` and `orElse` of `Option`.
 
 An instance of `Some[A]` is an `Option[A]`.
 
-The<sup>*</sup> instance of `None` is an `Option[Nothing]`.
+The instance of `None` is an `Option[Nothing]`.
 
 	!scala
-    case class Some[+A](get: A) extends Option[A]
-    case object None extends Option[Nothing]
+	case class Some[+A](get: A) extends Option[A]
+	case object None extends Option[Nothing]
 
-
-
-
-
-\* There is only a single instance of `None`, as it is an `object`.
 
 ---
 
-[`Nothing`](http://www.scala-lang.org/api/current/index.html#scala.Nothing) is "at the bottom of Scala's type hierarchy.  `Nothing` is a subtype of every other type."
+[`Nothing`](http://www.scala-lang.org/api/current/index.html#scala.Nothing) is at the bottom of Scala's type hierarchy, i.e. `Nothing <: A` for all types `A`.
 
-So `Nothing <: A`.
-
-This explains why an `Option[Integer]` can be:
-
-* `Some[Integer]` (`=:= Option[Integer]`)
-* `None` (`=:= Option[Nothing]`)
-
-Next stop, explanation of the necessity of this for `getOrElse` and `orElse`:
+Since `Option` is covariant, an `Option[Nothing]` can be an `Option[A]` for all types `A`.
 
 ---
 
@@ -141,7 +106,6 @@ if not for the lower type bound generic `B >: A`, `getOrElse` would be limited t
 	!scala
 	getOrElse(default: => Nothing): Nothing
 
-Not very useful.
 
 ---
 
@@ -150,43 +114,11 @@ With `B >: A`, `getOrElse` on `failed` becomes:
 	!scala
 	getOrElse[B >: Nothing](default: => B): B
 
-More useful.
-
----
-
-`B >: A` is a [*lower type bound*](http://docs.scala-lang.org/tutorials/tour/lower-type-bounds.html);
-
-Generic `B` can be a supertype of `A`, or an equal type to `A`.
-
-
-It is likely you will use [*upper type bounds*](http://docs.scala-lang.org/tutorials/tour/upper-type-bounds.html) more frequently.  I think their use cases are less convoluted, as well.
-
-
----
-
-`Option[Nothing] <: Option[A]` and the `+` before the generic is called [*covariance*](https://twitter.github.io/scala_school/type-basics.html#variance).
-
-Lacking the `+` prefix to its generic type, `Option` would be *invariant* and `Option[Nothing] <: Option[A]` would be *false*.  This is default.
-
----
-
-If the generic inside `List` is covariant, then:
-
-"If `X` is a subtype of `Y`, then `List[X]` is a subtype of `List[Y]`." -- *FP in Scala*, section 3.1
-
 ---
 
 The same explanation of the necessity of the lower type bound generic holds for `Either`.
 
-An instance of `Left` still has a "right" type: `Nothing`, and vice versa for an instance of `Right`:
-
-	!scala
-	case class Left[+E](e: E) extends Either[E, Nothing]
-	case class Right[+A](a: A) extends Either[Nothing, A]
-
----
-
-If not for the lower type bound generic `EE`, `flatMap` would be limited to this signature when called an a instance of `Left`:
+If not for the lower type bound generic `EE`, `flatMap` would be limited to this signature when called on an instance of `Left`:
 
 	!scala
 	flatMap[B](f: A => Either[Nothing, B]): Either[Nothing, B]
@@ -197,72 +129,19 @@ Why would you need to call `flatMap` on an instance of `Left`?
 
 Because at run-time your `Either` may not be a `Right` as you expected; it may be a `Left`.
 
-At run-time, an `Either` may be instantiated as a `Left` or `Right`.
-
 But at compile-time, the combinators must type-check for either way this could go.
 
 ---
 
-Type checking at compile-time needs to verify the types *"line up"*
-if `eitherA` is `Left` or `Right`, if `eitherB` is `Left` or `Right`, etc.:
+#Xor
 
-	!scala
-	val eitherA: Either[Exception, A] = ...
-	val eitherB: Either[Exception, B] = ...
-	val eitherC: Either[Exception, C] = ...
-	def f(a: A, b: B, c: C): D = ...
-	val eitherD: Either[Exception, D] =
-	  eitherA.flatMap { a =>
-	    eitherB.flatMap { b =>
-			  eitherC.map { c =>
-			    f(a, b, c)
-		  }
-	  }
-  }
-
-
----
-
-Note that in the prior example, the input `Either`s were not dependent upon each other.
-
-An example that makes explicit use of the monadic nature of `Either`;
-
-	!scala
-	val eitherD: Either[Exception, D] =
-	  eitherA.flatMap(eitherB).flatMap(eitherC)
-
-
----
-
-`Try` from the previous lecture, rewritten for `Either`
-
-	!scala
-	import scala.util.control.NonFatal
-
-	def tryEither[A](a: => A): Either[Throwable, A] =
-	  try { Right(a) }
-	  catch { case NonFatal(throwable) => Left(throwable) }
-
----
-
-#`Xor`
-
-`Xor` is the first concrete data type we’ve seen in Cats.
-
-Cats provides numerous other data types, all of which exist in the [cats.data][cats.data] package.
-
-Other examples include the `Validated` type that we will see shortly.
-
-
----
-
-The Scala standard library already has a type [Either](http://www.scala-lang.org/api/current/#scala.util.Either). Cats provides an alternative in `cats.data.Xor`.
+Cats provides an alternative to the Scala standard library's  [Either](http://www.scala-lang.org/api/current/#scala.util.Either) in `cats.data.Xor`.
 
 Why have this?
 
 ---
 
-Aside from providing a few useful methods, the main reason is that `Either` is unbiased.
+The main reason is that `Either` is unbiased.
 
 This means we must first use projection (`.left` or `.right`) to access `flatMap`, `map`, etc.:
 
@@ -274,7 +153,7 @@ This means we must first use projection (`.left` or `.right`) to access `flatMap
 
 ---
 
-This makes `Either` incovenient to use as a monad, especially as the convention in most functional languages is that the left side represents errors.
+This makes `Either` inconvenient to use as a monad, especially as the convention in most functional languages is that the left side represents errors.
 
 `Xor` complies with convention and thus supports `map` and `flatMap` directly:
 
@@ -287,18 +166,14 @@ This makes `Either` incovenient to use as a monad, especially as the convention 
 
 ---
 
-The `Xor` object provides the `Xor.left` and `Xor.right` constructors as we saw above.
-
-However, it is usually more convenient to use smart constructors via the type class syntax pattern.
-
----
+The `Xor` object provides the `Xor.left` and `Xor.right` constructors as we saw above, as well as smart constructors via the type class syntax pattern:
 
 	!scala
 	import cats.syntax.xor._
 	val a = 3.right[String]
-	// a: cats.data.Xor[String,Int] = Right(3)
+	//a: cats.data.Xor[String,Int] = Right(3)
 	val b = 4.right[String]
-	// b: cats.data.Xor[String,Int] = Right(4)
+	//b: cats.data.Xor[String,Int] = Right(4)
 	for {
 		x <- a
 		y <- b
@@ -307,18 +182,7 @@ However, it is usually more convenient to use smart constructors via the type cl
 
 ---
 
-`Xor` also supports familiar additional methods like `fold`, `getOrElse`, and `orElse`.
-
-We use `fold` to convert a `Xor` to some other type, by supplying transform functions for the left and right sides:
-
-	!scala
-	1.right[String].fold(
-	  left  => s"FAIL!",
-	  right => s"SUCCESS: $right!"
-	)
-	//res3: String = SUCCESS: 1!
-
----
+`Xor` also supports familiar additional methods like `getOrElse`, and `orElse`.
 
 We can use `getOrElse` to extract the right value or return a default:
 
@@ -329,7 +193,6 @@ We can use `getOrElse` to extract the right value or return a default:
 	//res5: Int = 0
 
 ---
-
 
 Like `Either`, `Xor` is typically used to implement fail-fast error handling.
 
@@ -356,13 +219,13 @@ When using `Xor` for error handling, we need to determine what type we want to u
 
 This gives us similar semantics to `Try` from the Scala standard library.
 
-The problem, however, is that `Throwable` is an extremely broad supertype.
+The problem, however, is that `Throwable` is an extremely broad supertype, and we have little insight into what type of error occurred.
 
-We have little insight into what type of error occurred.
+Another approach is to define an algebraic data type to represent the types of error that can occur.
 
 ---
 
-Another approach is to define an algebraic data type to represent the types of error that can occur:
+#Example: Login Errors
 
 	!scala
 	case class User(username: String, password: String)
@@ -378,11 +241,9 @@ This approach solves the problems we saw with `Throwable`.
 
 It gives us a fixed set of expected error types and a catch-all for anything else that we didn’t expect.
 
-We also get the safety of exhaustive checking on any pattern matching we do.
-
 ---
 
-Now we get precise error-handling based on the error type:
+Now we get precise type checking on any pattern matching:
 
 	!scala
 	def handleError(error: LoginError): Unit = error match {
@@ -390,16 +251,14 @@ Now we get precise error-handling based on the error type:
 		case PasswordIncorrect(u) => println(s"Password: $u")
 		case _ : UnexpectedError => println(s"Unexpected error")
 	}
-	val result1: LoginResult = User("dave", "passw0rd").right
-	val result2: LoginResult = UserNotFound("dave").left
-	result1.fold(handleError, println)
-	//User(dave,passw0rd)
-	result2.fold(handleError, println)
-	//User not found: dave
+	User("cem3394", "passw0rd").right
+	//res0: Xor[Nothing,User] = Right(User(cem3394,passw0rd))
+	UserNotFound("cem3394").left
+	//res1: Xor[UserNotFound,Nothing] = Left(UserNotFound(cem3394))
 
 ---
 
-#`Cartesian`
+#Cartesian
 
 `Cartesian` is a type class that allows us to “tuple” values within a context.
 
@@ -425,25 +284,7 @@ The code below summons a type class instance for Option and uses it to zip two v
 
 ---
 
-#Exercise
-
-There is also a Cartesian instance for `List`. What do you think the following expression will evaluate to?
-
-	!scala
-	Cartesian[List].product(List(1,2), List(3,4))
-
-
----
-
----
-
-	!scala
-	Cartesian[List].product(List(1,2), List(3,4))
-	//res0: List[(Int, Int)] = List((1,3), (1,4), (2,3), (2,4))
-
----
-
-Its definition in Cats is:
+Its type class definition in Cats is:
 
 	!scala
 	trait Cartesian[F[_]] {
@@ -498,7 +339,6 @@ Next we'll look at a type (called an applicative) for which we can define `produ
 
 #Validated
 
-
 Recall that `Xor` is a monad, so its `product` is implemented in terms of `flatMap`.
 <br />
 <br />
@@ -524,6 +364,8 @@ However, if we try to combine two failed `Xors`, only the left-most errors are r
 	val d: ErrorOr[Nothing] = Xor.left(List("Fail 2"))
 	product(c,d)
 	//res1: ErrorOr[(Nothing, Nothing)] = Left(List(Fail 1))
+
+This is what is meant by 'failing fast'.
 
 ---
 
