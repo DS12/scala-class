@@ -675,6 +675,32 @@ Then we can use `NEL[A]` on the invalid side to accumulate the errors:
 
 ---
 
+
+We can convert back and forth between `Validated` and `Xor` using the `toXor` and `toValidated` methods:
+
+import cats.data.Xor
+"Badness".invalid[Int].toXor
+// res22: cats.data.Xor[String,Int] = Left(Badness)
+"Badness".invalid[Int].toXor.toValidated
+// res23: cats.data.Validated[String,Int] = Invalid(Badness)
+
+---
+
+This allows us to switch error-handling semantics on the fly:
+
+// Accumulate errors in an Xor:
+(
+Xor.left[List[String], Int](List("Fail 1")).toValidated |@| Xor.left[List[String], Int](List("Fail 2")).toValidated
+).tupled.toXor
+// res25: cats.data.Xor[List[String],(Int, Int)] = Left(List(Fail 1, Fail 2))
+// Sequence operations on Validated using flatMap:
+for {
+a <- Validated.invalid[List[String], Int](List("Fail 1")).toXor b <- Validated.invalid[List[String], Int](List("Fail 2")).toXor
+} yield (a, b)
+// res27: cats.data.Xor[List[String],(Int, Int)] = Left(List(Fail 1))
+
+---
+
 #Homework
 
 Finish reading Chapter 12 of _Functional Programming in Scala_ (12.6-12.8), and have a look at `Foldable` and `Traverse` in [*Cats*](https://github.com/typelevel/cats).

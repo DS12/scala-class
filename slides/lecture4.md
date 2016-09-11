@@ -383,11 +383,11 @@ Implement `sequence[A](a: List[Option[A]]): Option[List[A]]`.
 ---
 
     !scala
-    def sequence1[A](a: List[Option[A]]):
+    def sequence[A](a: List[Option[A]]):
       Option[List[A]] =
         a match {
           case Nil => Some(Nil)
-          case h :: t => h flatMap (hh => sequence1(t) map (hh :: _))
+          case h :: t => h flatMap (hh => sequence(t) map (hh :: _))
         }
 
 ---
@@ -421,7 +421,7 @@ Reimplement `traverse` so that it traverses the list only once.
 ---
 
     !scala
-    def traverse1[A, B] (a: List[A])(f: A => Option[B]):
+    def traverse[A, B] (a: List[A])(f: A => Option[B]):
       Option[List[B]] =
         a match {
           case Nil => Some(Nil)
@@ -433,7 +433,7 @@ Reimplement `traverse` so that it traverses the list only once.
 ---
 
     !scala
-    def traverse2[A, B] (a: List[A])(
+    def traverse[A, B] (a: List[A])(
 	  f: A => Option[B]): Option[List[B]] =
       a match {
         case Nil => Some(Nil)
@@ -445,9 +445,9 @@ Reimplement `traverse` so that it traverses the list only once.
 
 ---
 
-The fact that `traverse1` and `traverse2` are equivalent is a simple result of the Monad laws.
+The fact that the second two implementations of `traverse` are equivalent is a simple result of the associativity law for Monads.
 
-Note also that `traverse` is not equivalent to the other two, it uses only `map2` and is therefore an applicative functor.
+Note also that the first implementation of `traverse` is not equivalent to the other two, it uses only `map2` and is therefore an applicative (but not necessarily monadic) functor.
 
 We'll discuss this more in the weeks to come.
 
