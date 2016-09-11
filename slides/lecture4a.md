@@ -249,7 +249,7 @@ It gives us a fixed set of expected error types and a catch-all for anything els
 	UserNotFound("cem3394").left
 	//res1: Xor[UserNotFound,Nothing] = Left(UserNotFound(cem3394))
 	PasswordIncorrect("cem3394").left
-	//res2: PasswordIncorrect,Nothing] = Left(PasswordIncorrect(cem3394))
+	//res2: Xor[PasswordIncorrect,Nothing] = Left(PasswordIncorrect(cem3394))
 	
 ---
 
