@@ -1868,20 +1868,15 @@ If we model this with a monad like <code>Xor</code>, we fail fast and lose error
         <div class="slide has_code">
           <div class="inner">
             
+            <header><h1>Example: Parsing</h1></header>
             
-            <section><p>The situation is the same with for comprehensions. The code below fails on the first call to <code>parseInt</code> and doesn’t go any further:</p>
-<div class="highlight"><pre><span></span>
+            
+            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">parseInt</span><span class="o">(</span><span class="n">str</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span><span class="k">:</span> <span class="kt">String</span> <span class="kt">Xor</span> <span class="kt">Int</span> <span class="o">=</span>
+    <span class="nc">Xor</span><span class="o">.</span><span class="n">catchOnly</span><span class="o">[</span><span class="kt">NumberFormatException</span><span class="o">](</span><span class="n">str</span><span class="o">.</span><span class="n">toInt</span><span class="o">)</span>
+         <span class="o">.</span><span class="n">leftMap</span><span class="o">(</span><span class="k">_</span> <span class="k">=&gt;</span> <span class="s">s&quot;Couldn&#39;t read </span><span class="si">$str</span><span class="s">&quot;</span><span class="o">)</span>
+<span class="c1">//parseInt: (str: String)cats.data.Xor[String,Int]</span>
 </pre></div>
-
-<p>def parseInt(str: String): String Xor Int =     <br />
-    Xor.catchOnly<a href="str.toInt">NumberFormatException</a>
-       .leftMap(_ =&gt; s"Couldn't read $str")
-  for {
-    a &lt;- parseInt("a")
-    b &lt;- parseInt("b")
-    c &lt;- parseInt("c")
-  } yield (a + b + c)
-  //res0: Xor[String,Int] = Left(Couldn't read a)</p></section>
+</section>
             
           </div>
           <div class="presenter_notes">
@@ -1900,6 +1895,44 @@ If we model this with a monad like <code>Xor</code>, we fail fast and lose error
             
             <aside class="page_number">
               49/62
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><div class="highlight"><pre><span></span><span class="k">for</span> <span class="o">{</span>
+    <span class="n">a</span> <span class="k">&lt;-</span> <span class="n">parseInt</span><span class="o">(</span><span class="s">&quot;a&quot;</span><span class="o">)</span>
+    <span class="n">b</span> <span class="k">&lt;-</span> <span class="n">parseInt</span><span class="o">(</span><span class="s">&quot;b&quot;</span><span class="o">)</span>
+    <span class="n">c</span> <span class="k">&lt;-</span> <span class="n">parseInt</span><span class="o">(</span><span class="s">&quot;c&quot;</span><span class="o">)</span>
+<span class="o">}</span> <span class="k">yield</span> <span class="o">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">b</span> <span class="o">+</span> <span class="n">c</span><span class="o">)</span>
+<span class="c1">//res0: Xor[String,Int] = Left(Couldn&#39;t read a)</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4a.md">lecture4a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              50/62
             </aside>
 
           </footer>
@@ -1936,46 +1969,6 @@ This means Cats can provide an error-accumulating implementation of product for 
             </aside>
             
             <aside class="page_number">
-              50/62
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4a.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code">
-          <div class="inner">
-            
-            
-            <section><p><code>Validated</code> has two subtypes, <code>Validated.Valid</code> and <code>Validated.Invalid</code>, that correspond loosely to <code>Xor.Right</code> and <code>Xor.Left</code>.</p>
-<p>We can create instances directly using their <code>apply</code> methods:</p>
-<div class="highlight"><pre><span></span>
-</pre></div>
-
-<p>import cats.data.Validated
-  val v = Validated.Valid(123)
-  //v: cats.data.Validated.Valid[Int] = Valid(123)
-  val i = Validated.Invalid("oops")
-  //i: cats.data.Validated.Invalid[String] = Invalid(oops)</p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4a.md">lecture4a.md</a>
-            </aside>
-            
-            <aside class="page_number">
               51/62
             </aside>
 
@@ -1989,15 +1982,15 @@ This means Cats can provide an error-accumulating implementation of product for 
           <div class="inner">
             
             
-            <section><p>Again, it is better for type inference to use the <code>valid</code> and <code>invalid</code> smart constructors, which return a type of <code>Validated</code>:</p>
-<div class="highlight"><pre><span></span>
+            <section><p><code>Validated</code> has two subtypes, <code>Validated.Valid</code> and <code>Validated.Invalid</code>, that correspond to <code>Xor.Right</code> and <code>Xor.Left</code>.</p>
+<p>We can create instances directly using their <code>apply</code> methods:</p>
+<div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">cats.data.Validated</span>
+<span class="k">val</span> <span class="n">v</span> <span class="k">=</span> <span class="nc">Validated</span><span class="o">.</span><span class="nc">Valid</span><span class="o">(</span><span class="mi">123</span><span class="o">)</span>
+<span class="c1">//v: cats.data.Validated.Valid[Int] = Valid(123)</span>
+<span class="k">val</span> <span class="n">i</span> <span class="k">=</span> <span class="nc">Validated</span><span class="o">.</span><span class="nc">Invalid</span><span class="o">(</span><span class="s">&quot;oops&quot;</span><span class="o">)</span>
+<span class="c1">//i: cats.data.Validated.Invalid[String] = Invalid(oops)</span>
 </pre></div>
-
-<p>import Validated.{valid, invalid}
-  val v = valid<a href="123">String, Int</a>
-  //v: Validated[String,Int] = Valid(123)
-  val i = invalid<a href="" title="oops">String, Int</a>
-  //i: Validated[String,Int] = Invalid(oops)</p></section>
+</section>
             
           </div>
           <div class="presenter_notes">
@@ -2028,15 +2021,14 @@ This means Cats can provide an error-accumulating implementation of product for 
           <div class="inner">
             
             
-            <section><p>And again we can import enriched <code>valid</code> and <code>invalid</code> methods from <code>cats.syntax.validated</code> to get some syntactic sugar:</p>
-<div class="highlight"><pre><span></span>
+            <section><p>It is better for type inference to use smart constructors:</p>
+<div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">Validated.</span><span class="o">{</span><span class="n">valid</span><span class="o">,</span> <span class="n">invalid</span><span class="o">}</span>
+<span class="k">val</span> <span class="n">v</span> <span class="k">=</span> <span class="n">valid</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">Int</span><span class="o">](</span><span class="mi">123</span><span class="o">)</span>
+<span class="c1">//v: Validated[String,Int] = Valid(123)</span>
+<span class="k">val</span> <span class="n">i</span> <span class="k">=</span> <span class="n">invalid</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">Int</span><span class="o">](</span><span class="s">&quot;oops&quot;</span><span class="o">)</span>
+<span class="c1">//i: Validated[String,Int] = Invalid(oops)</span>
 </pre></div>
-
-<p>import cats.syntax.validated._
-  123.valid[String]
-  //res0: Validated[String,Int] = Valid(123)
-  "message".invalid[Int]
-  //res1: Validated[String,Int] = Invalid(message)</p></section>
+</section>
             
           </div>
           <div class="presenter_notes">
@@ -2067,11 +2059,12 @@ This means Cats can provide an error-accumulating implementation of product for 
           <div class="inner">
             
             
-            <section><p>A toy implementation of <code>Validated</code>:</p>
-<div class="highlight"><pre><span></span><span class="k">sealed</span> <span class="k">trait</span> <span class="nc">Validated</span><span class="o">[</span><span class="kt">+E</span>, <span class="kt">+A</span><span class="o">]</span>
-<span class="nc">case</span> <span class="k">class</span> <span class="nc">Invalid</span><span class="o">[</span><span class="kt">E</span><span class="o">](</span><span class="n">head</span><span class="k">:</span> <span class="kt">E</span><span class="o">,</span> <span class="n">tail</span><span class="k">:</span> <span class="kt">Vector</span><span class="o">[</span><span class="kt">E</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Vector</span><span class="o">())</span>
-  <span class="k">extends</span> <span class="nc">Validated</span><span class="o">[</span><span class="kt">E</span>, <span class="kt">Nothing</span><span class="o">]</span>
-<span class="k">case</span> <span class="k">class</span> <span class="nc">Valid</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">a</span><span class="k">:</span> <span class="kt">A</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">Validated</span><span class="o">[</span><span class="kt">Nothing</span>, <span class="kt">A</span><span class="o">]</span>
+            <section><p>And again we can import enriched <code>valid</code> and <code>invalid</code> methods from <code>cats.syntax.validated</code>:</p>
+<div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">cats.syntax.validated._</span>
+<span class="mf">123.</span><span class="n">valid</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span>
+<span class="c1">//res0: Validated[String,Int] = Valid(123)</span>
+<span class="s">&quot;oops&quot;</span><span class="o">.</span><span class="n">invalid</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span>
+<span class="c1">//res1: Validated[String,Int] = Invalid(oops)</span>
 </pre></div>
 </section>
             
@@ -2106,7 +2099,6 @@ This means Cats can provide an error-accumulating implementation of product for 
             
             <section><p>Unlike the <code>Xor</code>’s monad, which cuts the calculation short, <code>Validated</code> keeps going to report back all failures.</p>
 <div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">cats.data.Validated</span>
-<span class="k">import</span> <span class="nn">cats.instances.list._</span>
 <span class="k">import</span> <span class="nn">cats.syntax.cartesian._</span>
 <span class="k">type</span> <span class="kt">ErrorOr</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Validated</span><span class="o">[</span><span class="kt">String</span>,<span class="kt">A</span><span class="o">]</span>
 <span class="k">val</span> <span class="n">a</span><span class="k">:</span> <span class="kt">ErrorOr</span><span class="o">[</span><span class="kt">Nothing</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Validated</span><span class="o">.</span><span class="nc">Invalid</span><span class="o">(</span><span class="s">&quot;foo&quot;</span><span class="o">)</span>
@@ -2145,7 +2137,7 @@ This means Cats can provide an error-accumulating implementation of product for 
           <div class="inner">
             
             
-            <section><p>Validated accumulates errors using a <code>Semigroup</code> (the append part of a <code>Monoid</code>).</p>
+            <section><p>Similar to <code>Writer</code>, <code>Validated</code> accumulates errors using a <code>Semigroup</code> (the append part of a <code>Monoid</code>).</p>
 <p>This means we can use any <code>Monoid</code> as an error type, including <code>String</code>, <code>List</code>, and <code>Vector</code>, as well as pure semigroups like <code>NonEmptyList</code>s.</p></section>
             
           </div>
@@ -2691,7 +2683,7 @@ This means Cats can provide an error-accumulating implementation of product for 
       
       
       <tr id="toc-row-49">
-        <th><a href="#slide49">-</a></th>
+        <th><a href="#slide49">Example: Parsing</a></th>
         <td><a href="#slide49">49</a></td>
       </tr>
       
