@@ -95,7 +95,7 @@ http://danielwestheide.com/blog/2012/12/26/the-neophytes-guide-to-scala-part-6-e
             </aside>
             
             <aside class="page_number">
-              1/62
+              1/50
             </aside>
 
           </footer>
@@ -130,7 +130,7 @@ http://danielwestheide.com/blog/2012/12/26/the-neophytes-guide-to-scala-part-6-e
             </aside>
             
             <aside class="page_number">
-              2/62
+              2/50
             </aside>
 
           </footer>
@@ -143,8 +143,8 @@ http://danielwestheide.com/blog/2012/12/26/the-neophytes-guide-to-scala-part-6-e
           <div class="inner">
             
             
-            <section><div class="highlight"><pre><span></span><span class="k">trait</span> <span class="nc">Either</span><span class="o">[</span><span class="kt">+E</span>,<span class="kt">+A</span><span class="o">]</span>
-<span class="nc">case</span> <span class="k">class</span> <span class="nc">Left</span><span class="o">[</span><span class="kt">+E</span><span class="o">](</span><span class="n">e</span><span class="k">:</span> <span class="kt">E</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">Either</span><span class="o">[</span><span class="kt">E</span>, <span class="kt">Nothing</span><span class="o">]</span>
+            <section><div class="highlight"><pre><span></span><span class="k">trait</span> <span class="nc">Either</span><span class="o">[</span><span class="kt">+E</span>,<span class="kt">+A</span><span class="o">]</span> <span class="c1">//base trait</span>
+<span class="k">case</span> <span class="k">class</span> <span class="nc">Left</span><span class="o">[</span><span class="kt">+E</span><span class="o">](</span><span class="n">e</span><span class="k">:</span> <span class="kt">E</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">Either</span><span class="o">[</span><span class="kt">E</span>, <span class="kt">Nothing</span><span class="o">]</span>
 <span class="k">case</span> <span class="k">class</span> <span class="nc">Right</span><span class="o">[</span><span class="kt">+A</span><span class="o">](</span><span class="n">a</span><span class="k">:</span> <span class="kt">A</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">Either</span><span class="o">[</span><span class="kt">Nothing</span>, <span class="kt">A</span><span class="o">]</span>
 </pre></div>
 
@@ -166,7 +166,7 @@ http://danielwestheide.com/blog/2012/12/26/the-neophytes-guide-to-scala-part-6-e
             </aside>
             
             <aside class="page_number">
-              3/62
+              3/50
             </aside>
 
           </footer>
@@ -181,8 +181,7 @@ http://danielwestheide.com/blog/2012/12/26/the-neophytes-guide-to-scala-part-6-e
             
             <section><p>A <code>Left</code> instance of <code>Either</code> will have <code>Nothing</code> for its "right" type.</p>
 <p>A <code>Right</code> instance of <code>Either</code> will have <code>Nothing</code> for its "left" type.</p>
-<p>The generic letter for the "left" type is "E" because it is usually a subtype of Java's <code>Exception</code>.</p>
-<p>Given an <code>Either[Exception, Integer]</code>, these combinators only let me operate on the <code>Integer</code>.  They are <em>right-biased</em>.</p></section>
+<p>The generic letter for the "left" type is "E" because it is usually a subtype of Java's <code>Exception</code>.</p></section>
             
           </div>
           <div class="presenter_notes">
@@ -200,7 +199,7 @@ http://danielwestheide.com/blog/2012/12/26/the-neophytes-guide-to-scala-part-6-e
             </aside>
             
             <aside class="page_number">
-              4/62
+              4/50
             </aside>
 
           </footer>
@@ -215,16 +214,15 @@ http://danielwestheide.com/blog/2012/12/26/the-neophytes-guide-to-scala-part-6-e
             
             <section><div class="highlight"><pre><span></span><span class="k">trait</span> <span class="nc">Either</span><span class="o">[</span><span class="kt">+E</span>,<span class="kt">+A</span><span class="o">]</span> <span class="o">{</span>
  <span class="k">def</span> <span class="n">map</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="n">B</span><span class="o">)</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">E</span>, <span class="kt">B</span><span class="o">]</span> <span class="k">=</span>
-   <span class="k">this</span> <span class="k">match</span> <span class="o">{</span>
-     <span class="k">case</span> <span class="nc">Right</span><span class="o">(</span><span class="n">a</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nc">Right</span><span class="o">(</span><span class="n">f</span><span class="o">(</span><span class="n">a</span><span class="o">))</span>
+    <span class="k">this</span> <span class="k">match</span> <span class="o">{</span>
      <span class="k">case</span> <span class="nc">Left</span><span class="o">(</span><span class="n">e</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nc">Left</span><span class="o">(</span><span class="n">e</span><span class="o">)</span>
-   <span class="o">}</span>
-
+     <span class="k">case</span> <span class="nc">Right</span><span class="o">(</span><span class="n">a</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nc">Right</span><span class="o">(</span><span class="n">f</span><span class="o">(</span><span class="n">a</span><span class="o">))</span>
+    <span class="o">}</span>
  <span class="k">def</span> <span class="n">flatMap</span><span class="o">[</span><span class="kt">EE</span> <span class="k">&gt;:</span> <span class="kt">E</span>, <span class="kt">B</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="nc">Either</span><span class="o">[</span><span class="kt">EE</span>, <span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">EE</span>, <span class="kt">B</span><span class="o">]</span> <span class="k">=</span>
-   <span class="k">this</span> <span class="k">match</span> <span class="o">{</span>
+    <span class="k">this</span> <span class="k">match</span> <span class="o">{</span>
      <span class="k">case</span> <span class="nc">Left</span><span class="o">(</span><span class="n">e</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nc">Left</span><span class="o">(</span><span class="n">e</span><span class="o">)</span>
      <span class="k">case</span> <span class="nc">Right</span><span class="o">(</span><span class="n">a</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">f</span><span class="o">(</span><span class="n">a</span><span class="o">)</span>
-   <span class="o">}</span>
+    <span class="o">}</span>
 <span class="o">}</span>
 </pre></div>
 </section>
@@ -245,7 +243,7 @@ http://danielwestheide.com/blog/2012/12/26/the-neophytes-guide-to-scala-part-6-e
             </aside>
             
             <aside class="page_number">
-              5/62
+              5/50
             </aside>
 
           </footer>
@@ -257,18 +255,13 @@ http://danielwestheide.com/blog/2012/12/26/the-neophytes-guide-to-scala-part-6-e
         <div class="slide has_code">
           <div class="inner">
             
-            <header><h1>Lower Type Bound Generics</h1></header>
+            <header><h1>Lower Type Bounds</h1></header>
             
             
-            <section><p>(Lower Type Bounds)</p>
-<p>Last lecture, we left unexplained the "the necessity of the lower type bound generic <code>B</code> in the <code>getOrElse</code> and <code>orElse</code> combinators."</p>
+            <section><p>In chapter 4 of FPS, the authors note the necessity of the lower type bound generic <code>B</code> in the <code>getOrElse</code> and <code>orElse</code> combinators.</p>
 <div class="highlight"><pre><span></span><span class="k">trait</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">+A</span><span class="o">]</span> <span class="o">{</span>
-  <span class="o">.</span>
-  <span class="o">.</span>
-  <span class="o">.</span>
-  <span class="k">def</span> <span class="n">getOrElse</span><span class="o">[</span><span class="kt">B</span> <span class="k">&gt;:</span> <span class="kt">A</span><span class="o">](</span><span class="n">default</span><span class="k">:</span> <span class="o">=&gt;</span> <span class="n">B</span><span class="o">)</span><span class="k">:</span> <span class="kt">B</span>
-  <span class="k">def</span> <span class="n">orElse</span><span class="o">[</span><span class="kt">B</span> <span class="k">&gt;:</span> <span class="kt">A</span><span class="o">](</span><span class="n">ob</span><span class="k">:</span> <span class="o">=&gt;</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span>
-  <span class="o">.</span>
+    <span class="k">def</span> <span class="n">getOrElse</span><span class="o">[</span><span class="kt">B</span> <span class="k">&gt;:</span> <span class="kt">A</span><span class="o">](</span><span class="n">default</span><span class="k">:</span> <span class="o">=&gt;</span> <span class="n">B</span><span class="o">)</span><span class="k">:</span> <span class="kt">B</span>
+    <span class="k">def</span> <span class="n">orElse</span><span class="o">[</span><span class="kt">B</span> <span class="k">&gt;:</span> <span class="kt">A</span><span class="o">](</span><span class="n">ob</span><span class="k">:</span> <span class="o">=&gt;</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span>
 <span class="o">}</span>
 </pre></div>
 </section>
@@ -289,90 +282,7 @@ http://danielwestheide.com/blog/2012/12/26/the-neophytes-guide-to-scala-part-6-e
             </aside>
             
             <aside class="page_number">
-              6/62
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4a.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code">
-          <div class="inner">
-            
-            
-            <section><p>Here, in <code>Either</code>, we see the same pattern; lower type bound generic <code>EE</code>:</p>
-<div class="highlight"><pre><span></span><span class="k">sealed</span> <span class="k">trait</span> <span class="nc">Either</span><span class="o">[</span><span class="kt">+E</span>,<span class="kt">+A</span><span class="o">]</span> <span class="o">{</span>
-  <span class="o">.</span>
-  <span class="o">.</span>
-  <span class="o">.</span>
-  <span class="k">def</span> <span class="n">flatMap</span><span class="o">[</span><span class="kt">EE</span> <span class="k">&gt;:</span> <span class="kt">E</span>, <span class="kt">B</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="nc">Either</span><span class="o">[</span><span class="kt">EE</span>, <span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">EE</span>, <span class="kt">B</span><span class="o">]</span>
-
-  <span class="c1">// This combinator has two lower type bound generics:</span>
-
-  <span class="k">def</span> <span class="n">orElse</span><span class="o">[</span><span class="kt">EE</span> <span class="k">&gt;:</span> <span class="kt">E</span>, <span class="kt">B</span> <span class="k">&gt;:</span> <span class="kt">A</span><span class="o">](</span><span class="n">b</span><span class="k">:</span> <span class="o">=&gt;</span> <span class="nc">Either</span><span class="o">[</span><span class="kt">EE</span>, <span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">EE</span>, <span class="kt">B</span><span class="o">]</span>
-  <span class="o">.</span>
-  <span class="o">.</span>
-<span class="o">}</span>
-</pre></div>
-</section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4a.md">lecture4a.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              7/62
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4a.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code">
-          <div class="inner">
-            
-            
-            <section><p>First, the explanation for the lower type bound generic in <code>getOrElse</code> and <code>orElse</code> of <code>Option</code>.</p>
-<p>An instance of <code>Some[A]</code> is an <code>Option[A]</code>.</p>
-<p>The<sup>*</sup> instance of <code>None</code> is an <code>Option[Nothing]</code>.</p>
-<div class="highlight"><pre><span></span><span class="k">case</span> <span class="k">class</span> <span class="nc">Some</span><span class="o">[</span><span class="kt">+A</span><span class="o">](</span><span class="n">get</span><span class="k">:</span> <span class="kt">A</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span>
-<span class="k">case</span> <span class="k">object</span> <span class="nc">None</span> <span class="k">extends</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">Nothing</span><span class="o">]</span>
-</pre></div>
-
-<p>* There is only a single instance of <code>None</code>, as it is an <code>object</code>.</p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4a.md">lecture4a.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              8/62
+              6/50
             </aside>
 
           </footer>
@@ -385,14 +295,9 @@ http://danielwestheide.com/blog/2012/12/26/the-neophytes-guide-to-scala-part-6-e
           <div class="inner">
             
             
-            <section><p><a href="http://www.scala-lang.org/api/current/index.html#scala.Nothing"><code>Nothing</code></a> is "at the bottom of Scala's type hierarchy.  <code>Nothing</code> is a subtype of every other type."</p>
-<p>So <code>Nothing &lt;: A</code>.</p>
-<p>This explains why an <code>Option[Integer]</code> can be:</p>
-<ul>
-<li><code>Some[Integer]</code> (<code>=:= Option[Integer]</code>)</li>
-<li><code>None</code> (<code>=:= Option[Nothing]</code>)</li>
-</ul>
-<p>Next stop, explanation of the necessity of this for <code>getOrElse</code> and <code>orElse</code>:</p></section>
+            <section><p><code>B &gt;: A</code> is a <a href="http://docs.scala-lang.org/tutorials/tour/lower-type-bounds.html"><em>lower type bound</em></a>;</p>
+<p>Generic <code>B</code> can be a supertype of <code>A</code>, or an equal type to <code>A</code>.</p>
+<p>It is likely you will use <a href="http://docs.scala-lang.org/tutorials/tour/upper-type-bounds.html"><em>upper type bounds</em></a> more frequently.</p></section>
             
           </div>
           <div class="presenter_notes">
@@ -410,7 +315,75 @@ http://danielwestheide.com/blog/2012/12/26/the-neophytes-guide-to-scala-part-6-e
             </aside>
             
             <aside class="page_number">
-              9/62
+              7/50
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>An instance of <code>Some[A]</code> is an <code>Option[A]</code>.</p>
+<p>The instance of <code>None</code> is an <code>Option[Nothing]</code>.</p>
+<div class="highlight"><pre><span></span><span class="k">case</span> <span class="k">class</span> <span class="nc">Some</span><span class="o">[</span><span class="kt">+A</span><span class="o">](</span><span class="n">get</span><span class="k">:</span> <span class="kt">A</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span>
+<span class="k">case</span> <span class="k">object</span> <span class="nc">None</span> <span class="k">extends</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">Nothing</span><span class="o">]</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4a.md">lecture4a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              8/50
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p><a href="http://www.scala-lang.org/api/current/index.html#scala.Nothing"><code>Nothing</code></a> is at the bottom of Scala's type hierarchy, i.e. <code>Nothing &lt;: A</code> for all types <code>A</code>.</p>
+<p>Since <code>Option</code> is covariant, an <code>Option[Nothing]</code> can be an <code>Option[A]</code> for all types <code>A</code>.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4a.md">lecture4a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              9/50
             </aside>
 
           </footer>
@@ -430,8 +403,7 @@ http://danielwestheide.com/blog/2012/12/26/the-neophytes-guide-to-scala-part-6-e
 <p>if not for the lower type bound generic <code>B &gt;: A</code>, <code>getOrElse</code> would be limited to this signature when called on <code>failed</code>:</p>
 <div class="highlight"><pre><span></span><span class="n">getOrElse</span><span class="o">(</span><span class="n">default</span><span class="k">:</span> <span class="o">=&gt;</span> <span class="nc">Nothing</span><span class="o">)</span><span class="k">:</span> <span class="kt">Nothing</span>
 </pre></div>
-
-<p>Not very useful.</p></section>
+</section>
             
           </div>
           <div class="presenter_notes">
@@ -449,7 +421,7 @@ http://danielwestheide.com/blog/2012/12/26/the-neophytes-guide-to-scala-part-6-e
             </aside>
             
             <aside class="page_number">
-              10/62
+              10/50
             </aside>
 
           </footer>
@@ -464,140 +436,6 @@ http://danielwestheide.com/blog/2012/12/26/the-neophytes-guide-to-scala-part-6-e
             
             <section><p>With <code>B &gt;: A</code>, <code>getOrElse</code> on <code>failed</code> becomes:</p>
 <div class="highlight"><pre><span></span><span class="n">getOrElse</span><span class="o">[</span><span class="kt">B</span> <span class="k">&gt;:</span> <span class="kt">Nothing</span><span class="o">](</span><span class="n">default</span><span class="k">:</span> <span class="o">=&gt;</span> <span class="n">B</span><span class="o">)</span><span class="k">:</span> <span class="kt">B</span>
-</pre></div>
-
-<p>More useful.</p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4a.md">lecture4a.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              11/62
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4a.md -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            
-            <section><p><code>B &gt;: A</code> is a <a href="http://docs.scala-lang.org/tutorials/tour/lower-type-bounds.html"><em>lower type bound</em></a>;</p>
-<p>Generic <code>B</code> can be a supertype of <code>A</code>, or an equal type to <code>A</code>.</p>
-<p>It is likely you will use <a href="http://docs.scala-lang.org/tutorials/tour/upper-type-bounds.html"><em>upper type bounds</em></a> more frequently.  I think their use cases are less convoluted, as well.</p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4a.md">lecture4a.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              12/62
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4a.md -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            
-            <section><p><code>Option[Nothing] &lt;: Option[A]</code> and the <code>+</code> before the generic is called <a href="https://twitter.github.io/scala_school/type-basics.html#variance"><em>covariance</em></a>.</p>
-<p>Lacking the <code>+</code> prefix to its generic type, <code>Option</code> would be <em>invariant</em> and <code>Option[Nothing] &lt;: Option[A]</code> would be <em>false</em>.  This is default.</p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4a.md">lecture4a.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              13/62
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4a.md -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            
-            <section><p>If the generic inside <code>List</code> is covariant, then:</p>
-<p>"If <code>X</code> is a subtype of <code>Y</code>, then <code>List[X]</code> is a subtype of <code>List[Y]</code>." -- <em>FP in Scala</em>, section 3.1</p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4a.md">lecture4a.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              14/62
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4a.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code">
-          <div class="inner">
-            
-            
-            <section><p>The same explanation of the necessity of the lower type bound generic holds for <code>Either</code>.</p>
-<p>An instance of <code>Left</code> still has a "right" type: <code>Nothing</code>, and vice versa for an instance of <code>Right</code>:</p>
-<div class="highlight"><pre><span></span><span class="k">case</span> <span class="k">class</span> <span class="nc">Left</span><span class="o">[</span><span class="kt">+E</span><span class="o">](</span><span class="n">e</span><span class="k">:</span> <span class="kt">E</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">Either</span><span class="o">[</span><span class="kt">E</span>, <span class="kt">Nothing</span><span class="o">]</span>
-<span class="k">case</span> <span class="k">class</span> <span class="nc">Right</span><span class="o">[</span><span class="kt">+A</span><span class="o">](</span><span class="n">a</span><span class="k">:</span> <span class="kt">A</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">Either</span><span class="o">[</span><span class="kt">Nothing</span>, <span class="kt">A</span><span class="o">]</span>
 </pre></div>
 </section>
             
@@ -617,7 +455,7 @@ http://danielwestheide.com/blog/2012/12/26/the-neophytes-guide-to-scala-part-6-e
             </aside>
             
             <aside class="page_number">
-              15/62
+              11/50
             </aside>
 
           </footer>
@@ -630,7 +468,8 @@ http://danielwestheide.com/blog/2012/12/26/the-neophytes-guide-to-scala-part-6-e
           <div class="inner">
             
             
-            <section><p>If not for the lower type bound generic <code>EE</code>, <code>flatMap</code> would be limited to this signature when called an a instance of <code>Left</code>:</p>
+            <section><p>The same explanation of the necessity of the lower type bound generic holds for <code>Either</code>.</p>
+<p>If not for the lower type bound generic <code>EE</code>, <code>flatMap</code> would be limited to this signature when called on an instance of <code>Left</code>:</p>
 <div class="highlight"><pre><span></span><span class="n">flatMap</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="nc">Either</span><span class="o">[</span><span class="kt">Nothing</span>, <span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">Nothing</span>, <span class="kt">B</span><span class="o">]</span>
 </pre></div>
 </section>
@@ -651,7 +490,7 @@ http://danielwestheide.com/blog/2012/12/26/the-neophytes-guide-to-scala-part-6-e
             </aside>
             
             <aside class="page_number">
-              16/62
+              12/50
             </aside>
 
           </footer>
@@ -666,7 +505,6 @@ http://danielwestheide.com/blog/2012/12/26/the-neophytes-guide-to-scala-part-6-e
             
             <section><p>Why would you need to call <code>flatMap</code> on an instance of <code>Left</code>?</p>
 <p>Because at run-time your <code>Either</code> may not be a <code>Right</code> as you expected; it may be a <code>Left</code>.</p>
-<p>At run-time, an <code>Either</code> may be instantiated as a <code>Left</code> or <code>Right</code>.</p>
 <p>But at compile-time, the combinators must type-check for either way this could go.</p></section>
             
           </div>
@@ -685,127 +523,7 @@ http://danielwestheide.com/blog/2012/12/26/the-neophytes-guide-to-scala-part-6-e
             </aside>
             
             <aside class="page_number">
-              17/62
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4a.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code">
-          <div class="inner">
-            
-            
-            <section><p>Type checking at compile-time needs to verify the types <em>"line up"</em>
-if <code>eitherA</code> is <code>Left</code> or <code>Right</code>, if <code>eitherB</code> is <code>Left</code> or <code>Right</code>, etc.:</p>
-<div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">eitherA</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">Exception</span>, <span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="o">...</span>
-<span class="k">val</span> <span class="n">eitherB</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">Exception</span>, <span class="kt">B</span><span class="o">]</span> <span class="k">=</span> <span class="o">...</span>
-<span class="k">val</span> <span class="n">eitherC</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">Exception</span>, <span class="kt">C</span><span class="o">]</span> <span class="k">=</span> <span class="o">...</span>
-<span class="k">def</span> <span class="n">f</span><span class="o">(</span><span class="n">a</span><span class="k">:</span> <span class="kt">A</span><span class="o">,</span> <span class="n">b</span><span class="k">:</span> <span class="kt">B</span><span class="o">,</span> <span class="n">c</span><span class="k">:</span> <span class="kt">C</span><span class="o">)</span><span class="k">:</span> <span class="kt">D</span> <span class="o">=</span> <span class="o">...</span>
-<span class="k">val</span> <span class="n">eitherD</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">Exception</span>, <span class="kt">D</span><span class="o">]</span> <span class="k">=</span>
-  <span class="n">eitherA</span><span class="o">.</span><span class="n">flatMap</span> <span class="o">{</span> <span class="n">a</span> <span class="k">=&gt;</span>
-    <span class="n">eitherB</span><span class="o">.</span><span class="n">flatMap</span> <span class="o">{</span> <span class="n">b</span> <span class="k">=&gt;</span>
-          <span class="n">eitherC</span><span class="o">.</span><span class="n">map</span> <span class="o">{</span> <span class="n">c</span> <span class="k">=&gt;</span>
-            <span class="n">f</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">,</span> <span class="n">c</span><span class="o">)</span>
-      <span class="o">}</span>
-  <span class="o">}</span>
-</pre></div>
-
-<p>}</p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4a.md">lecture4a.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              18/62
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4a.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code">
-          <div class="inner">
-            
-            
-            <section><p>Note that in the prior example, the input <code>Either</code>s were not dependent upon each other.</p>
-<p>An example that makes explicit use of the monadic nature of <code>Either</code>;</p>
-<div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">eitherD</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">Exception</span>, <span class="kt">D</span><span class="o">]</span> <span class="k">=</span>
-  <span class="n">eitherA</span><span class="o">.</span><span class="n">flatMap</span><span class="o">(</span><span class="n">eitherB</span><span class="o">).</span><span class="n">flatMap</span><span class="o">(</span><span class="n">eitherC</span><span class="o">)</span>
-</pre></div>
-</section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4a.md">lecture4a.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              19/62
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4a.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code">
-          <div class="inner">
-            
-            
-            <section><p><code>Try</code> from the previous lecture, rewritten for <code>Either</code></p>
-<div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">scala.util.control.NonFatal</span>
-
-<span class="k">def</span> <span class="n">tryEither</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">a</span><span class="k">:</span> <span class="o">=&gt;</span> <span class="n">A</span><span class="o">)</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">Throwable</span>, <span class="kt">A</span><span class="o">]</span> <span class="k">=</span>
-  <span class="k">try</span> <span class="o">{</span> <span class="nc">Right</span><span class="o">(</span><span class="n">a</span><span class="o">)</span> <span class="o">}</span>
-  <span class="k">catch</span> <span class="o">{</span> <span class="k">case</span> <span class="nc">NonFatal</span><span class="o">(</span><span class="n">throwable</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nc">Left</span><span class="o">(</span><span class="n">throwable</span><span class="o">)</span> <span class="o">}</span>
-</pre></div>
-</section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4a.md">lecture4a.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              20/62
+              13/50
             </aside>
 
           </footer>
@@ -817,43 +535,10 @@ if <code>eitherA</code> is <code>Left</code> or <code>Right</code>, if <code>eit
         <div class="slide">
           <div class="inner">
             
-            <header><h1><code>Xor</code></h1></header>
+            <header><h1>Xor</h1></header>
             
             
-            <section><p><code>Xor</code> is the first concrete data type we’ve seen in Cats.</p>
-<p>Cats provides numerous other data types, all of which exist in the [cats.data][cats.data] package.</p>
-<p>Other examples include the <code>Validated</code> type that we will see shortly.</p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4a.md">lecture4a.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              21/62
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4a.md -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            
-            <section><p>The Scala standard library already has a type <a href="http://www.scala-lang.org/api/current/#scala.util.Either">Either</a>. Cats provides an alternative in <code>cats.data.Xor</code>.</p>
+            <section><p>Cats provides an alternative to the Scala standard library's  <a href="http://www.scala-lang.org/api/current/#scala.util.Either">Either</a> in <code>cats.data.Xor</code>.</p>
 <p>Why have this?</p></section>
             
           </div>
@@ -872,7 +557,7 @@ if <code>eitherA</code> is <code>Left</code> or <code>Right</code>, if <code>eit
             </aside>
             
             <aside class="page_number">
-              22/62
+              14/50
             </aside>
 
           </footer>
@@ -885,7 +570,7 @@ if <code>eitherA</code> is <code>Left</code> or <code>Right</code>, if <code>eit
           <div class="inner">
             
             
-            <section><p>Aside from providing a few useful methods, the main reason is that <code>Either</code> is unbiased.</p>
+            <section><p>The main reason is that <code>Either</code> is unbiased.</p>
 <p>This means we must first use projection (<code>.left</code> or <code>.right</code>) to access <code>flatMap</code>, <code>map</code>, etc.:</p>
 <div class="highlight"><pre><span></span><span class="nc">Right</span><span class="o">(</span><span class="mi">123</span><span class="o">).</span><span class="n">flatMap</span><span class="o">(</span><span class="n">x</span> <span class="k">=&gt;</span> <span class="nc">Right</span><span class="o">(</span><span class="n">x</span> <span class="o">*</span> <span class="mi">2</span><span class="o">))</span>
 <span class="c1">//error: value flatMap is not a member of scala.util.Right[Nothing,Int]</span>
@@ -910,7 +595,7 @@ if <code>eitherA</code> is <code>Left</code> or <code>Right</code>, if <code>eit
             </aside>
             
             <aside class="page_number">
-              23/62
+              15/50
             </aside>
 
           </footer>
@@ -923,7 +608,7 @@ if <code>eitherA</code> is <code>Left</code> or <code>Right</code>, if <code>eit
           <div class="inner">
             
             
-            <section><p>This makes <code>Either</code> incovenient to use as a monad, especially as the convention in most functional languages is that the left side represents errors.</p>
+            <section><p>This makes <code>Either</code> inconvenient to use as a monad, especially as the convention in most functional languages is that the left side represents errors.</p>
 <p><code>Xor</code> complies with convention and thus supports <code>map</code> and <code>flatMap</code> directly:</p>
 <div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">cats.data.Xor</span>
 <span class="k">val</span> <span class="n">a</span> <span class="k">=</span> <span class="nc">Xor</span><span class="o">.</span><span class="nc">Right</span><span class="o">(</span><span class="mi">1</span><span class="o">)</span>
@@ -949,39 +634,7 @@ if <code>eitherA</code> is <code>Left</code> or <code>Right</code>, if <code>eit
             </aside>
             
             <aside class="page_number">
-              24/62
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4a.md -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            
-            <section><p>The <code>Xor</code> object provides the <code>Xor.left</code> and <code>Xor.right</code> constructors as we saw above.</p>
-<p>However, it is usually more convenient to use smart constructors via the type class syntax pattern.</p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4a.md">lecture4a.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              25/62
+              16/50
             </aside>
 
           </footer>
@@ -994,11 +647,12 @@ if <code>eitherA</code> is <code>Left</code> or <code>Right</code>, if <code>eit
           <div class="inner">
             
             
-            <section><div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">cats.syntax.xor._</span>
+            <section><p>The <code>Xor</code> object provides the <code>Xor.left</code> and <code>Xor.right</code> constructors as we saw above, as well as smart constructors via the type class syntax pattern:</p>
+<div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">cats.syntax.xor._</span>
 <span class="k">val</span> <span class="n">a</span> <span class="k">=</span> <span class="mf">3.</span><span class="n">right</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span>
-<span class="c1">// a: cats.data.Xor[String,Int] = Right(3)</span>
+<span class="c1">//a: cats.data.Xor[String,Int] = Right(3)</span>
 <span class="k">val</span> <span class="n">b</span> <span class="k">=</span> <span class="mf">4.</span><span class="n">right</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span>
-<span class="c1">// b: cats.data.Xor[String,Int] = Right(4)</span>
+<span class="c1">//b: cats.data.Xor[String,Int] = Right(4)</span>
 <span class="k">for</span> <span class="o">{</span>
     <span class="n">x</span> <span class="k">&lt;-</span> <span class="n">a</span>
     <span class="n">y</span> <span class="k">&lt;-</span> <span class="n">b</span>
@@ -1023,7 +677,7 @@ if <code>eitherA</code> is <code>Left</code> or <code>Right</code>, if <code>eit
             </aside>
             
             <aside class="page_number">
-              26/62
+              17/50
             </aside>
 
           </footer>
@@ -1036,46 +690,8 @@ if <code>eitherA</code> is <code>Left</code> or <code>Right</code>, if <code>eit
           <div class="inner">
             
             
-            <section><p><code>Xor</code> also supports familiar additional methods like <code>fold</code>, <code>getOrElse</code>, and <code>orElse</code>.</p>
-<p>We use <code>fold</code> to convert a <code>Xor</code> to some other type, by supplying transform functions for the left and right sides:</p>
-<div class="highlight"><pre><span></span><span class="mf">1.</span><span class="n">right</span><span class="o">[</span><span class="kt">String</span><span class="o">].</span><span class="n">fold</span><span class="o">(</span>
-  <span class="n">left</span>  <span class="k">=&gt;</span> <span class="s">s&quot;FAIL!&quot;</span><span class="o">,</span>
-  <span class="n">right</span> <span class="k">=&gt;</span> <span class="s">s&quot;SUCCESS: </span><span class="si">$right</span><span class="s">!&quot;</span>
-<span class="o">)</span>
-<span class="c1">//res3: String = SUCCESS: 1!</span>
-</pre></div>
-</section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4a.md">lecture4a.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              27/62
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4a.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code">
-          <div class="inner">
-            
-            
-            <section><p>We can use <code>getOrElse</code> to extract the right value or return a default:</p>
+            <section><p><code>Xor</code> also supports familiar additional methods like <code>getOrElse</code>, and <code>orElse</code>.</p>
+<p>We can use <code>getOrElse</code> to extract the right value or return a default:</p>
 <div class="highlight"><pre><span></span><span class="mf">1.</span><span class="n">right</span><span class="o">[</span><span class="kt">String</span><span class="o">].</span><span class="n">getOrElse</span><span class="o">(</span><span class="mi">0</span><span class="o">)</span>
 <span class="c1">//res4: Int = 1</span>
 <span class="s">&quot;Error&quot;</span><span class="o">.</span><span class="n">left</span><span class="o">[</span><span class="kt">Int</span><span class="o">].</span><span class="n">getOrElse</span><span class="o">(</span><span class="mi">0</span><span class="o">)</span>
@@ -1099,7 +715,7 @@ if <code>eitherA</code> is <code>Left</code> or <code>Right</code>, if <code>eit
             </aside>
             
             <aside class="page_number">
-              28/62
+              18/50
             </aside>
 
           </footer>
@@ -1139,7 +755,7 @@ if <code>eitherA</code> is <code>Left</code> or <code>Right</code>, if <code>eit
             </aside>
             
             <aside class="page_number">
-              29/62
+              19/50
             </aside>
 
           </footer>
@@ -1175,7 +791,7 @@ if <code>eitherA</code> is <code>Left</code> or <code>Right</code>, if <code>eit
             </aside>
             
             <aside class="page_number">
-              30/62
+              20/50
             </aside>
 
           </footer>
@@ -1189,8 +805,8 @@ if <code>eitherA</code> is <code>Left</code> or <code>Right</code>, if <code>eit
             
             
             <section><p>This gives us similar semantics to <code>Try</code> from the Scala standard library.</p>
-<p>The problem, however, is that <code>Throwable</code> is an extremely broad supertype.</p>
-<p>We have little insight into what type of error occurred.</p></section>
+<p>The problem, however, is that <code>Throwable</code> is an extremely broad supertype, and we have little insight into what type of error occurred.</p>
+<p>Another approach is to define an algebraic data type to represent the types of error that can occur.</p></section>
             
           </div>
           <div class="presenter_notes">
@@ -1208,7 +824,7 @@ if <code>eitherA</code> is <code>Left</code> or <code>Right</code>, if <code>eit
             </aside>
             
             <aside class="page_number">
-              31/62
+              21/50
             </aside>
 
           </footer>
@@ -1220,9 +836,10 @@ if <code>eitherA</code> is <code>Left</code> or <code>Right</code>, if <code>eit
         <div class="slide has_code">
           <div class="inner">
             
+            <header><h1>Example: Login Errors</h1></header>
             
-            <section><p>Another approach is to define an algebraic data type to represent the types of error that can occur:</p>
-<div class="highlight"><pre><span></span><span class="k">case</span> <span class="k">class</span> <span class="nc">User</span><span class="o">(</span><span class="n">username</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">password</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
+            
+            <section><div class="highlight"><pre><span></span><span class="k">case</span> <span class="k">class</span> <span class="nc">User</span><span class="o">(</span><span class="n">username</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">password</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
 <span class="k">sealed</span> <span class="k">trait</span> <span class="nc">LoginError</span>
 <span class="k">case</span> <span class="k">class</span> <span class="nc">UserNotFound</span><span class="o">(</span><span class="n">username</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">LoginError</span>
 <span class="k">case</span> <span class="k">class</span> <span class="nc">PasswordIncorrect</span><span class="o">(</span><span class="n">username</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">LoginError</span>
@@ -1247,7 +864,7 @@ if <code>eitherA</code> is <code>Left</code> or <code>Right</code>, if <code>eit
             </aside>
             
             <aside class="page_number">
-              32/62
+              22/50
             </aside>
 
           </footer>
@@ -1261,8 +878,7 @@ if <code>eitherA</code> is <code>Left</code> or <code>Right</code>, if <code>eit
             
             
             <section><p>This approach solves the problems we saw with <code>Throwable</code>.</p>
-<p>It gives us a fixed set of expected error types and a catch-all for anything else that we didn’t expect.</p>
-<p>We also get the safety of exhaustive checking on any pattern matching we do.</p></section>
+<p>It gives us a fixed set of expected error types and a catch-all for anything else that we didn’t expect.</p></section>
             
           </div>
           <div class="presenter_notes">
@@ -1280,7 +896,7 @@ if <code>eitherA</code> is <code>Left</code> or <code>Right</code>, if <code>eit
             </aside>
             
             <aside class="page_number">
-              33/62
+              23/50
             </aside>
 
           </footer>
@@ -1293,18 +909,16 @@ if <code>eitherA</code> is <code>Left</code> or <code>Right</code>, if <code>eit
           <div class="inner">
             
             
-            <section><p>Now we get precise error-handling based on the error type:</p>
+            <section><p>Now we get precise type checking on any pattern matching:</p>
 <div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">handleError</span><span class="o">(</span><span class="n">error</span><span class="k">:</span> <span class="kt">LoginError</span><span class="o">)</span><span class="k">:</span> <span class="kt">Unit</span> <span class="o">=</span> <span class="n">error</span> <span class="k">match</span> <span class="o">{</span>
     <span class="k">case</span> <span class="nc">UserNotFound</span><span class="o">(</span><span class="n">u</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">println</span><span class="o">(</span><span class="s">s&quot;User not found: </span><span class="si">$u</span><span class="s">&quot;</span><span class="o">)</span>
     <span class="k">case</span> <span class="nc">PasswordIncorrect</span><span class="o">(</span><span class="n">u</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">println</span><span class="o">(</span><span class="s">s&quot;Password: </span><span class="si">$u</span><span class="s">&quot;</span><span class="o">)</span>
     <span class="k">case</span> <span class="k">_</span> <span class="k">:</span> <span class="kt">UnexpectedError</span> <span class="o">=&gt;</span> <span class="n">println</span><span class="o">(</span><span class="s">s&quot;Unexpected error&quot;</span><span class="o">)</span>
 <span class="o">}</span>
-<span class="k">val</span> <span class="n">result1</span><span class="k">:</span> <span class="kt">LoginResult</span> <span class="o">=</span> <span class="nc">User</span><span class="o">(</span><span class="s">&quot;dave&quot;</span><span class="o">,</span> <span class="s">&quot;passw0rd&quot;</span><span class="o">).</span><span class="n">right</span>
-<span class="k">val</span> <span class="n">result2</span><span class="k">:</span> <span class="kt">LoginResult</span> <span class="o">=</span> <span class="nc">UserNotFound</span><span class="o">(</span><span class="s">&quot;dave&quot;</span><span class="o">).</span><span class="n">left</span>
-<span class="n">result1</span><span class="o">.</span><span class="n">fold</span><span class="o">(</span><span class="n">handleError</span><span class="o">,</span> <span class="n">println</span><span class="o">)</span>
-<span class="c1">//User(dave,passw0rd)</span>
-<span class="n">result2</span><span class="o">.</span><span class="n">fold</span><span class="o">(</span><span class="n">handleError</span><span class="o">,</span> <span class="n">println</span><span class="o">)</span>
-<span class="c1">//User not found: dave</span>
+<span class="nc">User</span><span class="o">(</span><span class="s">&quot;cem3394&quot;</span><span class="o">,</span> <span class="s">&quot;passw0rd&quot;</span><span class="o">).</span><span class="n">right</span>
+<span class="c1">//res0: Xor[Nothing,User] = Right(User(cem3394,passw0rd))</span>
+<span class="nc">UserNotFound</span><span class="o">(</span><span class="s">&quot;cem3394&quot;</span><span class="o">).</span><span class="n">left</span>
+<span class="c1">//res1: Xor[UserNotFound,Nothing] = Left(UserNotFound(cem3394))</span>
 </pre></div>
 </section>
             
@@ -1324,7 +938,7 @@ if <code>eitherA</code> is <code>Left</code> or <code>Right</code>, if <code>eit
             </aside>
             
             <aside class="page_number">
-              34/62
+              24/50
             </aside>
 
           </footer>
@@ -1336,7 +950,7 @@ if <code>eitherA</code> is <code>Left</code> or <code>Right</code>, if <code>eit
         <div class="slide">
           <div class="inner">
             
-            <header><h1><code>Cartesian</code></h1></header>
+            <header><h1>Cartesian</h1></header>
             
             
             <section><p><code>Cartesian</code> is a type class that allows us to “tuple” values within a context.</p>
@@ -1359,7 +973,7 @@ if <code>eitherA</code> is <code>Left</code> or <code>Right</code>, if <code>eit
             </aside>
             
             <aside class="page_number">
-              35/62
+              25/50
             </aside>
 
           </footer>
@@ -1402,68 +1016,7 @@ if <code>eitherA</code> is <code>Left</code> or <code>Right</code>, if <code>eit
             </aside>
             
             <aside class="page_number">
-              36/62
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4a.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code">
-          <div class="inner">
-            
-            <header><h1>Exercise</h1></header>
-            
-            
-            <section><p>There is also a Cartesian instance for <code>List</code>. What do you think the following expression will evaluate to?</p>
-<div class="highlight"><pre><span></span><span class="nc">Cartesian</span><span class="o">[</span><span class="kt">List</span><span class="o">].</span><span class="n">product</span><span class="o">(</span><span class="nc">List</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span><span class="mi">2</span><span class="o">),</span> <span class="nc">List</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span><span class="mi">4</span><span class="o">))</span>
-</pre></div>
-</section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4a.md">lecture4a.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              37/62
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source:  -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="page_number">
-              /62
+              26/50
             </aside>
 
           </footer>
@@ -1476,41 +1029,7 @@ if <code>eitherA</code> is <code>Left</code> or <code>Right</code>, if <code>eit
           <div class="inner">
             
             
-            <section><div class="highlight"><pre><span></span><span class="nc">Cartesian</span><span class="o">[</span><span class="kt">List</span><span class="o">].</span><span class="n">product</span><span class="o">(</span><span class="nc">List</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span><span class="mi">2</span><span class="o">),</span> <span class="nc">List</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span><span class="mi">4</span><span class="o">))</span>
-<span class="c1">//res0: List[(Int, Int)] = List((1,3), (1,4), (2,3), (2,4))</span>
-</pre></div>
-</section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4a.md">lecture4a.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              38/62
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4a.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code">
-          <div class="inner">
-            
-            
-            <section><p>Its definition in Cats is:</p>
+            <section><p>Its type class definition in Cats is:</p>
 <div class="highlight"><pre><span></span><span class="k">trait</span> <span class="nc">Cartesian</span><span class="o">[</span><span class="kt">F</span><span class="o">[</span><span class="k">_</span><span class="o">]]</span> <span class="o">{</span>
     <span class="k">def</span> <span class="n">product</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">](</span><span class="n">fa</span><span class="k">:</span> <span class="kt">F</span><span class="o">[</span><span class="kt">A</span><span class="o">],</span> <span class="n">fb</span><span class="k">:</span> <span class="kt">F</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">F</span><span class="o">[(</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">)]</span>
 <span class="o">}</span>
@@ -1533,7 +1052,7 @@ if <code>eitherA</code> is <code>Left</code> or <code>Right</code>, if <code>eit
             </aside>
             
             <aside class="page_number">
-              39/62
+              27/50
             </aside>
 
           </footer>
@@ -1570,7 +1089,7 @@ if <code>eitherA</code> is <code>Left</code> or <code>Right</code>, if <code>eit
             </aside>
             
             <aside class="page_number">
-              40/62
+              28/50
             </aside>
 
           </footer>
@@ -1612,7 +1131,7 @@ if <code>eitherA</code> is <code>Left</code> or <code>Right</code>, if <code>eit
             </aside>
             
             <aside class="page_number">
-              41/62
+              29/50
             </aside>
 
           </footer>
@@ -1644,7 +1163,7 @@ if <code>eitherA</code> is <code>Left</code> or <code>Right</code>, if <code>eit
             </aside>
             
             <aside class="page_number">
-              42/62
+              30/50
             </aside>
 
           </footer>
@@ -1676,7 +1195,7 @@ if <code>eitherA</code> is <code>Left</code> or <code>Right</code>, if <code>eit
             </aside>
             
             <aside class="page_number">
-              43/62
+              31/50
             </aside>
 
           </footer>
@@ -1708,7 +1227,7 @@ if <code>eitherA</code> is <code>Left</code> or <code>Right</code>, if <code>eit
             </aside>
             
             <aside class="page_number">
-              44/62
+              32/50
             </aside>
 
           </footer>
@@ -1744,7 +1263,7 @@ Let's experiment with this for a bit.</p></section>
             </aside>
             
             <aside class="page_number">
-              45/62
+              33/50
             </aside>
 
           </footer>
@@ -1782,7 +1301,7 @@ Let's experiment with this for a bit.</p></section>
             </aside>
             
             <aside class="page_number">
-              46/62
+              34/50
             </aside>
 
           </footer>
@@ -1801,7 +1320,8 @@ Let's experiment with this for a bit.</p></section>
 <span class="n">product</span><span class="o">(</span><span class="n">c</span><span class="o">,</span><span class="n">d</span><span class="o">)</span>
 <span class="c1">//res1: ErrorOr[(Nothing, Nothing)] = Left(List(Fail 1))</span>
 </pre></div>
-</section>
+
+<p>This is what is meant by 'failing fast'.</p></section>
             
           </div>
           <div class="presenter_notes">
@@ -1819,7 +1339,7 @@ Let's experiment with this for a bit.</p></section>
             </aside>
             
             <aside class="page_number">
-              47/62
+              35/50
             </aside>
 
           </footer>
@@ -1856,7 +1376,7 @@ If we model this with a monad like <code>Xor</code>, we fail fast and lose error
             </aside>
             
             <aside class="page_number">
-              48/62
+              36/50
             </aside>
 
           </footer>
@@ -1894,7 +1414,7 @@ If we model this with a monad like <code>Xor</code>, we fail fast and lose error
             </aside>
             
             <aside class="page_number">
-              49/62
+              37/50
             </aside>
 
           </footer>
@@ -1907,7 +1427,8 @@ If we model this with a monad like <code>Xor</code>, we fail fast and lose error
           <div class="inner">
             
             
-            <section><div class="highlight"><pre><span></span><span class="k">for</span> <span class="o">{</span>
+            <section><p>The situation is the same with for comprehensions. The code below fails on the first call to <code>parseInt</code> and doesn’t go any further:</p>
+<div class="highlight"><pre><span></span><span class="k">for</span> <span class="o">{</span>
     <span class="n">a</span> <span class="k">&lt;-</span> <span class="n">parseInt</span><span class="o">(</span><span class="s">&quot;a&quot;</span><span class="o">)</span>
     <span class="n">b</span> <span class="k">&lt;-</span> <span class="n">parseInt</span><span class="o">(</span><span class="s">&quot;b&quot;</span><span class="o">)</span>
     <span class="n">c</span> <span class="k">&lt;-</span> <span class="n">parseInt</span><span class="o">(</span><span class="s">&quot;c&quot;</span><span class="o">)</span>
@@ -1932,7 +1453,7 @@ If we model this with a monad like <code>Xor</code>, we fail fast and lose error
             </aside>
             
             <aside class="page_number">
-              50/62
+              38/50
             </aside>
 
           </footer>
@@ -1969,7 +1490,7 @@ This means Cats can provide an error-accumulating implementation of product for 
             </aside>
             
             <aside class="page_number">
-              51/62
+              39/50
             </aside>
 
           </footer>
@@ -2008,7 +1529,7 @@ This means Cats can provide an error-accumulating implementation of product for 
             </aside>
             
             <aside class="page_number">
-              52/62
+              40/50
             </aside>
 
           </footer>
@@ -2046,7 +1567,7 @@ This means Cats can provide an error-accumulating implementation of product for 
             </aside>
             
             <aside class="page_number">
-              53/62
+              41/50
             </aside>
 
           </footer>
@@ -2084,7 +1605,7 @@ This means Cats can provide an error-accumulating implementation of product for 
             </aside>
             
             <aside class="page_number">
-              54/62
+              42/50
             </aside>
 
           </footer>
@@ -2124,7 +1645,7 @@ This means Cats can provide an error-accumulating implementation of product for 
             </aside>
             
             <aside class="page_number">
-              55/62
+              43/50
             </aside>
 
           </footer>
@@ -2156,7 +1677,7 @@ This means Cats can provide an error-accumulating implementation of product for 
             </aside>
             
             <aside class="page_number">
-              56/62
+              44/50
             </aside>
 
           </footer>
@@ -2196,7 +1717,7 @@ This means Cats can provide an error-accumulating implementation of product for 
             </aside>
             
             <aside class="page_number">
-              57/62
+              45/50
             </aside>
 
           </footer>
@@ -2236,7 +1757,7 @@ This means Cats can provide an error-accumulating implementation of product for 
             </aside>
             
             <aside class="page_number">
-              58/62
+              46/50
             </aside>
 
           </footer>
@@ -2276,7 +1797,7 @@ This means Cats can provide an error-accumulating implementation of product for 
             </aside>
             
             <aside class="page_number">
-              59/62
+              47/50
             </aside>
 
           </footer>
@@ -2309,7 +1830,7 @@ This means Cats can provide an error-accumulating implementation of product for 
             </aside>
             
             <aside class="page_number">
-              60/62
+              48/50
             </aside>
 
           </footer>
@@ -2346,7 +1867,7 @@ This means Cats can provide an error-accumulating implementation of product for 
             </aside>
             
             <aside class="page_number">
-              61/62
+              49/50
             </aside>
 
           </footer>
@@ -2379,7 +1900,7 @@ This means Cats can provide an error-accumulating implementation of product for 
             </aside>
             
             <aside class="page_number">
-              62/62
+              50/50
             </aside>
 
           </footer>
@@ -2425,7 +1946,7 @@ This means Cats can provide an error-accumulating implementation of product for 
       
       
       <tr id="toc-row-6">
-        <th><a href="#slide6">Lower Type Bound Generics</a></th>
+        <th><a href="#slide6">Lower Type Bounds</a></th>
         <td><a href="#slide6">6</a></td>
       </tr>
       
@@ -2473,7 +1994,7 @@ This means Cats can provide an error-accumulating implementation of product for 
       
       
       <tr id="toc-row-14">
-        <th><a href="#slide14">-</a></th>
+        <th><a href="#slide14">Xor</a></th>
         <td><a href="#slide14">14</a></td>
       </tr>
       
@@ -2515,13 +2036,13 @@ This means Cats can provide an error-accumulating implementation of product for 
       
       
       <tr id="toc-row-21">
-        <th><a href="#slide21"><code>Xor</code></a></th>
+        <th><a href="#slide21">-</a></th>
         <td><a href="#slide21">21</a></td>
       </tr>
       
       
       <tr id="toc-row-22">
-        <th><a href="#slide22">-</a></th>
+        <th><a href="#slide22">Example: Login Errors</a></th>
         <td><a href="#slide22">22</a></td>
       </tr>
       
@@ -2539,13 +2060,13 @@ This means Cats can provide an error-accumulating implementation of product for 
       
       
       <tr id="toc-row-25">
-        <th><a href="#slide25">-</a></th>
+        <th><a href="#slide25">Cartesian</a></th>
         <td><a href="#slide25">25</a></td>
       </tr>
       
       
       <tr id="toc-row-26">
-        <th><a href="#slide26">-</a></th>
+        <th><a href="#slide26">Example: Combining Options</a></th>
         <td><a href="#slide26">26</a></td>
       </tr>
       
@@ -2587,7 +2108,7 @@ This means Cats can provide an error-accumulating implementation of product for 
       
       
       <tr id="toc-row-33">
-        <th><a href="#slide33">-</a></th>
+        <th><a href="#slide33">Validated</a></th>
         <td><a href="#slide33">33</a></td>
       </tr>
       
@@ -2599,19 +2120,19 @@ This means Cats can provide an error-accumulating implementation of product for 
       
       
       <tr id="toc-row-35">
-        <th><a href="#slide35"><code>Cartesian</code></a></th>
+        <th><a href="#slide35">-</a></th>
         <td><a href="#slide35">35</a></td>
       </tr>
       
       
       <tr id="toc-row-36">
-        <th><a href="#slide36">Example: Combining Options</a></th>
+        <th><a href="#slide36">-</a></th>
         <td><a href="#slide36">36</a></td>
       </tr>
       
       
       <tr id="toc-row-37">
-        <th><a href="#slide37">Exercise</a></th>
+        <th><a href="#slide37">Example: Parsing</a></th>
         <td><a href="#slide37">37</a></td>
       </tr>
       
@@ -2659,7 +2180,7 @@ This means Cats can provide an error-accumulating implementation of product for 
       
       
       <tr id="toc-row-45">
-        <th><a href="#slide45">Validated</a></th>
+        <th><a href="#slide45">-</a></th>
         <td><a href="#slide45">45</a></td>
       </tr>
       
@@ -2683,86 +2204,14 @@ This means Cats can provide an error-accumulating implementation of product for 
       
       
       <tr id="toc-row-49">
-        <th><a href="#slide49">Example: Parsing</a></th>
+        <th><a href="#slide49">-</a></th>
         <td><a href="#slide49">49</a></td>
       </tr>
       
       
       <tr id="toc-row-50">
-        <th><a href="#slide50">-</a></th>
+        <th><a href="#slide50">Homework</a></th>
         <td><a href="#slide50">50</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-51">
-        <th><a href="#slide51">-</a></th>
-        <td><a href="#slide51">51</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-52">
-        <th><a href="#slide52">-</a></th>
-        <td><a href="#slide52">52</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-53">
-        <th><a href="#slide53">-</a></th>
-        <td><a href="#slide53">53</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-54">
-        <th><a href="#slide54">-</a></th>
-        <td><a href="#slide54">54</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-55">
-        <th><a href="#slide55">-</a></th>
-        <td><a href="#slide55">55</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-56">
-        <th><a href="#slide56">-</a></th>
-        <td><a href="#slide56">56</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-57">
-        <th><a href="#slide57">-</a></th>
-        <td><a href="#slide57">57</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-58">
-        <th><a href="#slide58">-</a></th>
-        <td><a href="#slide58">58</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-59">
-        <th><a href="#slide59">-</a></th>
-        <td><a href="#slide59">59</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-60">
-        <th><a href="#slide60">-</a></th>
-        <td><a href="#slide60">60</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-61">
-        <th><a href="#slide61">-</a></th>
-        <td><a href="#slide61">61</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-62">
-        <th><a href="#slide62">Homework</a></th>
-        <td><a href="#slide62">62</a></td>
       </tr>
       
       
