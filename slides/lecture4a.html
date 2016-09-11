@@ -25,7 +25,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Lecture 4a: Either, Validation and <a href="https://github.com/typelevel/cats"><em>Cats</em></a></title>
+    <title>Lecture 4a: Either, Xor, and Validated</title>
     <!-- Styles -->
     
     <link rel="stylesheet" media="print" href="theme/css/print.css">
@@ -39,6 +39,21 @@
     
     
     <!-- /Javascripts -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          processEscapes: true
+        },
+        "HTML-CSS": { availableFonts: ["TeX"] }
+      });
+    </script>
+    <script type="text/javascript"
+        src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
 </head>
 <body style="!important;">
   <div id="blank"></div>
@@ -53,7 +68,7 @@
         <div class="slide">
           <div class="inner">
             
-            <header><h1>Lecture 4a: Either, Validation and <a href="https://github.com/typelevel/cats"><em>Cats</em></a></h1></header>
+            <header><h1>Lecture 4a: Either, Xor, and Validated</h1></header>
             
             
             <section><p><img alt="" src="images/lecture4a/cats.png" /></p>
@@ -80,7 +95,7 @@ http://danielwestheide.com/blog/2012/12/26/the-neophytes-guide-to-scala-part-6-e
             </aside>
             
             <aside class="page_number">
-              1/45
+              1/62
             </aside>
 
           </footer>
@@ -95,10 +110,9 @@ http://danielwestheide.com/blog/2012/12/26/the-neophytes-guide-to-scala-part-6-e
             <header><h1>Either</h1></header>
             
             
-            <section><p><code>Either</code> is a "chained container" that holds one of two things.</p>
-<p>Like <code>Option</code>, the possible value inside this chained container can be accessed with <code>flatMap</code>.</p>
-<p>Like a set of <code>Option</code>s, a set of <code>Eithers</code> can be chained together with a sequence of <code>flatMap</code>s.</p>
-<p><code>Either</code> solves our problem from the previous lecture of <code>Option</code>'s uninformative <code>None</code>.</p></section>
+            <section><p><code>Either</code>, like <code>Option</code> is a monadic container that can hold one of two things.</p>
+<p><code>Option</code> has only one generic type: <code>Some</code></p>
+<p><code>Either</code> has two generic types: left/incorrect and right/correct.</p></section>
             
           </div>
           <div class="presenter_notes">
@@ -116,39 +130,7 @@ http://danielwestheide.com/blog/2012/12/26/the-neophytes-guide-to-scala-part-6-e
             </aside>
             
             <aside class="page_number">
-              2/45
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4a.md -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            
-            <section><p>The <code>Option</code> trait had two concrete children: <code>Some</code> and <code>None</code>.  Think of <code>Some</code> as the "right" type and <code>None</code> as the "left" type.  <code>Option</code> has only one generic type.  <code>Either</code> has two generic types: left/incorrect and right/correct.</p>
-<p><code>Either</code> is not just used for catching errors, just like <code>None</code> in <code>Option</code> is not always a "bad thing."</p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4a.md">lecture4a.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              3/45
+              2/62
             </aside>
 
           </footer>
@@ -166,9 +148,41 @@ http://danielwestheide.com/blog/2012/12/26/the-neophytes-guide-to-scala-part-6-e
 <span class="k">case</span> <span class="k">class</span> <span class="nc">Right</span><span class="o">[</span><span class="kt">+A</span><span class="o">](</span><span class="n">a</span><span class="k">:</span> <span class="kt">A</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">Either</span><span class="o">[</span><span class="kt">Nothing</span>, <span class="kt">A</span><span class="o">]</span>
 </pre></div>
 
-<p>A <code>Left</code> instance of <code>Either</code> will have <code>Nothing</code> for its "right" type.</p>
+<p>The left side of <code>Either</code> is <em>typically</em> an <code>Exception</code> of some form, and is usually intended to be the "end of the chain."  </p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4a.md">lecture4a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              3/62
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>A <code>Left</code> instance of <code>Either</code> will have <code>Nothing</code> for its "right" type.</p>
 <p>A <code>Right</code> instance of <code>Either</code> will have <code>Nothing</code> for its "left" type.</p>
-<p>The generic letter for the "left" type is "E" because it is usually a subtype of Java's <code>Exception</code>.</p></section>
+<p>The generic letter for the "left" type is "E" because it is usually a subtype of Java's <code>Exception</code>.</p>
+<p>Given an <code>Either[Exception, Integer]</code>, these combinators only let me operate on the <code>Integer</code>.  They are <em>right-biased</em>.</p></section>
             
           </div>
           <div class="presenter_notes">
@@ -186,98 +200,7 @@ http://danielwestheide.com/blog/2012/12/26/the-neophytes-guide-to-scala-part-6-e
             </aside>
             
             <aside class="page_number">
-              4/45
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4a.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code">
-          <div class="inner">
-            
-            <header><h1>A few familiar combinators</h1></header>
-            
-            
-            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">map</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="n">B</span><span class="o">)</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">E</span>, <span class="kt">B</span><span class="o">]</span>
-<span class="k">def</span> <span class="n">flatMap</span><span class="o">[</span><span class="kt">EE</span> <span class="k">&gt;:</span> <span class="kt">E</span>, <span class="kt">B</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="nc">Either</span><span class="o">[</span><span class="kt">EE</span>, <span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">EE</span>, <span class="kt">B</span><span class="o">]</span>
-</pre></div>
-
-<p>Given an <code>Either[Exception, Integer]</code>, these combinators only let me operate on the <code>Integer</code>.  They are <em>right-biased</em>.</p>
-<p>Usually, we intend to "fail fast" whenever an <code>Either</code> becomes <code>Left[Exception]</code>.</p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4a.md">lecture4a.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              5/45
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4a.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code">
-          <div class="inner">
-            
-            <header><h1>Usage of <code>Either</code> will resemble this</h1></header>
-            
-            
-            <section><p>Given a set of <code>Either</code>s:</p>
-<div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">eitherA</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">Exception</span>, <span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="o">...</span>
-<span class="k">val</span> <span class="n">eitherB</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">Exception</span>, <span class="kt">B</span><span class="o">]</span> <span class="k">=</span> <span class="o">...</span>
-<span class="k">val</span> <span class="n">eitherC</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">Exception</span>, <span class="kt">C</span><span class="o">]</span> <span class="k">=</span> <span class="o">...</span>
-</pre></div>
-
-<p>a function to produce a <code>D</code>:</p>
-<div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">f</span><span class="o">(</span><span class="n">a</span><span class="k">:</span> <span class="kt">A</span><span class="o">,</span> <span class="n">b</span><span class="k">:</span> <span class="kt">B</span><span class="o">,</span> <span class="n">c</span><span class="k">:</span> <span class="kt">C</span><span class="o">)</span><span class="k">:</span> <span class="kt">D</span> <span class="o">=</span> <span class="o">...</span>
-</pre></div>
-
-<p>and a sequence of <code>flatMap</code>s:</p>
-<div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">eitherD</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">Exception</span>, <span class="kt">D</span><span class="o">]</span> <span class="k">=</span> 
-  <span class="n">eitherA</span><span class="o">.</span><span class="n">flatMap</span> <span class="o">{</span> <span class="n">a</span> <span class="k">=&gt;</span>
-    <span class="n">eitherB</span><span class="o">.</span><span class="n">flatMap</span> <span class="o">{</span> <span class="n">b</span> <span class="k">=&gt;</span>
-      <span class="n">eitherC</span><span class="o">.</span><span class="n">map</span> <span class="o">{</span> <span class="n">c</span> <span class="k">=&gt;</span>
-        <span class="n">f</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">,</span> <span class="n">c</span><span class="o">)</span>
-      <span class="o">}</span>
-    <span class="o">}</span>
-  <span class="o">}</span>
-</pre></div>
-</section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4a.md">lecture4a.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              6/45
+              4/62
             </aside>
 
           </footer>
@@ -290,260 +213,20 @@ http://danielwestheide.com/blog/2012/12/26/the-neophytes-guide-to-scala-part-6-e
           <div class="inner">
             
             
-            <section><p>Given:</p>
-<div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">eitherRecord1</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">Exception</span>, <span class="kt">Record</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Right</span><span class="o">(</span><span class="n">record</span><span class="o">)</span>
-<span class="k">val</span> <span class="n">eitherRecord2</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">Exception</span>, <span class="kt">Record</span><span class="o">]</span> <span class="k">=</span>
-  <span class="nc">Left</span><span class="o">(</span><span class="nc">RetrievalException</span><span class="o">(</span><span class="s">&quot;retrieval of Record2 failed&quot;</span><span class="o">))</span>
-<span class="k">val</span> <span class="n">record3</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">Exception</span>, <span class="kt">Record</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Right</span><span class="o">(</span><span class="n">record3</span><span class="o">)</span>
-</pre></div>
+            <section><div class="highlight"><pre><span></span><span class="k">trait</span> <span class="nc">Either</span><span class="o">[</span><span class="kt">+E</span>,<span class="kt">+A</span><span class="o">]</span> <span class="o">{</span>
+ <span class="k">def</span> <span class="n">map</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="n">B</span><span class="o">)</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">E</span>, <span class="kt">B</span><span class="o">]</span> <span class="k">=</span>
+   <span class="k">this</span> <span class="k">match</span> <span class="o">{</span>
+     <span class="k">case</span> <span class="nc">Right</span><span class="o">(</span><span class="n">a</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nc">Right</span><span class="o">(</span><span class="n">f</span><span class="o">(</span><span class="n">a</span><span class="o">))</span>
+     <span class="k">case</span> <span class="nc">Left</span><span class="o">(</span><span class="n">e</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nc">Left</span><span class="o">(</span><span class="n">e</span><span class="o">)</span>
+   <span class="o">}</span>
 
-<p>a function to produce a <code>Collection</code>:</p>
-<div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">makeCollection</span><span class="o">(</span><span class="n">r1</span><span class="k">:</span> <span class="kt">Record</span><span class="o">,</span> <span class="n">r2</span><span class="k">:</span> <span class="kt">Record</span><span class="o">,</span> <span class="n">r3</span><span class="k">:</span> <span class="kt">Record</span><span class="o">)</span><span class="k">:</span> <span class="kt">Collection</span> <span class="o">=</span> <span class="o">...</span>
-</pre></div>
-
-<p>and a sequence of <code>flatMap</code>s:</p>
-<div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">eitherCollection</span> <span class="k">=</span> <span class="n">eitherRecord1</span><span class="o">.</span><span class="n">flatMap</span> <span class="o">{</span> <span class="n">record1</span> <span class="k">=&gt;</span>
-  <span class="n">eitherRecord2</span><span class="o">.</span><span class="n">flatMap</span> <span class="o">{</span> <span class="n">record2</span> <span class="k">=&gt;</span>
-    <span class="n">eitherRecord3</span><span class="o">.</span><span class="n">flatMap</span> <span class="o">{</span> <span class="n">record3</span> <span class="k">=&gt;</span>
-      <span class="n">makeCollection</span><span class="o">(</span><span class="n">record1</span><span class="o">,</span> <span class="n">record2</span><span class="o">,</span> <span class="n">record3</span><span class="o">)</span>
-    <span class="o">}</span>
-  <span class="o">}</span>
-<span class="o">}</span>
-
-<span class="k">val</span> <span class="n">eitherCollection</span> <span class="k">=</span> 
-  <span class="nc">Left</span><span class="o">(</span><span class="nc">RetrievalException</span><span class="o">(</span><span class="s">&quot;retrieval of Record2 failed&quot;</span><span class="o">))</span>
-</pre></div>
-</section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4a.md">lecture4a.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              7/45
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4a.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code">
-          <div class="inner">
-            
-            
-            <section><p>Did the prior two examples make full use of "chaining"?  Were the prior examples "sequential"?  No on all counts.  The input <code>Either</code>s were not dependent upon each other.</p>
-<p>An example that makes better use of "chaining";
-given types <code>A</code>, <code>B</code>, <code>C</code>, and <code>D</code>:</p>
-<div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">eitherA</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">Exception</span>, <span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="o">...</span>
-<span class="k">def</span> <span class="n">eitherB</span><span class="o">(</span><span class="n">a</span><span class="k">:</span> <span class="kt">A</span><span class="o">)</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">Exception</span>, <span class="kt">B</span><span class="o">]</span> <span class="k">=</span> <span class="o">...</span>
-<span class="k">def</span> <span class="n">eitherC</span><span class="o">(</span><span class="n">b</span><span class="k">:</span> <span class="kt">B</span><span class="o">)</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">Exception</span>, <span class="kt">C</span><span class="o">]</span> <span class="k">=</span> <span class="o">...</span>
-<span class="k">def</span> <span class="n">eitherD</span><span class="o">(</span><span class="n">c</span><span class="k">:</span> <span class="kt">C</span><span class="o">)</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">Exception</span>, <span class="kt">D</span><span class="o">]</span> <span class="k">=</span> <span class="o">...</span>
-</pre></div>
-
-<p>and a sequence of <code>flatMap</code>s:</p>
-<div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">eitherD</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">Exception</span>, <span class="kt">D</span><span class="o">]</span> <span class="k">=</span> 
-  <span class="n">eitherA</span><span class="o">.</span><span class="n">flatMap</span> <span class="o">{</span> <span class="o">(</span><span class="n">a</span><span class="k">:</span> <span class="kt">A</span><span class="o">)</span> <span class="k">=&gt;</span>
-    <span class="n">eitherB</span><span class="o">(</span><span class="n">a</span><span class="o">).</span><span class="n">flatMap</span> <span class="o">{</span> <span class="o">(</span><span class="n">b</span><span class="k">:</span> <span class="kt">B</span><span class="o">)</span> <span class="k">=&gt;</span>
-      <span class="n">eitherC</span><span class="o">(</span><span class="n">b</span><span class="o">).</span><span class="n">flatMap</span> <span class="o">{</span> <span class="o">(</span><span class="n">c</span><span class="k">:</span> <span class="kt">C</span><span class="o">)</span> <span class="k">=&gt;</span>
-        <span class="n">eitherD</span><span class="o">(</span><span class="n">c</span><span class="o">)</span>
-    <span class="o">}</span>
-  <span class="o">}</span>
-<span class="c1">// three anonymous functions used here</span>
-</pre></div>
-</section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4a.md">lecture4a.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              8/45
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4a.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code">
-          <div class="inner">
-            
-            
-            <section><p>The anonymous functions used in the "chain" on the previous slide are actually redundant.</p>
-<p><code>=:=</code> is type eqivalency</p>
-<div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">eitherB</span><span class="o">(</span><span class="n">a</span><span class="k">:</span> <span class="kt">A</span><span class="o">)</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">Exception</span>, <span class="kt">B</span><span class="o">]</span> <span class="o">=:=</span> <span class="n">A</span> <span class="k">=&gt;</span> <span class="nc">Either</span><span class="o">[</span><span class="kt">Exception</span>, <span class="kt">B</span><span class="o">]</span>
-<span class="k">def</span> <span class="n">eitherC</span><span class="o">(</span><span class="n">b</span><span class="k">:</span> <span class="kt">B</span><span class="o">)</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">Exception</span>, <span class="kt">C</span><span class="o">]</span> <span class="o">=:=</span> <span class="n">B</span> <span class="k">=&gt;</span> <span class="nc">Either</span><span class="o">[</span><span class="kt">Exception</span>, <span class="kt">C</span><span class="o">]</span>
-<span class="k">def</span> <span class="n">eitherD</span><span class="o">(</span><span class="n">c</span><span class="k">:</span> <span class="kt">C</span><span class="o">)</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">Exception</span>, <span class="kt">D</span><span class="o">]</span> <span class="o">=:=</span> <span class="n">C</span> <span class="k">=&gt;</span> <span class="nc">Either</span><span class="o">[</span><span class="kt">Exception</span>, <span class="kt">D</span><span class="o">]</span>
-</pre></div>
-
-<p>We don't need to write anonymous functions when <code>eitherB</code>, <code>eitherC</code>, and <code>eitherD</code> already fit the signature of the argument expected by <code>flatMap</code>.</p>
-<p>The "chain" of the previous slide, rewritten without this redundancy:</p>
-<div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">eitherD</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">Exception</span>, <span class="kt">D</span><span class="o">]</span> <span class="k">=</span> 
-  <span class="n">eitherA</span>
-    <span class="o">.</span><span class="n">flatMap</span><span class="o">(</span><span class="n">eitherB</span><span class="o">)</span>
-    <span class="o">.</span><span class="n">flatMap</span><span class="o">(</span><span class="n">eitherC</span><span class="o">)</span>
-    <span class="o">.</span><span class="n">flatMap</span><span class="o">(</span><span class="n">eitherD</span><span class="o">)</span>
-</pre></div>
-
-<p>Redundancy is fine if it makes the code "self-documenting," though.</p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4a.md">lecture4a.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              9/45
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4a.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code">
-          <div class="inner">
-            
-            
-            <section><p>Sending a <code>Request</code> to a distant server; the <code>Response</code> may or may not arrive.  If the <code>Response</code> does arrive, its <code>Payload</code> may or may not be corrupted.</p>
-<div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">request</span><span class="k">:</span> <span class="kt">Request</span> <span class="o">=</span> <span class="o">...</span>
-<span class="k">def</span> <span class="n">sendRequest</span><span class="o">(</span><span class="n">req</span><span class="k">:</span> <span class="kt">Request</span><span class="o">)</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">Exception</span>, <span class="kt">Response</span><span class="o">]</span> <span class="k">=</span> <span class="o">...</span>
-<span class="k">def</span> <span class="n">unpackResponse</span><span class="o">(</span><span class="n">res</span><span class="k">:</span> <span class="kt">Response</span><span class="o">)</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">Exception</span>, <span class="kt">Payload</span><span class="o">]</span> <span class="k">=</span> <span class="o">...</span>
-</pre></div>
-
-<p>and a sequence of <code>flatMap</code>s:</p>
-<div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">eitherPayload</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">Exception</span>, <span class="kt">Payload</span><span class="o">]</span> <span class="k">=</span>
-  <span class="n">sendRequest</span><span class="o">(</span><span class="n">request</span><span class="o">).</span><span class="n">flatMap</span> <span class="o">{</span> <span class="n">response</span> <span class="k">=&gt;</span>
-    <span class="n">unpackResponse</span><span class="o">(</span><span class="n">response</span><span class="o">)</span>
-  <span class="o">}</span>
-</pre></div>
-
-<p>Rewritten to not be "hard-wired" to a particular value <code>request</code>:</p>
-<div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">getPayload</span><span class="o">(</span><span class="n">request</span><span class="k">:</span> <span class="kt">Request</span><span class="o">)</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">Exception</span>, <span class="kt">Payload</span><span class="o">]</span> <span class="k">=</span>
-  <span class="n">sendRequest</span><span class="o">(</span><span class="n">request</span><span class="o">).</span><span class="n">flatMap</span> <span class="o">{</span> <span class="n">response</span> <span class="k">=&gt;</span>
-    <span class="n">unpackResponse</span><span class="o">(</span><span class="n">response</span><span class="o">)</span>
-  <span class="o">}</span>
-</pre></div>
-</section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4a.md">lecture4a.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              10/45
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4a.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code">
-          <div class="inner">
-            
-            
-            <section><p>The left side of <code>Either</code> is <em>typically</em> an <code>Exception</code> of some form, and is usually intended to be the "end of the chain."  To prioritize typical usage, combinators on most implementations of <code>Either</code> are "right-biased."</p>
-<p>Nevertheless, sometimes we <em>do</em> want to operate on the "left" type.  Implementations of <code>Either</code> vary by library in how this is provided, if at all.</p>
-<p>Scalaz' <code>Either</code> provides <code>leftMap</code>:</p>
-<div class="highlight"><pre><span></span><span class="o">(</span><span class="n">A</span> <span class="o">\/</span> <span class="n">B</span><span class="o">)</span> <span class="o">{</span>
-    <span class="k">def</span> <span class="n">leftMap</span><span class="o">[</span><span class="kt">C</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="n">C</span><span class="o">)</span><span class="k">:</span> <span class="o">(</span><span class="kt">C</span> <span class="kt">\/</span> <span class="kt">B</span><span class="o">)</span>
+ <span class="k">def</span> <span class="n">flatMap</span><span class="o">[</span><span class="kt">EE</span> <span class="k">&gt;:</span> <span class="kt">E</span>, <span class="kt">B</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="nc">Either</span><span class="o">[</span><span class="kt">EE</span>, <span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">EE</span>, <span class="kt">B</span><span class="o">]</span> <span class="k">=</span>
+   <span class="k">this</span> <span class="k">match</span> <span class="o">{</span>
+     <span class="k">case</span> <span class="nc">Left</span><span class="o">(</span><span class="n">e</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nc">Left</span><span class="o">(</span><span class="n">e</span><span class="o">)</span>
+     <span class="k">case</span> <span class="nc">Right</span><span class="o">(</span><span class="n">a</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">f</span><span class="o">(</span><span class="n">a</span><span class="o">)</span>
+   <span class="o">}</span>
 <span class="o">}</span>
 </pre></div>
-
-<p>This is particularly useful when the "left" type is not a bad thing like an exception.</p>
-<p><code>Either</code> can be used for more than containing exceptions.</p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4a.md">lecture4a.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              11/45
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4a.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code">
-          <div class="inner">
-            
-            
-            <section><p><code>def Try</code> from previous lecture, rewritten for <code>Either</code></p>
-<div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">tryEither</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">a</span><span class="k">:</span> <span class="o">=&gt;</span> <span class="n">A</span><span class="o">)</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">Throwable</span>, <span class="kt">A</span><span class="o">]</span> <span class="k">=</span> 
-  <span class="k">try</span> <span class="o">{</span> <span class="nc">Right</span><span class="o">(</span><span class="n">a</span><span class="o">)</span> <span class="o">}</span>
-  <span class="k">catch</span> <span class="o">{</span> <span class="k">case</span> <span class="n">t</span><span class="k">:</span> <span class="kt">Throwable</span> <span class="o">=&gt;</span> <span class="nc">Left</span><span class="o">(</span><span class="n">throwable</span><span class="o">)</span> <span class="o">}</span>
-</pre></div>
-
-<p>An improvement, taken from <code>Scalaz</code></p>
-<div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">scala.util.control.NonFatal</span>
-
-<span class="k">def</span> <span class="n">tryEither</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">a</span><span class="k">:</span> <span class="o">=&gt;</span> <span class="n">A</span><span class="o">)</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">Throwable</span>, <span class="kt">A</span><span class="o">]</span> <span class="k">=</span> 
-  <span class="k">try</span> <span class="o">{</span> <span class="nc">Right</span><span class="o">(</span><span class="n">a</span><span class="o">)</span> <span class="o">}</span>
-  <span class="k">catch</span> <span class="o">{</span> <span class="k">case</span> <span class="nc">NonFatal</span><span class="o">(</span><span class="n">throwable</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nc">Left</span><span class="o">(</span><span class="n">throwable</span><span class="o">)</span> <span class="o">}</span>
-</pre></div>
 </section>
             
           </div>
@@ -562,7 +245,7 @@ given types <code>A</code>, <code>B</code>, <code>C</code>, and <code>D</code>:<
             </aside>
             
             <aside class="page_number">
-              12/45
+              5/62
             </aside>
 
           </footer>
@@ -606,7 +289,7 @@ given types <code>A</code>, <code>B</code>, <code>C</code>, and <code>D</code>:<
             </aside>
             
             <aside class="page_number">
-              13/45
+              6/62
             </aside>
 
           </footer>
@@ -651,7 +334,7 @@ given types <code>A</code>, <code>B</code>, <code>C</code>, and <code>D</code>:<
             </aside>
             
             <aside class="page_number">
-              14/45
+              7/62
             </aside>
 
           </footer>
@@ -689,7 +372,7 @@ given types <code>A</code>, <code>B</code>, <code>C</code>, and <code>D</code>:<
             </aside>
             
             <aside class="page_number">
-              15/45
+              8/62
             </aside>
 
           </footer>
@@ -727,7 +410,7 @@ given types <code>A</code>, <code>B</code>, <code>C</code>, and <code>D</code>:<
             </aside>
             
             <aside class="page_number">
-              16/45
+              9/62
             </aside>
 
           </footer>
@@ -748,8 +431,38 @@ given types <code>A</code>, <code>B</code>, <code>C</code>, and <code>D</code>:<
 <div class="highlight"><pre><span></span><span class="n">getOrElse</span><span class="o">(</span><span class="n">default</span><span class="k">:</span> <span class="o">=&gt;</span> <span class="nc">Nothing</span><span class="o">)</span><span class="k">:</span> <span class="kt">Nothing</span>
 </pre></div>
 
-<p>Not very useful.</p>
-<p>With <code>B &gt;: A</code>, <code>getOrElse</code> on <code>failed</code> becomes:</p>
+<p>Not very useful.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4a.md">lecture4a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              10/62
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>With <code>B &gt;: A</code>, <code>getOrElse</code> on <code>failed</code> becomes:</p>
 <div class="highlight"><pre><span></span><span class="n">getOrElse</span><span class="o">[</span><span class="kt">B</span> <span class="k">&gt;:</span> <span class="kt">Nothing</span><span class="o">](</span><span class="n">default</span><span class="k">:</span> <span class="o">=&gt;</span> <span class="n">B</span><span class="o">)</span><span class="k">:</span> <span class="kt">B</span>
 </pre></div>
 
@@ -771,7 +484,7 @@ given types <code>A</code>, <code>B</code>, <code>C</code>, and <code>D</code>:<
             </aside>
             
             <aside class="page_number">
-              17/45
+              11/62
             </aside>
 
           </footer>
@@ -804,7 +517,7 @@ given types <code>A</code>, <code>B</code>, <code>C</code>, and <code>D</code>:<
             </aside>
             
             <aside class="page_number">
-              18/45
+              12/62
             </aside>
 
           </footer>
@@ -818,8 +531,38 @@ given types <code>A</code>, <code>B</code>, <code>C</code>, and <code>D</code>:<
             
             
             <section><p><code>Option[Nothing] &lt;: Option[A]</code> and the <code>+</code> before the generic is called <a href="https://twitter.github.io/scala_school/type-basics.html#variance"><em>covariance</em></a>.</p>
-<p>Lacking the <code>+</code> prefix to its generic type, <code>Option</code> would be <em>invariant</em> and <code>Option[Nothing] &lt;: Option[A]</code> would be <em>false</em>.  This is default.</p>
-<p>If the generic inside <code>List</code> is covariant, then: </p>
+<p>Lacking the <code>+</code> prefix to its generic type, <code>Option</code> would be <em>invariant</em> and <code>Option[Nothing] &lt;: Option[A]</code> would be <em>false</em>.  This is default.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4a.md">lecture4a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              13/62
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>If the generic inside <code>List</code> is covariant, then:</p>
 <p>"If <code>X</code> is a subtype of <code>Y</code>, then <code>List[X]</code> is a subtype of <code>List[Y]</code>." -- <em>FP in Scala</em>, section 3.1</p></section>
             
           </div>
@@ -838,7 +581,7 @@ given types <code>A</code>, <code>B</code>, <code>C</code>, and <code>D</code>:<
             </aside>
             
             <aside class="page_number">
-              19/45
+              14/62
             </aside>
 
           </footer>
@@ -851,14 +594,43 @@ given types <code>A</code>, <code>B</code>, <code>C</code>, and <code>D</code>:<
           <div class="inner">
             
             
-            <section><p>The same explanation of the necessity of the lower type bound generic, for <code>Either</code></p>
-<p>An instance of <code>Left</code> still has a "right" type: <code>Nothing</code>.</p>
-<p>An instance of <code>Right</code> still has a "left" type: <code>Nothing</code>.</p>
+            <section><p>The same explanation of the necessity of the lower type bound generic holds for <code>Either</code>.</p>
+<p>An instance of <code>Left</code> still has a "right" type: <code>Nothing</code>, and vice versa for an instance of <code>Right</code>:</p>
 <div class="highlight"><pre><span></span><span class="k">case</span> <span class="k">class</span> <span class="nc">Left</span><span class="o">[</span><span class="kt">+E</span><span class="o">](</span><span class="n">e</span><span class="k">:</span> <span class="kt">E</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">Either</span><span class="o">[</span><span class="kt">E</span>, <span class="kt">Nothing</span><span class="o">]</span>
 <span class="k">case</span> <span class="k">class</span> <span class="nc">Right</span><span class="o">[</span><span class="kt">+A</span><span class="o">](</span><span class="n">a</span><span class="k">:</span> <span class="kt">A</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">Either</span><span class="o">[</span><span class="kt">Nothing</span>, <span class="kt">A</span><span class="o">]</span>
 </pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
 
-<p>If not for the lower type bound generic <code>EE</code>, <code>flatMap</code> would be limited to this signature when called an a instance of <code>Left</code>:</p>
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4a.md">lecture4a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              15/62
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>If not for the lower type bound generic <code>EE</code>, <code>flatMap</code> would be limited to this signature when called an a instance of <code>Left</code>:</p>
 <div class="highlight"><pre><span></span><span class="n">flatMap</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="nc">Either</span><span class="o">[</span><span class="kt">Nothing</span>, <span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">Nothing</span>, <span class="kt">B</span><span class="o">]</span>
 </pre></div>
 </section>
@@ -879,7 +651,7 @@ given types <code>A</code>, <code>B</code>, <code>C</code>, and <code>D</code>:<
             </aside>
             
             <aside class="page_number">
-              20/45
+              16/62
             </aside>
 
           </footer>
@@ -913,7 +685,7 @@ given types <code>A</code>, <code>B</code>, <code>C</code>, and <code>D</code>:<
             </aside>
             
             <aside class="page_number">
-              21/45
+              17/62
             </aside>
 
           </footer>
@@ -926,29 +698,22 @@ given types <code>A</code>, <code>B</code>, <code>C</code>, and <code>D</code>:<
           <div class="inner">
             
             
-            <section><p>Given a set of <code>Either</code>s:</p>
+            <section><p>Type checking at compile-time needs to verify the types <em>"line up"</em>
+if <code>eitherA</code> is <code>Left</code> or <code>Right</code>, if <code>eitherB</code> is <code>Left</code> or <code>Right</code>, etc.:</p>
 <div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">eitherA</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">Exception</span>, <span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="o">...</span>
 <span class="k">val</span> <span class="n">eitherB</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">Exception</span>, <span class="kt">B</span><span class="o">]</span> <span class="k">=</span> <span class="o">...</span>
 <span class="k">val</span> <span class="n">eitherC</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">Exception</span>, <span class="kt">C</span><span class="o">]</span> <span class="k">=</span> <span class="o">...</span>
-</pre></div>
-
-<p>a function to produce a <code>D</code>:</p>
-<div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">f</span><span class="o">(</span><span class="n">a</span><span class="k">:</span> <span class="kt">A</span><span class="o">,</span> <span class="n">b</span><span class="k">:</span> <span class="kt">B</span><span class="o">,</span> <span class="n">c</span><span class="k">:</span> <span class="kt">C</span><span class="o">)</span><span class="k">:</span> <span class="kt">D</span> <span class="o">=</span> <span class="o">...</span>
-</pre></div>
-
-<p>and a sequence of <code>flatMap</code>s:</p>
-<div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">eitherD</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">Exception</span>, <span class="kt">D</span><span class="o">]</span> <span class="k">=</span> 
+<span class="k">def</span> <span class="n">f</span><span class="o">(</span><span class="n">a</span><span class="k">:</span> <span class="kt">A</span><span class="o">,</span> <span class="n">b</span><span class="k">:</span> <span class="kt">B</span><span class="o">,</span> <span class="n">c</span><span class="k">:</span> <span class="kt">C</span><span class="o">)</span><span class="k">:</span> <span class="kt">D</span> <span class="o">=</span> <span class="o">...</span>
+<span class="k">val</span> <span class="n">eitherD</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">Exception</span>, <span class="kt">D</span><span class="o">]</span> <span class="k">=</span>
   <span class="n">eitherA</span><span class="o">.</span><span class="n">flatMap</span> <span class="o">{</span> <span class="n">a</span> <span class="k">=&gt;</span>
     <span class="n">eitherB</span><span class="o">.</span><span class="n">flatMap</span> <span class="o">{</span> <span class="n">b</span> <span class="k">=&gt;</span>
-      <span class="n">eitherC</span><span class="o">.</span><span class="n">map</span> <span class="o">{</span> <span class="n">c</span> <span class="k">=&gt;</span>
-        <span class="n">f</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">,</span> <span class="n">c</span><span class="o">)</span>
+          <span class="n">eitherC</span><span class="o">.</span><span class="n">map</span> <span class="o">{</span> <span class="n">c</span> <span class="k">=&gt;</span>
+            <span class="n">f</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">,</span> <span class="n">c</span><span class="o">)</span>
       <span class="o">}</span>
-    <span class="o">}</span>
   <span class="o">}</span>
 </pre></div>
 
-<p>typechecking at compile-time needs to verify the types <em>"line up"</em> 
-if <code>eitherA</code> is <code>Left</code> or <code>Right</code>, if <code>eitherB</code> is <code>Left</code> or <code>Right</code>, etc.</p></section>
+<p>}</p></section>
             
           </div>
           <div class="presenter_notes">
@@ -966,57 +731,7 @@ if <code>eitherA</code> is <code>Left</code> or <code>Right</code>, if <code>eit
             </aside>
             
             <aside class="page_number">
-              22/45
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4a.md -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            
-            <section><p>You can find an implementation of <code>Either</code> in several places:</p>
-<ul>
-<li>In <em>FP in Scala</em>, <code>fpinscala.errorhandling.Either</code></li>
-<li>In <em>Scalaz</em>, <code>scalaz.\/</code><ul>
-<li>Also called "Disjunction"</li>
-<li><code>scalaz/core/src/main/scala/scalaz/Either.scala</code></li>
-<li><a href="https://oss.sonatype.org/service/local/repositories/releases/archive/org/scalaz/scalaz_2.11/7.2.1/scalaz_2.11-7.2.1-javadoc.jar/!/index.html#scalaz.$bslash$div$">ScalaDoc</a></li>
-</ul>
-</li>
-<li>In <em>Cats</em>, <code>cats.data.Xor</code><ul>
-<li><code>cats/core/src/main/scala/cats/data/Xor.scala</code></li>
-<li><a href="http://typelevel.org/cats/api/#cats.data.Xor">ScalaDoc</a></li>
-</ul>
-</li>
-<li>Natively, <code>scala.util.Either</code><ul>
-<li><a href="http://www.scala-lang.org/api/current/#scala.util.Either">ScalaDoc</a></li>
-<li>Must use projection (<code>.left</code> or <code>.right</code>) to access <code>flatMap</code>, <code>map</code>, etc.; not right-biased; see ScalaDoc example</li>
-</ul>
-</li>
-</ul></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4a.md">lecture4a.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              23/45
+              18/62
             </aside>
 
           </footer>
@@ -1029,20 +744,10 @@ if <code>eitherA</code> is <code>Left</code> or <code>Right</code>, if <code>eit
           <div class="inner">
             
             
-            <section><p>In an earlier Challenge Question for <code>Option</code>, we asked you to implement <code>flatMap</code> on <code>Option</code> using <code>map</code>, <code>orElse</code> and <code>getOrElse</code>.</p>
-<p><code>orElse</code> and <code>getOrElse</code> are not "generalized" combinators -- they may not appear in all of the Containers equivalent to <code>Option</code>.  </p>
-<p><code>unit</code> and <code>flatMap</code> <em>are</em> generalized combinators.  Implement these from scratch (using pattern matching for <code>flatMap</code>) for <code>Either</code>.</p>
-<div class="highlight"><pre><span></span><span class="k">object</span> <span class="nc">Either</span> <span class="o">{</span>
-    <span class="k">def</span> <span class="n">unit</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">a</span><span class="k">:</span> <span class="kt">A</span><span class="o">)</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">Nothing</span>, <span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="o">???</span>
-    <span class="c1">// If we pass an eager `A` to `unit`, </span>
-    <span class="c1">// the left generic is completely unnecesary -- hence `Nothing`.</span>
-    <span class="c1">// Note, `unit` is not intended to be used to catch errors.</span>
-    <span class="c1">// If it were, we&#39;d need a type other than `Nothing`.</span>
-<span class="o">}</span>
-
-<span class="k">trait</span> <span class="nc">Either</span><span class="o">[</span><span class="kt">E</span>, <span class="kt">A</span><span class="o">]</span> <span class="o">{</span>
-    <span class="k">def</span> <span class="n">flatMap</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="nc">Either</span><span class="o">[</span><span class="kt">E</span>, <span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">E</span>, <span class="kt">B</span><span class="o">]</span> <span class="k">=</span> <span class="o">???</span>
-<span class="o">}</span>
+            <section><p>Note that in the prior example, the input <code>Either</code>s were not dependent upon each other.</p>
+<p>An example that makes explicit use of the monadic nature of <code>Either</code>;</p>
+<div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">eitherD</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">Exception</span>, <span class="kt">D</span><span class="o">]</span> <span class="k">=</span>
+  <span class="n">eitherA</span><span class="o">.</span><span class="n">flatMap</span><span class="o">(</span><span class="n">eitherB</span><span class="o">).</span><span class="n">flatMap</span><span class="o">(</span><span class="n">eitherC</span><span class="o">)</span>
 </pre></div>
 </section>
             
@@ -1062,38 +767,7 @@ if <code>eitherA</code> is <code>Left</code> or <code>Right</code>, if <code>eit
             </aside>
             
             <aside class="page_number">
-              24/45
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4a.md -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            
-            <section><p>In lab, you will implement <code>map</code>, <code>orElse</code>, and <code>getOrElse</code> using <code>unit</code> and <code>flatMap</code>, our primitives.</p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4a.md">lecture4a.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              25/45
+              19/62
             </aside>
 
           </footer>
@@ -1105,23 +779,15 @@ if <code>eitherA</code> is <code>Left</code> or <code>Right</code>, if <code>eit
         <div class="slide has_code">
           <div class="inner">
             
-            <header><h1>Validation</h1></header>
             
-            
-            <section><p>What if we don't want to "fail fast"?  What if we don't need (or want) sequentiality?  Then we should not be using a "chained container" like <code>Option</code> or <code>Either</code>.</p>
-<p>"Failing fast" and "sequential chaining" was a signature feature of the chained containers we've seen previously:</p>
-<div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">sendRequest</span><span class="o">(</span><span class="n">req</span><span class="k">:</span> <span class="kt">Request</span><span class="o">)</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">Exception</span>, <span class="kt">Response</span><span class="o">]</span> <span class="k">=</span> <span class="o">...</span>
-<span class="k">def</span> <span class="n">unpackResponse</span><span class="o">(</span><span class="n">res</span><span class="k">:</span> <span class="kt">Response</span><span class="o">)</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">Exception</span>, <span class="kt">Payload</span><span class="o">]</span> <span class="k">=</span> <span class="o">...</span>
+            <section><p><code>Try</code> from the previous lecture, rewritten for <code>Either</code></p>
+<div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">scala.util.control.NonFatal</span>
 
-<span class="k">def</span> <span class="n">getPayload</span><span class="o">(</span><span class="n">request</span><span class="k">:</span> <span class="kt">Request</span><span class="o">)</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">Exception</span>, <span class="kt">Payload</span><span class="o">]</span> <span class="k">=</span>
-  <span class="n">sendRequest</span><span class="o">(</span><span class="n">request</span><span class="o">).</span><span class="n">flatMap</span> <span class="o">{</span> <span class="n">response</span> <span class="k">=&gt;</span>
-    <span class="n">unpackResponse</span><span class="o">(</span><span class="n">response</span><span class="o">)</span>
-  <span class="o">}</span>
+<span class="k">def</span> <span class="n">tryEither</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">a</span><span class="k">:</span> <span class="o">=&gt;</span> <span class="n">A</span><span class="o">)</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">Throwable</span>, <span class="kt">A</span><span class="o">]</span> <span class="k">=</span>
+  <span class="k">try</span> <span class="o">{</span> <span class="nc">Right</span><span class="o">(</span><span class="n">a</span><span class="o">)</span> <span class="o">}</span>
+  <span class="k">catch</span> <span class="o">{</span> <span class="k">case</span> <span class="nc">NonFatal</span><span class="o">(</span><span class="n">throwable</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nc">Left</span><span class="o">(</span><span class="n">throwable</span><span class="o">)</span> <span class="o">}</span>
 </pre></div>
-
-<p>We'll have to depart from "chained container."</p>
-<p>We'll refer to this new "container" as a <em>"ringed container"</em>.</p>
-<p>I chose the word "ring" because "ringed container" is to <a href="https://en.wikipedia.org/wiki/Token_ring">token ring network</a> as "chained container" is to "Ethernet".</p></section>
+</section>
             
           </div>
           <div class="presenter_notes">
@@ -1139,7 +805,42 @@ if <code>eitherA</code> is <code>Left</code> or <code>Right</code>, if <code>eit
             </aside>
             
             <aside class="page_number">
-              26/45
+              20/62
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            <header><h1><code>Xor</code></h1></header>
+            
+            
+            <section><p><code>Xor</code> is the first concrete data type we’ve seen in Cats.</p>
+<p>Cats provides numerous other data types, all of which exist in the [cats.data][cats.data] package.</p>
+<p>Other examples include the <code>Validated</code> type that we will see shortly.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4a.md">lecture4a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              21/62
             </aside>
 
           </footer>
@@ -1152,17 +853,8 @@ if <code>eitherA</code> is <code>Left</code> or <code>Right</code>, if <code>eit
           <div class="inner">
             
             
-            <section><p>Features you lose with "Ringed Container"</p>
-<ul>
-<li>Failing fast<ul>
-<li>If I do not receive a <code>Response</code>, I will not attempt to extract the <code>Payload</code> of the <code>Response</code></li>
-</ul>
-</li>
-<li>The contents of one container as the argument to the next container<ul>
-<li>We are abandoning sequentiality.  With "chained container", each container had to wait on the container prior</li>
-</ul>
-</li>
-</ul></section>
+            <section><p>The Scala standard library already has a type <a href="http://www.scala-lang.org/api/current/#scala.util.Either">Either</a>. Cats provides an alternative in <code>cats.data.Xor</code>.</p>
+<p>Why have this?</p></section>
             
           </div>
           <div class="presenter_notes">
@@ -1180,45 +872,7 @@ if <code>eitherA</code> is <code>Left</code> or <code>Right</code>, if <code>eit
             </aside>
             
             <aside class="page_number">
-              27/45
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4a.md -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            
-            <section><p>Features you gain with "Ringed Container"</p>
-<ul>
-<li>Parallelism, rather than sequentiality</li>
-<li>In <code>Validation</code>, the ability to collect more than a single <code>Exception</code><ul>
-<li>Perfect for parallelized parsing tasks</li>
-</ul>
-</li>
-</ul></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4a.md">lecture4a.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              28/45
+              22/62
             </aside>
 
           </footer>
@@ -1230,15 +884,15 @@ if <code>eitherA</code> is <code>Left</code> or <code>Right</code>, if <code>eit
         <div class="slide has_code">
           <div class="inner">
             
-            <header><h1>map2</h1></header>
             
-            
-            <section><p>Remember <code>map2</code>, a combinator of <code>Option</code>?  </p>
-<div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">map2</span><span class="o">[</span><span class="kt">A</span>,<span class="kt">B</span>,<span class="kt">C</span><span class="o">](</span><span class="n">a</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">A</span><span class="o">],</span> <span class="n">b</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span>
-  <span class="o">(</span><span class="n">f</span><span class="k">:</span> <span class="o">(</span><span class="kt">A</span><span class="o">,</span> <span class="kt">B</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">C</span><span class="o">)</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">C</span><span class="o">]</span>
+            <section><p>Aside from providing a few useful methods, the main reason is that <code>Either</code> is unbiased.</p>
+<p>This means we must first use projection (<code>.left</code> or <code>.right</code>) to access <code>flatMap</code>, <code>map</code>, etc.:</p>
+<div class="highlight"><pre><span></span><span class="nc">Right</span><span class="o">(</span><span class="mi">123</span><span class="o">).</span><span class="n">flatMap</span><span class="o">(</span><span class="n">x</span> <span class="k">=&gt;</span> <span class="nc">Right</span><span class="o">(</span><span class="n">x</span> <span class="o">*</span> <span class="mi">2</span><span class="o">))</span>
+<span class="c1">//error: value flatMap is not a member of scala.util.Right[Nothing,Int]</span>
+<span class="nc">Right</span><span class="o">(</span><span class="mi">123</span><span class="o">).</span><span class="n">right</span><span class="o">.</span><span class="n">flatMap</span><span class="o">(</span><span class="n">x</span> <span class="k">=&gt;</span> <span class="nc">Right</span><span class="o">(</span><span class="n">x</span> <span class="o">*</span> <span class="mi">2</span><span class="o">))</span>
+<span class="c1">//res0: scala.util.Either[Nothing,Int] = Right(246)</span>
 </pre></div>
-
-<p>It is critically important to any "ringed container."  If you associate <code>flatMap</code> with "chained containers," associate <code>map2</code> with "ringed containers."</p></section>
+</section>
             
           </div>
           <div class="presenter_notes">
@@ -1256,7 +910,535 @@ if <code>eitherA</code> is <code>Left</code> or <code>Right</code>, if <code>eit
             </aside>
             
             <aside class="page_number">
-              29/45
+              23/62
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>This makes <code>Either</code> incovenient to use as a monad, especially as the convention in most functional languages is that the left side represents errors.</p>
+<p><code>Xor</code> complies with convention and thus supports <code>map</code> and <code>flatMap</code> directly:</p>
+<div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">cats.data.Xor</span>
+<span class="k">val</span> <span class="n">a</span> <span class="k">=</span> <span class="nc">Xor</span><span class="o">.</span><span class="nc">Right</span><span class="o">(</span><span class="mi">1</span><span class="o">)</span>
+<span class="c1">//a: cats.data.Xor.Right[Int] = Right(1)</span>
+<span class="n">a</span><span class="o">.</span><span class="n">flatMap</span><span class="o">(</span><span class="n">x</span> <span class="k">=&gt;</span> <span class="nc">Xor</span><span class="o">.</span><span class="nc">Right</span><span class="o">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">2</span><span class="o">))</span>
+<span class="c1">//res1: cats.data.Xor[Nothing,Int] = Right(3)</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4a.md">lecture4a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              24/62
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>The <code>Xor</code> object provides the <code>Xor.left</code> and <code>Xor.right</code> constructors as we saw above.</p>
+<p>However, it is usually more convenient to use smart constructors via the type class syntax pattern.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4a.md">lecture4a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              25/62
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">cats.syntax.xor._</span>
+<span class="k">val</span> <span class="n">a</span> <span class="k">=</span> <span class="mf">3.</span><span class="n">right</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span>
+<span class="c1">// a: cats.data.Xor[String,Int] = Right(3)</span>
+<span class="k">val</span> <span class="n">b</span> <span class="k">=</span> <span class="mf">4.</span><span class="n">right</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span>
+<span class="c1">// b: cats.data.Xor[String,Int] = Right(4)</span>
+<span class="k">for</span> <span class="o">{</span>
+    <span class="n">x</span> <span class="k">&lt;-</span> <span class="n">a</span>
+    <span class="n">y</span> <span class="k">&lt;-</span> <span class="n">b</span>
+<span class="o">}</span> <span class="k">yield</span> <span class="n">x</span><span class="o">*</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="o">*</span><span class="n">y</span>
+<span class="c1">//res2: cats.data.Xor[String,Int] = Right(25)</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4a.md">lecture4a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              26/62
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p><code>Xor</code> also supports familiar additional methods like <code>fold</code>, <code>getOrElse</code>, and <code>orElse</code>.</p>
+<p>We use <code>fold</code> to convert a <code>Xor</code> to some other type, by supplying transform functions for the left and right sides:</p>
+<div class="highlight"><pre><span></span><span class="mf">1.</span><span class="n">right</span><span class="o">[</span><span class="kt">String</span><span class="o">].</span><span class="n">fold</span><span class="o">(</span>
+  <span class="n">left</span>  <span class="k">=&gt;</span> <span class="s">s&quot;FAIL!&quot;</span><span class="o">,</span>
+  <span class="n">right</span> <span class="k">=&gt;</span> <span class="s">s&quot;SUCCESS: </span><span class="si">$right</span><span class="s">!&quot;</span>
+<span class="o">)</span>
+<span class="c1">//res3: String = SUCCESS: 1!</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4a.md">lecture4a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              27/62
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>We can use <code>getOrElse</code> to extract the right value or return a default:</p>
+<div class="highlight"><pre><span></span><span class="mf">1.</span><span class="n">right</span><span class="o">[</span><span class="kt">String</span><span class="o">].</span><span class="n">getOrElse</span><span class="o">(</span><span class="mi">0</span><span class="o">)</span>
+<span class="c1">//res4: Int = 1</span>
+<span class="s">&quot;Error&quot;</span><span class="o">.</span><span class="n">left</span><span class="o">[</span><span class="kt">Int</span><span class="o">].</span><span class="n">getOrElse</span><span class="o">(</span><span class="mi">0</span><span class="o">)</span>
+<span class="c1">//res5: Int = 0</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4a.md">lecture4a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              28/62
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>Like <code>Either</code>, <code>Xor</code> is typically used to implement fail-fast error handling.</p>
+<p>We sequence a number of computations using <code>flatMap</code>, and if one fails the remaining computations are not run:</p>
+<div class="highlight"><pre><span></span><span class="k">for</span> <span class="o">{</span>
+    <span class="n">a</span> <span class="k">&lt;-</span> <span class="mf">1.</span><span class="n">right</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span>
+    <span class="n">b</span> <span class="k">&lt;-</span> <span class="mf">0.</span><span class="n">right</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span>
+    <span class="n">c</span> <span class="k">&lt;-</span> <span class="k">if</span><span class="o">(</span><span class="n">b</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="s">&quot;DIV0&quot;</span><span class="o">.</span><span class="n">left</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">else</span> <span class="o">(</span><span class="n">a</span> <span class="o">/</span> <span class="n">b</span><span class="o">).</span><span class="n">right</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span>
+<span class="o">}</span> <span class="k">yield</span> <span class="n">c</span> <span class="o">*</span> <span class="mi">100</span>
+<span class="c1">//res6: cats.data.Xor[String,Int] = Left(DIV0)</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4a.md">lecture4a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              29/62
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>When using <code>Xor</code> for error handling, we need to determine what type we want to use to represent errors. We could use <code>Throwable</code> for this as follows:</p>
+<div class="highlight"><pre><span></span><span class="k">type</span> <span class="kt">Result</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Xor</span><span class="o">[</span><span class="kt">Throwable</span>, <span class="kt">A</span><span class="o">]</span>
+<span class="c1">//infix notation</span>
+<span class="k">type</span> <span class="kt">Result</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Throwable</span> <span class="nc">Xor</span> <span class="n">A</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4a.md">lecture4a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              30/62
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>This gives us similar semantics to <code>Try</code> from the Scala standard library.</p>
+<p>The problem, however, is that <code>Throwable</code> is an extremely broad supertype.</p>
+<p>We have little insight into what type of error occurred.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4a.md">lecture4a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              31/62
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>Another approach is to define an algebraic data type to represent the types of error that can occur:</p>
+<div class="highlight"><pre><span></span><span class="k">case</span> <span class="k">class</span> <span class="nc">User</span><span class="o">(</span><span class="n">username</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">password</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
+<span class="k">sealed</span> <span class="k">trait</span> <span class="nc">LoginError</span>
+<span class="k">case</span> <span class="k">class</span> <span class="nc">UserNotFound</span><span class="o">(</span><span class="n">username</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">LoginError</span>
+<span class="k">case</span> <span class="k">class</span> <span class="nc">PasswordIncorrect</span><span class="o">(</span><span class="n">username</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">LoginError</span>
+<span class="k">trait</span> <span class="nc">UnexpectedError</span> <span class="k">extends</span> <span class="nc">LoginError</span>
+<span class="k">type</span> <span class="kt">LoginResult</span> <span class="o">=</span> <span class="nc">LoginError</span> <span class="nc">Xor</span> <span class="nc">User</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4a.md">lecture4a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              32/62
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>This approach solves the problems we saw with <code>Throwable</code>.</p>
+<p>It gives us a fixed set of expected error types and a catch-all for anything else that we didn’t expect.</p>
+<p>We also get the safety of exhaustive checking on any pattern matching we do.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4a.md">lecture4a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              33/62
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>Now we get precise error-handling based on the error type:</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">handleError</span><span class="o">(</span><span class="n">error</span><span class="k">:</span> <span class="kt">LoginError</span><span class="o">)</span><span class="k">:</span> <span class="kt">Unit</span> <span class="o">=</span> <span class="n">error</span> <span class="k">match</span> <span class="o">{</span>
+    <span class="k">case</span> <span class="nc">UserNotFound</span><span class="o">(</span><span class="n">u</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">println</span><span class="o">(</span><span class="s">s&quot;User not found: </span><span class="si">$u</span><span class="s">&quot;</span><span class="o">)</span>
+    <span class="k">case</span> <span class="nc">PasswordIncorrect</span><span class="o">(</span><span class="n">u</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">println</span><span class="o">(</span><span class="s">s&quot;Password: </span><span class="si">$u</span><span class="s">&quot;</span><span class="o">)</span>
+    <span class="k">case</span> <span class="k">_</span> <span class="k">:</span> <span class="kt">UnexpectedError</span> <span class="o">=&gt;</span> <span class="n">println</span><span class="o">(</span><span class="s">s&quot;Unexpected error&quot;</span><span class="o">)</span>
+<span class="o">}</span>
+<span class="k">val</span> <span class="n">result1</span><span class="k">:</span> <span class="kt">LoginResult</span> <span class="o">=</span> <span class="nc">User</span><span class="o">(</span><span class="s">&quot;dave&quot;</span><span class="o">,</span> <span class="s">&quot;passw0rd&quot;</span><span class="o">).</span><span class="n">right</span>
+<span class="k">val</span> <span class="n">result2</span><span class="k">:</span> <span class="kt">LoginResult</span> <span class="o">=</span> <span class="nc">UserNotFound</span><span class="o">(</span><span class="s">&quot;dave&quot;</span><span class="o">).</span><span class="n">left</span>
+<span class="n">result1</span><span class="o">.</span><span class="n">fold</span><span class="o">(</span><span class="n">handleError</span><span class="o">,</span> <span class="n">println</span><span class="o">)</span>
+<span class="c1">//User(dave,passw0rd)</span>
+<span class="n">result2</span><span class="o">.</span><span class="n">fold</span><span class="o">(</span><span class="n">handleError</span><span class="o">,</span> <span class="n">println</span><span class="o">)</span>
+<span class="c1">//User not found: dave</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4a.md">lecture4a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              34/62
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            <header><h1><code>Cartesian</code></h1></header>
+            
+            
+            <section><p><code>Cartesian</code> is a type class that allows us to “tuple” values within a context.</p>
+<p>If we have two objects of type <code>F[A]</code> and <code>F[B]</code>, a <code>Cartesian[F]</code> allows us to combine them to form an <code>F[(A, B)]</code>.</p>
+<p>Recall that this was a motivating example when we introduced the type class pattern in lecture 2.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4a.md">lecture4a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              35/62
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            <header><h1>Example: Combining Options</h1></header>
+            
+            
+            <section><p>The code below summons a type class instance for Option and uses it to zip two values:</p>
+<div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">cats.Cartesian</span>
+<span class="k">import</span> <span class="nn">cats.instances.option._</span>
+<span class="nc">Cartesian</span><span class="o">[</span><span class="kt">Option</span><span class="o">].</span><span class="n">product</span><span class="o">(</span><span class="nc">Some</span><span class="o">(</span><span class="mi">123</span><span class="o">),</span> <span class="nc">Some</span><span class="o">(</span><span class="s">&quot;abc&quot;</span><span class="o">))</span>
+<span class="c1">//res0: Option[(Int, String)] = Some((123,abc))</span>
+<span class="nc">Cartesian</span><span class="o">[</span><span class="kt">Option</span><span class="o">].</span><span class="n">product</span><span class="o">(</span><span class="nc">None</span><span class="o">,</span> <span class="nc">Some</span><span class="o">(</span><span class="s">&quot;abc&quot;</span><span class="o">))</span>
+<span class="c1">//res1: Option[(Nothing, String)] = None</span>
+<span class="nc">Cartesian</span><span class="o">[</span><span class="kt">Option</span><span class="o">].</span><span class="n">product</span><span class="o">(</span><span class="nc">Some</span><span class="o">(</span><span class="mi">123</span><span class="o">),</span> <span class="nc">None</span><span class="o">)</span>
+<span class="c1">//res2: Option[(Int, Nothing)] = None</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4a.md">lecture4a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              36/62
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            <header><h1>Exercise</h1></header>
+            
+            
+            <section><p>There is also a Cartesian instance for <code>List</code>. What do you think the following expression will evaluate to?</p>
+<div class="highlight"><pre><span></span><span class="nc">Cartesian</span><span class="o">[</span><span class="kt">List</span><span class="o">].</span><span class="n">product</span><span class="o">(</span><span class="nc">List</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span><span class="mi">2</span><span class="o">),</span> <span class="nc">List</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span><span class="mi">4</span><span class="o">))</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4a.md">lecture4a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              37/62
             </aside>
 
           </footer>
@@ -1281,52 +1463,7 @@ if <code>eitherA</code> is <code>Left</code> or <code>Right</code>, if <code>eit
           <footer>
             
             <aside class="page_number">
-              /45
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4a.md -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            
-            <section><p>We are going to "hone in" on this feature of <code>Validation</code>, mentioned earlier:</p>
-<ul>
-<li>the ability to collect more than a single <code>Exception</code></li>
-</ul>
-<p>Where is this useful?</p>
-<ul>
-<li>a group of things that are mutually dependent, but not sequential</li>
-<li>a set of web form fields that need to be validated<ul>
-<li>Each field must be a <code>Right</code> for the entire form to be a <code>Right</code></li>
-<li>But fields are validated independently</li>
-<li>We want independence in validating these fields, so that all errors can be caught at the same time</li>
-<li>What if you make multiple mistakes in a web form, and the page only informs you of one mistake per attempt to submit?</li>
-</ul>
-</li>
-</ul></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4a.md">lecture4a.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              30/45
+              /62
             </aside>
 
           </footer>
@@ -1339,54 +1476,8 @@ if <code>eitherA</code> is <code>Left</code> or <code>Right</code>, if <code>eit
           <div class="inner">
             
             
-            <section><div class="highlight"><pre><span></span><span class="k">sealed</span> <span class="k">trait</span> <span class="nc">Validation</span><span class="o">[</span><span class="kt">+E</span>, <span class="kt">+A</span><span class="o">]</span>
-
-<span class="nc">case</span> <span class="k">class</span> <span class="nc">Failure</span><span class="o">[</span><span class="kt">E</span><span class="o">](</span><span class="n">head</span><span class="k">:</span> <span class="kt">E</span><span class="o">,</span> <span class="n">tail</span><span class="k">:</span> <span class="kt">Vector</span><span class="o">[</span><span class="kt">E</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Vector</span><span class="o">())</span>
-  <span class="k">extends</span> <span class="nc">Validation</span><span class="o">[</span><span class="kt">E</span>, <span class="kt">Nothing</span><span class="o">]</span>
-
-<span class="k">case</span> <span class="k">class</span> <span class="nc">Success</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">a</span><span class="k">:</span> <span class="kt">A</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">Validation</span><span class="o">[</span><span class="kt">Nothing</span>, <span class="kt">A</span><span class="o">]</span>
-</pre></div>
-
-<p>A <code>Failure</code> instance of <code>Validation</code> will have <code>Nothing</code> for its "right" type.</p>
-<p>A <code>Failure</code> instance of <code>Validation</code> will contain at least one instance of <code>E</code>.  Its member <code>tail</code> may be empty.</p>
-<p>In Scalaz, <code>Failure</code> contains a <code>NonEmptyList[E]</code> rather than <code>head: E</code> and <code>tail: Vector[E]</code></p>
-<p>A <code>Success</code> instance of <code>Validation</code> will have <code>Nothing</code> for its "left" type.</p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4a.md">lecture4a.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              31/45
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4a.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code">
-          <div class="inner">
-            
-            <header><h1>Challenge Question</h1></header>
-            
-            
-            <section><p>Write a function that combines two <code>Failure</code>s.  This is a component of other <code>Validation</code> combinators you will implement in lab.</p>
-<div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">combineFailures</span><span class="o">[</span><span class="kt">E</span><span class="o">](</span><span class="n">f1</span><span class="k">:</span> <span class="kt">Validation</span><span class="o">[</span><span class="kt">E</span>, <span class="kt">Nothing</span><span class="o">],</span>
-                   <span class="n">f2</span><span class="k">:</span> <span class="kt">Validation</span><span class="o">[</span><span class="kt">E</span>, <span class="kt">Nothing</span><span class="o">)</span><span class="k">:</span>
-                  <span class="kt">Validation</span><span class="o">[</span><span class="kt">E</span>, <span class="kt">Nothing</span><span class="o">]</span> <span class="k">=</span> <span class="o">???</span>
+            <section><div class="highlight"><pre><span></span><span class="nc">Cartesian</span><span class="o">[</span><span class="kt">List</span><span class="o">].</span><span class="n">product</span><span class="o">(</span><span class="nc">List</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span><span class="mi">2</span><span class="o">),</span> <span class="nc">List</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span><span class="mi">4</span><span class="o">))</span>
+<span class="c1">//res0: List[(Int, Int)] = List((1,3), (1,4), (2,3), (2,4))</span>
 </pre></div>
 </section>
             
@@ -1406,32 +1497,7 @@ if <code>eitherA</code> is <code>Left</code> or <code>Right</code>, if <code>eit
             </aside>
             
             <aside class="page_number">
-              32/45
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source:  -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="page_number">
-              /45
+              38/62
             </aside>
 
           </footer>
@@ -1444,12 +1510,9 @@ if <code>eitherA</code> is <code>Left</code> or <code>Right</code>, if <code>eit
           <div class="inner">
             
             
-            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">combineFailures</span><span class="o">[</span><span class="kt">E</span><span class="o">](</span><span class="n">f1</span><span class="k">:</span> <span class="kt">Validation</span><span class="o">[</span><span class="kt">E</span>, <span class="kt">Nothing</span><span class="o">],</span>
-                   <span class="n">f2</span><span class="k">:</span> <span class="kt">Validation</span><span class="o">[</span><span class="kt">E</span>, <span class="kt">Nothing</span><span class="o">)</span><span class="k">:</span>
-                  <span class="kt">Validation</span><span class="o">[</span><span class="kt">E</span>, <span class="kt">Nothing</span><span class="o">]</span> <span class="k">=</span> <span class="o">(</span><span class="n">f1</span><span class="o">,</span> <span class="n">f2</span><span class="o">)</span> <span class="k">match</span> <span class="o">{</span>
-  <span class="k">case</span> <span class="o">(</span><span class="nc">Failure</span><span class="o">(</span><span class="n">h1</span><span class="o">,</span> <span class="n">t1</span><span class="o">),</span> <span class="nc">Failure</span><span class="o">(</span><span class="n">h2</span><span class="o">,</span> <span class="n">t2</span><span class="o">))</span> <span class="k">=&gt;</span>
-    <span class="nc">Failure</span><span class="o">(</span><span class="n">h1</span><span class="o">,</span> <span class="n">h2</span><span class="o">::</span><span class="n">t1</span><span class="o">:::</span><span class="n">t2</span><span class="o">)</span>
-  <span class="o">...</span>
+            <section><p>Its definition in Cats is:</p>
+<div class="highlight"><pre><span></span><span class="k">trait</span> <span class="nc">Cartesian</span><span class="o">[</span><span class="kt">F</span><span class="o">[</span><span class="k">_</span><span class="o">]]</span> <span class="o">{</span>
+    <span class="k">def</span> <span class="n">product</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">](</span><span class="n">fa</span><span class="k">:</span> <span class="kt">F</span><span class="o">[</span><span class="kt">A</span><span class="o">],</span> <span class="n">fb</span><span class="k">:</span> <span class="kt">F</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">F</span><span class="o">[(</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">)]</span>
 <span class="o">}</span>
 </pre></div>
 </section>
@@ -1470,192 +1533,7 @@ if <code>eitherA</code> is <code>Left</code> or <code>Right</code>, if <code>eit
             </aside>
             
             <aside class="page_number">
-              33/45
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4a.md -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            
-            <section><p>You can find an implementation of <code>Validation</code> in several places:</p>
-<ul>
-<li>In <em>FP in Scala</em>, <code>fpinscala.applicative.Validation</code></li>
-<li>In <em>Cats</em>, <code>cats.data.Validated</code><ul>
-<li><code>cats/core/src/main/scala/cats/data/Validated.scala</code></li>
-<li><a href="http://typelevel.org/cats/api/#cats.data.Validated">ScalaDoc</a></li>
-</ul>
-</li>
-<li>Nowhere in the Scala standard library that I know of</li>
-</ul></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4a.md">lecture4a.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              34/45
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4a.md -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            
-            <section><p>If "chained container" has <code>map2</code>, why do we need <code>ringed container</code>?</p>
-<p>Every "chained container" is also a "ringed container."</p>
-<p>Earlier we mentioned that choosing the most restricted data type that meets the requirements is good programming practice.</p>
-<p>The same applies to choosing "ringed container" over "chained container."</p>
-<p>"Ringed container" is more restricted, and therefore more analyzable.</p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4a.md">lecture4a.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              35/45
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4a.md -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            
-            <section><p><a href="http://stackoverflow.com/a/7863380/1007926">What are the benefits of applicative parsing over monadic parsing?</a></p>
-<p>"
-The main difference between monadic and applicative parsing is in how sequential composition is handled. </p>
-<p>You might think that having some extra flexibility can't hurt, but in reality it can. It prevents us from doing useful static analysis on a parser without running it. "</p>
-<p>"Ringed container" is a more restricted, and therefore more analyzable, type of container than "chained container."</p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4a.md">lecture4a.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              36/45
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4a.md -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            <header><h1>Tuple</h1></header>
-            
-            
-            <section><p>Tuple is a simple product type that groups together simple logical collections of items without using a class.</p>
-<pre><code>scala&gt; val hostPort = ("localhost", 80)
-hostPort: (String, Int) = (localhost, 80)
-scala&gt; hostPort._1
-res0: String = localhost
-scala&gt; hostPort._2
-res1: Int = 80
-</code></pre></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4a.md">lecture4a.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              37/45
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4a.md -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            
-            <section><p>We are concluding our discussion of <code>Option</code>, <code>Either</code> and <code>Validation</code> with <code>Tuple</code> to expose the categorical relationship between the first 3 types and <code>Tuple</code>.</p>
-<p><code>Tuple</code> is a <em>Product</em> in category theory.</p>
-<p><code>Option</code>, <code>Either</code> and <code>Validation</code> are each a <em>Coproduct</em> in category theory.</p>
-<p><code>Tuple</code> is a simpler type to understand than <code>Option</code>, <code>Either</code> or <code>Validation</code>.</p>
-<p><code>Either</code> and <code>Validation</code> are each a dual to <code>Tuple2</code>.</p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4a.md">lecture4a.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              38/45
+              39/62
             </aside>
 
           </footer>
@@ -1668,47 +1546,10 @@ res1: Int = 80
           <div class="inner">
             
             
-            <section><p>Tuple is implemented as a case class, is not iterable, and is indexed starting from 1.</p>
-<div class="highlight"><pre><span></span><span class="k">case</span> <span class="k">class</span> <span class="nc">Tuple2</span><span class="o">[</span><span class="kt">+T1</span>, <span class="kt">+T2</span><span class="o">](</span><span class="n">_1</span><span class="k">:</span> <span class="kt">T1</span><span class="o">,</span> <span class="n">_2</span><span class="k">:</span> <span class="kt">T2</span><span class="o">)</span>
-  <span class="k">extends</span> <span class="nc">Product2</span><span class="o">[</span><span class="kt">T1</span>, <span class="kt">T2</span><span class="o">]</span>
-  <span class="k">with</span> <span class="nc">Product</span>
-  <span class="k">with</span> <span class="nc">Serializable</span>
-</pre></div>
-</section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4a.md">lecture4a.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              39/45
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4a.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code">
-          <div class="inner">
-            
-            
-            <section><p>Tuples fit with pattern matching nicely.</p>
-<div class="highlight"><pre><span></span><span class="n">hostPort</span> <span class="k">match</span> <span class="o">{</span>
-  <span class="k">case</span> <span class="o">(</span><span class="s">&quot;localhost&quot;</span><span class="o">,</span> <span class="n">port</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="o">...</span>
-  <span class="k">case</span> <span class="o">(</span><span class="n">host</span><span class="o">,</span> <span class="n">port</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="o">...</span>
+            <section><p>Note that the parameters <code>fa</code> and <code>fb</code> are independent of one another.</p>
+<p>This contrasts with <code>flatMap</code>, in which <code>fb</code> is evaluated using <code>a</code>:</p>
+<div class="highlight"><pre><span></span><span class="k">trait</span> <span class="nc">FlatMap</span><span class="o">[</span><span class="kt">F</span><span class="o">[</span><span class="k">_</span><span class="o">]]</span> <span class="o">{</span>
+    <span class="k">def</span> <span class="n">flatMap</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">](</span><span class="n">fa</span><span class="k">:</span> <span class="kt">F</span><span class="o">[</span><span class="kt">A</span><span class="o">])(</span><span class="n">fb</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="n">F</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">F</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span>
 <span class="o">}</span>
 </pre></div>
 </section>
@@ -1729,7 +1570,49 @@ res1: Int = 80
             </aside>
             
             <aside class="page_number">
-              40/45
+              40/62
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>We can define our own <code>product</code> for any monad as:</p>
+<div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">cats.Monad</span>
+<span class="k">import</span> <span class="nn">cats.syntax.flatMap._</span>
+<span class="k">import</span> <span class="nn">cats.syntax.functor._</span>
+<span class="k">import</span> <span class="nn">scala.language.higherKinds</span>
+<span class="k">def</span> <span class="n">product</span><span class="o">[</span><span class="kt">F</span><span class="o">[</span><span class="k">_</span><span class="o">]</span><span class="kt">:</span> <span class="kt">Monad</span>, <span class="kt">A</span>, <span class="kt">B</span><span class="o">](</span><span class="n">fa</span><span class="k">:</span> <span class="kt">F</span><span class="o">[</span><span class="kt">A</span><span class="o">],</span> <span class="n">fb</span><span class="k">:</span> <span class="kt">F</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">F</span><span class="o">[(</span><span class="kt">A</span>,<span class="kt">B</span><span class="o">)]</span> <span class="k">=</span>
+    <span class="k">for</span> <span class="o">{</span>
+        <span class="n">a</span> <span class="k">&lt;-</span> <span class="n">fa</span>
+        <span class="n">b</span> <span class="k">&lt;-</span> <span class="n">fb</span>
+    <span class="o">}</span> <span class="k">yield</span> <span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">)</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4a.md">lecture4a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              41/62
             </aside>
 
           </footer>
@@ -1742,11 +1625,416 @@ res1: Int = 80
           <div class="inner">
             
             
-            <section><p>Tuple has some special sauce for simply making Tuples of 2 values</p>
-<pre><code>scala&gt; 1 -&gt; 2
-res0: (Int, Int) = (1,2)
-scala&gt; 1.-&gt;(2)
-res0: (Int, Int) = (1,2)
+            <section><p>Making this choice makes it easier to reason about uses of product for a specific monad instance—we only have to remember the semantics of flatMap to understand how product will work.</p>
+<p>We've seen that we can implement product in terms of the monad operations. Why bother with the Cartesian type class then?</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4a.md">lecture4a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              42/62
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>One reason to have the Cartesian type class is to enforce consistent behavior for all monad instances.</p>
+<p>Another reason is that <code>product</code> (and in particular the 'tie-fighter' operator <code>|@|</code> we’ll see in lecture 12) is more convenient than writing out the for comprehension.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4a.md">lecture4a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              43/62
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>The most important reason however is that <code>Cartesian</code> is strictly weaker than <code>Monad</code>.</p>
+<p>Next we'll look at a type (called an applicative) for which we can define <code>product</code> but not a monad instance.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4a.md">lecture4a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              44/62
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            <header><h1>Validated</h1></header>
+            
+            
+            <section><p>Recall that <code>Xor</code> is a monad, so its <code>product</code> is implemented in terms of <code>flatMap</code>.
+<br />
+<br />
+Let's experiment with this for a bit.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4a.md">lecture4a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              45/62
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">cats.data.Xor</span>
+<span class="k">type</span> <span class="kt">ErrorOr</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="nc">List</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span> <span class="nc">Xor</span> <span class="n">A</span>
+<span class="k">val</span> <span class="n">a</span><span class="k">:</span> <span class="kt">ErrorOr</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Xor</span><span class="o">.</span><span class="n">right</span><span class="o">(</span><span class="mi">123</span><span class="o">)</span>
+<span class="k">val</span> <span class="n">b</span><span class="k">:</span> <span class="kt">ErrorOr</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Xor</span><span class="o">.</span><span class="n">right</span><span class="o">(</span><span class="s">&quot;abc&quot;</span><span class="o">)</span>
+<span class="n">product</span><span class="o">(</span><span class="n">a</span><span class="o">,</span><span class="n">b</span><span class="o">)</span>
+<span class="c1">//res0: ErrorOr[(Int, String)] = Right((123,abc))</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4a.md">lecture4a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              46/62
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>However, if we try to combine two failed <code>Xors</code>, only the left-most errors are retained:</p>
+<div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">c</span><span class="k">:</span> <span class="kt">ErrorOr</span><span class="o">[</span><span class="kt">Nothing</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Xor</span><span class="o">.</span><span class="n">left</span><span class="o">(</span><span class="nc">List</span><span class="o">(</span><span class="s">&quot;Fail 1&quot;</span><span class="o">))</span>
+<span class="k">val</span> <span class="n">d</span><span class="k">:</span> <span class="kt">ErrorOr</span><span class="o">[</span><span class="kt">Nothing</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Xor</span><span class="o">.</span><span class="n">left</span><span class="o">(</span><span class="nc">List</span><span class="o">(</span><span class="s">&quot;Fail 2&quot;</span><span class="o">))</span>
+<span class="n">product</span><span class="o">(</span><span class="n">c</span><span class="o">,</span><span class="n">d</span><span class="o">)</span>
+<span class="c1">//res1: ErrorOr[(Nothing, Nothing)] = Left(List(Fail 1))</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4a.md">lecture4a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              47/62
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>However fail-fast semantics aren’t always the best choice.
+<br />
+<br />
+For example, when validating a web form, we want to accumulate errors for all invalid fields, not just the first one we find.
+<br />
+<br />
+If we model this with a monad like <code>Xor</code>, we fail fast and lose errors.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4a.md">lecture4a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              48/62
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>The situation is the same with for comprehensions. The code below fails on the first call to <code>parseInt</code> and doesn’t go any further:</p>
+<div class="highlight"><pre><span></span>
+</pre></div>
+
+<p>def parseInt(str: String): String Xor Int =     <br />
+    Xor.catchOnly<a href="str.toInt">NumberFormatException</a>
+       .leftMap(_ =&gt; s"Couldn't read $str")
+  for {
+    a &lt;- parseInt("a")
+    b &lt;- parseInt("b")
+    c &lt;- parseInt("c")
+  } yield (a + b + c)
+  //res0: Xor[String,Int] = Left(Couldn't read a)</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4a.md">lecture4a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              49/62
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>Cats provides another data type called <code>Validated</code> in addition to <code>Xor</code>.
+<br />
+<br />
+<code>Validated</code> is an example of a non-monadic applicative.
+<br />
+<br />
+This means Cats can provide an error-accumulating implementation of product for <code>Validated</code> without introducing inconsistent semantics.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4a.md">lecture4a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              50/62
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p><code>Validated</code> has two subtypes, <code>Validated.Valid</code> and <code>Validated.Invalid</code>, that correspond loosely to <code>Xor.Right</code> and <code>Xor.Left</code>.</p>
+<p>We can create instances directly using their <code>apply</code> methods:</p>
+<div class="highlight"><pre><span></span>
+</pre></div>
+
+<p>import cats.data.Validated
+  val v = Validated.Valid(123)
+  //v: cats.data.Validated.Valid[Int] = Valid(123)
+  val i = Validated.Invalid("oops")
+  //i: cats.data.Validated.Invalid[String] = Invalid(oops)</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4a.md">lecture4a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              51/62
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>Again, it is better for type inference to use the <code>valid</code> and <code>invalid</code> smart constructors, which return a type of <code>Validated</code>:</p>
+<div class="highlight"><pre><span></span>
+</pre></div>
+
+<p>import Validated.{valid, invalid}
+  val v = valid<a href="123">String, Int</a>
+  //v: Validated[String,Int] = Valid(123)
+  val i = invalid<a href="" title="oops">String, Int</a>
+  //i: Validated[String,Int] = Invalid(oops)</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4a.md">lecture4a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              52/62
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>And again we can import enriched <code>valid</code> and <code>invalid</code> methods from <code>cats.syntax.validated</code> to get some syntactic sugar:</p>
+<pre><code>    !scala
+  import cats.syntax.validated._
+  123.valid[String]
+  //res0: Validated[String,Int] = Valid(123)
+  "message".invalid[Int]
+  //res1: Validated[String,Int] = Invalid(message)
 </code></pre></section>
             
           </div>
@@ -1765,7 +2053,7 @@ res0: (Int, Int) = (1,2)
             </aside>
             
             <aside class="page_number">
-              41/45
+              53/62
             </aside>
 
           </footer>
@@ -1774,20 +2062,17 @@ res0: (Int, Int) = (1,2)
       
       <!-- slide source: lecture4a.md -->
       <div class="slide-wrapper">
-        <div class="slide">
+        <div class="slide has_code">
           <div class="inner">
             
-            <header><h1>Tuples and Maps</h1></header>
             
-            
-            <section><p>Maps can be thought of as sets of tuples</p>
-<pre><code>scala&gt; val a = 'a' -&gt; 97
-a: (Char, Int) = (a,97)
-scala&gt; Map(a)
-res0: scala.collection.immutable.Map[Char,Int] = Map(a -&gt; 97)
-scala&gt; Map(a,a)
-res0: scala.collection.immutable.Map[Char,Int] = Map(a -&gt; 97)
-</code></pre></section>
+            <section><p>A toy implementation of <code>Validated</code>:</p>
+<div class="highlight"><pre><span></span><span class="k">sealed</span> <span class="k">trait</span> <span class="nc">Validated</span><span class="o">[</span><span class="kt">+E</span>, <span class="kt">+A</span><span class="o">]</span>
+<span class="nc">case</span> <span class="k">class</span> <span class="nc">Invalid</span><span class="o">[</span><span class="kt">E</span><span class="o">](</span><span class="n">head</span><span class="k">:</span> <span class="kt">E</span><span class="o">,</span> <span class="n">tail</span><span class="k">:</span> <span class="kt">Vector</span><span class="o">[</span><span class="kt">E</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Vector</span><span class="o">())</span>
+  <span class="k">extends</span> <span class="nc">Validated</span><span class="o">[</span><span class="kt">E</span>, <span class="kt">Nothing</span><span class="o">]</span>
+<span class="k">case</span> <span class="k">class</span> <span class="nc">Valid</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">a</span><span class="k">:</span> <span class="kt">A</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">Validated</span><span class="o">[</span><span class="kt">Nothing</span>, <span class="kt">A</span><span class="o">]</span>
+</pre></div>
+</section>
             
           </div>
           <div class="presenter_notes">
@@ -1805,7 +2090,7 @@ res0: scala.collection.immutable.Map[Char,Int] = Map(a -&gt; 97)
             </aside>
             
             <aside class="page_number">
-              42/45
+              54/62
             </aside>
 
           </footer>
@@ -1814,14 +2099,21 @@ res0: scala.collection.immutable.Map[Char,Int] = Map(a -&gt; 97)
       
       <!-- slide source: lecture4a.md -->
       <div class="slide-wrapper">
-        <div class="slide">
+        <div class="slide has_code">
           <div class="inner">
             
             
-            <section><p>So the functions you write work on a pair of the keys and values in the Map.</p>
-<pre><code>scala&gt; val ext= Map("steve" -&gt; 100, "bob" -&gt; 101, "joe" -&gt; 201)
-ext: Map[String,Int] = Map((steve,100), (bob,101), (joe,201))
-</code></pre></section>
+            <section><p>Unlike the <code>Xor</code>’s monad, which cuts the calculation short, <code>Validated</code> keeps going to report back all failures.</p>
+<div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">cats.data.Validated</span>
+<span class="k">import</span> <span class="nn">cats.instances.list._</span>
+<span class="k">import</span> <span class="nn">cats.syntax.cartesian._</span>
+<span class="k">type</span> <span class="kt">ErrorOr</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Validated</span><span class="o">[</span><span class="kt">String</span>,<span class="kt">A</span><span class="o">]</span>
+<span class="k">val</span> <span class="n">a</span><span class="k">:</span> <span class="kt">ErrorOr</span><span class="o">[</span><span class="kt">Nothing</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Validated</span><span class="o">.</span><span class="nc">Invalid</span><span class="o">(</span><span class="s">&quot;foo&quot;</span><span class="o">)</span>
+<span class="k">val</span> <span class="n">b</span><span class="k">:</span> <span class="kt">ErrorOr</span><span class="o">[</span><span class="kt">Nothing</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Validated</span><span class="o">.</span><span class="nc">Invalid</span><span class="o">(</span><span class="s">&quot;bar!&quot;</span><span class="o">)</span>
+<span class="nc">Cartesian</span><span class="o">[</span><span class="kt">ErrorOr</span><span class="o">].</span><span class="n">product</span><span class="o">(</span><span class="n">a</span><span class="o">,</span><span class="n">b</span><span class="o">)</span>
+<span class="c1">//res0: ErrorOr[(Nothing, Nothing)] = Invalid(foobar!)</span>
+</pre></div>
+</section>
             
           </div>
           <div class="presenter_notes">
@@ -1839,7 +2131,7 @@ ext: Map[String,Int] = Map((steve,100), (bob,101), (joe,201))
             </aside>
             
             <aside class="page_number">
-              43/45
+              55/62
             </aside>
 
           </footer>
@@ -1848,14 +2140,12 @@ ext: Map[String,Int] = Map((steve,100), (bob,101), (joe,201))
       
       <!-- slide source: lecture4a.md -->
       <div class="slide-wrapper">
-        <div class="slide has_notes">
+        <div class="slide">
           <div class="inner">
             
             
-            <section><pre><code>scala&gt; ext.filter((namePhone: (String, Int)) =&gt; namePhone._2 &lt; 200)
-res0: Map[String,Int] = Map((steve,100), (bob,101))
-</code></pre>
-<p class="notes">Because it gives you a tuple, you have to pull out the keys and values with their positional accessors. Yuck! Lucky us, we can actually use a pattern match to extract the key and value nicely.</p></section>
+            <section><p>Validated accumulates errors using a <code>Semigroup</code> (the append part of a <code>Monoid</code>).</p>
+<p>This means we can use any <code>Monoid</code> as an error type, including <code>String</code>, <code>List</code>, and <code>Vector</code>, as well as pure semigroups like <code>NonEmptyList</code>s.</p></section>
             
           </div>
           <div class="presenter_notes">
@@ -1873,7 +2163,7 @@ res0: Map[String,Int] = Map((steve,100), (bob,101))
             </aside>
             
             <aside class="page_number">
-              44/45
+              56/62
             </aside>
 
           </footer>
@@ -1882,15 +2172,20 @@ res0: Map[String,Int] = Map((steve,100), (bob,101))
       
       <!-- slide source: lecture4a.md -->
       <div class="slide-wrapper">
-        <div class="slide">
+        <div class="slide has_code">
           <div class="inner">
             
             
-            <section><pre><code>scala&gt; ext.filter({case (name, extension) =&gt; extension &lt; 200})
-res0: Map[String,Int] = Map((steve,100), (bob,101))
-</code></pre>
-<p>.notes: Why does this work? Why can you pass in a partial pattern match?
-Because PartialFunction[A,B] is a subtype of A=&gt;B</p></section>
+            <section><div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">cats.Cartesian</span>
+<span class="k">type</span> <span class="kt">StringOr</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Validated</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">A</span><span class="o">]</span>
+<span class="k">import</span> <span class="nn">cats.std.string._</span>
+<span class="nc">Cartesian</span><span class="o">[</span><span class="kt">StringOr</span><span class="o">].</span><span class="n">product</span><span class="o">(</span>
+  <span class="nc">Validated</span><span class="o">.</span><span class="n">invalid</span><span class="o">(</span><span class="s">&quot;Hello&quot;</span><span class="o">),</span>
+  <span class="nc">Validated</span><span class="o">.</span><span class="n">invalid</span><span class="o">(</span><span class="s">&quot; world&quot;</span><span class="o">)</span>
+<span class="o">)</span>
+<span class="c1">//res0 = Invalid(Hello world)</span>
+</pre></div>
+</section>
             
           </div>
           <div class="presenter_notes">
@@ -1908,18 +2203,29 @@ Because PartialFunction[A,B] is a subtype of A=&gt;B</p></section>
             </aside>
             
             <aside class="page_number">
-              45/45
+              57/62
             </aside>
 
           </footer>
         </div>
       </div>
       
-      <!-- slide source:  -->
+      <!-- slide source: lecture4a.md -->
       <div class="slide-wrapper">
-        <div class="slide">
+        <div class="slide has_code">
           <div class="inner">
             
+            
+            <section><p>Lists have a monoid instance as well:</p>
+<div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">cats.std.list._</span>
+<span class="k">type</span> <span class="kt">ListOr</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Validated</span><span class="o">[</span><span class="kt">List</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span>, <span class="kt">A</span><span class="o">]</span>
+<span class="nc">Cartesian</span><span class="o">[</span><span class="kt">ListOr</span><span class="o">].</span><span class="n">product</span><span class="o">(</span>
+  <span class="nc">Validated</span><span class="o">.</span><span class="n">invalid</span><span class="o">(</span><span class="nc">List</span><span class="o">(</span><span class="s">&quot;Hello&quot;</span><span class="o">)),</span>
+  <span class="nc">Validated</span><span class="o">.</span><span class="n">invalid</span><span class="o">(</span><span class="nc">List</span><span class="o">(</span><span class="s">&quot;world&quot;</span><span class="o">))</span>
+<span class="o">)</span>
+<span class="c1">//res1 = Invalid(List(Hello, world))</span>
+</pre></div>
+</section>
             
           </div>
           <div class="presenter_notes">
@@ -1932,8 +2238,155 @@ Because PartialFunction[A,B] is a subtype of A=&gt;B</p></section>
 
           <footer>
             
+            <aside class="source">
+              Source: <a href="lecture4a.md">lecture4a.md</a>
+            </aside>
+            
             <aside class="page_number">
-              /45
+              58/62
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4a.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>Note that vectors have a more efficient append operation than lists and should be used instead:</p>
+<div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">cats.std.vector._</span>
+<span class="k">type</span> <span class="kt">VectorOr</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Validated</span><span class="o">[</span><span class="kt">Vector</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span>, <span class="kt">A</span><span class="o">]</span>
+<span class="nc">Cartesian</span><span class="o">[</span><span class="kt">VectorOr</span><span class="o">].</span><span class="n">product</span><span class="o">(</span>
+  <span class="nc">Validated</span><span class="o">.</span><span class="n">invalid</span><span class="o">(</span><span class="nc">Vector</span><span class="o">(</span><span class="mi">404</span><span class="o">)),</span>
+  <span class="nc">Validated</span><span class="o">.</span><span class="n">invalid</span><span class="o">(</span><span class="nc">Vector</span><span class="o">(</span><span class="mi">500</span><span class="o">))</span>
+<span class="o">)</span>
+<span class="c1">//res2 = Invalid(Vector(404, 500))</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4a.md">lecture4a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              59/62
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p><code>Xor</code> vs <code>Validated</code></p>
+<p>Which is better?</p>
+<p>The answer depends on the semantics we’re looking for.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4a.md">lecture4a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              60/62
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>Some points to ponder:</p>
+<ul>
+<li>Sometimes sequentiality (i.e.<code>flatMap</code>) is exactly what you need. Perhaps you want fail-fast semantics or the ability use the contents of one container as an argument to the next container.</li>
+<li>Error recovery is important when processing large jobs like Spark pipelines. We don’t want to run a job for an hour and then find it failed on the last element.</li>
+<li>Error reporting is equally important. We need to know what went wrong, not just that something went wrong.</li>
+<li>In a number of cases we want to collect all the errors, not just the first one we encountered.</li>
+</ul></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4a.md">lecture4a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              61/62
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4a.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            <header><h1>Homework</h1></header>
+            
+            
+            <section><p>Read Chapter 5 of <em>Functional Programming in Scala</em>.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4a.md">lecture4a.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              62/62
             </aside>
 
           </footer>
@@ -1949,7 +2402,7 @@ Because PartialFunction[A,B] is a subtype of A=&gt;B</p></section>
       <caption>Table of Contents</caption>
       
       <tr id="toc-row-1">
-        <th><a href="#slide1">Lecture 4a: Either, Validation and <a href="https://github.com/typelevel/cats"><em>Cats</em></a></a></th>
+        <th><a href="#slide1">Lecture 4a: Either, Xor, and Validated</a></th>
         <td><a href="#slide1">1</a></td>
       </tr>
       
@@ -1973,13 +2426,13 @@ Because PartialFunction[A,B] is a subtype of A=&gt;B</p></section>
       
       
       <tr id="toc-row-5">
-        <th><a href="#slide5">A few familiar combinators</a></th>
+        <th><a href="#slide5">-</a></th>
         <td><a href="#slide5">5</a></td>
       </tr>
       
       
       <tr id="toc-row-6">
-        <th><a href="#slide6">Usage of <code>Either</code> will resemble this</a></th>
+        <th><a href="#slide6">Lower Type Bound Generics</a></th>
         <td><a href="#slide6">6</a></td>
       </tr>
       
@@ -2021,7 +2474,7 @@ Because PartialFunction[A,B] is a subtype of A=&gt;B</p></section>
       
       
       <tr id="toc-row-13">
-        <th><a href="#slide13">Lower Type Bound Generics</a></th>
+        <th><a href="#slide13">-</a></th>
         <td><a href="#slide13">13</a></td>
       </tr>
       
@@ -2069,7 +2522,7 @@ Because PartialFunction[A,B] is a subtype of A=&gt;B</p></section>
       
       
       <tr id="toc-row-21">
-        <th><a href="#slide21">-</a></th>
+        <th><a href="#slide21"><code>Xor</code></a></th>
         <td><a href="#slide21">21</a></td>
       </tr>
       
@@ -2099,7 +2552,7 @@ Because PartialFunction[A,B] is a subtype of A=&gt;B</p></section>
       
       
       <tr id="toc-row-26">
-        <th><a href="#slide26">Validation</a></th>
+        <th><a href="#slide26">-</a></th>
         <td><a href="#slide26">26</a></td>
       </tr>
       
@@ -2117,7 +2570,7 @@ Because PartialFunction[A,B] is a subtype of A=&gt;B</p></section>
       
       
       <tr id="toc-row-29">
-        <th><a href="#slide29">map2</a></th>
+        <th><a href="#slide29">-</a></th>
         <td><a href="#slide29">29</a></td>
       </tr>
       
@@ -2135,7 +2588,7 @@ Because PartialFunction[A,B] is a subtype of A=&gt;B</p></section>
       
       
       <tr id="toc-row-32">
-        <th><a href="#slide32">Challenge Question</a></th>
+        <th><a href="#slide32">-</a></th>
         <td><a href="#slide32">32</a></td>
       </tr>
       
@@ -2153,19 +2606,19 @@ Because PartialFunction[A,B] is a subtype of A=&gt;B</p></section>
       
       
       <tr id="toc-row-35">
-        <th><a href="#slide35">-</a></th>
+        <th><a href="#slide35"><code>Cartesian</code></a></th>
         <td><a href="#slide35">35</a></td>
       </tr>
       
       
       <tr id="toc-row-36">
-        <th><a href="#slide36">-</a></th>
+        <th><a href="#slide36">Example: Combining Options</a></th>
         <td><a href="#slide36">36</a></td>
       </tr>
       
       
       <tr id="toc-row-37">
-        <th><a href="#slide37">Tuple</a></th>
+        <th><a href="#slide37">Exercise</a></th>
         <td><a href="#slide37">37</a></td>
       </tr>
       
@@ -2195,7 +2648,7 @@ Because PartialFunction[A,B] is a subtype of A=&gt;B</p></section>
       
       
       <tr id="toc-row-42">
-        <th><a href="#slide42">Tuples and Maps</a></th>
+        <th><a href="#slide42">-</a></th>
         <td><a href="#slide42">42</a></td>
       </tr>
       
@@ -2213,8 +2666,110 @@ Because PartialFunction[A,B] is a subtype of A=&gt;B</p></section>
       
       
       <tr id="toc-row-45">
-        <th><a href="#slide45">-</a></th>
+        <th><a href="#slide45">Validated</a></th>
         <td><a href="#slide45">45</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-46">
+        <th><a href="#slide46">-</a></th>
+        <td><a href="#slide46">46</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-47">
+        <th><a href="#slide47">-</a></th>
+        <td><a href="#slide47">47</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-48">
+        <th><a href="#slide48">-</a></th>
+        <td><a href="#slide48">48</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-49">
+        <th><a href="#slide49">-</a></th>
+        <td><a href="#slide49">49</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-50">
+        <th><a href="#slide50">-</a></th>
+        <td><a href="#slide50">50</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-51">
+        <th><a href="#slide51">-</a></th>
+        <td><a href="#slide51">51</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-52">
+        <th><a href="#slide52">-</a></th>
+        <td><a href="#slide52">52</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-53">
+        <th><a href="#slide53">-</a></th>
+        <td><a href="#slide53">53</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-54">
+        <th><a href="#slide54">-</a></th>
+        <td><a href="#slide54">54</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-55">
+        <th><a href="#slide55">-</a></th>
+        <td><a href="#slide55">55</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-56">
+        <th><a href="#slide56">-</a></th>
+        <td><a href="#slide56">56</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-57">
+        <th><a href="#slide57">-</a></th>
+        <td><a href="#slide57">57</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-58">
+        <th><a href="#slide58">-</a></th>
+        <td><a href="#slide58">58</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-59">
+        <th><a href="#slide59">-</a></th>
+        <td><a href="#slide59">59</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-60">
+        <th><a href="#slide60">-</a></th>
+        <td><a href="#slide60">60</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-61">
+        <th><a href="#slide61">-</a></th>
+        <td><a href="#slide61">61</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-62">
+        <th><a href="#slide62">Homework</a></th>
+        <td><a href="#slide62">62</a></td>
       </tr>
       
       

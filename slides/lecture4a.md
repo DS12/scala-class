@@ -1,5 +1,5 @@
 
-#Lecture 4a: Either, Validation and [*Cats*](https://github.com/typelevel/cats)
+#Lecture 4a: Either, Xor, and Validated
 
 
 ![](images/lecture4a/cats.png)
@@ -15,22 +15,14 @@ http://danielwestheide.com/blog/2012/12/26/the-neophytes-guide-to-scala-part-6-e
 
 ---
 
+
 #Either
 
-`Either` is a "chained container" that holds one of two things.
+`Either`, like `Option` is a monadic container that can hold one of two things.
 
-Like `Option`, the possible value inside this chained container can be accessed with `flatMap`.
+`Option` has only one generic type: `Some`
 
-Like a set of `Option`s, a set of `Eithers` can be chained together with a sequence of `flatMap`s.
-
-`Either` solves our problem from the previous lecture of `Option`'s uninformative `None`.
-
-
-
----
-The `Option` trait had two concrete children: `Some` and `None`.  Think of `Some` as the "right" type and `None` as the "left" type.  `Option` has only one generic type.  `Either` has two generic types: left/incorrect and right/correct.
-
-`Either` is not just used for catching errors, just like `None` in `Option` is not always a "bad thing."
+`Either` has two generic types: left/incorrect and right/correct.
 
 ---
 
@@ -39,7 +31,9 @@ The `Option` trait had two concrete children: `Some` and `None`.  Think of `Some
 	case class Left[+E](e: E) extends Either[E, Nothing]
 	case class Right[+A](a: A) extends Either[Nothing, A]
 
+The left side of `Either` is *typically* an `Exception` of some form, and is usually intended to be the "end of the chain."  
 
+---
 
 A `Left` instance of `Either` will have `Nothing` for its "right" type.
 
@@ -47,189 +41,27 @@ A `Right` instance of `Either` will have `Nothing` for its "left" type.
 
 The generic letter for the "left" type is "E" because it is usually a subtype of Java's `Exception`.
 
----
-
-# A few familiar combinators
-
-	!scala
-	def map[B](f: A => B): Either[E, B]
-    def flatMap[EE >: E, B](f: A => Either[EE, B]): Either[EE, B]
-
 Given an `Either[Exception, Integer]`, these combinators only let me operate on the `Integer`.  They are *right-biased*.
 
-Usually, we intend to "fail fast" whenever an `Either` becomes `Left[Exception]`.
-
 ---
 
-#Usage of `Either` will resemble this
-
-Given a set of `Either`s:
-
 	!scala
-	val eitherA: Either[Exception, A] = ...
-	val eitherB: Either[Exception, B] = ...
-	val eitherC: Either[Exception, C] = ...
+	trait Either[+E,+A] {
+	 def map[B](f: A => B): Either[E, B] =
+	   this match {
+	     case Right(a) => Right(f(a))
+	     case Left(e) => Left(e)
+	   }
 
-a function to produce a `D`:
-
-	!scala
-	def f(a: A, b: B, c: C): D = ...
-
-and a sequence of `flatMap`s:
-
-	!scala
-	val eitherD: Either[Exception, D] =
-	  eitherA.flatMap { a =>
-	    eitherB.flatMap { b =>
-		  eitherC.map { c =>
-		    f(a, b, c)
-		  }
-	    }
-      }
----
-
-Given:
-
-	!scala
-	val eitherRecord1: Either[Exception, Record] = Right(record)
-	val eitherRecord2: Either[Exception, Record] =
-	  Left(RetrievalException("retrieval of Record2 failed"))
-	val record3: Either[Exception, Record] = Right(record3)
-
-a function to produce a `Collection`:
-
-	!scala
-	def makeCollection(r1: Record, r2: Record, r3: Record): Collection = ...
-
-and a sequence of `flatMap`s:
-
-	!scala
-	val eitherCollection = eitherRecord1.flatMap { record1 =>
-	  eitherRecord2.flatMap { record2 =>
-	    eitherRecord3.flatMap { record3 =>
-		  makeCollection(record1, record2, record3)
-	    }
-	  }
+	 def flatMap[EE >: E, B](f: A => Either[EE, B]): Either[EE, B] =
+	   this match {
+	     case Left(e) => Left(e)
+	     case Right(a) => f(a)
+	   }
 	}
 
-	val eitherCollection =
-	  Left(RetrievalException("retrieval of Record2 failed"))
 ---
 
-Did the prior two examples make full use of "chaining"?  Were the prior examples "sequential"?  No on all counts.  The input `Either`s were not dependent upon each other.
-
-An example that makes better use of "chaining";
-given types `A`, `B`, `C`, and `D`:
-
-	!scala
-	val eitherA: Either[Exception, A] = ...
-	def eitherB(a: A): Either[Exception, B] = ...
-	def eitherC(b: B): Either[Exception, C] = ...
-	def eitherD(c: C): Either[Exception, D] = ...
-
-and a sequence of `flatMap`s:
-
-	!scala
-	val eitherD: Either[Exception, D] =
-	  eitherA.flatMap { (a: A) =>
-	    eitherB(a).flatMap { (b: B) =>
-		  eitherC(b).flatMap { (c: C) =>
-		    eitherD(c)
-	    }
-      }
-	// three anonymous functions used here
-
----
-
-The anonymous functions used in the "chain" on the previous slide are actually redundant.
-
-`=:=` is type eqivalency
-
-	!scala
-	def eitherB(a: A): Either[Exception, B] =:= A => Either[Exception, B]
-	def eitherC(b: B): Either[Exception, C] =:= B => Either[Exception, C]
-	def eitherD(c: C): Either[Exception, D] =:= C => Either[Exception, D]
-
-We don't need to write anonymous functions when `eitherB`, `eitherC`, and `eitherD` already fit the signature of the argument expected by `flatMap`.
-
-The "chain" of the previous slide, rewritten without this redundancy:
-
-	!scala
-	val eitherD: Either[Exception, D] =
-	  eitherA
-	    .flatMap(eitherB)
-		.flatMap(eitherC)
-		.flatMap(eitherD)
-
-Redundancy is fine if it makes the code "self-documenting," though.
-
----
-
-Sending a `Request` to a distant server; the `Response` may or may not arrive.  If the `Response` does arrive, its `Payload` may or may not be corrupted.
-
-	!scala
-	val request: Request = ...
-	def sendRequest(req: Request): Either[Exception, Response] = ...
-	def unpackResponse(res: Response): Either[Exception, Payload] = ...
-
-
-and a sequence of `flatMap`s:
-
-	!scala
-	val eitherPayload: Either[Exception, Payload] =
-	  sendRequest(request).flatMap { response =>
-     	unpackResponse(response)
-	  }
-
-Rewritten to not be "hard-wired" to a particular value `request`:
-
-	!scala
-	def getPayload(request: Request): Either[Exception, Payload] =
-	  sendRequest(request).flatMap { response =>
-     	unpackResponse(response)
-	  }
-
----
-
-The left side of `Either` is *typically* an `Exception` of some form, and is usually intended to be the "end of the chain."  To prioritize typical usage, combinators on most implementations of `Either` are "right-biased."
-
-Nevertheless, sometimes we *do* want to operate on the "left" type.  Implementations of `Either` vary by library in how this is provided, if at all.
-
-Scalaz' `Either` provides `leftMap`:
-
-	!scala
-	(A \/ B) {
-    	def leftMap[C](f: A => C): (C \/ B)
-	}
-
-
-This is particularly useful when the "left" type is not a bad thing like an exception.
-
-`Either` can be used for more than containing exceptions.
-
-
-
----
-
-`def Try` from previous lecture, rewritten for `Either`
-
-	!scala
-	def tryEither[A](a: => A): Either[Throwable, A] =
-	  try { Right(a) }
-	  catch { case t: Throwable => Left(throwable) }
-
-An improvement, taken from `Scalaz`
-
-	!scala
-	import scala.util.control.NonFatal
-
-	def tryEither[A](a: => A): Either[Throwable, A] =
-	  try { Right(a) }
-	  catch { case NonFatal(throwable) => Left(throwable) }
-
-
-
----
 
 # Lower Type Bound Generics
 
@@ -248,8 +80,6 @@ Last lecture, we left unexplained the "the necessity of the lower type bound gen
     }
 
 ---
-
-
 
 Here, in `Either`, we see the same pattern; lower type bound generic `EE`:
 
@@ -313,6 +143,8 @@ if not for the lower type bound generic `B >: A`, `getOrElse` would be limited t
 
 Not very useful.
 
+---
+
 With `B >: A`, `getOrElse` on `failed` becomes:
 
 	!scala
@@ -336,6 +168,7 @@ It is likely you will use [*upper type bounds*](http://docs.scala-lang.org/tutor
 
 Lacking the `+` prefix to its generic type, `Option` would be *invariant* and `Option[Nothing] <: Option[A]` would be *false*.  This is default.
 
+---
 
 If the generic inside `List` is covariant, then:
 
@@ -343,15 +176,15 @@ If the generic inside `List` is covariant, then:
 
 ---
 
-The same explanation of the necessity of the lower type bound generic, for `Either`
+The same explanation of the necessity of the lower type bound generic holds for `Either`.
 
-An instance of `Left` still has a "right" type: `Nothing`.
-
-An instance of `Right` still has a "left" type: `Nothing`.
+An instance of `Left` still has a "right" type: `Nothing`, and vice versa for an instance of `Right`:
 
 	!scala
 	case class Left[+E](e: E) extends Either[E, Nothing]
 	case class Right[+A](a: A) extends Either[Nothing, A]
+
+---
 
 If not for the lower type bound generic `EE`, `flatMap` would be limited to this signature when called an a instance of `Left`:
 
@@ -370,309 +203,483 @@ But at compile-time, the combinators must type-check for either way this could g
 
 ---
 
-Given a set of `Either`s:
+Type checking at compile-time needs to verify the types *"line up"*
+if `eitherA` is `Left` or `Right`, if `eitherB` is `Left` or `Right`, etc.:
 
 	!scala
 	val eitherA: Either[Exception, A] = ...
 	val eitherB: Either[Exception, B] = ...
 	val eitherC: Either[Exception, C] = ...
-
-a function to produce a `D`:
-
-	!scala
 	def f(a: A, b: B, c: C): D = ...
-
-and a sequence of `flatMap`s:
-
-	!scala
 	val eitherD: Either[Exception, D] =
 	  eitherA.flatMap { a =>
 	    eitherB.flatMap { b =>
-		  eitherC.map { c =>
-		    f(a, b, c)
+			  eitherC.map { c =>
+			    f(a, b, c)
 		  }
-	    }
-      }
-
-typechecking at compile-time needs to verify the types *"line up"*
-if `eitherA` is `Left` or `Right`, if `eitherB` is `Left` or `Right`, etc.
-
----
-
-You can find an implementation of `Either` in several places:
-
-* In *FP in Scala*, `fpinscala.errorhandling.Either`
-* In *Scalaz*, `scalaz.\/`
-    * Also called "Disjunction"
-    * `scalaz/core/src/main/scala/scalaz/Either.scala`
-    * [ScalaDoc](https://oss.sonatype.org/service/local/repositories/releases/archive/org/scalaz/scalaz_2.11/7.2.1/scalaz_2.11-7.2.1-javadoc.jar/!/index.html#scalaz.$bslash$div$)
-* In *Cats*, `cats.data.Xor`
-    * `cats/core/src/main/scala/cats/data/Xor.scala`
-	* [ScalaDoc](http://typelevel.org/cats/api/#cats.data.Xor)
-* Natively, `scala.util.Either`
-    * [ScalaDoc](http://www.scala-lang.org/api/current/#scala.util.Either)
-	* Must use projection (`.left` or `.right`) to access `flatMap`, `map`, etc.; not right-biased; see ScalaDoc example
-
-
----
-In an earlier Challenge Question for `Option`, we asked you to implement `flatMap` on `Option` using `map`, `orElse` and `getOrElse`.
-
-`orElse` and `getOrElse` are not "generalized" combinators -- they may not appear in all of the Containers equivalent to `Option`.  
-
-`unit` and `flatMap` *are* generalized combinators.  Implement these from scratch (using pattern matching for `flatMap`) for `Either`.
-
-	!scala
-	object Either {
-    	def unit[A](a: A): Either[Nothing, A] = ???
-		// If we pass an eager `A` to `unit`,
-		// the left generic is completely unnecesary -- hence `Nothing`.
-		// Note, `unit` is not intended to be used to catch errors.
-		// If it were, we'd need a type other than `Nothing`.
-    }
-
-	trait Either[E, A] {
-		def flatMap[B](f: A => Either[E, B]): Either[E, B] = ???
-	}
-
-
-
----
-
-In lab, you will implement `map`, `orElse`, and `getOrElse` using `unit` and `flatMap`, our primitives.
-
----
-
-#Validation
-
-What if we don't want to "fail fast"?  What if we don't need (or want) sequentiality?  Then we should not be using a "chained container" like `Option` or `Either`.
-
-"Failing fast" and "sequential chaining" was a signature feature of the chained containers we've seen previously:
-
-	!scala
-	def sendRequest(req: Request): Either[Exception, Response] = ...
-	def unpackResponse(res: Response): Either[Exception, Payload] = ...
-
-	def getPayload(request: Request): Either[Exception, Payload] =
-	  sendRequest(request).flatMap { response =>
-     	unpackResponse(response)
 	  }
+  }
 
-We'll have to depart from "chained container."
-
-We'll refer to this new "container" as a *"ringed container"*.
-
-I chose the word "ring" because "ringed container" is to [token ring network](https://en.wikipedia.org/wiki/Token_ring) as "chained container" is to "Ethernet".
 
 ---
 
-Features you lose with "Ringed Container"
+Note that in the prior example, the input `Either`s were not dependent upon each other.
 
-* Failing fast
-    * If I do not receive a `Response`, I will not attempt to extract the `Payload` of the `Response`
-* The contents of one container as the argument to the next container
-    * We are abandoning sequentiality.  With "chained container", each container had to wait on the container prior
-
----
-
-Features you gain with "Ringed Container"
-
-* Parallelism, rather than sequentiality
-* In `Validation`, the ability to collect more than a single `Exception`
-    * Perfect for parallelized parsing tasks
-
----
-# map2
-
-Remember `map2`, a combinator of `Option`?  
+An example that makes explicit use of the monadic nature of `Either`;
 
 	!scala
-	def map2[A,B,C](a: Option[A], b: Option[B])
-	  (f: (A, B) => C): Option[C]
-
-It is critically important to any "ringed container."  If you associate `flatMap` with "chained containers," associate `map2` with "ringed containers."
-
----
+	val eitherD: Either[Exception, D] =
+	  eitherA.flatMap(eitherB).flatMap(eitherC)
 
 
 ---
 
-We are going to "hone in" on this feature of `Validation`, mentioned earlier:
+`Try` from the previous lecture, rewritten for `Either`
 
- * the ability to collect more than a single `Exception`
+	!scala
+	import scala.util.control.NonFatal
 
-Where is this useful?
+	def tryEither[A](a: => A): Either[Throwable, A] =
+	  try { Right(a) }
+	  catch { case NonFatal(throwable) => Left(throwable) }
 
- * a group of things that are mutually dependent, but not sequential
- * a set of web form fields that need to be validated
-     * Each field must be a `Right` for the entire form to be a `Right`
-	 * But fields are validated independently
-	 * We want independence in validating these fields, so that all errors can be caught at the same time
-	 * What if you make multiple mistakes in a web form, and the page only informs you of one mistake per attempt to submit?
+---
+
+#`Xor`
+
+`Xor` is the first concrete data type we’ve seen in Cats.
+
+Cats provides numerous other data types, all of which exist in the [cats.data][cats.data] package.
+
+Other examples include the `Validated` type that we will see shortly.
+
+
+---
+
+The Scala standard library already has a type [Either](http://www.scala-lang.org/api/current/#scala.util.Either). Cats provides an alternative in `cats.data.Xor`.
+
+Why have this?
+
+---
+
+Aside from providing a few useful methods, the main reason is that `Either` is unbiased.
+
+This means we must first use projection (`.left` or `.right`) to access `flatMap`, `map`, etc.:
+
+	!scala
+	Right(123).flatMap(x => Right(x * 2))
+	//error: value flatMap is not a member of scala.util.Right[Nothing,Int]
+	Right(123).right.flatMap(x => Right(x * 2))
+	//res0: scala.util.Either[Nothing,Int] = Right(246)
+
+---
+
+This makes `Either` incovenient to use as a monad, especially as the convention in most functional languages is that the left side represents errors.
+
+`Xor` complies with convention and thus supports `map` and `flatMap` directly:
+
+	!scala
+	import cats.data.Xor
+	val a = Xor.Right(1)
+	//a: cats.data.Xor.Right[Int] = Right(1)
+	a.flatMap(x => Xor.Right(x + 2))
+	//res1: cats.data.Xor[Nothing,Int] = Right(3)
+
+---
+
+The `Xor` object provides the `Xor.left` and `Xor.right` constructors as we saw above.
+
+However, it is usually more convenient to use smart constructors via the type class syntax pattern.
 
 ---
 
 	!scala
-	sealed trait Validation[+E, +A]
-
-	case class Failure[E](head: E, tail: Vector[E] = Vector())
-	  extends Validation[E, Nothing]
-
-	case class Success[A](a: A) extends Validation[Nothing, A]
-
-A `Failure` instance of `Validation` will have `Nothing` for its "right" type.
-
-A `Failure` instance of `Validation` will contain at least one instance of `E`.  Its member `tail` may be empty.
-
-In Scalaz, `Failure` contains a `NonEmptyList[E]` rather than `head: E` and `tail: Vector[E]`
-
-A `Success` instance of `Validation` will have `Nothing` for its "left" type.
+	import cats.syntax.xor._
+	val a = 3.right[String]
+	// a: cats.data.Xor[String,Int] = Right(3)
+	val b = 4.right[String]
+	// b: cats.data.Xor[String,Int] = Right(4)
+	for {
+		x <- a
+		y <- b
+	} yield x*x + y*y
+	//res2: cats.data.Xor[String,Int] = Right(25)
 
 ---
-#Challenge Question
 
-Write a function that combines two `Failure`s.  This is a component of other `Validation` combinators you will implement in lab.
+`Xor` also supports familiar additional methods like `fold`, `getOrElse`, and `orElse`.
+
+We use `fold` to convert a `Xor` to some other type, by supplying transform functions for the left and right sides:
 
 	!scala
-	def combineFailures[E](f1: Validation[E, Nothing],
-	                   f2: Validation[E, Nothing):
-					  Validation[E, Nothing] = ???
-
-
----
-
+	1.right[String].fold(
+	  left  => s"FAIL!",
+	  right => s"SUCCESS: $right!"
+	)
+	//res3: String = SUCCESS: 1!
 
 ---
+
+We can use `getOrElse` to extract the right value or return a default:
+
 	!scala
-	def combineFailures[E](f1: Validation[E, Nothing],
-	                   f2: Validation[E, Nothing):
-					  Validation[E, Nothing] = (f1, f2) match {
-	  case (Failure(h1, t1), Failure(h2, t2)) =>
-	    Failure(h1, h2::t1:::t2)
-	  ...
+	1.right[String].getOrElse(0)
+	//res4: Int = 1
+	"Error".left[Int].getOrElse(0)
+	//res5: Int = 0
+
+---
+
+
+Like `Either`, `Xor` is typically used to implement fail-fast error handling.
+
+We sequence a number of computations using `flatMap`, and if one fails the remaining computations are not run:
+
+	!scala
+	for {
+		a <- 1.right[String]
+		b <- 0.right[String]
+		c <- if(b == 0) "DIV0".left[Int] else (a / b).right[String]
+	} yield c * 100
+	//res6: cats.data.Xor[String,Int] = Left(DIV0)
+
+---
+
+When using `Xor` for error handling, we need to determine what type we want to use to represent errors. We could use `Throwable` for this as follows:
+
+	!scala
+	type Result[A] = Xor[Throwable, A]
+	//infix notation
+	type Result[A] = Throwable Xor A
+
+---
+
+This gives us similar semantics to `Try` from the Scala standard library.
+
+The problem, however, is that `Throwable` is an extremely broad supertype.
+
+We have little insight into what type of error occurred.
+
+---
+
+Another approach is to define an algebraic data type to represent the types of error that can occur:
+
+	!scala
+	case class User(username: String, password: String)
+	sealed trait LoginError
+	case class UserNotFound(username: String) extends LoginError
+	case class PasswordIncorrect(username: String) extends LoginError
+	trait UnexpectedError extends LoginError
+	type LoginResult = LoginError Xor User
+
+---
+
+This approach solves the problems we saw with `Throwable`.
+
+It gives us a fixed set of expected error types and a catch-all for anything else that we didn’t expect.
+
+We also get the safety of exhaustive checking on any pattern matching we do.
+
+---
+
+Now we get precise error-handling based on the error type:
+
+	!scala
+	def handleError(error: LoginError): Unit = error match {
+		case UserNotFound(u) => println(s"User not found: $u")
+		case PasswordIncorrect(u) => println(s"Password: $u")
+		case _ : UnexpectedError => println(s"Unexpected error")
+	}
+	val result1: LoginResult = User("dave", "passw0rd").right
+	val result2: LoginResult = UserNotFound("dave").left
+	result1.fold(handleError, println)
+	//User(dave,passw0rd)
+	result2.fold(handleError, println)
+	//User not found: dave
+
+---
+
+#`Cartesian`
+
+`Cartesian` is a type class that allows us to “tuple” values within a context.
+
+If we have two objects of type `F[A]` and `F[B]`, a `Cartesian[F]` allows us to combine them to form an `F[(A, B)]`.
+
+Recall that this was a motivating example when we introduced the type class pattern in lecture 2.
+
+---
+
+#Example: Combining Options
+
+The code below summons a type class instance for Option and uses it to zip two values:
+
+	!scala
+	import cats.Cartesian
+	import cats.instances.option._
+	Cartesian[Option].product(Some(123), Some("abc"))
+	//res0: Option[(Int, String)] = Some((123,abc))
+	Cartesian[Option].product(None, Some("abc"))
+	//res1: Option[(Nothing, String)] = None
+	Cartesian[Option].product(Some(123), None)
+	//res2: Option[(Int, Nothing)] = None
+
+---
+
+#Exercise
+
+There is also a Cartesian instance for `List`. What do you think the following expression will evaluate to?
+
+	!scala
+	Cartesian[List].product(List(1,2), List(3,4))
+
+
+---
+
+---
+
+	!scala
+	Cartesian[List].product(List(1,2), List(3,4))
+	//res0: List[(Int, Int)] = List((1,3), (1,4), (2,3), (2,4))
+
+---
+
+Its definition in Cats is:
+
+	!scala
+	trait Cartesian[F[_]] {
+		def product[A, B](fa: F[A], fb: F[B]): F[(A, B)]
 	}
 
 ---
 
-You can find an implementation of `Validation` in several places:
+Note that the parameters `fa` and `fb` are independent of one another.
 
-* In *FP in Scala*, `fpinscala.applicative.Validation`
-* In *Cats*, `cats.data.Validated`
-    * `cats/core/src/main/scala/cats/data/Validated.scala`
-	* [ScalaDoc](http://typelevel.org/cats/api/#cats.data.Validated)
-* Nowhere in the Scala standard library that I know of
+This contrasts with `flatMap`, in which `fb` is evaluated using `a`:
 
----
-
-If "chained container" has `map2`, why do we need `ringed container`?
-
-Every "chained container" is also a "ringed container."
-
-Earlier we mentioned that choosing the most restricted data type that meets the requirements is good programming practice.
-
-The same applies to choosing "ringed container" over "chained container."
-
-"Ringed container" is more restricted, and therefore more analyzable.
+	!scala
+	trait FlatMap[F[_]] {
+		def flatMap[A, B](fa: F[A])(fb: A => F[B]): F[B]
+	}
 
 ---
 
-[What are the benefits of applicative parsing over monadic parsing?](http://stackoverflow.com/a/7863380/1007926)
+We can define our own `product` for any monad as:
 
-"
-The main difference between monadic and applicative parsing is in how sequential composition is handled.
-
-You might think that having some extra flexibility can't hurt, but in reality it can. It prevents us from doing useful static analysis on a parser without running it. "
-
-"Ringed container" is a more restricted, and therefore more analyzable, type of container than "chained container."
-
----
-
-#Tuple
-
-Tuple is a simple product type that groups together simple logical collections of items without using a class.
-
-    scala> val hostPort = ("localhost", 80)
-    hostPort: (String, Int) = (localhost, 80)
-    scala> hostPort._1
-    res0: String = localhost
-    scala> hostPort._2
-    res1: Int = 80
+	!scala
+	import cats.Monad
+	import cats.syntax.flatMap._
+	import cats.syntax.functor._
+	import scala.language.higherKinds
+	def product[F[_]: Monad, A, B](fa: F[A], fb: F[B]): F[(A,B)] =
+		for {
+			a <- fa
+			b <- fb
+		} yield (a, b)
 
 ---
 
-We are concluding our discussion of `Option`, `Either` and `Validation` with `Tuple` to expose the categorical relationship between the first 3 types and `Tuple`.
+Making this choice makes it easier to reason about uses of product for a specific monad instance—we only have to remember the semantics of flatMap to understand how product will work.
 
-`Tuple` is a *Product* in category theory.
-
-`Option`, `Either` and `Validation` are each a *Coproduct* in category theory.
-
-`Tuple` is a simpler type to understand than `Option`, `Either` or `Validation`.
-
-`Either` and `Validation` are each a dual to `Tuple2`.
+We've seen that we can implement product in terms of the monad operations. Why bother with the Cartesian type class then?
 
 ---
 
-Tuple is implemented as a case class, is not iterable, and is indexed starting from 1.
+One reason to have the Cartesian type class is to enforce consistent behavior for all monad instances.
 
-    !scala
-    case class Tuple2[+T1, +T2](_1: T1, _2: T2)
-      extends Product2[T1, T2]
-      with Product
-      with Serializable
+Another reason is that `product` (and in particular the 'tie-fighter' operator `|@|` we’ll see in lecture 12) is more convenient than writing out the for comprehension.
+
+---
+
+The most important reason however is that `Cartesian` is strictly weaker than `Monad`.
+
+Next we'll look at a type (called an applicative) for which we can define `product` but not a monad instance.
+
+---
+
+#Validated
+
+
+Recall that `Xor` is a monad, so its `product` is implemented in terms of `flatMap`.
+<br />
+<br />
+Let's experiment with this for a bit.
+
+---
+
+
+	!scala
+	import cats.data.Xor
+	type ErrorOr[A] = List[String] Xor A
+	val a: ErrorOr[Int] = Xor.right(123)
+	val b: ErrorOr[String] = Xor.right("abc")
+	product(a,b)
+	//res0: ErrorOr[(Int, String)] = Right((123,abc))
+
+---
+
+However, if we try to combine two failed `Xors`, only the left-most errors are retained:
+
+	!scala
+	val c: ErrorOr[Nothing] = Xor.left(List("Fail 1"))
+	val d: ErrorOr[Nothing] = Xor.left(List("Fail 2"))
+	product(c,d)
+	//res1: ErrorOr[(Nothing, Nothing)] = Left(List(Fail 1))
+
+---
+
+However fail-fast semantics aren’t always the best choice.
+<br />
+<br />
+For example, when validating a web form, we want to accumulate errors for all invalid fields, not just the first one we find.
+<br />
+<br />
+If we model this with a monad like `Xor`, we fail fast and lose errors.
+
+---
+
+The situation is the same with for comprehensions. The code below fails on the first call to `parseInt` and doesn’t go any further:
+
+	!scala
+  def parseInt(str: String): String Xor Int =       
+    Xor.catchOnly[NumberFormatException](str.toInt)
+       .leftMap(_ => s"Couldn't read $str")
+  for {
+    a <- parseInt("a")
+    b <- parseInt("b")
+    c <- parseInt("c")
+  } yield (a + b + c)
+  //res0: Xor[String,Int] = Left(Couldn't read a)
+
+---
+
+Cats provides another data type called `Validated` in addition to `Xor`.
+<br />
+<br />
+`Validated` is an example of a non-monadic applicative.
+<br />
+<br />
+This means Cats can provide an error-accumulating implementation of product for `Validated` without introducing inconsistent semantics.
 
 
 ---
 
-Tuples fit with pattern matching nicely.
+`Validated` has two subtypes, `Validated.Valid` and `Validated.Invalid`, that correspond loosely to `Xor.Right` and `Xor.Left`.
 
-    !scala
-    hostPort match {
-      case ("localhost", port) => ...
-      case (host, port) => ...
-    }
+We can create instances directly using their `apply` methods:
 
----
-
-Tuple has some special sauce for simply making Tuples of 2 values
-
-    scala> 1 -> 2
-    res0: (Int, Int) = (1,2)
-    scala> 1.->(2)
-    res0: (Int, Int) = (1,2)
+	!scala
+  import cats.data.Validated
+  val v = Validated.Valid(123)
+  //v: cats.data.Validated.Valid[Int] = Valid(123)
+  val i = Validated.Invalid("oops")
+  //i: cats.data.Validated.Invalid[String] = Invalid(oops)
 
 ---
 
-#Tuples and Maps
+Again, it is better for type inference to use the `valid` and `invalid` smart constructors, which return a type of `Validated`:
 
-Maps can be thought of as sets of tuples
-
-    scala> val a = 'a' -> 97
-    a: (Char, Int) = (a,97)
-    scala> Map(a)
-    res0: scala.collection.immutable.Map[Char,Int] = Map(a -> 97)
-    scala> Map(a,a)
-    res0: scala.collection.immutable.Map[Char,Int] = Map(a -> 97)
+	!scala
+  import Validated.{valid, invalid}
+  val v = valid[String, Int](123)
+  //v: Validated[String,Int] = Valid(123)
+  val i = invalid[String, Int]("oops")
+  //i: Validated[String,Int] = Invalid(oops)
 
 ---
 
-So the functions you write work on a pair of the keys and values in the Map.
+And again we can import enriched `valid` and `invalid` methods from `cats.syntax.validated` to get some syntactic sugar:
 
-    scala> val ext= Map("steve" -> 100, "bob" -> 101, "joe" -> 201)
-    ext: Map[String,Int] = Map((steve,100), (bob,101), (joe,201))
-
----
-
-    scala> ext.filter((namePhone: (String, Int)) => namePhone._2 < 200)
-    res0: Map[String,Int] = Map((steve,100), (bob,101))
-
-.notes: Because it gives you a tuple, you have to pull out the keys and values with their positional accessors. Yuck! Lucky us, we can actually use a pattern match to extract the key and value nicely.
+	!scala
+  import cats.syntax.validated._
+  123.valid[String]
+  //res0: Validated[String,Int] = Valid(123)
+  "message".invalid[Int]
+  //res1: Validated[String,Int] = Invalid(message)
 
 ---
 
-    scala> ext.filter({case (name, extension) => extension < 200})
-    res0: Map[String,Int] = Map((steve,100), (bob,101))
+A toy implementation of `Validated`:
 
-.notes: Why does this work? Why can you pass in a partial pattern match?
-Because PartialFunction[A,B] is a subtype of A=>B
+	!scala
+	sealed trait Validated[+E, +A]
+	case class Invalid[E](head: E, tail: Vector[E] = Vector())
+	  extends Validated[E, Nothing]
+	case class Valid[A](a: A) extends Validated[Nothing, A]
+
+---
+
+Unlike the `Xor`’s monad, which cuts the calculation short, `Validated` keeps going to report back all failures.
+
+	!scala
+	import cats.data.Validated
+	import cats.instances.list._
+	import cats.syntax.cartesian._
+	type ErrorOr[A] = Validated[String,A]
+	val a: ErrorOr[Nothing] = Validated.Invalid("foo")
+	val b: ErrorOr[Nothing] = Validated.Invalid("bar!")
+	Cartesian[ErrorOr].product(a,b)
+	//res0: ErrorOr[(Nothing, Nothing)] = Invalid(foobar!)
+
+---
+
+
+Validated accumulates errors using a `Semigroup` (the append part of a `Monoid`).
+
+This means we can use any `Monoid` as an error type, including `String`, `List`, and `Vector`, as well as pure semigroups like `NonEmptyList`s.
+
+---
+
+	!scala
+	import cats.Cartesian
+	type StringOr[A] = Validated[String, A]
+	import cats.std.string._
+	Cartesian[StringOr].product(
+	  Validated.invalid("Hello"),
+	  Validated.invalid(" world")
+	)
+	//res0 = Invalid(Hello world)
+
+---
+
+Lists have a monoid instance as well:
+
+	!scala
+	import cats.std.list._
+	type ListOr[A] = Validated[List[String], A]
+	Cartesian[ListOr].product(
+	  Validated.invalid(List("Hello")),
+	  Validated.invalid(List("world"))
+	)
+	//res1 = Invalid(List(Hello, world))
+
+---
+
+Note that vectors have a more efficient append operation than lists and should be used instead:
+
+	!scala
+	import cats.std.vector._
+	type VectorOr[A] = Validated[Vector[Int], A]
+	Cartesian[VectorOr].product(
+	  Validated.invalid(Vector(404)),
+	  Validated.invalid(Vector(500))
+	)
+	//res2 = Invalid(Vector(404, 500))
+
+---
+`Xor` vs `Validated`
+
+Which is better?
+
+The answer depends on the semantics we’re looking for.
+
+---
+
+Some points to ponder:
+
+* Sometimes sequentiality (i.e.`flatMap`) is exactly what you need. Perhaps you want fail-fast semantics or the ability use the contents of one container as an argument to the next container.
+* Error recovery is important when processing large jobs like Spark pipelines. We don’t want to run a job for an hour and then find it failed on the last element.
+* Error reporting is equally important. We need to know what went wrong, not just that something went wrong.
+* In a number of cases we want to collect all the errors, not just the first one we encountered.
 
 ---
 
