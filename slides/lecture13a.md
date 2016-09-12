@@ -1,3 +1,5 @@
+
+
 The interpreter is the über pattern of functional programming. Most large programs written in a functional style can be viewed as using this pattern. Amongst many reasons, interpreters allow us to handle effects and still keep desirable properties such as substitution.
 
 Given the importance of interpreters it is not surprising there are many implementation strategies. In this blog post I want to discuss one of the main axes along which implementation strategies vary, which is how far we take reification of actions within the interpreter.
