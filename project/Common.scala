@@ -2,6 +2,9 @@
 
 import sbt._
 import Keys._
+import sbtunidoc.Plugin.UnidocKeys._
+import sbtunidoc.Plugin.ScalaUnidoc
+
 
 object Common {
 
@@ -28,6 +31,12 @@ object Common {
     resolvers ++= otherResolvers,
     libraryDependencies ++= Dependencies.dependencies
   )
+
+  lazy val additionalUnidocSettings: Seq[Def.Setting[_]] = Seq(
+    target in unidoc in ScalaUnidoc := baseDirectory.value / "doc" / "scaladoc",
+    autoAPIMappings := true
+  )
+  
   
 
 
