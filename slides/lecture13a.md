@@ -1,159 +1,203 @@
-Lecture 13a: Free Monads
-
----
-
-A `Monoid[A]` essentially models a function of type `List[A] => A`.
-<br />
-<br />
-We saw how the unit and associativity laws for monoids model the fact that we can fold left and right, and that the empty list doesn’t count.
-<br />
-<br />
-We also defined a monoid as a category with one object.
-
----
-
-Before, we represented `Monoid` as having a binary function and an identity element for that function.
-<br />
-<br />
-By our categorical definition, we could just restrict the Scala category (where types are the objects and functions are the arrows) and define `Monoid` in terms of that:
-
-		!scala
-		class Endo[M] {
-		  def compose(m1: M => M, m2: M => M): M => M
-				= m1 compose m2
-		  def identity: M => M = m => m
-		}
-
----
-
-Recall that a function from some type to itself is called an endomorphism.
-<br />
-<br />
-`Endo[M]` for any type `M`, is a monoid, by our previous definition.
-<br />
-<br />
-It is a category with one object M whose only arrows are endomorphisms on `M`.
-
----
-
-We know already that lists and monoids are intimately connected. Now notice that `M => M` is exactly the form of the right-hand side of foldRight:
-
-	!scala
-	def foldRight[A,B]:
-		(List[A], A => (B => B)) => (B => B)
-
-`foldRight`, then, is saying that a `List[A]` together with a function from a value of type `A` to an endomorphism on `B` allows us to collapse all those `A`s into a single endomorphism on `B`.
-
----
-
-Here’s a possible implementation:
-
-    !scala
-    def foldRight[A,B] =
-      (as: List[A], f: A => B => B) => {
-        val m = new Endo[B]
-        as match {
-          case Nil => m.identity
-          case x :: xs => m.compose(f(x),
-                                    foldRight(as, f))
-        }
-
----
-
-#List Monoid Composition
-
-If we had a `List[List[A]]` such that A is a monoid, so we know we can go from `List[A]` to `A`, then we could fold all the inner lists and end up with `List[A]` which we can then fold.
-<br />
-<br />
-Another way of saying the same thing is that we can pass the list constructor `::` to `foldRight`.
-
----
-
-`::` has the correct type for the `f` argument, namely `A => List[A] => List[A]`.
-<br />
-<br />
-That in turn gives us another function of type `List[A] => List[A] => List[A]`, which appends one list to another.
-<br />
-<br />
-If we pass that to `foldRight`, we get a `List[List[A]] => List[A] => List[A]`.
-<br />
-<br />
-That again has the proper type for `foldRight`, and so on.
-
----
-
-The pattern here is that we can keep doing this to turn an arbitrarily nested list of lists into an endofunction on lists, and we can always pass an empty list to one of those endofunctions to get an identity.
-<br />
-<br />
-So the types of arbitrarily nested lists are monoids. Our composition for such a monoid appends one list to another, and the identity for that function is the empty list.
 
 
----
+The interpreter is the über pattern of functional programming. Most large programs written in a functional style can be viewed as using this pattern. Amongst many reasons, interpreters allow us to handle effects and still keep desirable properties such as substitution.
 
-The Free Monad (data structure) is to the Monad (class) like the List (data structure) to the Monoid (class): It is the trivial implementation, where you can decide afterwards how the content will be combined.
-<br />
-<br />
-You probably know what a Monad is and that each Monad needs a specific (Monad-law abiding) implementation of either fmap + join + return or bind + return.
+Given the importance of interpreters it is not surprising there are many implementation strategies. In this blog post I want to discuss one of the main axes along which implementation strategies vary, which is how far we take reification of actions within the interpreter.
 
----
+But first, a quick recap of the interpreter pattern, and the secret cheat code of functional programming, reification.
 
-Let us assume you have a Functor (an implementation of fmap) but the rest depends on values and choices made at run-time, which means that you want to be able to use the Monad properties but want to choose the Monad-functions afterwards.
-<br />
-<br />
-That can be done using the Free Monad (data structure), which wraps the Functor (type) in such a way so that the join is rather a stacking of those functors than a reduction.
+What’s An Interpreter?
+Our basic definition of an interpreter is anything that separates describing the computation from running it. That’s quite a mouthful, so let’s see a quick example. In Doodle, a library for vector graphics we are developing, we can describe a picture like so
 
----
+val picture1 = Image.circle(100)
+When we’re describing a picture we can easily compose a new picture from existing pictures.
 
-The real return and join you want to use, can now be given as parameters to the reduction function foldFree:
+val picture2 = picture1 beside picture1
+If we want to draw a picture, we call the draw method. Nothing appears on the screen until we call draw.
 
-foldFree :: Functor f => (a -> b) -> (f b -> b) -> Free f a -> b
-foldFree return join :: Monad m => Free m a -> m a
+picture2.draw
+The result of draw is Unit, so we cannot use this result to construct more pictures.
 
-To explain the types, we can replace Functor f with Monad m and b with (m a):
+This illustrates the essential features of the interpreter pattern: describing a picture is the “describing the computation” part, and calling draw is the “running the computation” part.
 
-foldFree :: Monad m => (a -> (m a)) -> (m (m a) -> (m a)) -> Free m a -> (m a)
+Why Do We Use Interpreters?
+One important reason for functional programmers liking the interpreter pattern is how it allows us to deal with effects. Effects are problematic, because they break substitution. Substitution allows easy reasoning about code, so functional programmers strive hard to maintain it. At some point you have to have effects—if not, the programm will not do anything useful. The secret to allowing effects is to delay them until some point in the program where we don’t care about substitution anymore. For example, in a web service we can delay effects till we’ve constructed the program to create the response, and then run that program, causing our database effects and so on to occur. In Doodle we delay effects—drawing—until we’ve fully described the picture we want to draw. If you’re familiar with computer graphics, Doodle is essentially constructing a scene graph.
 
----
+Reification
+Reification is an integral part of the interpreter pattern. Reification means to make the abstract concrete. In the context of interpreters this means to turn an action into data. For example, in the context of Doodle when we call Image.circle(100) this turns into a case class rather than drawing something on the screen. Reification is an essential part of the interpreter pattern as we need to delay running the program for the pattern to work, as described above, and the only way to do this is to create a data structure of some kind.
 
-Free monads are just a general way of turning functors into monads. That is, given any functor f Free f is a monad. This would not be very useful, except you get a pair of functions
+Opaque and Transparent Interpreters
+With the background out of the way, let’s move to the main content of this post: talking about different implementation strategies. I’m going to use as an example of the Random monad. The Random monad allows us to separate describing how to generate random data from actually introducing randomness. Randomness is an effect (a function that generates a random value breaks substitution, as it returns a different value each time it is called) and so we can use the Random monad to control this effect. The Random monad is very simple to implement and make a good case study of different implementation techniques.
 
-liftFree :: Functor f => f a -> Free f a
-foldFree :: Functor f => (f r -> r) -> Free f r -> r
+Let’s look at two different implementation strategies. For bonus points I’ve implemented a cats monad instance for both, but this has no bearing on the point I’m making.
 
-the first of these lets you "get into" your monad, and the second one gives you a way to "get out" of it.
+The first strategy is to reify the methods to an algebraic data type.
 
----
+import cats.Monad
 
-More generally, if X is a Y with some extra stuff P, then a "free X" is a a way of getting from a Y to an X without gaining anything extra.
-<br />
-<br />
-Examples: a monoid (X) is a set (Y) with extra structure (P) that basically says it has an operations (you can think of addition) and some identity (like zero).
+sealed trait AlgebraicDataType[A] extends Product with Serializable {
+  def run(rng: scala.util.Random = scala.util.Random): A =
+    this match {
+      case Primitive(sample) => sample(rng)
+      case FlatMap(fa, f) => f(fa.run(rng)).run(rng)
+    }
 
----
+  def flatMap[B](f: A => AlgebraicDataType[B]): AlgebraicDataType[B] =
+    FlatMap(this, f)
 
-Given any type t we know that [t] is a monoid
+  def map[B](f: A => B): AlgebraicDataType[B] =
+    FlatMap(this, (a: A) => AlgebraicDataType.always(f(a)))
+}
+object AlgebraicDataType {
+  def always[A](a: A): AlgebraicDataType[A] =
+    Primitive(rng => a)
 
-instance Monoid [t] where
-  mempty   = []
-  mappend = (++)
+  def int: AlgebraicDataType[Int] =
+    Primitive(rng => rng.nextInt())
 
-So lists are the "free monoid" over sets (or in Haskell types).
+  def double: AlgebraicDataType[Double] =
+    Primitive(rng => rng.nextDouble())
 
----
+  implicit object randomInstance extends Monad[AlgebraicDataType] {
+    def flatMap[A, B](fa: AlgebraicDataType[A])(f: (A) ⇒ AlgebraicDataType[B]): AlgebraicDataType[B] =
+      fa.flatMap(f)
 
-Free monads are the same idea. We take a functor, and give back a monad. In fact, since monads can be seen as monoids in the category of endo functors, the definition of a list
+    def pure[A](x: A): AlgebraicDataType[A] =
+      AlgebraicDataType.always(x)
+  }
+}
+final case class FlatMap[A,B](fa: AlgebraicDataType[A], f: A => AlgebraicDataType[B]) extends AlgebraicDataType[B]
+final case class Primitive[A](sample: scala.util.Random => A) extends AlgebraicDataType[A]
+An alternative implementation strategy is to reify with functions.
 
-data [a] = [] | a : [a]
-looks a lot like the definition of free monads
+import cats.Monad
 
-data Free f a = Pure a | Roll (f (Free f a))
+final case class Lambda[A](get: scala.util.Random => A) {
+  def run(rng: scala.util.Random = scala.util.Random): A =
+    get(rng)
+
+  def flatMap[B](f: A => Lambda[B]): Lambda[B] =
+    Lambda((rng: scala.util.Random) => f(get(rng)).run(rng))
+
+  def map[B](f: A => B): Lambda[B] =
+    Lambda((rng: scala.util.Random) => f(get(rng)))
+}
+object Lambda {
+  def always[A](a: A): Lambda[A] =
+    Lambda(rng => a)
+
+  def int: Lambda[Int] =
+    Lambda(rng => rng.nextInt())
+
+  def double: Lambda[Double] =
+    Lambda(rng => rng.nextDouble())
+
+  implicit object randomInstance extends Monad[Lambda] {
+    def flatMap[A, B](fa: Lambda[A])(f: (A) ⇒ Lambda[B]): Lambda[B] =
+      fa.flatMap(f)
+
+    def pure[A](x: A): Lambda[A] =
+      Lambda.always(x)
+  }
+}
+I call the former strategy (AlgebraicDataType) a transparent interpreter, because we can programmatically inspect the AlgebraicDataType data structure, and the later strategy (Lambda) an opaque interpreter, because we can’t look into the anonymous functions. Update: in the literature you’ll find the terms shallow and deep embedding are used for what I call opaque and transparent respectively. Thanks for Gabriel Claramunt for pointing this out.
+
+There are two ways in which the opaque interpreter is superior to the transparent interpreter.
+
+The opaque interpreter doesn’t require we implement an algebraic data type to represent the “language” we want to interpret. This certainly saves on the typing. In some sense functions are universal interpreters. We can represent any language we like in terms of functions, so long as we can accept the semantics we get from Scala.
+
+The other main advantage of the opaque interpreter is that code within a function is just code. The compiler is going to have a much easier time optimising the opaque representation than the transparent one. We can say the opaque representation is more transparent to the compiler.
+
+The transparent interpreter is more modular than the opaque one. With a transparent interpreter we can see the structure of the program we’re interpreting in terms of its algebraic data type representation. This means we can choose to interpret it in different ways. For instance, we could print logging information during interpretation, or run in a distributed environment, or use a “stackless” implementation to avoid overflowing the stack in deeply nested calls. With the opaque representation we can’t make these choices.
+
+In summary, transparent interpreters trade performance for flexibility. I usually find that flexibility is the right choice.
+
+It’s worth noting there is another implementation technique (there is always another way in Scala.) This is to use anonymous classes, as show belown in AnonymousTrait. This is still an opaque implementation, just one that is much more verbose than Lambda above.
+
+import cats.Monad
+
+sealed trait AnonymousTrait[A] { self =>
+  def run(rng: scala.util.Random = scala.util.Random): A
+
+  def flatMap[B](f: A => AnonymousTrait[B]): AnonymousTrait[B] =
+    new AnonymousTrait[B] {
+      def run(rng: scala.util.Random): B =
+        f(self.run(rng)).run(rng)
+    }
+
+  def map[B](f: A => B): AnonymousTrait[B] =
+    new AnonymousTrait[B] {
+      def run(rng: scala.util.Random): B =
+        f(self.run(rng))
+    }
+}
+object AnonymousTrait {
+  def always[A](a: A): AnonymousTrait[A] =
+    new AnonymousTrait[A] {
+      def run(rng: scala.util.Random): A =
+        a
+    }
+
+  def int: AnonymousTrait[Int] =
+    new AnonymousTrait[Int] {
+      def run(rng: scala.util.Random): Int =
+        rng.nextInt()
+    }
+
+  def double: AnonymousTrait[Double] =
+    new AnonymousTrait[Double] {
+      def run(rng: scala.util.Random): Double =
+        rng.nextDouble()
+    }
+
+  implicit object randomInstance extends Monad[AnonymousTrait] {
+    def flatMap[A, B](fa: AnonymousTrait[A])(f: (A) ⇒ AnonymousTrait[B]): AnonymousTrait[B] =
+      fa.flatMap(f)
+
+    def pure[A](x: A): AnonymousTrait[A] =
+      AnonymousTrait.always(x)
+  }
+}
+I’ve also seen this technique used with an unsealed trait. I think this is bad practice. An unsealed trait allows random changes to the semantics by overriding, and doesn’t indicate to the user how they should use the class. Unsealed traits should generally be used for type classes, in my opinion.
+
+Modular Interpreters
+One way we can take advantage of the modularity offered by transparent interpreters is by capturing common patterns in reusable classes. This is exactly what the free monad does. Here’s an example of the Random monad using the free monad implementation in Cats. As you can see, we don’t have to write a great deal of code, and we benefit from an optimised and stack-safe implementation.
+
+object RandomM {
+  import cats.free.Free
+  import cats.{Comonad,Monad}
+
+  type Random[A] = Free[Primitive,A]
+  final case class Primitive[A](sample: scala.util.Random => A)
+
+  implicit val randomMonad: Monad[Random] = Free.freeMonad
+
+  implicit def randomInterpreter(implicit rng: scala.util.Random = scala.util.Random): Comonad[Primitive] =
+    new Comonad[Primitive] {
+      override def coflatMap[A, B](fa: Primitive[A])(f: (Primitive[A]) ⇒ B): Primitive[B] =
+        Primitive(rng => f(fa))
+
+      override def extract[A](x: Primitive[A]): A =
+        x.sample(rng)
+
+      override def map[A, B](fa: Primitive[A])(f: (A) ⇒ B): Primitive[B] =
+        Primitive(rng => f(fa.sample(rng)))
+    }
+}
+Conclusions
+The transparency tradeoff is a major design decision in creating an interpreter. Over time I feel that as a community we’re moving towards more transparent representations, particularly as techniques like the free monad become more widely known.
+
+Note that transparency is not a binary choice. Even in the transparent implementation above, we have opaque functions passed to flatMap and friends. The ultimate endpoint of a transparent implementation is implementing all language features—conditionals, binding constructs, and everything else—within the little language we’re defining.
+
+The opaque interpreter reminds of higher order abstract syntax (HOAS), which a technique for representing variable binding in an interpreter by reusing the host language’s implementation. HOAS has the same drawback as our opaque interpreters: since we can’t inspect the structure of the bindings in HOAS we have to use the host language’s semantics. There is some work on removing this restriction. I’m not familiar enough with this work to say if and how it applies to the discussion here.
+
 
 ---
 
 #Links
 
-[Free Monads and Free Monoids](http://blog.higher-order.com/blog/2013/08/20/free-monads-and-free-monoids/)
-
+http://underscore.io/blog/posts/2016/06/27/opaque-transparent-interpreters.html
+http://underscore.io/blog/posts/2016/04/21/probabilistic-programming.html
 http://blog.scalac.io/2016/06/02/overview-of-free-monad-in-cats.html
 http://eed3si9n.com/herding-cats/Free-monads.html
 http://okmij.org/ftp/Computation/free-monad.html

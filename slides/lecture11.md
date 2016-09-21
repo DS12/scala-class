@@ -314,27 +314,26 @@ Let's see how all of this looks in Haskell:
 
 #Writer/Reader Duality
 
-If we look at a Kleisli arrow in the Reader[R,?] comonad, it looks like A => Reader[R,B], or expanded out: A => R => B. If we uncurry that, we get (A, R) => B, and we can go back to the original by currying again. But notice that a value of type (A, R) => B is a coKleisli arrow in the Coreader comonad! Remember that Coreader[R,A] is really a pair (A, R).
+If we look at a Kleisli arrow in the `Reader[R,?]` comonad, it looks like `A => Reader[R,B]`, or expanded out: `A => R => B`.
 
-So the answer to the question of how Reader and Coreader are related is that there is a one-to-one correspondence between a Kleisli arrow in the Reader monad and a coKleisli arrow in the Coreader comonad. More precisely, the Kleisli category for Reader[R,?] is isomorphic to the coKleisli category for Coreader[R,?]. This isomorphism is witnessed by currying and uncurrying.
+If we uncurry that, we get `(A, R) => B`, and we can go back to the original by currying again.
 
-In general, if we have an isomorphism between arrows like this, we have what’s called an adjunction:
+Notice also that a value of type `(A, R) => B` is a `coKleisli` arrow in the `Coreader` comonad.
 
-trait Adjunction[F[_],G[_]] {
-  def left[A,B](f: F[A] => B): A => G[B]
-  def right[A,B](f: A => G[B]): F[A] => B
-}
-In an Adjunction[F,G], we say that F is left adjoint to G, often expressed with the notation F ⊣ G.
+Remember that Coreader[R,A] is really a pair (A, R).
 
-We can clearly make an Adjunction for Coreader[R,?] and Reader[R,?] by using curry and uncurry:
 
-def homSetAdj[R] = new Adjunction[(?, R), R => ?] {
-  def left[A,B](f: ((A, R)) => B): A => R => B =
-    Function.untupled(f).curried
-  def right[A,B](f: A => R => B): ((A, R)) => B =
-    Function.uncurried(f).tupled
-}
-The additional tupled and untupled come from the unfortunate fact that I’ve chosen Scala notation here and Scala differentiates between functions of two arguments and functions of one argument that happens to be a pair.
+---
+
+So the answer to the question of how Reader and Coreader are related is that there is a one-to-one correspondence between a Kleisli arrow in the Reader monad and a coKleisli arrow in the Coreader comonad.
+
+More precisely, the Kleisli category for `Reader[R,?]` is isomorphic to the coKleisli category for `Coreader[R,?]`. The correspondence between them is given by currying and uncurrying.
+
+http://cstheory.stackexchange.com/questions/2101/reader-writer-monads
+
+---
+
+The additional tupled and untupled come from the unfortunate fact that Scala differentiates between functions of two arguments and functions of one argument that happens to be a pair.
 
 So a more succinct description of this relationship is that Coreader is left adjoint to Reader.
 

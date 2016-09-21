@@ -29,7 +29,7 @@ The similarity at the type level is obvious, however there are further connectio
 When you write functions using `flatMap`, in any of the varieties above, these functions inherit a sort of sameness from the underlying `flatMap` combinator.
 <br />
 <br />
-Gabriel Gonzalez has referred to this sort of composability as the ['catergory theory design pattern'](http://www.haskellforall.com/2012/08/the-category-design-pattern.html).
+Gabriel Gonzalez has referred to this sort of composability as the ['category theory design pattern'](http://www.haskellforall.com/2012/08/the-category-design-pattern.html).
 
 ---
 
@@ -249,7 +249,7 @@ This is the case with most higher-kinded types in Cats, for example [here](https
 
 ---
 
-Earlier I mentioned the ['catergory theory design pattern'](http://www.haskellforall.com/2012/08/the-category-design-pattern.html).
+Earlier I mentioned the ['category theory design pattern'](http://www.haskellforall.com/2012/08/the-category-design-pattern.html).
 
 [Category theory](https://en.wikipedia.org/wiki/Category_theory) is a branch of mathematics that grew up around algebraic topology in the mid-20th century, but has been increasingly applied to areas of computer science, particularly type theory.
 
