@@ -1,0 +1,1035 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>Readme_answers.html</title>
+
+</head>
+
+<body>
+
+<h1 id="recursion-and-folding-lab-sudoku-solver">Recursion and Folding Lab: Sudoku Solver</h1>
+<h2 id="part-0-background-and-setup">Part 0: Background and Setup</h2>
+<h3 id="a-background">(0a): Background</h3>
+<p><a href="https://en.wikipedia.org/wiki/Sudoku">Sudoku</a> is a</p>
+<blockquote>
+<p>combinatorial number-placement puzzle. The objective is to fill a 9×9 grid with digits so that each column, each row, and each of the nine 3×3 sub-grids that compose the grid (&quot;tiles&quot;) contains all of the digits from 1 to 9.</p>
+</blockquote>
+<p>Puzzle; initial conditions</p>
+<div class="figure">
+<img src="images/Sudoku.png" />
+
+</div>
+<p>A solution</p>
+<div class="figure">
+<img src="images/Sudoku_solution.png" />
+
+</div>
+<p>In this lab we will implement a Sudoku solver that can find one or more solutions for a puzzle. We refer to the incomplete puzzle as the &quot;initial conditions.&quot;</p>
+<p>An ill-posed puzzle will have no solution.</p>
+<h3 id="b-environment-setup">(0b): Environment setup</h3>
+<p>Open class <code>labExercises.lecture1.Sudoku</code> in your editor, located in file <code>code/labExercises/src/main/scala/labExercises/lecture1/Sudoku.scala</code>.</p>
+<p>In the terminal, start SBT in the <code>code</code> directory:</p>
+<pre><code>bash-3.2$ pwd
+../code
+bash-3.2$ sbt
+Java HotSpot(TM) 64-Bit Server VM warning: ignoring option MaxPermSize=384m; support was removed in 8.0
+[info] Loading project definition from ../code/project
+[info] Set current project to code (in build file:../code/)
+[info] Set current project to slideCode (in build file:../code/)
+&gt; </code></pre>
+<p>Enter sub-project <code>labExercises</code>:</p>
+<pre><code>&gt; project labExercises
+project labExercises
+[info] Set current project to labExercises (in build file:/Users/peterbecich/scala-for-data-scientists/code/)
+&gt; </code></pre>
+<p>Run <code>labExercises.lecture1.SudokuPreview</code>:</p>
+<pre><code>&gt; run
+run
+[info] Compiling 1 Scala source to ../code/labExercises/target/scala-2.11/classes...
+[warn] Multiple main classes detected.  Run &#39;show discoveredMainClasses&#39; to see the list
+
+Multiple main classes detected, select one to run:
+
+ [1] labExercises.lecture1.SudokuPreview
+ [2] labExercises.lecture1.SudokuSolve
+ [3] labExercises.lecture10.HashMapMonoidExamples
+ [4] labExercises.lecture10.JaccardLaws
+ ...
+ 
+Enter number: 1
+1
+
+[info] Running labAnswers.lecture1.SudokuPreview 
+find solutions for this Sudoku board:
+5 3 0 0 7 0 0 0 0
+6 0 0 1 9 5 0 0 0
+0 9 8 0 0 0 0 6 0
+8 0 0 0 6 0 0 0 3
+4 0 0 8 0 3 0 0 1
+7 0 0 0 2 0 0 0 6
+0 6 0 0 0 0 2 8 0
+0 0 0 4 1 9 0 0 5
+0 0 0 0 8 0 0 7 9
+rows
+0 0 0 0 0 0 0 0 0
+1 1 1 1 1 1 1 1 1
+2 2 2 2 2 2 2 2 2
+3 3 3 3 3 3 3 3 3
+4 4 4 4 4 4 4 4 4
+5 5 5 5 5 5 5 5 5
+6 6 6 6 6 6 6 6 6
+7 7 7 7 7 7 7 7 7
+8 8 8 8 8 8 8 8 8
+columns
+0 1 2 3 4 5 6 7 8
+0 1 2 3 4 5 6 7 8
+0 1 2 3 4 5 6 7 8
+0 1 2 3 4 5 6 7 8
+0 1 2 3 4 5 6 7 8
+0 1 2 3 4 5 6 7 8
+0 1 2 3 4 5 6 7 8
+0 1 2 3 4 5 6 7 8
+0 1 2 3 4 5 6 7 8
+tiles
+0 0 0 1 1 1 2 2 2
+0 0 0 1 1 1 2 2 2
+0 0 0 1 1 1 2 2 2
+3 3 3 4 4 4 5 5 5
+3 3 3 4 4 4 5 5 5
+3 3 3 4 4 4 5 5 5
+6 6 6 7 7 7 8 8 8
+6 6 6 7 7 7 8 8 8
+6 6 6 7 7 7 8 8 8
+[success] Total time: 82 s, completed May 22, 2016 8:02:07 PM
+&gt; 
+
+</code></pre>
+<h3 id="c-semantics">(0c): Semantics</h3>
+<p>We store our Sudoku board in a <code>List</code> of (position, value) tuples. Positions are in <a href="https://en.wikipedia.org/wiki/Row-major_order">row-major format</a>.</p>
+<pre><code>  val initial = List((0,5),(1,3),(4,7),(9,6),(12,1),(13,9),(14,5),...</code></pre>
+<p>Each element of the list corresponds to an element in the Sudoku board.</p>
+<p>This board has been &quot;flattened&quot; into a row-major list. The first element of each tuple is the &quot;flattened&quot; coordinate in the Sudoku board (explained momentarily), and the second element of each tuple is the value itself.</p>
+<p>First, let's establish syntax for elements of the board</p>
+<p>Given element M_ij, i is the row and j is the column.</p>
+<p>Our row and column indices are 0-indexed, in contrast to the 1-indexed convention of a mathematical matrix.</p>
+<p>A Sudoku board is 9 by 9 elements.</p>
+<ul>
+<li>(0, 5) is placed at M_00</li>
+<li>(1, 3) is placed at M_01</li>
+<li>(4, 7) is placed at M_04</li>
+<li>(12, 1) is placed at M_13</li>
+</ul>
+<p>Here is partial plot of these four elements, with absent elements of the board filled by 0</p>
+<pre><code>5 3 0 0 7 0 0 0 0
+0 0 0 1 0 0 0 0 0
+0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0</code></pre>
+<p>You can print all of <code>initial</code> by running <code>SudokuPreview</code></p>
+<h2 id="part-1-find-solutions-to-a-puzzle">Part 1: Find solutions to a puzzle</h2>
+<h3 id="a-implement-checky">(1a): Implement <code>checkY</code></h3>
+<p>In a valid Sudoku board, each row contains only one copy of each digit 1-9. In other words, the 9 elements of each row correspond one-to-one with the 9 digits in [1,9]. <code>checkX</code> verifies this.</p>
+<p>Furthermore, each column contains only one copy of each digit 1-9.</p>
+<p><code>checkY</code> is like <code>checkX</code>, but for columns.</p>
+<p>Let's review the signature of <code>foldLeft</code> on <code>board</code>.</p>
+<pre><code>board: List[(Int,Int)]
+    
+board.foldLeft[B](z: B)(f: (B, (Int, Int)) =&gt; B)</code></pre>
+<p><code>foldLeft</code> will combine every <code>(Int, Int)</code> in <code>board</code> into a single value of generic type <code>B</code>.</p>
+<p>For example, here is a usage of <code>foldLeft</code> that counts the elements of the board.</p>
+<pre><code>val elementCount: Int = board.foldLeft(0)((count: Int, element: (Int, Int)) =&gt; count+1)</code></pre>
+<p>Since <code>element</code> is unused, we can replace it with a &quot;don't care&quot; placeholder. See <a href="http://stackoverflow.com/questions/8000903/what-are-all-the-uses-of-an-underscore-in-scala">What are all the uses of an underscore in Scala?</a></p>
+<pre><code>val elementCount: Int = board.foldLeft(0)((count: Int, _: (Int, Int)) =&gt; count+1)</code></pre>
+<p>As used by <code>checkX</code>, type <code>B</code> will be <code>Boolean</code>.</p>
+<pre><code>  def checkX(board: List[(Int,Int)], next: (Int,Int)): Boolean = {
+    def check(b: Boolean, tuple: (Int,Int)): Boolean = {
+      b &amp;&amp; ((row(tuple) == row(next) &amp;&amp; tuple._2 != next._2) || row(tuple) != row(next))
+
+    }
+    board.foldLeft(true)(check)
+  }</code></pre>
+<p>This pseudocode gives an intuitive notion of what <code>foldLeft</code> is being used for:</p>
+<pre><code>  def checkX(board: List[(Int,Int)], next: (Int,Int)): Boolean = {
+    def check(b: Boolean, tuple: (Int,Int)): Boolean = {
+      some predicate on tuple: (Int, Int) and b: Boolean 
+
+    }
+    board.foldLeft(true)(check)
+  }</code></pre>
+<p>For <code>checkX</code> to return <code>true</code>, <code>next._2</code> must not equal any value on the board of the same row.</p>
+<p>For <code>checkY</code> to return <code>true</code>, <code>next._2</code> must not equal any value on the board of the same column.</p>
+<h4 id="task">Task</h4>
+<p>Complete the implementation of <code>checkY</code>.</p>
+<pre><code>def checkY(board: List[(Int,Int)], next: (Int,Int)): Boolean =</code></pre>
+<p>Just as <code>checkX</code> utilizes the method <code>row</code>, <code>checkY</code> should utilize the method <code>column</code>.</p>
+<h3 id="task-1b-implement-checkt">Task (1b): Implement <code>checkT</code></h3>
+<p>The same rules that apply to rows and columns apply to the 9 tiles of the Sudoku board.</p>
+<p><code>checkT</code> is like <code>checkX</code> and <code>checkY</code>, but for tiles.</p>
+<p>For <code>checkX</code> to return <code>true</code>, <code>next._2</code> must not equal any value on the board of the same row.</p>
+<p>For <code>checkY</code> to return <code>true</code>, <code>next._2</code> must not equal any value on the board of the same column.</p>
+<p>For <code>checkT</code> to return <code>true</code>, <code>next._2</code> must not equal any value on the board of the same tile.</p>
+<p>Utilize the method <code>tile</code>, similar to method <code>row</code> or <code>column</code>.</p>
+<h3 id="task-1c-implement-notplayed">Task (1c): Implement <code>notPlayed</code></h3>
+<p>Each tuple in <code>board</code> consists of an index and a value.</p>
+<p>Check that <code>index</code> is absent from <code>board</code>. This means that the board is 0, or not played, at this index.</p>
+<pre><code>def notPlayed(board: List[(Int,Int)], index: Int): Boolean = ???</code></pre>
+<p>For example, given board</p>
+<pre><code>val initial = List((0,5),(1,3),(4,7),(9,6),(12,1),(13,9),(14,5))</code></pre>
+<p>index 2 is not played.</p>
+<pre><code>notPlayed(initial, 2) = false</code></pre>
+<h3 id="task-1d-implement-islegal">Task (1d): Implement <code>isLegal</code></h3>
+<p>Tie together <code>checkX</code>, <code>checkY</code>, and <code>checkT</code>. All three rules must be satisfied for <code>next</code>:</p>
+<pre><code>  def isLegal(board: List[(Int,Int)], next: (Int,Int)): Boolean = ???</code></pre>
+<p>Hint <em>relevant to Task (1e)</em>: We consider a row, column or tile containing an empty index or indices to be <em>legal</em>.</p>
+<p><code>next = (..., 0)</code> should never be passed to <code>isLegal</code>. Call <code>isLegal</code> inside <code>sudokuIter</code>. Don't check the &quot;legality&quot; of any value outside <code>[1,9]</code>.</p>
+<h3 id="task-1e-implement-sudokuiter">Task (1e): Implement <code>sudokuIter</code></h3>
+<p>The input to <code>sudokuIter</code> is a List of empty board indices (board indices holding value 0).</p>
+<p>Hint: Handle the case in which the input board has no empty indices. This board may or may not be a valid Sudoku board, but regardless, there is no solving to be done in this case.</p>
+<hr />
+<p>Answer: The solution is brute-force.</p>
+<p>Personally I think the version without the for-comprehension makes more sense:</p>
+<pre><code>case index::tail =&gt;
+  sudokuIter(tail).flatMap { board =&gt;
+    (1 until 10).filter { k =&gt;
+      isLegal(board, (index,k))
+    }.map { k =&gt;
+      (index, k) :: board
+    }
+  }</code></pre>
+<p><em>First</em> critical point:</p>
+<p>In <code>isLegal</code>, the tile, row, or column being checked for &quot;legality&quot; does not have to be <em>complete</em>. Legality means: &quot;among the indices not empty, are there redundancies in the digits 1 to 9?&quot;</p>
+<p>Example: <code>isLegal</code> is checking <code>next = (0,9)</code>, meaning index 0 and value 9. This means checking the top row, the left-most column, and the top-left tile.</p>
+<p>top row legal</p>
+<p><code>9 1 2 3 4 5 0 0 0</code></p>
+<p>left-most column legal</p>
+<pre><code>9
+0
+0
+0
+5
+4
+3
+2
+1</code></pre>
+<p>top-left tile illegal!</p>
+<pre><code>9 1 2
+0 9 3
+0 4 5</code></pre>
+<p>this means that 9 cannot be put in index 0, to fill in the Sudoku board.</p>
+<p><em>Second</em> critical point:</p>
+<p>If I were to remove the <code>filter</code> step, what would this mean to you?</p>
+<pre><code>    (1 until 10).map { k =&gt;
+      (index, k) :: board
+    }: Set[List[(Int, Int)]]</code></pre>
+<p>It means, prepend elements 1-9 onto 9 distinct boards!</p>
+<p>Each board is a <code>List[(Int,Int)]</code>. The collection of boards is <code>Set[List[(Int,Int)]]</code>.</p>
+<p>If the input Sudoku board has more than one solution, these solutions are being built <em>in parallel</em> by means of <code>map</code>.</p>
+<hr />
+<pre><code>  //recursively provide all solutions to puzzle w/ given initial conds
+  def sudokuSolve(initial: List[(Int,Int)]): Set[List[(Int,Int)]] = {
+
+    // indices of empty board elements, given initial conditions (pre-filled board)
+    val indices: List[Int] =
+      (0 until 81) filter { index =&gt; notPlayed(initial, index)} toList
+
+    /*
+     TASK 1e
+     */
+    def sudokuIter(indices: List[Int]): Set[List[(Int,Int)]] =
+      indices match {
+        case Nil =&gt; Set(initial) // board has no empty elements
+        case index::tail =&gt; for {
+          board &lt;- sudokuIter(tail)
+          k &lt;- 1 until 10
+          if isLegal(board, (index,k))
+        } yield (index,k)::board
+      }
+
+    sudokuIter(indices)
+  }</code></pre>
+<p>Alternate</p>
+<pre><code>
+    def sudokuIter2(indices: List[Int]): Set[List[(Int, Int)]] =
+      indices match {
+        case Nil =&gt; Set(initial)
+        case index::tail =&gt;
+          sudokuIter(tail).flatMap { board =&gt;
+            (1 until 10).filter { k =&gt;
+              isLegal(board, (index,k))
+            }.map { k =&gt;
+              (index, k) :: board
+            }
+          }
+      }
+</code></pre>
+<p>See <a href="http://docs.scala-lang.org/tutorials/tour/sequence-comprehensions.html">documentation on for-comprehensions</a></p>
+<h3 id="task-1f-run-the-sudoku-solver">Task (1f): Run the Sudoku Solver</h3>
+<pre><code>&gt; run 
+run 
+[info] Compiling 1 Scala source to ../labExercises/target/scala-2.11/classes...
+[warn] Multiple main classes detected.  Run &#39;show discoveredMainClasses&#39; to see the list
+Multiple main classes detected, select one to run:
+ [1] labAnswers.lecture1.SudokuBoardGenerate
+ [2] labAnswers.lecture1.SudokuPreview
+ [3] labAnswers.lecture1.SudokuSolver
+ [4] labAnswers.lecture10.HashMapMonoidExamples
+ ...
+Enter number: 3
+3
+[info] Running labAnswers.lecture1.SudokuSolver 
+find solutions for this Sudoku board:
+5 3 0 0 7 0 0 0 0
+6 0 0 1 9 5 0 0 0
+0 9 8 0 0 0 0 6 0
+8 0 0 0 6 0 0 0 3
+4 0 0 8 0 3 0 0 1
+7 0 0 0 2 0 0 0 6
+0 6 0 0 0 0 2 8 0
+0 0 0 4 1 9 0 0 5
+0 0 0 0 8 0 0 7 9
+solution 
+ 5 3 4 6 7 8 9 1 2
+6 7 2 1 9 5 3 4 8
+1 9 8 3 4 2 5 6 7
+8 5 9 7 6 1 4 2 3
+4 2 6 8 5 3 7 9 1
+7 1 3 9 2 4 8 5 6
+9 6 1 5 3 7 2 8 4
+2 8 7 4 1 9 6 3 5
+3 4 5 2 8 6 1 7 9
+[success] Total time: 9 s, completed May 23, 2016 2:53:17 PM
+&gt; </code></pre>
+<h4 id="copy-your-solutions-to-the-second-board-initial2.-there-are-many-solutions">Copy your solutions to the second board, <code>initial2</code>. There are many solutions!</h4>
+<h3 id="solutions-to-board-initial2">Solutions to board <code>initial2</code></h3>
+<pre><code>find solutions for this Sudoku board (initial2):
+5 3 0 0 7 0 0 0 0
+0 0 0 1 9 5 0 0 0
+0 9 8 0 0 0 0 0 0
+8 0 0 0 6 0 0 0 3
+0 0 0 8 0 0 0 0 1
+7 0 0 0 2 0 0 0 0
+0 6 0 0 0 0 2 8 0
+0 0 0 4 0 9 0 0 5
+0 0 0 0 8 0 0 7 9
+solution 
+ 5 3 1 6 7 8 4 9 2
+4 7 2 1 9 5 6 3 8
+6 9 8 3 4 2 5 1 7
+8 2 5 7 6 1 9 4 3
+9 4 6 8 5 3 7 2 1
+7 1 3 9 2 4 8 5 6
+1 6 9 5 3 7 2 8 4
+2 8 7 4 1 9 3 6 5
+3 5 4 2 8 6 1 7 9
+solution 
+ 5 3 1 6 7 8 4 9 2
+4 7 2 1 9 5 8 3 6
+6 9 8 3 4 2 5 1 7
+8 2 5 7 6 1 9 4 3
+9 4 6 8 5 3 7 2 1
+7 1 3 9 2 4 6 5 8
+3 6 9 5 1 7 2 8 4
+2 8 7 4 3 9 1 6 5
+1 5 4 2 8 6 3 7 9
+solution 
+ 5 3 1 6 7 8 9 4 2
+4 7 2 1 9 5 6 3 8
+6 9 8 3 4 2 5 1 7
+8 2 4 5 6 1 7 9 3
+9 5 6 8 3 7 4 2 1
+7 1 3 9 2 4 8 5 6
+1 6 9 7 5 3 2 8 4
+2 8 7 4 1 9 3 6 5
+3 4 5 2 8 6 1 7 9
+solution 
+ 5 3 1 6 7 8 4 9 2
+4 7 2 1 9 5 6 3 8
+6 9 8 3 4 2 5 1 7
+8 5 4 7 6 1 9 2 3
+9 2 6 8 5 3 7 4 1
+7 1 3 9 2 4 8 5 6
+1 6 9 5 3 7 2 8 4
+2 8 7 4 1 9 3 6 5
+3 4 5 2 8 6 1 7 9
+solution 
+ 5 3 1 6 7 8 4 9 2
+4 7 2 1 9 5 3 6 8
+6 9 8 3 4 2 5 1 7
+8 1 5 7 6 4 9 2 3
+9 2 6 8 5 3 7 4 1
+7 4 3 9 2 1 8 5 6
+1 6 9 5 3 7 2 8 4
+2 8 7 4 1 9 6 3 5
+3 5 4 2 8 6 1 7 9
+solution 
+ 5 3 1 6 7 8 9 4 2
+4 7 2 1 9 5 3 6 8
+6 9 8 3 4 2 5 1 7
+8 4 5 9 6 1 7 2 3
+9 2 6 8 3 7 4 5 1
+7 1 3 5 2 4 8 9 6
+1 6 9 7 5 3 2 8 4
+2 8 7 4 1 9 6 3 5
+3 5 4 2 8 6 1 7 9
+solution 
+ 5 3 1 6 7 8 4 9 2
+4 7 2 1 9 5 8 3 6
+6 9 8 3 4 2 5 1 7
+8 2 5 7 6 1 9 4 3
+9 4 6 8 5 3 7 2 1
+7 1 3 9 2 4 6 5 8
+1 6 9 5 3 7 2 8 4
+2 8 7 4 1 9 3 6 5
+3 5 4 2 8 6 1 7 9
+solution 
+ 5 3 1 6 7 8 9 4 2
+4 7 2 1 9 5 8 3 6
+6 9 8 3 4 2 5 1 7
+8 5 4 9 6 1 7 2 3
+9 2 6 8 3 7 4 5 1
+7 1 3 5 2 4 6 9 8
+1 6 9 7 5 3 2 8 4
+2 8 7 4 1 9 3 6 5
+3 4 5 2 8 6 1 7 9
+solution 
+ 5 3 1 6 7 8 4 9 2
+4 7 2 1 9 5 8 3 6
+6 9 8 3 4 2 1 5 7
+8 4 5 7 6 1 9 2 3
+3 2 9 8 5 4 7 6 1
+7 1 6 9 2 3 5 4 8
+9 6 3 5 1 7 2 8 4
+2 8 7 4 3 9 6 1 5
+1 5 4 2 8 6 3 7 9
+solution 
+ 5 3 1 6 7 8 9 4 2
+4 7 2 1 9 5 6 3 8
+6 9 8 3 4 2 5 1 7
+8 4 5 9 6 1 7 2 3
+9 2 6 8 3 7 4 5 1
+7 1 3 5 2 4 8 9 6
+1 6 9 7 5 3 2 8 4
+2 8 7 4 1 9 3 6 5
+3 5 4 2 8 6 1 7 9
+solution 
+ 5 3 1 6 7 8 4 9 2
+4 7 2 1 9 5 6 3 8
+6 9 8 3 4 2 5 1 7
+8 1 4 5 6 7 9 2 3
+9 2 6 8 3 4 7 5 1
+7 5 3 9 2 1 8 4 6
+1 6 9 7 5 3 2 8 4
+2 8 7 4 1 9 3 6 5
+3 4 5 2 8 6 1 7 9
+solution 
+ 5 3 1 6 7 8 9 4 2
+4 7 2 1 9 5 8 3 6
+6 9 8 3 4 2 5 1 7
+8 2 5 7 6 1 4 9 3
+9 4 6 8 5 3 7 2 1
+7 1 3 9 2 4 6 5 8
+3 6 9 5 1 7 2 8 4
+2 8 7 4 3 9 1 6 5
+1 5 4 2 8 6 3 7 9
+solution 
+ 5 3 4 6 7 8 9 1 2
+6 7 2 1 9 5 4 3 8
+1 9 8 3 4 2 6 5 7
+8 1 9 5 6 4 7 2 3
+4 2 6 8 3 7 5 9 1
+7 5 3 9 2 1 8 4 6
+9 6 1 7 5 3 2 8 4
+2 8 7 4 1 9 3 6 5
+3 4 5 2 8 6 1 7 9
+solution 
+ 5 3 1 6 7 8 4 9 2
+4 7 2 1 9 5 8 3 6
+6 9 8 3 4 2 5 1 7
+8 4 5 7 6 1 9 2 3
+9 2 6 8 5 3 7 4 1
+7 1 3 9 2 4 6 5 8
+1 6 9 5 3 7 2 8 4
+2 8 7 4 1 9 3 6 5
+3 5 4 2 8 6 1 7 9
+solution 
+ 5 3 1 6 7 8 4 9 2
+4 7 2 1 9 5 6 3 8
+6 9 8 3 4 2 5 1 7
+8 2 5 7 6 1 9 4 3
+9 4 6 8 5 3 7 2 1
+7 1 3 9 2 4 8 5 6
+3 6 9 5 1 7 2 8 4
+2 8 7 4 3 9 1 6 5
+1 5 4 2 8 6 3 7 9
+solution 
+ 5 3 4 6 7 8 9 1 2
+6 7 2 1 9 5 4 3 8
+1 9 8 3 4 2 6 5 7
+8 1 9 7 6 4 5 2 3
+4 2 6 8 5 3 7 9 1
+7 5 3 9 2 1 8 4 6
+9 6 1 5 3 7 2 8 4
+2 8 7 4 1 9 3 6 5
+3 4 5 2 8 6 1 7 9
+solution 
+ 5 3 1 6 7 8 9 4 2
+4 7 2 1 9 5 8 3 6
+6 9 8 3 4 2 5 1 7
+8 2 4 9 6 1 7 5 3
+9 5 6 8 3 7 4 2 1
+7 1 3 5 2 4 6 9 8
+1 6 9 7 5 3 2 8 4
+2 8 7 4 1 9 3 6 5
+3 4 5 2 8 6 1 7 9
+solution 
+ 5 3 1 6 7 8 4 9 2
+4 7 2 1 9 5 3 6 8
+6 9 8 3 4 2 5 1 7
+8 1 4 5 6 7 9 2 3
+9 2 6 8 3 4 7 5 1
+7 5 3 9 2 1 8 4 6
+1 6 9 7 5 3 2 8 4
+2 8 7 4 1 9 6 3 5
+3 4 5 2 8 6 1 7 9
+solution 
+ 5 3 1 6 7 8 4 9 2
+4 7 2 1 9 5 8 3 6
+6 9 8 3 4 2 5 1 7
+8 5 4 7 6 1 9 2 3
+9 2 6 8 5 3 7 4 1
+7 1 3 9 2 4 6 5 8
+1 6 9 5 3 7 2 8 4
+2 8 7 4 1 9 3 6 5
+3 4 5 2 8 6 1 7 9
+solution 
+ 5 3 4 6 7 8 1 9 2
+6 7 2 1 9 5 4 3 8
+1 9 8 3 4 2 5 6 7
+8 4 5 7 6 1 9 2 3
+9 2 6 8 5 3 7 4 1
+7 1 3 9 2 4 8 5 6
+3 6 9 5 1 7 2 8 4
+2 8 7 4 3 9 6 1 5
+4 5 1 2 8 6 3 7 9
+solution 
+ 5 3 1 6 7 8 9 4 2
+4 7 2 1 9 5 8 3 6
+6 9 8 3 4 2 5 1 7
+8 1 5 9 6 4 7 2 3
+9 2 6 8 3 7 4 5 1
+7 4 3 5 2 1 6 9 8
+1 6 9 7 5 3 2 8 4
+2 8 7 4 1 9 3 6 5
+3 5 4 2 8 6 1 7 9
+solution 
+ 5 3 1 6 7 8 4 9 2
+4 7 2 1 9 5 8 3 6
+6 9 8 3 4 2 1 5 7
+8 5 4 7 6 1 9 2 3
+9 2 3 8 5 4 7 6 1
+7 1 6 9 2 3 5 4 8
+3 6 9 5 1 7 2 8 4
+2 8 7 4 3 9 6 1 5
+1 4 5 2 8 6 3 7 9
+solution 
+ 5 3 1 6 7 8 9 4 2
+4 7 2 1 9 5 8 3 6
+6 9 8 3 4 2 1 5 7
+8 5 9 7 6 1 4 2 3
+3 2 6 8 5 4 7 9 1
+7 1 4 9 2 3 5 6 8
+9 6 3 5 1 7 2 8 4
+2 8 7 4 3 9 6 1 5
+1 4 5 2 8 6 3 7 9
+solution 
+ 5 3 1 6 7 8 4 9 2
+4 7 2 1 9 5 8 3 6
+6 9 8 3 4 2 5 1 7
+8 4 5 7 6 1 9 2 3
+9 2 6 8 5 3 7 4 1
+7 1 3 9 2 4 6 5 8
+3 6 9 5 1 7 2 8 4
+2 8 7 4 3 9 1 6 5
+1 5 4 2 8 6 3 7 9
+solution 
+ 5 3 4 6 7 8 9 1 2
+6 7 2 1 9 5 4 3 8
+1 9 8 3 4 2 6 5 7
+8 2 1 7 6 4 5 9 3
+9 4 6 8 5 3 7 2 1
+7 5 3 9 2 1 8 4 6
+3 6 9 5 1 7 2 8 4
+2 8 7 4 3 9 1 6 5
+4 1 5 2 8 6 3 7 9
+solution 
+ 5 3 1 6 7 8 9 4 2
+4 7 2 1 9 5 8 3 6
+6 9 8 3 4 2 5 1 7
+8 5 9 7 6 1 4 2 3
+3 2 6 8 5 4 7 9 1
+7 1 4 9 2 3 6 5 8
+9 6 3 5 1 7 2 8 4
+2 8 7 4 3 9 1 6 5
+1 4 5 2 8 6 3 7 9
+solution 
+ 5 3 1 6 7 8 4 9 2
+4 7 2 1 9 5 6 3 8
+6 9 8 3 4 2 5 1 7
+8 4 5 7 6 1 9 2 3
+9 2 6 8 5 3 7 4 1
+7 1 3 9 2 4 8 5 6
+3 6 9 5 1 7 2 8 4
+2 8 7 4 3 9 1 6 5
+1 5 4 2 8 6 3 7 9
+solution 
+ 5 3 1 6 7 8 9 4 2
+4 7 2 1 9 5 3 6 8
+6 9 8 3 4 2 5 1 7
+8 5 4 9 6 1 7 2 3
+9 2 6 8 3 7 4 5 1
+7 1 3 5 2 4 8 9 6
+1 6 9 7 5 3 2 8 4
+2 8 7 4 1 9 6 3 5
+3 4 5 2 8 6 1 7 9
+solution 
+ 5 3 1 6 7 8 4 9 2
+4 7 2 1 9 5 8 3 6
+6 9 8 3 4 2 5 1 7
+8 1 5 7 6 4 9 2 3
+9 2 6 8 5 3 7 4 1
+7 4 3 9 2 1 6 5 8
+1 6 9 5 3 7 2 8 4
+2 8 7 4 1 9 3 6 5
+3 5 4 2 8 6 1 7 9
+solution 
+ 5 3 1 6 7 8 9 4 2
+4 7 2 1 9 5 8 3 6
+6 9 8 3 4 2 5 1 7
+8 4 5 9 6 1 7 2 3
+9 2 6 8 3 7 4 5 1
+7 1 3 5 2 4 6 9 8
+1 6 9 7 5 3 2 8 4
+2 8 7 4 1 9 3 6 5
+3 5 4 2 8 6 1 7 9
+solution 
+ 5 3 4 6 7 8 9 1 2
+6 7 2 1 9 5 4 3 8
+1 9 8 3 4 2 6 5 7
+8 4 9 7 6 1 5 2 3
+3 2 6 8 5 4 7 9 1
+7 5 1 9 2 3 8 4 6
+9 6 3 5 1 7 2 8 4
+2 8 7 4 3 9 1 6 5
+4 1 5 2 8 6 3 7 9
+solution 
+ 5 3 1 6 7 8 9 4 2
+4 7 2 1 9 5 3 6 8
+6 9 8 3 4 2 5 1 7
+8 1 5 9 6 7 4 2 3
+9 2 6 8 3 4 7 5 1
+7 4 3 5 2 1 8 9 6
+1 6 9 7 5 3 2 8 4
+2 8 7 4 1 9 6 3 5
+3 5 4 2 8 6 1 7 9
+solution 
+ 5 3 1 6 7 8 4 9 2
+4 7 2 1 9 5 6 3 8
+6 9 8 3 4 2 5 1 7
+8 5 4 7 6 1 9 2 3
+9 2 6 8 5 3 7 4 1
+7 1 3 9 2 4 8 5 6
+3 6 9 5 1 7 2 8 4
+2 8 7 4 3 9 1 6 5
+1 4 5 2 8 6 3 7 9
+solution 
+ 5 3 4 6 7 8 1 9 2
+6 7 2 1 9 5 4 3 8
+1 9 8 3 4 2 5 6 7
+8 5 1 7 6 4 9 2 3
+9 2 6 8 5 3 7 4 1
+7 4 3 9 2 1 8 5 6
+3 6 9 5 1 7 2 8 4
+2 8 7 4 3 9 6 1 5
+4 1 5 2 8 6 3 7 9
+solution 
+ 5 3 1 6 7 8 4 9 2
+4 7 2 1 9 5 3 6 8
+6 9 8 3 4 2 5 1 7
+8 4 5 7 6 1 9 2 3
+9 2 6 8 5 3 7 4 1
+7 1 3 9 2 4 8 5 6
+1 6 9 5 3 7 2 8 4
+2 8 7 4 1 9 6 3 5
+3 5 4 2 8 6 1 7 9
+solution 
+ 5 3 1 6 7 8 4 9 2
+4 7 2 1 9 5 3 6 8
+6 9 8 3 4 2 5 1 7
+8 2 5 7 6 1 9 4 3
+9 4 6 8 5 3 7 2 1
+7 1 3 9 2 4 8 5 6
+1 6 9 5 3 7 2 8 4
+2 8 7 4 1 9 6 3 5
+3 5 4 2 8 6 1 7 9
+solution 
+ 5 3 1 6 7 8 4 9 2
+4 7 2 1 9 5 8 3 6
+6 9 8 3 4 2 1 5 7
+8 1 5 7 6 4 9 2 3
+9 2 6 8 5 3 7 4 1
+7 4 3 9 2 1 5 6 8
+3 6 9 5 1 7 2 8 4
+2 8 7 4 3 9 6 1 5
+1 5 4 2 8 6 3 7 9
+solution 
+ 5 3 1 6 7 8 9 4 2
+4 7 2 1 9 5 6 3 8
+6 9 8 3 4 2 5 1 7
+8 2 4 9 6 1 7 5 3
+9 5 6 8 3 7 4 2 1
+7 1 3 5 2 4 8 9 6
+1 6 9 7 5 3 2 8 4
+2 8 7 4 1 9 3 6 5
+3 4 5 2 8 6 1 7 9
+solution 
+ 5 3 4 6 7 8 1 9 2
+6 7 2 1 9 5 4 3 8
+1 9 8 3 4 2 5 6 7
+8 1 5 7 6 4 9 2 3
+9 2 6 8 5 3 7 4 1
+7 4 3 9 2 1 8 5 6
+3 6 9 5 1 7 2 8 4
+2 8 7 4 3 9 6 1 5
+4 5 1 2 8 6 3 7 9
+solution 
+ 5 3 1 6 7 8 4 9 2
+4 7 2 1 9 5 8 3 6
+6 9 8 3 4 2 1 5 7
+8 2 5 7 6 1 9 4 3
+9 4 6 8 5 3 7 2 1
+7 1 3 9 2 4 5 6 8
+3 6 9 5 1 7 2 8 4
+2 8 7 4 3 9 6 1 5
+1 5 4 2 8 6 3 7 9
+solution 
+ 5 3 1 6 7 8 9 4 2
+4 7 2 1 9 5 3 6 8
+6 9 8 3 4 2 5 1 7
+8 2 4 5 6 1 7 9 3
+9 5 6 8 3 7 4 2 1
+7 1 3 9 2 4 8 5 6
+1 6 9 7 5 3 2 8 4
+2 8 7 4 1 9 6 3 5
+3 4 5 2 8 6 1 7 9
+solution 
+ 5 3 1 6 7 8 9 4 2
+4 7 2 1 9 5 8 3 6
+6 9 8 3 4 2 1 5 7
+8 2 5 7 6 1 4 9 3
+9 4 6 8 5 3 7 2 1
+7 1 3 9 2 4 5 6 8
+3 6 9 5 1 7 2 8 4
+2 8 7 4 3 9 6 1 5
+1 5 4 2 8 6 3 7 9
+solution 
+ 5 3 1 6 7 8 9 4 2
+4 7 2 1 9 5 3 6 8
+6 9 8 3 4 2 5 1 7
+8 2 5 7 6 1 4 9 3
+9 4 6 8 5 3 7 2 1
+7 1 3 9 2 4 8 5 6
+1 6 9 5 3 7 2 8 4
+2 8 7 4 1 9 6 3 5
+3 5 4 2 8 6 1 7 9
+solution 
+ 5 3 1 6 7 8 4 9 2
+4 7 2 1 9 5 8 3 6
+6 9 8 3 4 2 5 1 7
+8 5 4 7 6 1 9 2 3
+9 2 6 8 5 3 7 4 1
+7 1 3 9 2 4 6 5 8
+3 6 9 5 1 7 2 8 4
+2 8 7 4 3 9 1 6 5
+1 4 5 2 8 6 3 7 9
+solution 
+ 5 3 1 6 7 8 9 4 2
+4 7 2 1 9 5 8 3 6
+6 9 8 3 4 2 5 1 7
+8 2 4 5 6 1 7 9 3
+9 5 6 8 3 7 4 2 1
+7 1 3 9 2 4 6 5 8
+1 6 9 7 5 3 2 8 4
+2 8 7 4 1 9 3 6 5
+3 4 5 2 8 6 1 7 9
+solution 
+ 5 3 1 6 7 8 4 9 2
+4 7 2 1 9 5 8 3 6
+6 9 8 3 4 2 1 5 7
+8 5 4 7 6 1 9 2 3
+3 2 9 8 5 4 7 6 1
+7 1 6 9 2 3 5 4 8
+9 6 3 5 1 7 2 8 4
+2 8 7 4 3 9 6 1 5
+1 4 5 2 8 6 3 7 9
+solution 
+ 5 3 1 6 7 8 4 9 2
+4 7 2 1 9 5 6 3 8
+6 9 8 3 4 2 5 1 7
+8 4 5 7 6 1 9 2 3
+9 2 6 8 5 3 7 4 1
+7 1 3 9 2 4 8 5 6
+1 6 9 5 3 7 2 8 4
+2 8 7 4 1 9 3 6 5
+3 5 4 2 8 6 1 7 9
+solution 
+ 5 3 1 6 7 8 9 4 2
+4 7 2 1 9 5 3 6 8
+6 9 8 3 4 2 5 1 7
+8 2 4 9 6 1 7 5 3
+9 5 6 8 3 7 4 2 1
+7 1 3 5 2 4 8 9 6
+1 6 9 7 5 3 2 8 4
+2 8 7 4 1 9 6 3 5
+3 4 5 2 8 6 1 7 9
+solution 
+ 5 3 1 6 7 8 9 4 2
+4 7 2 1 9 5 6 3 8
+6 9 8 3 4 2 5 1 7
+8 1 5 9 6 7 4 2 3
+9 2 6 8 3 4 7 5 1
+7 4 3 5 2 1 8 9 6
+1 6 9 7 5 3 2 8 4
+2 8 7 4 1 9 3 6 5
+3 5 4 2 8 6 1 7 9
+solution 
+ 5 3 4 6 7 8 9 1 2
+6 7 2 1 9 5 3 4 8
+1 9 8 3 4 2 5 6 7
+8 5 9 7 6 1 4 2 3
+4 2 6 8 5 3 7 9 1
+7 1 3 9 2 4 8 5 6
+9 6 1 5 3 7 2 8 4
+2 8 7 4 1 9 6 3 5
+3 4 5 2 8 6 1 7 9
+solution 
+ 5 3 1 6 7 8 4 9 2
+4 7 2 1 9 5 8 3 6
+6 9 8 3 4 2 5 1 7
+8 1 4 5 6 7 9 2 3
+9 2 6 8 3 4 7 5 1
+7 5 3 9 2 1 6 4 8
+1 6 9 7 5 3 2 8 4
+2 8 7 4 1 9 3 6 5
+3 4 5 2 8 6 1 7 9
+solution 
+ 5 3 1 6 7 8 4 9 2
+4 7 2 1 9 5 8 3 6
+6 9 8 3 4 2 5 1 7
+8 1 5 7 6 4 9 2 3
+9 2 6 8 5 3 7 4 1
+7 4 3 9 2 1 6 5 8
+3 6 9 5 1 7 2 8 4
+2 8 7 4 3 9 1 6 5
+1 5 4 2 8 6 3 7 9
+solution 
+ 5 3 1 6 7 8 4 9 2
+4 7 2 1 9 5 8 3 6
+6 9 8 3 4 2 1 5 7
+8 5 4 7 6 1 9 2 3
+9 2 6 8 5 3 7 4 1
+7 1 3 9 2 4 5 6 8
+3 6 9 5 1 7 2 8 4
+2 8 7 4 3 9 6 1 5
+1 4 5 2 8 6 3 7 9
+solution 
+ 5 3 1 6 7 8 4 9 2
+4 7 2 1 9 5 8 3 6
+6 9 8 3 4 2 1 5 7
+8 4 5 7 6 1 9 2 3
+9 2 6 8 5 3 7 4 1
+7 1 3 9 2 4 5 6 8
+3 6 9 5 1 7 2 8 4
+2 8 7 4 3 9 6 1 5
+1 5 4 2 8 6 3 7 9
+solution 
+ 5 3 4 6 7 8 9 1 2
+6 7 2 1 9 5 4 3 8
+1 9 8 3 4 2 6 5 7
+8 4 9 7 6 1 5 2 3
+3 2 6 8 5 4 7 9 1
+7 1 5 9 2 3 8 4 6
+9 6 3 5 1 7 2 8 4
+2 8 7 4 3 9 1 6 5
+4 5 1 2 8 6 3 7 9
+solution 
+ 5 3 4 6 7 8 1 9 2
+6 7 2 1 9 5 4 3 8
+1 9 8 3 4 2 5 6 7
+8 2 1 7 6 4 9 5 3
+9 4 6 8 5 3 7 2 1
+7 5 3 9 2 1 8 4 6
+3 6 9 5 1 7 2 8 4
+2 8 7 4 3 9 6 1 5
+4 1 5 2 8 6 3 7 9
+solution 
+ 5 3 1 6 7 8 4 9 2
+4 7 2 1 9 5 6 3 8
+6 9 8 3 4 2 5 1 7
+8 1 5 7 6 4 9 2 3
+9 2 6 8 5 3 7 4 1
+7 4 3 9 2 1 8 5 6
+1 6 9 5 3 7 2 8 4
+2 8 7 4 1 9 3 6 5
+3 5 4 2 8 6 1 7 9
+solution 
+ 5 3 1 6 7 8 9 4 2
+4 7 2 1 9 5 6 3 8
+6 9 8 3 4 2 5 1 7
+8 2 5 7 6 1 4 9 3
+9 4 6 8 5 3 7 2 1
+7 1 3 9 2 4 8 5 6
+1 6 9 5 3 7 2 8 4
+2 8 7 4 1 9 3 6 5
+3 5 4 2 8 6 1 7 9
+solution 
+ 5 3 1 6 7 8 4 9 2
+4 7 2 1 9 5 3 6 8
+6 9 8 3 4 2 5 1 7
+8 5 4 7 6 1 9 2 3
+9 2 6 8 5 3 7 4 1
+7 1 3 9 2 4 8 5 6
+1 6 9 5 3 7 2 8 4
+2 8 7 4 1 9 6 3 5
+3 4 5 2 8 6 1 7 9
+solution 
+ 5 3 1 6 7 8 4 9 2
+4 7 2 1 9 5 8 3 6
+6 9 8 3 4 2 1 5 7
+8 4 5 7 6 1 9 2 3
+9 2 3 8 5 4 7 6 1
+7 1 6 9 2 3 5 4 8
+3 6 9 5 1 7 2 8 4
+2 8 7 4 3 9 6 1 5
+1 5 4 2 8 6 3 7 9
+solution 
+ 5 3 4 6 7 8 9 1 2
+6 7 2 1 9 5 4 3 8
+1 9 8 3 4 2 6 5 7
+8 4 9 7 6 1 5 2 3
+3 2 6 8 5 4 7 9 1
+7 1 5 9 2 3 8 4 6
+9 6 1 5 3 7 2 8 4
+2 8 7 4 1 9 3 6 5
+4 5 3 2 8 6 1 7 9
+solution 
+ 5 3 4 6 7 8 1 9 2
+6 7 2 1 9 5 4 3 8
+1 9 8 3 4 2 5 6 7
+8 2 5 7 6 1 9 4 3
+9 4 6 8 5 3 7 2 1
+7 1 3 9 2 4 8 5 6
+3 6 9 5 1 7 2 8 4
+2 8 7 4 3 9 6 1 5
+4 5 1 2 8 6 3 7 9
+solution 
+ 5 3 1 6 7 8 9 4 2
+4 7 2 1 9 5 8 3 6
+6 9 8 3 4 2 1 5 7
+8 4 9 7 6 1 5 2 3
+3 2 6 8 5 4 7 9 1
+7 1 5 9 2 3 4 6 8
+9 6 3 5 1 7 2 8 4
+2 8 7 4 3 9 6 1 5
+1 5 4 2 8 6 3 7 9
+solution 
+ 5 3 1 6 7 8 9 4 2
+4 7 2 1 9 5 6 3 8
+6 9 8 3 4 2 5 1 7
+8 5 9 7 6 1 4 2 3
+3 2 6 8 5 4 7 9 1
+7 1 4 9 2 3 8 5 6
+9 6 3 5 1 7 2 8 4
+2 8 7 4 3 9 1 6 5
+1 4 5 2 8 6 3 7 9
+solution 
+ 5 3 1 6 7 8 9 4 2
+4 7 2 1 9 5 3 6 8
+6 9 8 3 4 2 5 1 7
+8 1 5 9 6 4 7 2 3
+9 2 6 8 3 7 4 5 1
+7 4 3 5 2 1 8 9 6
+1 6 9 7 5 3 2 8 4
+2 8 7 4 1 9 6 3 5
+3 5 4 2 8 6 1 7 9
+solution 
+ 5 3 1 6 7 8 9 4 2
+4 7 2 1 9 5 6 3 8
+6 9 8 3 4 2 5 1 7
+8 1 5 9 6 4 7 2 3
+9 2 6 8 3 7 4 5 1
+7 4 3 5 2 1 8 9 6
+1 6 9 7 5 3 2 8 4
+2 8 7 4 1 9 3 6 5
+3 5 4 2 8 6 1 7 9
+solution 
+ 5 3 1 6 7 8 4 9 2
+4 7 2 1 9 5 6 3 8
+6 9 8 3 4 2 5 1 7
+8 1 5 7 6 4 9 2 3
+9 2 6 8 5 3 7 4 1
+7 4 3 9 2 1 8 5 6
+3 6 9 5 1 7 2 8 4
+2 8 7 4 3 9 1 6 5
+1 5 4 2 8 6 3 7 9
+solution 
+ 5 3 1 6 7 8 9 4 2
+4 7 2 1 9 5 6 3 8
+6 9 8 3 4 2 5 1 7
+8 5 4 9 6 1 7 2 3
+9 2 6 8 3 7 4 5 1
+7 1 3 5 2 4 8 9 6
+1 6 9 7 5 3 2 8 4
+2 8 7 4 1 9 3 6 5
+3 4 5 2 8 6 1 7 9
+solution 
+ 5 3 1 6 7 8 9 4 2
+4 7 2 1 9 5 8 3 6
+6 9 8 3 4 2 5 1 7
+8 2 5 7 6 1 4 9 3
+9 4 6 8 5 3 7 2 1
+7 1 3 9 2 4 6 5 8
+1 6 9 5 3 7 2 8 4
+2 8 7 4 1 9 3 6 5
+3 5 4 2 8 6 1 7 9
+solution 
+ 5 3 1 6 7 8 9 4 2
+4 7 2 1 9 5 6 3 8
+6 9 8 3 4 2 5 1 7
+8 2 5 7 6 1 4 9 3
+9 4 6 8 5 3 7 2 1
+7 1 3 9 2 4 8 5 6
+3 6 9 5 1 7 2 8 4
+2 8 7 4 3 9 1 6 5
+1 5 4 2 8 6 3 7 9
+solution 
+ 5 3 1 6 7 8 9 4 2
+4 7 2 1 9 5 8 3 6
+6 9 8 3 4 2 5 1 7
+8 1 5 9 6 7 4 2 3
+9 2 6 8 3 4 7 5 1
+7 4 3 5 2 1 6 9 8
+1 6 9 7 5 3 2 8 4
+2 8 7 4 1 9 3 6 5
+3 5 4 2 8 6 1 7 9</code></pre>
+<h2 id="part-2-generate-boards">Part 2: Generate boards</h2>
+
+</body>
+</html>

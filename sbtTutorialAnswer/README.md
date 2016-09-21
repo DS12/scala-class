@@ -12,9 +12,11 @@ Specifically:
 * [Java/Scala package hierarchy](https://en.wikipedia.org/wiki/Java_package)
 * how repositories are organized
 	
-There is no implementation required Parts 1, 2, and 3.  Your task is in Part 4.
+There is no implementation required <b>Parts 1, 2, and 3</b>.  Your tasks are in <b>Parts 4 and 5</b>.
 
 ## Part 1: `minimal`
+
+`scala-class/sbtTutorial/minimal/src/main/scala`
 
 Directory `minimal` contains an SBT build definition that is close to minimal complexity, and some very simple Scala code in `minimal/src/main/scala/Hello.scala`.
 
@@ -64,11 +66,13 @@ version := "1.0"
 scalaVersion := "2.9.1"
 ```
 
-The reason we skip over this absolutely minimal build definition is that such a build definition is not suitable to be expanded to multiple sub-projects, as show in Part 2.  Our Scala code, and supporting code like build definitions, will keep scalability in mind whenever possible.
+The reason we skip over this absolutely minimal build definition is that such a build definition is not suitable to be expanded to multiple sub-projects, as show in <b>Part 2</b>.  Our Scala code, and supporting code like build definitions, will keep scalability in mind whenever possible.
 
 The version of SBT is set outside `minimal/build.sbt`, in `minimal/project/build.properties`.
 
 ## Part 2: `multi`
+
+`scala-class-private/sbtTutorial/multi`
 
 Directory `multi` contains an SBT build definition with multiple SBT sub-projects.
 
@@ -191,6 +195,8 @@ Note that the class and filesystem hierarchies do not necessarily correspond.  `
 
 ## Part 3: `usingCats`
 
+`scala-class/sbtTutorial/usingCats`
+
 `usingCats` shows how to add an external dependency.  This SBT project contains only a single sub-project.
 
 Start SBT inside directory `usingCats`.
@@ -252,6 +258,8 @@ the absence of Sonny in the repository is handled safely
 
 ## Part 4: `usingBreeze` Task
 
+`scala-class/sbtTutorial/usingBreeze`
+
 Use `minimal`, `multi`, and `usingCats` to set up the SBT project in directory `usingBreeze`.
 
 Start SBT inside directory `usingBreeze`.
@@ -277,7 +285,7 @@ Start SBT inside directory `usingBreeze`.
 
 Set up these two sub-projects in `usingBreeze/build.sbt` and try to reduce code duplication.
 
-### Task 1: Set up `distributions`
+### Task 4a: Set up `distributions`
 
 `distributions` is not dependent on `plotting`.  That means `plotting` can remain uncompilable and unrunnable while `distributions` is runnable.
 
@@ -289,7 +297,7 @@ At the SBT prompt, enter the `distributions` sub-project.
 
 `run` to see some outputs of various statistical distributions.
 
-### Task 2: Set up `plotting`
+### Task 4b: Set up `plotting`
 
 `plotting` depends on `distributions`, so will not be compilable or runnable if `distributions` is not set up correctly.
 
@@ -301,13 +309,33 @@ Resolve the dependencies of `plotting`.
 
 ![](images/gaussian_histogram_example.png)
 
-### Task 3: Refactor to reduce duplication
+### Task 4c: Set up `root`
+
+Skim the documentation on the [*default `root` sub-project*](http://www.scala-sbt.org/0.13/docs/Multi-Project.html#Default+root+project).
+
+> If a project is not defined for the root directory in the build, sbt creates a default one that aggregates all other projects in the build. 
+
+Define `root` explicitly instead of letting SBT create it implicitly.
+
+`root` should aggregate `distributions` and `plotting`.
+
+### Task 4d: Refactor to reduce duplication
 
 `plotting` and `distributions` share two external dependencies.
 
-Take another look at `multi/build.sbt` from Part 2.  Define `commonSettings` so that these two dependencies only appear once in `usingBreeze.sbt`.  Use stacking, as described in Part 2, to resolve `plotting`'s third external dependency -- Breeze Viz.
+Take another look at `multi/build.sbt` from <b>Part 2</b>.  Define `commonSettings` so that these two dependencies only appear once in `usingBreeze.sbt`.  Use stacking, as described in <b>Part 2</b>, to resolve `plotting`'s third external dependency -- Breeze Viz.
 
 There will be no difference in the behavior of `plotting` or `distributions`, but you have eliminated some obvious code duplication and room for error.  Come time to change the version of these Breeze dependencies, there will be less room for error.
+
+Use [*How `build.sbt` defines settings*](http://www.scala-sbt.org/0.13/docs/Basic-Def.html#How+build.sbt+defines+settings) as a guide:
+
+```
+lazy val commonSettings = Seq(
+  organization := "com.example",
+  version := "0.1.0",
+  scalaVersion := "2.11.8"
+)
+```
 
 
 ###Terminal commands you will use
@@ -333,7 +361,206 @@ There will be no difference in the behavior of `plotting` or `distributions`, bu
 * `help` - Displays this help message or prints detailed help on requested commands (run `help <command>`)
 
 
+## Part 5: `usingBreezeRefactored` Task
 
-### References
+`scala-class/sbtTutorial/usingBreezeRefactored`
 
-* [.sbt build examples](http://www.scala-sbt.org/0.13/docs/Basic-Def-Examples.html)
+In this <b>Part</b> we will refactor our build configuration from <b>Part 4</b> in the style of the [MLeap library](https://github.com/TrueCar/mleap).
+
+We will split our `build.sbt` into multiple files: `build.sbt`, `project/Common.scala` and `project/Dependencies.scala`.
+
+The extra imports in the `*.scala` files
+
+```
+import sbt._
+import Keys._
+```
+
+are explained in [*What is the difference between `build.sbt` and `build.scala`?*](http://stackoverflow.com/a/18010698/1007926).
+
+
+### Task 5a: `Common`
+
+`scala-class/sbtTutorial/usingBreezeRefactored/project/Common.scala`
+
+Emulate [`mleap/project/Common.scala`]( https://github.com/TrueCar/mleap/blob/master/project/Common.scala)
+
+Refactor `commonSettings` from `scala-class/sbtTutorial/usingBreeze/build.sbt` in <b>Part 4</b>.
+
+```
+import sbt._
+import Keys._
+
+object Common {
+
+  lazy val commonSettings: Seq[Def.Setting[_]] = ???
+
+}
+```
+
+Define the *organization* as `com.datascience.education`.
+
+Include
+
+```
+    scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature")
+```
+
+### Task 5b: `scalaVer`
+
+`scala-class/sbtTutorial/usingBreezeRefactored/project/Common.scala`
+
+Emulate [`mleap/project/Common.scala`]( https://github.com/TrueCar/mleap/blob/master/project/Common.scala)
+
+Factor out the string containing the version of Scala from `commonSettings`.
+
+
+
+
+```
+import sbt._
+import Keys._
+
+object Common {
+
+  // use Scala 2.11.8
+  val scalaVer: String = ???
+
+  lazy val commonSettings: Seq[Def.Setting[_]] = ???
+
+}
+```
+
+### Task 5c: additional resolvers
+
+`scala-class/sbtTutorial/usingBreezeRefactored/project/Common.scala`
+
+Emulate [`mleap/project/Common.scala`]( https://github.com/TrueCar/mleap/blob/master/project/Common.scala)
+
+Skim over [SBT's documentation on Resolvers](http://www.scala-sbt.org/0.13/docs/Resolvers.html).
+
+Fill in 
+
+```
+  lazy val otherResolvers: Seq[Resolver] = ???
+```
+
+with
+
+```
+"bintray/non" at "http://dl.bintray.com/non/maven",
+```
+
+and
+
+```
+"Sonatype Releases" at "https://oss.sonatype.org/content/repositories/releases/"
+```
+.
+
+
+Put `otherResolvers` into `commonSettings` with, right below the `organization`:
+
+```
+    resolvers ++= otherResolvers
+```
+
+### Task 5d: `Dependencies`
+
+`scala-class/sbtTutorial/usingBreezeRefactored/project/Dependencies.scala`
+
+Emulate [`mleap/project/Dependencies.scala`](https://github.com/TrueCar/mleap/blob/master/project/Dependencies.scala).
+
+Refactor `libraryDependencies` from `scala-class/sbtTutorial/usingBreeze/build.sbt` in <b>Part 4</b>.
+
+Fill in 
+
+```
+  lazy val commonDependencies: Seq[ModuleID] = ???
+```
+
+and
+
+```
+  lazy val plottingDependencies: Seq[ModuleID] = ???
+```
+
+.  `plottingDependencies` should not include the `commonDependencies`.  They can be combined, if need be, with `commonDependencies.union(plottingDependencies)`.  [You have all the methods of `Seq` at your disposal.](http://www.scala-lang.org/files/archive/api/2.11.8/#scala.collection.immutable.Seq)
+
+
+### Task 5e: `breezeVersion`
+
+`scala-class/sbtTutorial/usingBreezeRefactored/project/Dependencies.scala`
+
+Factor out the version of Breeze into a `val`:
+
+```
+  val breezeVersion: String = ???
+```
+
+### Task 5f: compiler plugins
+
+`scala-class/sbtTutorial/usingBreezeRefactored/project/Dependencies.scala`
+
+Skim the [SBT documentation on compiler plugins.](http://www.scala-sbt.org/1.0/docs/Compiler-Plugins.html)
+
+[si2712fix-plugin](https://github.com/milessabin/si2712fix-plugin) and [kind-projector](https://github.com/non/kind-projector) are compiler plugins.  They are dependencies, but must be wrapped with `compilerPlugin(...)`.
+
+The necessity of these two particular compiler plugins is a topic for another day.
+
+```
+  val kindProjector = compilerPlugin("org.spire-math" % "kind-projector" % "0.9.0" cross CrossVersion.binary)
+  val si2712 = compilerPlugin("com.milessabin" % "si2712fix-plugin" % "1.2.0" cross CrossVersion.full)
+```
+
+Append these two dependencies to `commonDependencies: Seq[ModuleID]`.
+
+
+### Task 5g: putting common dependencies in common settings
+
+`scala-class/sbtTutorial/usingBreezeRefactored/project/Dependencies.scala`
+
+Include `Dependencies.commonDependencies` with `scalaVersion`, `organization`, `scalacOptions` and `resolvers` in:
+
+```
+lazy val commonSettings: Seq[Def.Setting[_]] = ???
+```
+
+### Task 5h: `build.sbt`
+
+`scala-class/sbtTutorial/usingBreezeRefactored/build.sbt`
+
+Copy and refactor 
+
+```
+lazy val root = ???
+
+lazy val distributions = ???
+
+lazy val plotting = ???
+```
+
+from `scala-class/sbtTutorial/usingBreeze/build.sbt` in <b>Part 4</b>.
+
+`root` should aggregate `distributions` and `plotting`.
+
+`plotting` should depend on `distributions`.
+
+Ensure the `plotting` sub-project has access to `Dependencies.plottingDependencies`.
+
+This `build.sbt` will be much more concise than `scala-class/sbtTutorial/usingBreeze/build.sbt` in <b>Part 4</b>.
+
+## References
+
+[SBT 0.13 Scaladoc](http://www.scala-sbt.org/0.13.12/api/#package)
+
+[.sbt build examples](http://www.scala-sbt.org/0.13/docs/Basic-Def-Examples.html)
+
+[`ModuleID` Scaladoc](http://www.scala-sbt.org/0.13.12/api/#sbt.ModuleID) - the type that holds a dependency
+
+[`Resolver` Scaladoc](http://www.scala-sbt.org/0.13.12/api/#sbt.Resolver)
+
+[`Def.Setting` Scaladoc](http://www.scala-sbt.org/0.13.12/api/#sbt.Init$Setting)
+
+
+

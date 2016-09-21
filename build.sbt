@@ -10,7 +10,12 @@ lazy val root = project.in(file(".")).
   settings(Common.settings).
   settings(unidocSettings: _*).
   settings(Common.additionalUnidocSettings).
-  aggregate(common, slideCode, lab, labAnswer, tutorial, tutorialAnswer)
+  aggregate(
+    common, slideCode,
+    lab, labAnswer,
+    tutorial, tutorialAnswer, tutorialCommon,
+    misc, miscAnswer, miscCommon
+  )
 
 lazy val common = (project in file("common")).
   settings(
@@ -71,22 +76,31 @@ lazy val tutorialAnswer = (project in file("tutorialAnswer")).
   dependsOn(labAnswer)
 
 
-// assemblyMergeStrategy in assembly := {
-//   case PathList("javax", "servlet", xs @ _*) => MergeStrategy.last
-//   case PathList("javax", "activation", xs @ _*) => MergeStrategy.last
-//   case PathList("org", "apache", xs @ _*) => MergeStrategy.last
-//   case PathList("com", "google", xs @ _*) => MergeStrategy.last
-//   case PathList("com", "esotericsoftware", xs @ _*) => MergeStrategy.last
-//   case PathList("com", "codahale", xs @ _*) => MergeStrategy.last
-//   case PathList("com", "yammer", xs @ _*) => MergeStrategy.last
-//   case "about.html" => MergeStrategy.rename
-//   case "META-INF/ECLIPSEF.RSA" => MergeStrategy.last
-//   case "META-INF/mailcap" => MergeStrategy.last
-//   case "META-INF/mimetypes.default" => MergeStrategy.last
-//   case "plugin.properties" => MergeStrategy.last
-//   case "log4j.properties" => MergeStrategy.last
-//   case x =>
-//     val oldStrategy = (assemblyMergeStrategy in assembly).value
-//     oldStrategy(x)
-// }
+lazy val miscCommon = (project in file("miscCommon")).
+  settings(
+    name := "miscCommon",
+    scalaVersion := Common.scalaVer,
+    description := "Miscellaneous common"
+  ).settings(Common.settings).dependsOn(common)
+
+lazy val misc = (project in file("misc")).
+  settings(
+    name := "misc",
+    scalaVersion := Common.scalaVer,
+    description := "Miscellaneous"
+  ).
+  settings(Common.settings).
+  dependsOn(common).
+  dependsOn(miscCommon % "compile->compile;test->test")
+
+lazy val miscAnswer = (project in file("miscAnswer")).
+  settings(
+    name := "miscAnswer",
+    scalaVersion := Common.scalaVer,
+    description := "Miscellaneous answers"
+  ).
+  settings(Common.settings).
+  dependsOn(common).
+  dependsOn(miscCommon % "compile->compile;test->test")
+
 
