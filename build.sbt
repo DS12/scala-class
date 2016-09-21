@@ -37,12 +37,12 @@ lazy val lab = (project in file("lab")).
     description := "Lab exercises"
   ).settings(Common.settings).dependsOn(common)
 
-lazy val labAnswer = (project in file("labAnswer")).
-  settings(
-    name := "labAnswer",
-    scalaVersion := Common.scalaVer,
-    description := "Lab answers"
-  ).settings(Common.settings).dependsOn(common)
+// lazy val labAnswer = (project in file("labAnswer")).
+//   settings(
+//     name := "labAnswer",
+//     scalaVersion := Common.scalaVer,
+//     description := "Lab answers"
+//   ).settings(Common.settings).dependsOn(common)
 
 
 
@@ -64,16 +64,16 @@ lazy val tutorial = (project in file("tutorial")).
   dependsOn(tutorialCommon % "compile->compile;test->test").
   dependsOn(lab)
 
-lazy val tutorialAnswer = (project in file("tutorialAnswer")).
-  settings(
-    name := "tutorialAnswer",
-    scalaVersion := Common.scalaVer,
-    description := "Tutorial answers"
-  ).
-  settings(Common.settings).
-  dependsOn(common).
-  dependsOn(tutorialCommon % "compile->compile;test->test").  
-  dependsOn(labAnswer)
+// lazy val tutorialAnswer = (project in file("tutorialAnswer")).
+//   settings(
+//     name := "tutorialAnswer",
+//     scalaVersion := Common.scalaVer,
+//     description := "Tutorial answers"
+//   ).
+//   settings(Common.settings).
+//   dependsOn(common).
+//   dependsOn(tutorialCommon % "compile->compile;test->test").  
+//   dependsOn(labAnswer)
 
 
 lazy val miscCommon = (project in file("miscCommon")).
@@ -93,14 +93,14 @@ lazy val misc = (project in file("misc")).
   dependsOn(common).
   dependsOn(miscCommon % "compile->compile;test->test")
 
-lazy val miscAnswer = (project in file("miscAnswer")).
-  settings(
-    name := "miscAnswer",
-    scalaVersion := Common.scalaVer,
-    description := "Miscellaneous answers"
-  ).
-  settings(Common.settings).
-  dependsOn(common).
-  dependsOn(miscCommon % "compile->compile;test->test")
+// lazy val miscAnswer = (project in file("miscAnswer")).
+//   settings(
+//     name := "miscAnswer",
+//     scalaVersion := Common.scalaVer,
+//     description := "Miscellaneous answers"
+//   ).
+//   settings(Common.settings).
+//   dependsOn(common).
+//   dependsOn(miscCommon % "compile->compile;test->test")
 
 
