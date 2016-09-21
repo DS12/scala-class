@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>README.html</title>
+
+</head>
+
+<body>
+
+<h1 id="lecture-0-tutorial-getting-started">Lecture 0 Tutorial: Getting Started</h1>
+<p>Tutorials put a special emphasis on use of the REPL, in comparison to the other SBT sub-projects in this repository.</p>
+<p>This document will teach you the REPL development cycle for the tutorials.</p>
+<ol style="list-style-type: decimal">
+<li>Open <code>code/tutorials/src/main/scala/tutorials/lecture0/GettingStarted.scala</code> in your editor.<br />
+A symlink in <code>tutorials</code> shortens this to <code>code/tutorials/lecture0/GettingStarted.scala</code></li>
+</ol>
+<h2 id="scala-2.11-approach"><code>scala-2.11</code> approach</h2>
+<ol start="2" style="list-style-type: decimal">
+<li><p>In your terminal, navigate to the directory containing <code>GettingStarted.scala</code>, <code>code/tutorials/src/main/scala/tutorials/lecture0/</code> We are going to use the <code>-i</code> flag of the Scala REPL.</p>
+<pre><code>bash-3.2$ scala-2.11 -help
+Usage: scala &lt;options&gt; [&lt;script|class|object|jar&gt; &lt;arguments&gt;]
+...
+ -i &lt;file&gt;    preload &lt;file&gt; before starting the repl
+...</code></pre></li>
+<li><p>Start the REPL, pre-loading our file, with <code>scala-2.11 -i GettingStarted.scala</code></p>
+<pre><code>bash-3.2$ scala-2.11 -i GettingStarted.scala
+Loading GettingStarted.scala...
+defined object GettingStarted
+Welcome to Scala version 2.11.7 (Java HotSpot(TM) 64-Bit Server VM, Java 1.8.0_74).
+Type in expressions to have them evaluated.
+Type :help for more information.
+scala&gt; </code></pre></li>
+<li><p>Import members of the <code>GettingStarted</code> <code>object</code> to bring them into the outermost scope.</p>
+<pre><code>scala&gt; import GettingStarted._
+import GettingStarted._
+scala&gt;</code></pre></li>
+<li><p>Use the <code>add</code> function.</p>
+<pre><code>scala&gt; add(1)
+res3: Int = 2</code></pre></li>
+<li><p>In your editor, change the definition of <code>add</code>.</p>
+<pre><code>object GettingStarted {
+  def add(i: Int): Int = i+2
+}</code></pre></li>
+<li><p>Back in the REPL, reload with <code>:load GettingStarted.scala</code></p>
+<pre><code>scala&gt; :load GettingStarted.scala
+Loading GettingStarted.scala...
+defined object GettingStarted
+scala&gt; </code></pre></li>
+<li><p>Again, <code>import GettingStarted._</code></p>
+<pre><code>scala&gt; import GettingStarted._
+import GettingStarted._
+scala&gt; </code></pre></li>
+<li><p>Try <code>add</code> again</p>
+<pre><code>scala&gt; add(1)
+res4: Int = 3
+scala&gt; </code></pre>
+<p>You have successfully edited the <code>.scala</code> file and brought the changes into the Scala REPL.</p></li>
+<li><p>Use <code>:replay</code> to re-do any commands you entered previously. With some mutable variables, <code>:replay</code> will cause logical errors. Imagine an accumulator <code>var</code> that is mutated with <code>:replay</code>. Nonetheless, <code>:replay</code> is useful for saving some repetition. Note that <code>add</code> behaves by its most recent version, adding two, in each call to it. <code>:replay</code> can replace the usage of <code>:load</code>.</p>
+<pre><code>scala&gt; :replay 
+Replaying: :load GettingStarted.scala
+Loading GettingStarted.scala...
+defined object GettingStarted
+Replaying: import GettingStarted._
+import GettingStarted._
+Replaying: add(1)
+res2: Int = 3
+Replaying: :load GettingStarted.scala
+Loading GettingStarted.scala...
+defined object GettingStarted
+Replaying: import GettingStarted._
+import GettingStarted._
+Replaying: add(1)
+res3: Int = 3
+scala&gt; </code></pre></li>
+</ol>
+<h2 id="sbt-console-approach">SBT console approach</h2>
+<p>This uses <code>console</code> inside SBT</p>
+<ol start="2" style="list-style-type: decimal">
+<li><p>Launch SBT in <code>code</code></p>
+<pre><code>bash-3.2$ pwd
+../code
+bash-3.2$ sbt
+Java HotSpot(TM) 64-Bit Server VM warning: ignoring option MaxPermSize=384m; support was removed in 8.0
+[info] Loading project definition from ../code/project
+[info] Set current project to code (in build file:../code/)
+[info] Set current project to slideCode (in build file:../code/)
+&gt; </code></pre></li>
+<li><p>List the sub-projects (optional). These sub-projects may change slightly from the time of this writing, but if only one appears, you are in the wrong SBT project. Launching SBT in a sub-directory of <code>code</code> is a common mistake.</p>
+<pre><code>&gt; projects
+projects
+[info] In file:../code/
+[info]     code
+[info]     common
+[info]     labAnswers
+[info]     labExercises
+[info]   * slideCode
+[info]     spark
+[info]     sparkLabAnswers
+[info]     sparkLabExercises
+[info]     tutorials
+&gt; </code></pre></li>
+<li><p>Enter the <code>tutorials</code> sub-project.</p>
+<pre><code>&gt; project tutorials
+project tutorials
+[info] Set current project to tutorials (in build file:../code/)</code></pre></li>
+<li><p>Start at <em>step 4</em> of the <em><code>scala-2.11</code> approach</em>. Because your working directory is <code>code</code> rather than <code>code/tutorials/src/main/scala/tutorials/lecture0/</code>, usage of <code>:load</code> is a little different.</p>
+<pre><code>scala&gt; :load tutorials/src/main/scala/tutorials/lecture0/GettingStarted.scala
+Loading tutorials/src/main/scala/tutorials/lecture0/GettingStarted.scala...
+defined object GettingStarted</code></pre></li>
+</ol>
+<h2 id="section">---------------------------------</h2>
+<h1 id="tips">Tips</h1>
+<p><code>:load</code> makes <a href="http://www.scala-sbt.org/0.13/docs/Howto-Triggered.html">triggered execution</a> unnecessary. Triggered execution, below, re-issues an SBT command when a source file is modified on disk.</p>
+<pre><code>&gt; ~compile 
+~compile 
+[success] Total time: 0 s, completed May 16, 2016 5:01:23 PM
+1. Waiting for source changes... (press enter to interrupt)</code></pre>
+<hr />
+<p><code>???</code> turns a compile-time exception into a run-time exception. It is useful for leaving code un-implemented. If <code>pascal2</code> is called, in this situation, it will give a run-time exception.</p>
+<pre><code>object Recursion {
+  // ...
+
+  // implement
+  def pascal2(r: Int)(c: Int): Int = ???
+  
+  // ...
+}</code></pre>
+<pre><code>bash-3.2$ pwd
+../code/tutorials/lecture1
+bash-3.2$ scala-2.11 -i Recursion.scala 
+Loading Recursion.scala...
+defined object Recursion
+
+Welcome to Scala version 2.11.7 (Java HotSpot(TM) 64-Bit Server VM, Java 1.8.0_74).
+Type in expressions to have them evaluated.
+Type :help for more information.
+
+scala&gt; import Recursion._
+import Recursion._
+
+scala&gt; pascal2(4)(2)
+scala.NotImplementedError: an implementation is missing
+  at scala.Predef$.$qmark$qmark$qmark(Predef.scala:225)
+  at Recursion$.pascal2(&lt;console&gt;:229)
+  ... 33 elided</code></pre>
+<hr />
+<p>Elided lines of a run-time exception <a href="http://www.scala-lang.org/old/node/8501">can be retrieved with</a> <code>lastException.printStackTrace</code>. This has been truncated.</p>
+<pre><code>scala&gt; 1/0
+java.lang.ArithmeticException: / by zero
+  ... 42 elided
+
+scala&gt; lastException.printStackTrace 
+java.lang.ArithmeticException: / by zero
+    at $line4.$read$$iw$$iw$.&lt;init&gt;(&lt;console&gt;:12)
+    at $line4.$read$$iw$$iw$.&lt;clinit&gt;(&lt;console&gt;)
+    at $line4.$eval$.$print$lzycompute(&lt;console&gt;:7)
+    at $line4.$eval$.$print(&lt;console&gt;:6)
+    at $line4.$eval.$print(&lt;console&gt;)
+    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+    at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+    at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+    at java.lang.reflect.Method.invoke(Method.java:498)
+    at scala.tools.nsc.interpreter.IMain$ReadEvalPrint.call(IMain.scala:786)
+    at scala.tools.nsc.interpreter.IMain$Request.loadAndRun(IMain.scala:1047)
+    at scala.tools.nsc.interpreter.IMain$WrappedRequest$$anonfun$loadAndRunReq$1.apply(IMain.scala:638)
+    ...</code></pre>
+<p>Let's retrieve the full stack-trace of the <code>scala.NotImplementedError</code> we just saw. This has been truncated.</p>
+<pre><code>scala&gt; lastException.printStackTrace
+scala.NotImplementedError: an implementation is missing
+    at scala.Predef$.$qmark$qmark$qmark(Predef.scala:225)
+    at $line3.$read$$iw$$iw$Recursion$.pascal2(&lt;console&gt;:229)
+    at $line8.$read$$iw$$iw$$iw$$iw$.&lt;init&gt;(&lt;console&gt;:15)
+    at $line8.$read$$iw$$iw$$iw$$iw$.&lt;clinit&gt;(&lt;console&gt;)
+    at $line8.$eval$.$print$lzycompute(&lt;console&gt;:7)
+    at $line8.$eval$.$print(&lt;console&gt;:6)
+    at $line8.$eval.$print(&lt;console&gt;)
+    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+    at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+    at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+    at java.lang.reflect.Method.invoke(Method.java:498)
+    at ...</code></pre>
+<hr />
+<p>It's helpful to know that expressions inside an <code>object</code> are only evaluated after a value or function inside the object is used. This is easier to show, than to describe.</p>
+<p>In <code>GettingStarted.scala</code>:</p>
+<pre><code>object GettingStarted {
+  println(&quot;lazy evaluation of the contents of `GettingStarted`&quot;)
+  def add(i: Int): Int = i+3
+}</code></pre>
+<p>Using <code>GettingStarted</code> in the REPL:</p>
+<pre><code>bash-3.2$ pwd
+/Users/peterbecich/scala-for-data-scientists/code/tutorials/lecture0
+bash-3.2$ scala-2.11 -i GettingStarted.scala
+Loading GettingStarted.scala...
+defined object GettingStarted
+
+Welcome to Scala version 2.11.7 (Java HotSpot(TM) 64-Bit Server VM, Java 1.8.0_74).
+Type in expressions to have them evaluated.
+Type :help for more information.
+</code></pre>
+<p>It would be intuitive to think that <em>&quot;lazy evaluation of the contents of <code>GettingStarted</code>&quot;</em> is printed upon import, below:</p>
+<pre><code>scala&gt; import GettingStarted._
+import GettingStarted._</code></pre>
+<p>This is not the case. The string is printed when <code>add</code> is used for the first time.</p>
+<pre><code>scala&gt; add(1)
+lazy evaluation of the contents of `GettingStarted`
+res0: Int = 4
+
+scala&gt; </code></pre>
+<p>Calling <code>add</code> again does not have the same effect. The print statement is only evaluated once.</p>
+<pre><code>scala&gt; add(1)
+lazy evaluation of the contents of `GettingStarted`
+res0: Int = 4
+
+scala&gt; add(1)
+res1: Int = 4
+
+scala&gt; </code></pre>
+<p>This has implications for tutorial code.</p>
+<pre><code>object Recursion {
+
+  //Pascal&#39;s Triangle
+  def pascal(c: Int, r: Int): Int = {
+    if (c == 0 || r == 0 || r == c) 1
+    else pascal(c-1, r-1) + pascal(c, r-1)
+  }
+
+  def renderRow(r: Int) = ((0 to r).map(pascal(_,r))  mkString &quot; &quot;) + &#39;\n&#39;
+
+  // The strictly functional approach -- Pascal&#39;s Triangle
+  print((0 to 10).map(row =&gt; renderRow(row) ).reduce(_+_))
+
+  // implement
+  def factorial(n: Int): Int = ???
+
+}</code></pre>
+<p>The <code>print</code> statement under &quot;The strictly functional approach&quot; will only be evaluated after a function or value within <code>Recursion</code> is used. Below, Pascal's Triangle prints out when we call <code>println(factorial(5))</code>. Understandably, <code>factorial</code> gives <code>scala.NotImplementedError</code> run-time exception.</p>
+<pre><code>bash-3.2$ scala-2.11 -i Recursion.scala 
+Loading Recursion.scala...
+defined object Recursion
+
+Welcome to Scala version 2.11.7 (Java HotSpot(TM) 64-Bit Server VM, Java 1.8.0_74).
+Type in expressions to have them evaluated.
+Type :help for more information.
+
+scala&gt; import Recursion._
+import Recursion._
+
+scala&gt; println(factorial(5))
+1
+1 1
+1 2 1
+1 3 3 1
+1 4 6 4 1
+1 5 10 10 5 1
+1 6 15 20 15 6 1
+1 7 21 35 35 21 7 1
+1 8 28 56 70 56 28 8 1
+1 9 36 84 126 126 84 36 9 1
+1 10 45 120 210 252 210 120 45 10 1
+scala.NotImplementedError: an implementation is missing
+  at scala.Predef$.$qmark$qmark$qmark(Predef.scala:225)
+  at Recursion$.factorial(&lt;console&gt;:78)
+  ... 35 elided
+
+scala&gt; </code></pre>
+<p>In other examples, expressions that are lazily evaluated can interfere with your work. In other words, to skip forward in these tutorials, you need to comment things out.</p>
+<pre><code>object Recursion {
+
+  //Pascal&#39;s Triangle
+  def pascal(c: Int, r: Int): Int = {
+    if (c == 0 || r == 0 || r == c) 1
+    else pascal(c-1, r-1) + pascal(c, r-1)
+  }
+
+  def renderRow(r: Int): String = ???
+
+  // The strictly functional approach
+  print((0 to 10).map(row =&gt; renderRow(row) ).reduce(_+_))
+
+  def factorial(n: Int): Int = ???
+
+}</code></pre>
+<p>In this example, calling the unimplemented <code>factorial</code> function will not give the &quot;missing implementation&quot; error for <code>factorial</code> -- the error that arises will belong to <code>renderRow</code>. In this situation it can help to read the stack trace carefully.</p>
+<pre><code>bash-3.2$ scala-2.11 -i Recursion.scala 
+Loading Recursion.scala...
+defined object Recursion
+
+Welcome to Scala version 2.11.7 (Java HotSpot(TM) 64-Bit Server VM, Java 1.8.0_74).
+Type in expressions to have them evaluated.
+Type :help for more information.
+
+scala&gt; import Recursion._
+import Recursion._
+
+scala&gt; println(factorial(5))
+scala.NotImplementedError: an implementation is missing
+  at scala.Predef$.$qmark$qmark$qmark(Predef.scala:225)
+  at Recursion$.renderRow(&lt;console&gt;:22)
+  at Recursion$$anonfun$2.apply(&lt;console&gt;:29)
+  at Recursion$$anonfun$2.apply(&lt;console&gt;:29)
+  at scala.collection.TraversableLike$$anonfun$map$1.apply(TraversableLike.scala:245)
+  at scala.collection.TraversableLike$$anonfun$map$1.apply(TraversableLike.scala:245)
+  at scala.collection.immutable.Range.foreach(Range.scala:166)
+  at scala.collection.TraversableLike$class.map(TraversableLike.scala:245)
+  at scala.collection.AbstractTraversable.map(Traversable.scala:104)
+  ... 35 elided
+
+scala&gt; 
+</code></pre>
+<hr />
+<p>If your Scala <code>object</code> is not importable, check for errors in the loading of the <code>.scala</code> file. Warnings may have no negative impact.</p>
+<pre><code>bash-3.2$ scala-2.11 -i Recursion.scala 
+Loading Recursion.scala...
+&lt;console&gt;:70: error: not found: value a
+         for(i&lt;- 10 to 1 by -1){ d = i :: a }
+                                          ^
+&lt;console&gt;:105: warning: a pure expression does nothing in statement position; you may be omitting necessary parentheses
+         e
+         ^
+
+Welcome to Scala version 2.11.7 (Java HotSpot(TM) 64-Bit Server VM, Java 1.8.0_74).
+Type in expressions to have them evaluated.
+Type :help for more information.
+
+scala&gt; import Recursion._
+&lt;console&gt;:10: error: not found: value Recursion
+       import Recursion._</code></pre>
+<h1 id="sources">Sources</h1>
+<p><a href="http://www.scala-lang.org/old/node/8501">longer stack traces in REPL</a></p>
+<p><a href="http://stackoverflow.com/questions/2471947/how-to-reload-a-class-or-package-in-scala-repl">How to reload a class or package in Scala REPL?</a></p>
+
+</body>
+</html>
