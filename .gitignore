@@ -12,6 +12,12 @@ src_managed/
 project/boot/
 project/plugins/project/
 
+# scala class answers
+# Each branch cannot have its own .gitignore
+# Use this instead: http://stackoverflow.com/a/29583813/1007926
+#tutorialAnswer
+#labAnswer
+
 # Scala-IDE specific
 .scala_dependencies
 .worksheet
