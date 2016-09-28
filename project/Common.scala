@@ -16,7 +16,6 @@ object Common {
     "Sonatype Releases" at "https://oss.sonatype.org/content/repositories/releases/",
     "twitter-repo" at "https://maven.twttr.com",
     "Clojars Repository" at "http://clojars.org/repo",
-    "Conjars Repository" at "http://conjars.org/repo",
     "Artima Maven Repository" at "http://repo.artima.com/releases",
     "Spark Packages Repo Bintray" at "http://dl.bintray.com/spark-packages/maven",
     Opts.resolver.sonatypeSnapshots
