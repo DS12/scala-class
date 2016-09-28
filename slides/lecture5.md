@@ -3,19 +3,17 @@
 
 ---
 
-"Separation of program description from evaluation" is promised to us at the beginning of this book.  Laziness is a fundamental component of this.
+In this course we will explore a series of methods for separating program description from program evaluation.
 <br />
 <br />
-<br />
-<br />
+This line of inquiry leads ultimately to the `Free` monad in lecture 13.
 
-We will write *descriptions* for infinitely long processes, but only *evaluate* them for a finite length of time, or within some bound.
-<br />
-<br />
-<br />
-<br />
+---
 
-First we must review Scala's syntax for laziness, then we will see a data structure that separates "description from evaluation": `Stream`
+In this lecture we will begin by writing *descriptions* for infinitely long processes, but only *evaluate* them for a finite length of time, or within some bound.
+<br />
+<br />
+Laziness is a fundamental component of this.
 
 ---
 
@@ -24,18 +22,6 @@ First we must review Scala's syntax for laziness, then we will see a data struct
     !scala
     def foo(i: Int) = {println(i); i + 10}
     def bar(i: Int) = {println(i); i % 2 == 0}
-    Stream(1,2,3).map(foo).filter(bar).force
-    //1
-    //11
-    //2
-    //12
-    //3
-    //13
-    //res0: Stream[Int] = Stream(12)
-
----
-
-    !scala
     List(1,2,3).map(foo).filter(bar)
     //1
     //2
@@ -43,109 +29,107 @@ First we must review Scala's syntax for laziness, then we will see a data struct
     //11
     //12
     //13
-    //res1: List[Int] = List(12)
+    //res0: List[Int] = List(12)
 
 ---
 
+    !scala
+    Stream(1,2,3).map(foo).filter(bar).force
+    //1
+    //11
+    //2
+    //12
+    //3
+    //13
+    //res1: Stream[Int] = Stream(12)
+
+---
+
+
 #Eval Monad
 
-`cats.Eval` is a monad that allows us to abstract over different models of evalua on. We typically hear of two such models: eager and lazy. Eval throws in a further dis nc on of memoized and unmemoized to create three models of evalua on:
-• now—evaluatedonceimmediately(equivalenttoval);
-• later—evaluatedoncewhenvalueisneeded(equivalenttolazyval); • always—evaluatedevery mevalueisneeded(equivalenttodef).
+`cats.Eval` is a monad that allows us to abstract over different models of evaluation.
+
+We typically hear of two such models: eager and lazy.
+
 
 ---
 
 What do these terms mean?
 
-Eager computa ons happen immediately, whereas lazy computations happen on access.
+Eager computations happen immediately, whereas lazy computations happen only upon access.
 
-For example, Scala vals are eager defini ons. We can see this using a computa on with a visible side-effect. In the following example, the code to compute the value of x happens eagerly at the defini on site. Accessing x simply recalls the stored value without re-running the code.
-
-
-
-val x = { println("Computing X") 1+1
-}
-// Computing X
-// x: Int = 2
-x // first access // res0: Int = 2
-x // second access // res1: Int = 2
+For example, Scala `val`s are eager, memoized definitions.
 
 ---
 
-By contrast, defs are lazy and not memoized. The code to compute y below is not run un l we access it (lazy), and is re-run on every access (not memoized):
-def y = { println("Computing Y") 1+1
-}
-// y: Int
-y // first access // Computing Y
-// res2: Int = 2
-y // second access // Computing Y
-// res3: Int = 2
+We can see this using a computation with a visible side-effect:
+
+    !scala
+    val x = { println("Computing x"); 1+1 }
+    //Computing x
+    //x: Int = 2
+    x
+    //res0: Int = 2
+    x
+    //res1: Int = 2
 
 ---
 
-Last but not least, lazy vals are eager and memoized. The code to compute z below is not run un l we access it for the first  me (lazy). The result is then cached and re-used on subsequent accesses (memoized):
+By contrast, `def`s are lazy and not memoized:
 
-lazy val z = { println("Computing Z") 1+1
-}
-// z: Int = <lazy>
-z // first access // Computing Z
-// res4: Int = 2
-z // second access // res5: Int = 2
-
----
-
-Eval has three subtypes: Eval.Now, Eval.Later, and Eval.Always. We construct these with three construc- tor methods, which create instances of the three classes and return them typed as Eval:
-import cats.Eval
-// import cats.Eval
-val now = Eval.now(1 + 2)
-// now: cats.Eval[Int] = Now(3)
-val later = Eval.later(3 + 4)
-// later: cats.Eval[Int] = cats.Later@10ab850e
-val always = Eval.always(5 + 6)
-// always: cats.Eval[Int] = cats.Always@f76e9a0
-We can extract the result of an Eval using its value method:
-now.value
-// res6: Int = 3
-later.value
-// res7: Int = 7
-always.value
-// res8: Int = 11
+    !scala
+    def y = { println("Computing y"); 1+1}
+    //y: Int
+    y
+    //Computing y
+    //res2: Int = 2
+    y
+    //Computing y
+    //res3: Int = 2
 
 ---
 
-Each type of Eval calculates its result using one of the evalua on models defined above. Eval.now captures a value right now. Its seman cs are similar to a val—eager and memoized:
+Last but not least, lazy vals are lazy and memoized:
 
-val x = Eval.now { println("Computing X") 1+1
-}
-// Computing X
-// x: cats.Eval[Int] = Now(2)
-x.value // first access // res9: Int = 2
-x.value // second access // res10: Int = 2
-
----
-
-Eval.always captures a lazy computa on, similar to a def:
-val y = Eval.always { println("Computing Y") 1+1
-}
-// y: cats.Eval[Int] = cats.Always@fc4a7df
-y.value // first access // Computing Y
-// res11: Int = 2
-y.value // second access // Computing Y
-// res12: Int = 2
+    !scala
+    lazy val z = { println("Computing z"); 1+1}
+    //z: Int = <lazy>
+    z
+    // Computing z
+    //res4: Int = 2
+    z
+    //res5: Int = 2
 
 ---
 
-Finally, Eval.later captures a lazy computa on and memoizes the result, similar to a lazy val:
-val z = Eval.later { println("Computing Z") 1+1
-}
-// z: cats.Eval[Int] = cats.Later@56d1796c
-z.value // first access // Computing Z
-// res13: Int = 2
-z.value // second access // res14: Int = 2
+`Eval` has three subtypes: `Eval.Now`, `Eval.Later`, and `Eval.Always`:
+
+    !scala
+    import cats.Eval
+    val now = Eval.now({ println("foo"); 1+1})
+    //foo
+    //now: cats.Eval[Int] = Now(2)
+    val later = Eval.later({ println("foo"); 1+1})
+    //later: cats.Eval[Int] = cats.Later@24a2a9b8
+    later.value
+    //foo
+    //res0: Int = 2
+    later.value
+    //res1: Int = 2
+    val always = Eval.always({ println("foo"); 1+1})
+    //always: cats.Eval[Int] = cats.Always@773adb25
+    always.value
+    //foo
+    //res2: Int = 2
+    always.value
+    //foo
+    //res3: Int = 2
+
 
 ---
 
-The three behaviours are summarized below:
+The three behaviors are summarized below:
 
 <style type="text/css">
 .tg  {border-collapse:collapse;border-spacing:0;border-color:#ccc;margin:0px auto;}
@@ -174,239 +158,160 @@ The three behaviours are summarized below:
 
 ---
 
-Eval's map and flatMap methods add computa ons to a chain.
+`Eval`s `map` and `flatMap` methods add computations to a chain.
 
-This is similar to the map and flatMap meththods on `scala.concurrent.Future`, except that the computations aren’t run until we call value to obtain a result:
+This is similar to the `map` and `flatMap` methods on `scala.concurrent.Future`, except that the computations aren’t run until we call value to obtain a result:
 
-val greeting = Eval.always { println("Step 1")
-"Hello"
-}.map { str =>
-  println("Step 2")
-  str + " world"
-}
-// greeting: cats.Eval[String] = cats.Eval$$anon$8@411b9c5f
-greeting.value
-// Step 1
-// Step 2
-// res15: String = Hello world
-
----
-
-Note that, while the seman cs of the origina ng Eval instances are maintained, mapping func ons are always called lazily on demand:
-
-val ans = for {
-a <- Eval.now { println("Calculating A") ; 40 } b <- Eval.always { println("Calculating B") ; 2 }
-} yield {
-println("Adding A and B") a+b
-}
-// Calculating A
-// ans: cats.Eval[Int] = cats.Eval$$anon$8@1bc45591
-ans.value // first access // Calculating B
-// Adding A and B
-// res16: Int = 42
-ans.value // second access // Calculating B
-// Adding A and B
-// res17: Int = 42
+    !scala
+    val greeting = Eval.always { println("Step 1")
+      "Hello"
+      }.map { str =>
+        println("Step 2")
+        str + " world"
+      }
+    //greeting: cats.Eval[String] = cats.Eval$$anon$8@411b9c5f
+    greeting.value
+    //Step 1
+    //Step 2
+    //res0: String = Hello world
 
 ---
 
-We can use Eval's memoize method to memoize a chain of computa ons. Calcula ons before the call to memoize are cached, whereas calcula ons a er the call retain their original seman cs:
-val saying = Eval.always { println("Step 1") ; "The cat" }. map { str => println("Step 2") ; str + " sat on" }. memoize.
-map { str => println("Step 3") ; str + " the mat" }
-// saying: cats.Eval[String] = cats.Eval$$anon$8@24c1a639
-52 CHAPTER4. MONADS
-saying.value // first access // Step 1
-// Step 2
-// Step 3
-// res18: String = The cat sat on the mat
-saying.value // second access
-// Step 3
-// res19: String = The cat sat on the mat
+`Eval` also supports for comprehensions:
+
+    !scala
+    val ans = for {
+        a <- Eval.now { println("Calculating A") ; 40 }
+        b <- Eval.now { println("Calculating B") ; 2 }
+      } yield {
+        println("Adding A and B"); a+b
+      }
+    //Calculating A
+    //ans: cats.Eval[Int] = cats.Eval$$anon$8@f636c08
 
 ---
 
-more (trampolines) on p 52
----
+Note that, while the semantics of the originating `Eval` instances are maintained, mapping functions are always called lazily on demand:
 
-#`val`
-
-[Call-by-value](https://en.wikipedia.org/wiki/Evaluation_strategy#Call_by_value)
-<br />
-<br />
-
-Strict/eager, memoizes
-<br />
-<br />
-
-
-	!scala
-	val foo = 5 + 5
-	println(foo)
-
-
-.notes: This program is evaluated line by line, from top to bottom.  The cost of time in calculating `5+5` is paid on the first line.  This cost will only be paid once, ever, for any use of `foo`.
+    !scala
+    ans.value
+    //Calculating B
+    //Adding A and B
+    //res0: Int = 42
+    ans.value
+    //Calculating B
+    //Adding A and B
+    //res1: Int = 42
 
 ---
 
-#`lazy val`
+We can use `Eval`'s `memoize` method to memoize a chain of computations.
 
-[Call-by-need](https://en.wikipedia.org/wiki/Evaluation_strategy#Call_by_need)
-<br />
-<br />
-
-lazy, memoizes
-<br />
-<br />
-
-
-	!scala
-	lazy val foo = 5 + 5
-	println(foo)
-
-.notes: The cost of time and memory in calculating `5+5` is paid on the second line.  This cost will only be paid once, ever, for any use of `foo`.
+    !scala
+    val saying = Eval.always { println("Step 1") ; "The cat" }
+      .map { str => println("Step 2") ; str + " sat on" }.memoize
+      .map { str => println("Step 3") ; str + " the mat" }
+    //saying: cats.Eval[String] = cats.Eval$$anon$8@24c1a639
 
 ---
 
-#`def`
+Calculations before the call to memoize are cached, whereas calculations after the call retain their original semantics:
 
-[Call-by-name](https://en.wikipedia.org/wiki/Evaluation_strategy#Call_by_name)
-<br />
-<br />
-
-lazy, does not memoize
-<br />
-<br />
-
-	!scala
-	def foo = 5 + 5
-	println(foo)
-
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-
-[Call-by-need versus call-by-name](http://stackoverflow.com/a/8822824/1007926)
-
-.notes: The cost of time and memory in calculating `5+5` is paid on the second line.  This cost will be incurred every time `foo` is used.
+    !scala
+    saying.value
+    //Step 1
+    //Step 2
+    //Step 3
+    //res0: String = The cat sat on the mat
+    saying.value
+    //Step 3
+    //res1: String = The cat sat on the mat
 
 ---
 
-# Thunk
+#Trampolining
+
+One useful property of `Eval` is that its `map` and `flatMap` methods are trampolined.
+
+This means we can nest calls to `map` and `flatMap` arbitrarily without consuming stack frames.
+
+We’ll illustrate this by comparing `Eval` to `Option`.
+
+---
+
+The `loopM` method below creates a loop through a monad’s `flatMap`:
+
+    !scala
+    import cats.Monad
+    import cats.syntax.flatMap._
+    import scala.language.higherKinds
+    def stackDepth: Int = Thread.currentThread.getStackTrace.length
+    def loopM[M[_] : Monad](m: M[Int], count: Int): M[Int] = {
+      println(s"Stack depth $stackDepth")
+      count match {
+        case 0 => m
+        case n => m.flatMap { _ => loopM(m, n - 1) }
+      }
+    }
+
+
+---
+
+When we run `loopM` with an `Option` we can see the stack depth slowly increasing:
+
+    !scala
+    import cats.std.option._
+    import cats.syntax.option._
+    loopM(1.some, 3)
+    //Stack depth 45
+    //Stack depth 52
+    //Stack depth 59
+    //Stack depth 66
+    //res0: Option[Int] = Some(1)
+
+---
+
+Now let’s see the same thing using `Eval`. The trampoline keeps the stack depth constant:
+
+    !scala
+    loopM(Eval.now(1), 3).value
+    //Stack depth 45
+    //Stack depth 49
+    //Stack depth 49
+    //Stack depth 49
+    //res1: Int = 1
+
+---
+
+We can use `Eval` as a mechanism to prevent to prevent stack overflows when working on very large data structures.
+
+However, we should bear in mind that trampolining is not free—it effectively avoids consuming stack by creating a chain of function calls on the heap.
+
+There are still limits on how deeply we can nest computations, but they are bounded by the size of the heap rather than the stack.
+
+---
+
+# Thunks
 
 A ["thunk"](https://en.wikipedia.org/wiki/Thunk#Functional_programming) uses a function to provide *laziness*:
 
 	!scala
 	val thunk: () => Int = () => 123
 
-<br />
-<br />
-<br />
-<br />
+---
 
 `expensive` will not be called until the thunk is called.
 
-	!scala
-	val thunk2: () => Long = () => expensive()
+  	!scala
+    def expensive: Int = 42 //cost incurred here
+    //expensive: Int
+    val thunk2: () => Long = () => expensive
+    //thunk2: () => Long = <function0>
+    thunk2
+    //res0: () => Long = <function0>
+    thunk2()
+    //res1: Long = 42
 
-	// cost incurred here
-	val expensiveResult = thunk2()
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-
-[Comments on evaluation strategies](https://wiki.haskell.org/Lazy_vs._non-strict)
-
-.notes: *Wikipedia* says that a "thunk" in Haskell memoizes.  This is not true in Scala.
-
----
-
-# Arguments to a function
-
-[Call-by-name](https://en.wikipedia.org/wiki/Evaluation_strategy#Call_by_name) with `=>`
-<br />
-<br />
-Avoid the evaluation of the `B` value if the `A` value is available
-<br />
-
-
-	!scala
-	sealed trait Option[+A] {
-	  ...
-	  def getOrElse[B >: A](default: => B): B =
-	    this match {
-          case Some(get) => get
-          case None => default
-        }
-	  ...
-	}
-
-<br />
-in `common.lecture4.FPOption`
-<br />
-<br />
-<br />
-<br />
-See [Section 9.5 of *Programming in Scala*](http://www.artima.com/pins1ed/control-abstraction.html#9.5)
-
-
-.notes: I feel this call-by-name syntax is far more understandable/justifiable after seeing the Stream combinators.  Some Stream combinators cannot be implemented without call-by-name syntax.  Outside of the context of lazy data structures like Stream, the only justification for call-by-name syntax is "short-circuiting" and avoiding the evaluation of expensive expressions, a.f.a.i.k.  "Separation of description from evaluation" encompasses (1) short-circuiting, (2) avoiding the evaluation of unnecessary, expensive expressions, and (3) lazy data structures.
-
-
----
-
-#List (eager)
-
-	!scala
-	// abstract
-	sealed trait List[+A]
-	// concrete
-	case object Nil
-	  extends List[Nothing]
-	case class Cons[+A](head: A,
-	                    tail: List[A])
-	  extends List[A]
-
----
-
-#Stream
-
-a.k.a. lazy list
-
-	!scala
-	// abstract
-	trait Stream[+A]
-	// concrete
-	case object Empty
-	  extends Stream[Nothing]
-	case class Cons[+C](h: () => C,
-	                    t: () => Stream[C])
-		extends Stream[C]
-
----
-
-The most important difference between the two:
-
-* the tail of `Cons` of `List` is *eager*
-* the tail of `Cons` of `Stream` is *lazy*
-
-Non-empty streams are also commonly used in comonadic computations. More on this later.  
-
----
-
-Scala does not support `call-by-name` parameters in `case class`.
-
-We use thunks as a work-around. A thunk is a function with no argument:
-
-	!scala
-	case class Cons[+C](h: () => C,
-	                    t: () => Stream[C])
-		extends Stream[C]
 
 ---
 
@@ -419,66 +324,75 @@ The chosen syntax for a call-by-name argument was probably chosen for its resemb
 	def baz(x: () => Int)
 
 
----
-
-
-  !scala
-	Cons(() => 1,
-	     () => Cons(() => 2,
-	                () => Cons(() => 3,
-			                   () => Cons(() => 4,
-							              () => Empty
-									     )
-						      )
-
-	               )
-        )
-	//res0 = Cons(<function0>,<function0>)
-
-
-Note the type has been inferred as `Cons[Int]` rather than `Stream[Int]`.  We also encountered this issue with `List`.
-
-.notes: Before "tying the knot" and introduction of `take`, I think its necessary to show a manually constructed `Stream` like this.  The stack trace of `take` on an infinite `Stream` will arrive at this finite Stream.
+Note that Scala does not support call-by-name parameters in case classes.
 
 ---
-# Smart constructor
 
+#Streams
+
+Recall the definition of a simple list:
 
 	!scala
-	def cons[A](hd: => A, tl: => Stream[A]):
-	  Stream[A] = {
-	    lazy val head = hd
-	    lazy val tail = tl
-	    Cons(() => head, () => tail)
-      }
-
-	def empty[A]: Stream[A] = Empty
-
-<br />
-<br />
-<br />
-
-.notes: The `cons` smart constructor (1) memoizes (2) hides the thunks (3) assists with type inference.  Because of the type annotation `def cons[A](...): Stream[A]`, a constructed Cons will be inferred to be of type Stream, not of type Cons.  This is the same issue we encountered with Cons of List.  The `empty[A]` smart constructor only assists with type inference
+	sealed trait List[+A]
+	case object Nil
+	  extends List[Nothing]
+	case class Cons[+A](head: A,
+	                    tail: List[A])
+	  extends List[A]
 
 ---
 
-Using the smart constructor
+A `Stream` is nothing other than a lazily evaluated list:
 
-	scala> cons(1, cons(2, cons(3, cons(4, empty))))
+	!scala
+	trait Stream[+A]
+	case object Empty extends Stream[Nothing]
+	case class Cons[+A](h: () => A,
+	                    t: () => Stream[A])
+	extends Stream[A]
 
-	res1: common.lecture5.Stream[Int] =
-	       Cons(<function0>,<function0>)
+---
 
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
+The most important difference between the two:
 
-Type has been inferred correctly as `Stream[Int]`.
+* the tail of `Cons` of `List` is *eager*
+* the tail of `Cons` of `Stream` is *lazy*
 
-.notes: Equivalent to the structure two slides earlier.  Head and Tail elements of each Cons are lazy.  Call-by-name syntax in smart constructor removes need for thunks
+Non-empty streams are also commonly used in comonadic computations (e.g. zippers). More on this later.  
+
+---
+
+Note the type has been inferred as `Cons[Int]` rather than `Stream[Int]`:
+
+  !scala
+  val s = Cons(() => 1, () => Cons(() => 2, () => Empty))
+	//res0 = Cons(<function0>,<function0>)
+  s.h
+  //res1: () => Int = <function0>
+  s.h()
+  //res2: Int = 1
+
+---
+
+The `cons` smart constructor memoizes and hides the thunks as well as assisting with type inference.  
+
+	!scala
+  def cons[A](hd: => A, tl: => Stream[A]):
+    Stream[A] = {
+      lazy val head = hd
+      lazy val tail = tl
+      Cons(() => head, () => tail)
+      }
+  def empty[A]: Stream[A] = Empty
+
+---
+
+Note that the call-by-name syntax in the smart constructor removes need for thunks:
+
+  !scala
+  val s = cons(1, cons(2, empty))
+  //s: Stream[Int] = Cons(<function0>,<function0>)
+
 
 ---
 #[Tying the Knot](https://github.com/fpinscala/fpinscala/wiki/Chapter-5:-Strictness-and-laziness#tying-the-knot)

@@ -126,26 +126,29 @@ You can make a functor U from the category of monoids (where arrows are monoid h
 
 ---
 
-The target of F is in the category Mon of monoids, where arrows are monoid homomorphisms, so we need a to show that a monoid homomorphism from [a] → b can be described precisely by a function from a → b.
+The target of F is in the category Mon of monoids, where arrows are monoid homomorphisms, so we need a to show that a monoid homomorphism from [a] -> b can be described precisely by a function from a -> b.
 
-In Haskell, we call the side of this that lives in Set (er, Hask, the category of Haskell types that we pretend is Set), just foldMap, which when specialized from Data.Foldable to Lists has type Monoid m => (a → m) → [a] → m.
+In Haskell, we call the side of this that lives in Set (er, Hask, the category of Haskell types that we pretend is Set), just foldMap, which when specialized from Data.Foldable to Lists has type Monoid m => (a -> m) -> [a] -> m.
+
+---
+
+!haskell
+interpretMonoid :: Monoid m => (a -> m) -> ([a] -> m)
+interpretMonoid f [] = mempty
+interpretMonoid f (a : as) = f a <> interpretMonoid f as
 
 ---
 
-You can compose all of this more directly by describing a list in these terms with:
-
-newtype List a = List (forall b. Monoid b => (a -> b) -> b)
-
-
----
 
 A general `Monoid[A]` essentially models a function of type `List[A] => A`.
 <br />
 <br />
+
 We saw how the unit and associativity laws for monoids model the fact that we can fold left and right, and that the empty list doesn’t count.
 <br />
 <br />
 We also defined a monoid as a category with one object.
+
 
 ---
 
@@ -197,6 +200,24 @@ Here’s a possible implementation:
 
 ---
 
+#Example: Bank
+
+This is an example of a catamorphism.
+
+!haskell
+data BankOp = Deposit Int | Withdraw Int
+program = [Deposit 10, Withdraw 5, Withdraw 2, Deposit 3]
+
+interpretOp :: BankOp -> Int
+interpretOp (Deposit d) = d
+interpretOp (Withdraw w) = -w
+
+interpret = interpretMonoid interpretOp
+interpret program --6
+
+
+---
+
 #List Monoid Composition
 
 If we had a `List[List[A]]` such that A is a monoid, so we know we can go from `List[A]` to `A`, then we could fold all the inner lists and end up with `List[A]` which we can then fold.
@@ -234,35 +255,78 @@ The Free Monad (data structure) is to the Monad (class) like the List (data stru
 <br />
 You know what a Monad is and that each Monad needs a specific (Monad-law abiding) implementation of either fmap + join + return or bind + return.
 
----
-
 Free monads are the same idea. We take a functor, and give back a monad.
 
-In fact, since monads can be seen as monoids in the category of endofunctors, the definition of a list
+---
 
-data [a] = [] | a : [a]
+In fact the definition of a list looks a lot like the definition of a free monad:
 
-looks a lot like the definition of free monads
-
-data Free f a = Return a | Suspend (f (Free f a))
+  !haskell
+  data [a] = [] | a : [a]
+  data Free f a = Return a | Suspend (f (Free f a))
 
 ---
 
-Let us assume you have a Functor (an implementation of fmap) but the rest depends on values and choices made at run-time, which means that you want to be able to use the Monad properties but want to choose the Monad-functions afterwards.
+This makes sense, since free monads can be seen as free monoids in the category of endofunctors.
+
+Unlike List, which stores a list of values, Free stores a list of functors, wrapped around an initial value.
+
+Accordingly, the Functor and Monad instances of Free do nothing other than handing a given function down that list with fmap.
+
+---
+
+---
+
+Example: Toy
+
+Slight variation on an example from [Gabriel Gonzalez](http://www.haskellforall.com/2012/06/you-could-have-invented-free-monads.html):
+
+  !scala
+  sealed trait Toy[+Next]
+  object Toy {
+    case class Output[Next](a: Char, next: Next) extends Toy[Next]
+    case class Bell[Next](next: Next) extends Toy[Next]
+    case class Done() extends Toy[Nothing]
+    def output[Next](a: Char, next: Next): Toy[Next] = Output(a, next)
+    def bell[Next](next: Next): Toy[Next] = Bell(next)
+    def done: Toy[Nothing] = Done()
+  }
+  import Toy._
+  output('A', done)
+  //res0: Toy[Toy[Nothing]] = Output(A,Done())
+  bell(output('A', done))
+  //res1: Toy[Toy[Toy[Nothing]]] = Bell(Output(A,Done()))
+
+---
+
+Note that the type changes every time a command is added.
+
+case class Fix[F[_]](f: F[Fix[F]])
+object Fix {
+  def fix(t: Toy[Fix[Toy]]) = Fix[Toy](t)
+}
+
+import Fix._
+fix(output('A', fix(done)))
+//res176: Fix[Toy] = Fix(Output(A,Fix(Done())))
+fix(bell(fix(output('A', fix(done)))))
+//res177: Fix[Toy] = Fix(Bell(Fix(Output(A,Fix(Done())))))
+
+
+data Fix f = Fix (f (Fix f))
+data ListF a b = Nil | Cons a b
+type List a = Fix (ListF a)
+
+
+There's still a problem. This approach only works if you can use the Done constructor to terminate every chain of functors. Unfortunately, programmers don't often have the luxury of writing the entire program from start to finish. We often just want to write subroutines that can be called from within other programs and our Fix trick doesn't let us write a subroutine without terminating the entire program.
+
+
+Let us assume you have a `Functor` but the rest depends on values and choices made at run-time.
+
+This means that you want to be able to use the monad properties but want to choose the actual typeclass implementation afterwards.
 <br />
 <br />
 That can be done using the Free Monad (data structure), which wraps the Functor (type) in such a way so that the `join` is rather a stacking of those functors than a reduction.
-
----
-
-The real return and join you want to use, can now be given as parameters to the reduction function foldFree:
-
-foldFree :: Functor f => (a -> b) -> (f b -> b) -> Free f a -> b
-foldFree return join :: Monad m => Free m a -> m a
-
-To explain the types, we can replace Functor f with Monad m and b with (m a):
-
-foldFree :: Monad m => (a -> (m a)) -> (m (m a) -> (m a)) -> Free m a -> (m a)
 
 ---
 
@@ -275,39 +339,45 @@ the first of these lets you "get into" your monad, and the second one gives you 
 
 ---
 
+The real `return` and `join` you want to use, can now be given as parameters to the reduction function `foldFree`:
 
-A Monad is something that "computes" when monadic context is collapsed by join :: m (m a) -> m a (recalling that >>= can be defined as (join .) . flip fmap).
+  !haskell
+  foldFree :: Functor f => (a -> b) -> (f b -> b) -> Free f a -> b
+  foldFree return join :: Monad m => Free m a -> m a
 
-This is how Monads carry context through a sequential chain of computations: because at each point in the series, the context from the previous call is collapsed with the next.
+To explain the types, we can replace Functor f with Monad m and b with (m a):
 
----
-
-We can take the same approach starting with the monad operations point and flatMap, but our task will be easier if we reformulate monads in terms of point, map, and join. Under this formulation a monad for a type F[_] has:
-
-an operation point with type A => F[A];
-an operation join with type F[F[A]] => F[A]; and
-an operation map with type (F[A], A => B) => F[B].
+foldFree :: Monad m => (a -> (m a)) -> (m (m a) -> (m a)) -> Free m a -> (m a)
 
 ---
 
-From this list of operations we can start to create an abstract syntax tree. We start with the definition of Free.
+We can take the same approach starting with the monad operations `unit` and `flatMap`, but our task will be easier if we reformulate monads in terms of `unit`, `map`, and `join`.
 
-sealed trait Free[F[_], A]
+Under this formulation a monad for a type `F[_]` has:
 
----
-
-We can directly convert point into a case Return (following the names I introduced in the introduction).
-
-final case class Return[F[_], A](a: A) extends Free[F, A]
+* a unit with type `A => F[A]`;
+* a join with type `F[F[A]] => F[A]`
+* a map with type `(F[A], A => B) => F[B]`
 
 ---
 
-We are going to convert join into a case Suspend.
+From this list of operations we can start to create an abstract syntax tree. We start with the definition of `Free`.
 
-What is the type of the value we store inside Suspend?
+  !scala
+  sealed trait Free[F[_], A]
 
-We might think it should store a value of type F[F[A]] but if we did this we wouldn’t be able to store, say, a Return inside the outer F.
+---
 
+We can directly convert `unit` into a case `Return`:
+
+  !scala
+  final case class Return[F[_], A](a: A) extends Free[F, A]
+
+---
+
+We are going to convert `join` into a case `Suspend`, but what type of value should we store?
+
+We might think to store a value of type `F[F[A]]`, but if we did then we wouldn’t be able to store, say, a `Return` inside the outer `F`.
 
 ---
 
@@ -345,14 +415,14 @@ data [a] = [] | a : [a]
 
 To show this works, let’s implement the monad operations on this data type.
 
-We’ll use the more familiar flatMap and point formulation, which is better suited to Scala, than the point, join, and map formulation above.
+We’ll use the more familiar flatMap and unit formulation, which is better suited to Scala, than the unit, join, and map formulation above.
 
 ---
 
-We can knock out point easily enough.
+We can knock out unit easily enough.
 
 object Free {
-  def point[F[_]](a: A): Free[F, A] = Return[F, A](a)
+  def unit[F[_]](a: A): Free[F, A] = Return[F, A](a)
 }
 Things get a bit trickier with flatMap, however. Since we know Free in an algebraic data type we can easily get the structural recursion skeleton.
 
