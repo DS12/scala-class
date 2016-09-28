@@ -1,9 +1,13 @@
 resolvers ++= Seq(
   "bintray-sbt-plugins" at "http://dl.bintray.com/sbt/sbt-plugin-releases",
   "Sonatype Releases" at "https://oss.sonatype.org/content/repositories/releases/",
-  "Artima Maven Repository" at "http://repo.artima.com/releases",
-  "Spark Packages Repo Bintray" at "https://dl.bintray.com/spark-packages/maven/"
+  "Artima Maven Repository" at "http://repo.artima.com/releases"
 )
+
+resolvers += Resolver.url(
+  "bintray-sbt-plugins",
+  url("http://dl.bintray.com/sbt/sbt-plugins"))(
+  Resolver.ivyStylePatterns)
 
 addSbtPlugin("org.spark-packages" % "sbt-spark-package" % "0.2.4")
 
