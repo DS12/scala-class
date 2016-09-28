@@ -1,4 +1,4 @@
-# Lecture 1 Tutorial: Subtyping, Variance, Typeclasses
+# Subtyping, Variance, Typeclasses Tutorial - Answers
 
 ## Part 0
 
@@ -18,6 +18,7 @@ ordered by level of abstraction.
 ## Part 1: [Simple Inheritance](https://en.wikipedia.org/wiki/Inheritance_(object-oriented_programming))
 
 `tutorial/src/main/scala/com/datascience/education/tutorial/lecture1/Hierarchy.scala`
+
 
 Inheritance is the simplest and earliest-developed pattern of object-oriented programming.
 
@@ -204,6 +205,27 @@ res1: org.json4s.package.JValue =
       JObject(List((name,JString(Toy)), (price,JDecimal(35.35))))
 ```
 
+#### Answer (1a)
+
+```
+  val json1JValue: JValue = parse(json1)
+  val json2JValue: JValue = parse(json2)
+```
+
+```
+
+
+scala> import tutorialAnswers.lecture3.Hierarchy._
+import tutorialAnswers.lecture3.Hierarchy._
+
+scala> json1JValue
+res1: org.json4s.JValue = JObject(List((firstName,JString(John)), (lastName,JString(Smith)), (isAlive,JBool(true)), (age,JInt(25)), (address,JObject(List((streetAddress,JString(21 2nd Street)), (city,JString(New York)), (state,JString(NY)), (postalCode,JString(10021-3100))))), (phoneNumbers,JArray(List(JObject(List((type,JString(home)), (number,JString(212 555-1234)))), JObject(List((type,JString(office)), (number,JString(646 555-4567))))))), (children,JArray(List())), (spouse,JNull)))
+
+scala> json2JValue
+res2: org.json4s.JValue = JObject(List((name,JString(Bert)), (children,JArray(List(JObject(List((name,JString(Alice)), (children,JArray(List())))), JObject(List((name,JString(Bob)), (children,JArray(List(JObject(List((name,JString(Bill)), (children,JArray(List())))), JObject(List((name,JString(Zoot)), (children,JArray(List()))))))))))))))
+
+scala> 
+```
 
 -----------
 
@@ -259,8 +281,7 @@ Is `write` in `OutputChannel[-A]` a source or a sink?
 
 `tutorial/src/main/scala/com/datascience/education/tutorial/lecture1/TypeLinearization.scala`
 
-
-[Based off section 12.1 of *Programming in Scala*.](http://www.artima.com/pins1ed/traits.html)
+Based off section 12.1 of *Programming in Scala*
 
 Scala [does not allow multiple inheritance](http://stackoverflow.com/questions/9919021/can-a-scala-class-extend-multiple-classes).  Scala allows [mixin](https://en.wikipedia.org/wiki/Mixin)s:
 
@@ -337,6 +358,27 @@ Investigate the inner types of `childToGrandparent` and explain why the code is 
 
 Note that the sub- and supertype relationships are inclusive; `A <: A` and `B >: B` are true.  This affects the answer.
 
+
+#### Answer (4a)
+
+Let's look inside the `childToGrandparent` `HeirloomTransition`:
+
+```
+scala> childToGrandparent
+res0: tutorialAnswers.lecture3.Heirloom.HeirloomTransition[tutorialAnswers.lecture3.Heirloom.Grandparent,tutorialAnswers.lecture3.Heirloom.Grandparent] = HeirloomTransition(tutorialAnswers.lecture3.Heirloom$Child@344e6879,tutorialAnswers.lecture3.Heirloom$Grandparent@5d026a2f)
+
+scala> childToGrandparent.ancestor 
+res1: tutorialAnswers.lecture3.Heirloom.Grandparent = tutorialAnswers.lecture3.Heirloom$Child@344e6879
+
+scala> childToGrandparent.descendant 
+res2: tutorialAnswers.lecture3.Heirloom.Grandparent = tutorialAnswers.lecture3.Heirloom$Grandparent@5d026a2f
+```
+
+The `Child` was cast to type `Grandparent`!  The compiler "raised" the type of `A` until the type invariant `D <: A` was satisfied.  Why would it do this?
+
+
+
+This subtype relationship requires that each descendant can take the place of an ancestor if necessary.  This explains why the `Child` was cast to a `Grandparent`.
 
 ---------------------
 
@@ -416,12 +458,19 @@ Do not change any given method signatures -- only add code.
 Test your implicit conversion by compiling and running `ImplicitConversionsExample`.
 
 
----------------------
+#### Answer (5a)
+
+```
+  implicit def int2Complex(i: Int): ComplexNumber = (i.toDouble, 0.0)
+```
+
+
+
+--------------------------
 
 ## Part 6: Implicit Parameters and the Typeclass Pattern
 
 `tutorial/src/main/scala/com/datascience/education/tutorial/lecture1/TypeClassProblem.scala`
-
 
 Read this example: [Label-maker typeclass example](http://debasishg.blogspot.com/2010/06/scala-implicits-type-classes-here-i.html)
 
@@ -443,9 +492,26 @@ While `LabelMaker` is generic on a single type `T`, `Plottable` must handle gene
 `Plottable` must be usable by any type with two generics [(a higher-kinded type)](http://stackoverflow.com/questions/6246719/what-is-a-higher-kinded-type-in-scala).  That is, do not specialize `Plottable` to only plot `Model`s.
 
 ### Task (6a): `points`
+
 Complete the implementation of typeclass `Plottable`.
 
 `points` is an *abstract* method that will be implemented by each concrete instance of `Plottable`.  You need to complete its signature.
+
+#### Answer (6a)
+
+```
+  trait Plottable[Domain, Range, T[Domain, Range]] {
+    def points(t: T[Domain, Range], ld: List[Domain]): List[Range]
+
+    import breeze.plot._
+
+    def plot(name: String, t: T[Domain, Range], input: List[Domain]): Unit = {
+      val y = points(t, input)
+      println(s"$name: $y")
+    }
+
+  }
+```
 
 ### Task (6b): `PlotDoubleDoubleModel`
 
@@ -462,6 +528,16 @@ class List[+A] {
 }
 ```
 
+#### Answer (6b)
+
+```
+  implicit object PlotDoubleDoubleModel extends Plottable[Double, Double, Model] {
+
+    def points(mod: Model[Double, Double], ld: List[Double]): List[Double] =
+      ld.map(mod.pdf)
+
+  }
+```
 
 ### Task (6c): `PlotDoubleDoubleFunction`
 
@@ -479,6 +555,17 @@ class List[+A] {
 ```
 
 
+#### Answer (6c)
+
+```
+  implicit object PlotDoubleDoubleFunction extends Plottable[Double, Double, Function1] {
+
+    def points(func: Double => Double, ld: List[Double]): List[Double] =
+      ld.map(func)
+
+  }
+```
+
 ### Task (6d): `plotter`
 
 `plotter` is the counterpart to `printLabel`.  `plotter` will work with any class `T` of domain `D` and range `R` for which there is a `Plottable` implemented.
@@ -494,9 +581,20 @@ Your output will look like this:
 [info] Running tutorialAnswers.lecture3.PlotExample 
 gaussianpdf.png: List(0.08568429602390368, 0.09132454269451096, 0.09709302749160648,
 0.10296813435998739, 0.10892608851627526, 0.11494107034211652, 0.12098536225957168,
-0.1270295282345945, 0.1330426249493774, 0.13899244306549824, 0.1448457763807414,...
+0.1270295282345945, 0.1330426249493774, 0.13899244306549824, 0.1448457763807414,
+0.15056871607740221, 0.15612696668338066, 0.16148617983395713, 0.16661230144589984,
+0.17147192750969195, 0.17603266338214976, 0.18026348123082397, 0.18413507015166167,
+0.18762017345846896, 0.19069390773026207, 0.19333405840142462, 0.19552134698772794,
+0.19723966545394447, 0.1984762737385059, 0.19922195704738202, 0.19947114020071635,
+0.19922195704738202, 0.1984762737385059, 0.19723966545394447, 0.19552134698772797,
+0.19333405840142462, 0.19069390773026204)
 ```
+#### Answer (6d)
 
+```
+  def plotter[D,R,T[D,R]](t: T[D,R], ld: List[D], name: String)(implicit plottable: Plottable[D,R,T]): Unit =
+    plottable.plot(name, t, ld)
+```
 
 ---------------------
 

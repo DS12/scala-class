@@ -89,7 +89,7 @@
             </aside>
             
             <aside class="page_number">
-              1/47
+              1/46
             </aside>
 
           </footer>
@@ -126,7 +126,7 @@
             </aside>
             
             <aside class="page_number">
-              2/47
+              2/46
             </aside>
 
           </footer>
@@ -141,7 +141,7 @@
             <header><h1>Flagged Arguments</h1></header>
             
             
-            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">mean2</span><span class="o">(</span><span class="n">xs</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Double</span><span class="o">],</span> <span class="n">empty</span><span class="k">:</span> <span class="kt">Double</span><span class="o">)</span><span class="k">:</span> <span class="kt">Double</span> <span class="o">=</span>
+            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">mean</span><span class="o">(</span><span class="n">xs</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Double</span><span class="o">],</span> <span class="n">empty</span><span class="k">:</span> <span class="kt">Double</span><span class="o">)</span><span class="k">:</span> <span class="kt">Double</span> <span class="o">=</span>
   <span class="k">if</span> <span class="o">(</span><span class="n">xs</span><span class="o">.</span><span class="n">isEmpty</span><span class="o">)</span> <span class="n">empty</span>
   <span class="k">else</span> <span class="n">xs</span><span class="o">.</span><span class="n">sum</span> <span class="o">/</span> <span class="n">xs</span><span class="o">.</span><span class="n">length</span>
 </pre></div>
@@ -163,7 +163,7 @@
             </aside>
             
             <aside class="page_number">
-              3/47
+              3/46
             </aside>
 
           </footer>
@@ -178,7 +178,7 @@
             <header><h1>Sentinel Values</h1></header>
             
             
-            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">mean1</span><span class="o">(</span><span class="n">xs</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Double</span><span class="o">])</span><span class="k">:</span> <span class="kt">Double</span> <span class="o">=</span>
+            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">mean</span><span class="o">(</span><span class="n">xs</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Double</span><span class="o">])</span><span class="k">:</span> <span class="kt">Double</span> <span class="o">=</span>
   <span class="k">if</span> <span class="o">(</span><span class="n">xs</span><span class="o">.</span><span class="n">isEmpty</span><span class="o">)</span> <span class="nc">Double</span><span class="o">.</span><span class="nc">NaN</span>
   <span class="k">else</span> <span class="n">xs</span><span class="o">.</span><span class="n">sum</span> <span class="o">/</span> <span class="n">xs</span><span class="o">.</span><span class="n">length</span>
 </pre></div>
@@ -200,7 +200,7 @@
             </aside>
             
             <aside class="page_number">
-              4/47
+              4/46
             </aside>
 
           </footer>
@@ -238,7 +238,7 @@
             </aside>
             
             <aside class="page_number">
-              5/47
+              5/46
             </aside>
 
           </footer>
@@ -270,7 +270,7 @@
             </aside>
             
             <aside class="page_number">
-              6/47
+              6/46
             </aside>
 
           </footer>
@@ -302,7 +302,7 @@
             </aside>
             
             <aside class="page_number">
-              7/47
+              7/46
             </aside>
 
           </footer>
@@ -343,7 +343,7 @@
             </aside>
             
             <aside class="page_number">
-              8/47
+              8/46
             </aside>
 
           </footer>
@@ -380,7 +380,7 @@
             </aside>
             
             <aside class="page_number">
-              9/47
+              9/46
             </aside>
 
           </footer>
@@ -416,7 +416,7 @@
             </aside>
             
             <aside class="page_number">
-              10/47
+              10/46
             </aside>
 
           </footer>
@@ -452,7 +452,7 @@
             </aside>
             
             <aside class="page_number">
-              11/47
+              11/46
             </aside>
 
           </footer>
@@ -497,7 +497,7 @@
             </aside>
             
             <aside class="page_number">
-              12/47
+              12/46
             </aside>
 
           </footer>
@@ -513,9 +513,9 @@
             <section><p>Here is a hard-coded version of <code>map</code>:</p>
 <div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">map</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="n">B</span><span class="o">)</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span> <span class="k">=</span>
   <span class="k">this</span> <span class="k">match</span> <span class="o">{</span>
-      <span class="k">case</span> <span class="nc">None</span> <span class="k">=&gt;</span> <span class="nc">None</span>
-      <span class="k">case</span> <span class="nc">Some</span><span class="o">(</span><span class="n">a</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nc">Some</span><span class="o">(</span><span class="n">f</span><span class="o">(</span><span class="n">a</span><span class="o">))</span>
-    <span class="o">}</span>
+    <span class="k">case</span> <span class="nc">None</span> <span class="k">=&gt;</span> <span class="nc">None</span>
+    <span class="k">case</span> <span class="nc">Some</span><span class="o">(</span><span class="n">a</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nc">Some</span><span class="o">(</span><span class="n">f</span><span class="o">(</span><span class="n">a</span><span class="o">))</span>
+  <span class="o">}</span>
 </pre></div>
 </section>
             
@@ -535,42 +535,7 @@
             </aside>
             
             <aside class="page_number">
-              13/47
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code">
-          <div class="inner">
-            
-            <header><h1><code>flatMap</code> for <code>Option</code></h1></header>
-            
-            
-            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">flatMap</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span> <span class="k">=</span>
-</pre></div>
-</section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4.md">lecture4.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              14/47
+              13/46
             </aside>
 
           </footer>
@@ -583,7 +548,7 @@
           <div class="inner">
             
             
-            <section><p>Combinators for safely exiting the <code>Option</code> monad:</p>
+            <section><p>There are a number of 'non-proper' combinators for safely exiting the <code>Option</code> monad. Two examples:</p>
 <ul>
 <li><a href="https://github.com/typelevel/cats/blob/master/core/src/main/scala/cats/Foldable.scala"><code>fold</code></a></li>
 <li><a href="https://github.com/typelevel/cats/blob/master/core/src/main/scala/cats/data/OptionT.scala"><code>getOrElse</code></a></li>
@@ -605,7 +570,7 @@
             </aside>
             
             <aside class="page_number">
-              15/47
+              14/46
             </aside>
 
           </footer>
@@ -620,12 +585,11 @@
             
             <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">getOrElse</span><span class="o">[</span><span class="kt">B</span><span class="k">&gt;:</span><span class="kt">A</span><span class="o">](</span><span class="n">default</span><span class="k">:</span> <span class="o">=&gt;</span> <span class="n">B</span><span class="o">)</span><span class="k">:</span> <span class="kt">B</span> <span class="o">=</span>
   <span class="k">this</span> <span class="k">match</span> <span class="o">{</span>
-      <span class="k">case</span> <span class="nc">None</span> <span class="k">=&gt;</span> <span class="n">default</span>
-      <span class="k">case</span> <span class="nc">Some</span><span class="o">(</span><span class="n">a</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">a</span>
-    <span class="o">}</span>
+    <span class="k">case</span> <span class="nc">None</span> <span class="k">=&gt;</span> <span class="n">default</span>
+    <span class="k">case</span> <span class="nc">Some</span><span class="o">(</span><span class="n">a</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">a</span>
+  <span class="o">}</span>
 </pre></div>
-
-<p>We will explain the necessity of the lower type bound generic <code>B</code> in the <code>getOrElse</code> combinator in a bit.</p></section>
+</section>
             
           </div>
           <div class="presenter_notes">
@@ -643,7 +607,7 @@
             </aside>
             
             <aside class="page_number">
-              16/47
+              15/46
             </aside>
 
           </footer>
@@ -676,7 +640,7 @@
             </aside>
             
             <aside class="page_number">
-              17/47
+              16/46
             </aside>
 
           </footer>
@@ -701,7 +665,7 @@
           <footer>
             
             <aside class="page_number">
-              /47
+              /46
             </aside>
 
           </footer>
@@ -735,7 +699,7 @@
             </aside>
             
             <aside class="page_number">
-              18/47
+              17/46
             </aside>
 
           </footer>
@@ -753,45 +717,6 @@
             <section><p><code>Try</code> is a general-purpose function for converting from an exception-based API to a container-based API.</p>
 <div class="highlight"><pre><span></span><span class="k">def</span> <span class="nc">Try</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">a</span><span class="k">:</span> <span class="o">=&gt;</span> <span class="n">A</span><span class="o">)</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span>
   <span class="k">try</span> <span class="o">{</span> <span class="nc">Some</span><span class="o">(</span><span class="n">a</span><span class="o">)</span> <span class="o">}</span>
-  <span class="k">catch</span> <span class="o">{</span> <span class="k">case</span> <span class="n">e</span><span class="k">:</span> <span class="kt">Exception</span> <span class="o">=&gt;</span> <span class="nc">None</span> <span class="o">}</span>
-</pre></div>
-
-<p>The <code>None</code> returned is not informative about the exception thrown.  Next lecture's type <code>Either</code> fixes this.</p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture4.md">lecture4.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              19/47
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture4.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code">
-          <div class="inner">
-            
-            
-            <section><p><code>=&gt;</code> in a function argument means the argument is lazy.  <code>=&gt;</code> does not memoize.
-If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation would be outside the try-catch clause.</p>
-<p>Think of lazy argument <code>a: =&gt; A</code> as a function with no input: <code>() =&gt; A</code>.</p>
-<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nc">Try</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">lazyA</span><span class="k">:</span> <span class="o">()</span> <span class="o">=&gt;</span> <span class="n">A</span><span class="o">)</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span>
-  <span class="k">try</span> <span class="o">{</span> <span class="nc">Some</span><span class="o">(</span> <span class="n">lazyA</span><span class="o">()</span> <span class="o">)</span> <span class="o">}</span>
   <span class="k">catch</span> <span class="o">{</span> <span class="k">case</span> <span class="n">e</span><span class="k">:</span> <span class="kt">Exception</span> <span class="o">=&gt;</span> <span class="nc">None</span> <span class="o">}</span>
 </pre></div>
 </section>
@@ -812,7 +737,39 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
             </aside>
             
             <aside class="page_number">
-              20/47
+              18/46
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture4.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+            <section><p>The argument here must be lazy, otherwise <code>Try</code> will not function.</p>
+<p>The <code>None</code> returned is not informative about the exception thrown.  Next lecture's type <code>Either</code> fixes this.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture4.md">lecture4.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              19/46
             </aside>
 
           </footer>
@@ -852,7 +809,7 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
             </aside>
             
             <aside class="page_number">
-              21/47
+              20/46
             </aside>
 
           </footer>
@@ -894,7 +851,7 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
             </aside>
             
             <aside class="page_number">
-              22/47
+              21/46
             </aside>
 
           </footer>
@@ -935,7 +892,7 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
             </aside>
             
             <aside class="page_number">
-              23/47
+              22/46
             </aside>
 
           </footer>
@@ -975,7 +932,7 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
             </aside>
             
             <aside class="page_number">
-              24/47
+              23/46
             </aside>
 
           </footer>
@@ -1018,7 +975,7 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
             </aside>
             
             <aside class="page_number">
-              25/47
+              24/46
             </aside>
 
           </footer>
@@ -1061,7 +1018,7 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
             </aside>
             
             <aside class="page_number">
-              26/47
+              25/46
             </aside>
 
           </footer>
@@ -1099,7 +1056,7 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
             </aside>
             
             <aside class="page_number">
-              27/47
+              26/46
             </aside>
 
           </footer>
@@ -1136,7 +1093,7 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
             </aside>
             
             <aside class="page_number">
-              28/47
+              27/46
             </aside>
 
           </footer>
@@ -1173,7 +1130,7 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
             </aside>
             
             <aside class="page_number">
-              29/47
+              28/46
             </aside>
 
           </footer>
@@ -1198,7 +1155,7 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
           <footer>
             
             <aside class="page_number">
-              /47
+              /46
             </aside>
 
           </footer>
@@ -1233,7 +1190,7 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
             </aside>
             
             <aside class="page_number">
-              30/47
+              29/46
             </aside>
 
           </footer>
@@ -1272,7 +1229,7 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
             </aside>
             
             <aside class="page_number">
-              31/47
+              30/46
             </aside>
 
           </footer>
@@ -1312,7 +1269,7 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
             </aside>
             
             <aside class="page_number">
-              32/47
+              31/46
             </aside>
 
           </footer>
@@ -1337,7 +1294,7 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
           <footer>
             
             <aside class="page_number">
-              /47
+              /46
             </aside>
 
           </footer>
@@ -1373,7 +1330,7 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
             </aside>
             
             <aside class="page_number">
-              33/47
+              32/46
             </aside>
 
           </footer>
@@ -1410,7 +1367,7 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
             </aside>
             
             <aside class="page_number">
-              34/47
+              33/46
             </aside>
 
           </footer>
@@ -1446,7 +1403,7 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
             </aside>
             
             <aside class="page_number">
-              35/47
+              34/46
             </aside>
 
           </footer>
@@ -1483,7 +1440,7 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
             </aside>
             
             <aside class="page_number">
-              36/47
+              35/46
             </aside>
 
           </footer>
@@ -1516,7 +1473,7 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
             </aside>
             
             <aside class="page_number">
-              37/47
+              36/46
             </aside>
 
           </footer>
@@ -1541,7 +1498,7 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
           <footer>
             
             <aside class="page_number">
-              /47
+              /46
             </aside>
 
           </footer>
@@ -1578,7 +1535,7 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
             </aside>
             
             <aside class="page_number">
-              38/47
+              37/46
             </aside>
 
           </footer>
@@ -1595,7 +1552,7 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
   <span class="kt">Option</span><span class="o">[</span><span class="kt">List</span><span class="o">[</span><span class="kt">A</span><span class="o">]]</span> <span class="k">=</span>
     <span class="n">a</span> <span class="k">match</span> <span class="o">{</span>
       <span class="k">case</span> <span class="nc">Nil</span> <span class="k">=&gt;</span> <span class="nc">Some</span><span class="o">(</span><span class="nc">Nil</span><span class="o">)</span>
-      <span class="k">case</span> <span class="n">h</span> <span class="o">::</span> <span class="n">t</span> <span class="k">=&gt;</span> <span class="n">h</span> <span class="n">flatMap</span> <span class="o">(</span><span class="n">hh</span> <span class="k">=&gt;</span> <span class="n">sequence</span><span class="o">(</span><span class="n">t</span><span class="o">)</span> <span class="n">map</span> <span class="o">(</span><span class="n">hh</span> <span class="o">::</span> <span class="k">_</span><span class="o">))</span>
+      <span class="k">case</span> <span class="n">h</span> <span class="o">::</span> <span class="n">t</span> <span class="k">=&gt;</span> <span class="n">h</span> <span class="n">flatMap</span> <span class="o">(</span><span class="n">hh</span> <span class="k">=&gt;</span> <span class="n">sequence1</span><span class="o">(</span><span class="n">t</span><span class="o">)</span> <span class="n">map</span> <span class="o">(</span><span class="n">hh</span> <span class="o">::</span> <span class="k">_</span><span class="o">))</span>
     <span class="o">}</span>
 </pre></div>
 </section>
@@ -1616,7 +1573,7 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
             </aside>
             
             <aside class="page_number">
-              39/47
+              38/46
             </aside>
 
           </footer>
@@ -1653,7 +1610,7 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
             </aside>
             
             <aside class="page_number">
-              40/47
+              39/46
             </aside>
 
           </footer>
@@ -1686,7 +1643,7 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
             </aside>
             
             <aside class="page_number">
-              41/47
+              40/46
             </aside>
 
           </footer>
@@ -1711,7 +1668,7 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
           <footer>
             
             <aside class="page_number">
-              /47
+              /46
             </aside>
 
           </footer>
@@ -1748,7 +1705,7 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
             </aside>
             
             <aside class="page_number">
-              42/47
+              41/46
             </aside>
 
           </footer>
@@ -1788,7 +1745,7 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
             </aside>
             
             <aside class="page_number">
-              43/47
+              42/46
             </aside>
 
           </footer>
@@ -1828,7 +1785,7 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
             </aside>
             
             <aside class="page_number">
-              44/47
+              43/46
             </aside>
 
           </footer>
@@ -1861,7 +1818,7 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
             </aside>
             
             <aside class="page_number">
-              45/47
+              44/46
             </aside>
 
           </footer>
@@ -1894,7 +1851,7 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
             </aside>
             
             <aside class="page_number">
-              46/47
+              45/46
             </aside>
 
           </footer>
@@ -1930,7 +1887,7 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
             </aside>
             
             <aside class="page_number">
-              47/47
+              46/46
             </aside>
 
           </footer>
@@ -2024,7 +1981,7 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
       
       
       <tr id="toc-row-14">
-        <th><a href="#slide14"><code>flatMap</code> for <code>Option</code></a></th>
+        <th><a href="#slide14">-</a></th>
         <td><a href="#slide14">14</a></td>
       </tr>
       
@@ -2036,25 +1993,25 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
       
       
       <tr id="toc-row-16">
-        <th><a href="#slide16">-</a></th>
+        <th><a href="#slide16">Exercise</a></th>
         <td><a href="#slide16">16</a></td>
       </tr>
       
       
       <tr id="toc-row-17">
-        <th><a href="#slide17">Exercise</a></th>
+        <th><a href="#slide17">-</a></th>
         <td><a href="#slide17">17</a></td>
       </tr>
       
       
       <tr id="toc-row-18">
-        <th><a href="#slide18">-</a></th>
+        <th><a href="#slide18">Try</a></th>
         <td><a href="#slide18">18</a></td>
       </tr>
       
       
       <tr id="toc-row-19">
-        <th><a href="#slide19">Try</a></th>
+        <th><a href="#slide19">-</a></th>
         <td><a href="#slide19">19</a></td>
       </tr>
       
@@ -2072,31 +2029,31 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
       
       
       <tr id="toc-row-22">
-        <th><a href="#slide22">-</a></th>
+        <th><a href="#slide22"><code>Option</code> in Cats</a></th>
         <td><a href="#slide22">22</a></td>
       </tr>
       
       
       <tr id="toc-row-23">
-        <th><a href="#slide23"><code>Option</code> in Cats</a></th>
+        <th><a href="#slide23">Reduction of for loops</a></th>
         <td><a href="#slide23">23</a></td>
       </tr>
       
       
       <tr id="toc-row-24">
-        <th><a href="#slide24">Reduction of for loops</a></th>
+        <th><a href="#slide24">-</a></th>
         <td><a href="#slide24">24</a></td>
       </tr>
       
       
       <tr id="toc-row-25">
-        <th><a href="#slide25">-</a></th>
+        <th><a href="#slide25">'Looping' over Options</a></th>
         <td><a href="#slide25">25</a></td>
       </tr>
       
       
       <tr id="toc-row-26">
-        <th><a href="#slide26">'Looping' over Options</a></th>
+        <th><a href="#slide26">-</a></th>
         <td><a href="#slide26">26</a></td>
       </tr>
       
@@ -2108,13 +2065,13 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
       
       
       <tr id="toc-row-28">
-        <th><a href="#slide28">-</a></th>
+        <th><a href="#slide28">Exercise</a></th>
         <td><a href="#slide28">28</a></td>
       </tr>
       
       
       <tr id="toc-row-29">
-        <th><a href="#slide29">Exercise</a></th>
+        <th><a href="#slide29">-</a></th>
         <td><a href="#slide29">29</a></td>
       </tr>
       
@@ -2126,25 +2083,25 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
       
       
       <tr id="toc-row-31">
-        <th><a href="#slide31">-</a></th>
+        <th><a href="#slide31">Exercise</a></th>
         <td><a href="#slide31">31</a></td>
       </tr>
       
       
       <tr id="toc-row-32">
-        <th><a href="#slide32">Exercise</a></th>
+        <th><a href="#slide32">-</a></th>
         <td><a href="#slide32">32</a></td>
       </tr>
       
       
       <tr id="toc-row-33">
-        <th><a href="#slide33">-</a></th>
+        <th><a href="#slide33"><code>sequence</code> and <code>traverse</code></a></th>
         <td><a href="#slide33">33</a></td>
       </tr>
       
       
       <tr id="toc-row-34">
-        <th><a href="#slide34"><code>sequence</code> and <code>traverse</code></a></th>
+        <th><a href="#slide34">-</a></th>
         <td><a href="#slide34">34</a></td>
       </tr>
       
@@ -2156,13 +2113,13 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
       
       
       <tr id="toc-row-36">
-        <th><a href="#slide36">-</a></th>
+        <th><a href="#slide36">Exercise</a></th>
         <td><a href="#slide36">36</a></td>
       </tr>
       
       
       <tr id="toc-row-37">
-        <th><a href="#slide37">Exercise</a></th>
+        <th><a href="#slide37">-</a></th>
         <td><a href="#slide37">37</a></td>
       </tr>
       
@@ -2180,13 +2137,13 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
       
       
       <tr id="toc-row-40">
-        <th><a href="#slide40">-</a></th>
+        <th><a href="#slide40">Exercise</a></th>
         <td><a href="#slide40">40</a></td>
       </tr>
       
       
       <tr id="toc-row-41">
-        <th><a href="#slide41">Exercise</a></th>
+        <th><a href="#slide41">-</a></th>
         <td><a href="#slide41">41</a></td>
       </tr>
       
@@ -2210,20 +2167,14 @@ If <code>a</code> were evaluated eagerly, an exception thrown in its evaluation 
       
       
       <tr id="toc-row-45">
-        <th><a href="#slide45">-</a></th>
+        <th><a href="#slide45">Homework</a></th>
         <td><a href="#slide45">45</a></td>
       </tr>
       
       
       <tr id="toc-row-46">
-        <th><a href="#slide46">Homework</a></th>
+        <th><a href="#slide46">Links</a></th>
         <td><a href="#slide46">46</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-47">
-        <th><a href="#slide47">Links</a></th>
-        <td><a href="#slide47">47</a></td>
       </tr>
       
       

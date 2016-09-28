@@ -19,13 +19,13 @@ jdk:
 
 # http://www.scala-sbt.org/0.13/docs/Travis-CI-with-sbt.html#%28Experimental%29+Reusing+Ivy+cache
 
-before_cache:
+#before_cache:
 # Tricks to avoid unnecessary cache updates
-- find $HOME/.ivy2 -name "ivydata-*.properties" -delete
-- find $HOME/.sbt -name "*.lock" -delete
+#- find $HOME/.ivy2 -name "ivydata-*.properties" -delete
+#- find $HOME/.sbt -name "*.lock" -delete
 
-cache:
-directories:
-- $HOME/.ivy2/cache
-- $HOME/.sbt/boot/
+#cache:
+#directories:
+#- $HOME/.ivy2/cache
+#- $HOME/.sbt/boot/
 
