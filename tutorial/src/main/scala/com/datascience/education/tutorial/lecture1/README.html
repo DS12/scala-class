@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-<title>README_ANSWERS.html</title>
+<title>README.html</title>
 
 </head>
 
 <body>
 
-<h1 id="subtyping-variance-typeclasses-tutorial---answers">Subtyping, Variance, Typeclasses Tutorial - Answers</h1>
+<h1 id="lecture-1-tutorial-subtyping-variance-typeclasses">Lecture 1 Tutorial: Subtyping, Variance, Typeclasses</h1>
 <h2 id="part-0">Part 0</h2>
 <p>In this tutorial we aim to review, define or explain</p>
 <ul>
@@ -179,21 +179,6 @@ res0: org.json4s.JsonAST.JValue =
 scala&gt; parse(&quot;&quot;&quot;{&quot;name&quot;:&quot;Toy&quot;,&quot;price&quot;:35.35}&quot;&quot;&quot;, useBigDecimalForDouble = true)
 res1: org.json4s.package.JValue = 
       JObject(List((name,JString(Toy)), (price,JDecimal(35.35))))</code></pre>
-<h4 id="answer-1a">Answer (1a)</h4>
-<pre><code>  val json1JValue: JValue = parse(json1)
-  val json2JValue: JValue = parse(json2)</code></pre>
-<pre><code>
-
-scala&gt; import tutorialAnswers.lecture3.Hierarchy._
-import tutorialAnswers.lecture3.Hierarchy._
-
-scala&gt; json1JValue
-res1: org.json4s.JValue = JObject(List((firstName,JString(John)), (lastName,JString(Smith)), (isAlive,JBool(true)), (age,JInt(25)), (address,JObject(List((streetAddress,JString(21 2nd Street)), (city,JString(New York)), (state,JString(NY)), (postalCode,JString(10021-3100))))), (phoneNumbers,JArray(List(JObject(List((type,JString(home)), (number,JString(212 555-1234)))), JObject(List((type,JString(office)), (number,JString(646 555-4567))))))), (children,JArray(List())), (spouse,JNull)))
-
-scala&gt; json2JValue
-res2: org.json4s.JValue = JObject(List((name,JString(Bert)), (children,JArray(List(JObject(List((name,JString(Alice)), (children,JArray(List())))), JObject(List((name,JString(Bob)), (children,JArray(List(JObject(List((name,JString(Bill)), (children,JArray(List())))), JObject(List((name,JString(Zoot)), (children,JArray(List()))))))))))))))
-
-scala&gt; </code></pre>
 <hr />
 <h2 id="part-2-covariance-and-contravariance">Part 2: Covariance and Contravariance</h2>
 <p>We are familiar with the rules below:</p>
@@ -225,7 +210,7 @@ invariant       C[T] and C[T’] are not related  [T]</code></pre>
 <hr />
 <h2 id="part-3-type-linearization">Part 3: <a href="https://www.safaribooksonline.com/library/view/programming-scala/9780596801908/ch07s05.html">Type Linearization</a></h2>
 <p><code>tutorial/src/main/scala/com/datascience/education/tutorial/lecture1/TypeLinearization.scala</code></p>
-<p>Based off section 12.1 of <em>Programming in Scala</em></p>
+<p><a href="http://www.artima.com/pins1ed/traits.html">Based off section 12.1 of <em>Programming in Scala</em>.</a></p>
 <p>Scala <a href="http://stackoverflow.com/questions/9919021/can-a-scala-class-extend-multiple-classes">does not allow multiple inheritance</a>. Scala allows <a href="https://en.wikipedia.org/wiki/Mixin">mixin</a>s:</p>
 <blockquote>
 <p>In object-oriented programming languages, a mixin is a class that contains methods for use by other classes without having to be the parent class of those other classes. How those other classes gain access to the mixin's methods depends on the language. Mixins are sometimes described as being &quot;included&quot; rather than &quot;inherited&quot;.</p>
@@ -273,18 +258,6 @@ res5: tutorialAnswers.lecture3.Heirloom.Child = tutorialAnswers.lecture3.Heirloo
     new HeirloomTransition(new Child, new Grandparent)</code></pre>
 <p>Investigate the inner types of <code>childToGrandparent</code> and explain why the code is allowed to compile.</p>
 <p>Note that the sub- and supertype relationships are inclusive; <code>A &lt;: A</code> and <code>B &gt;: B</code> are true. This affects the answer.</p>
-<h4 id="answer-4a">Answer (4a)</h4>
-<p>Let's look inside the <code>childToGrandparent</code> <code>HeirloomTransition</code>:</p>
-<pre><code>scala&gt; childToGrandparent
-res0: tutorialAnswers.lecture3.Heirloom.HeirloomTransition[tutorialAnswers.lecture3.Heirloom.Grandparent,tutorialAnswers.lecture3.Heirloom.Grandparent] = HeirloomTransition(tutorialAnswers.lecture3.Heirloom$Child@344e6879,tutorialAnswers.lecture3.Heirloom$Grandparent@5d026a2f)
-
-scala&gt; childToGrandparent.ancestor 
-res1: tutorialAnswers.lecture3.Heirloom.Grandparent = tutorialAnswers.lecture3.Heirloom$Child@344e6879
-
-scala&gt; childToGrandparent.descendant 
-res2: tutorialAnswers.lecture3.Heirloom.Grandparent = tutorialAnswers.lecture3.Heirloom$Grandparent@5d026a2f</code></pre>
-<p>The <code>Child</code> was cast to type <code>Grandparent</code>! The compiler &quot;raised&quot; the type of <code>A</code> until the type invariant <code>D &lt;: A</code> was satisfied. Why would it do this?</p>
-<p>This subtype relationship requires that each descendant can take the place of an ancestor if necessary. This explains why the <code>Child</code> was cast to a <code>Grandparent</code>.</p>
 <hr />
 <h2 id="part-5-implicit-conversions">Part 5: Implicit Conversions</h2>
 <p><code>tutorial/src/main/scala/com/datascience/education/tutorial/lecture1/ImplicitConversions.scala</code></p>
@@ -332,8 +305,6 @@ Creates a dense vector from its values.</code></pre>
 <p><em>Discover</em> where the implicit conversion should be placed. It is a question of scope. Consider: implicit conversions are primarily used for compatibility with an unmodifiable library. The canonical example is a Java library that accepts Java types as arguments. Modifying the library would be an anti-pattern -- modify the call to the library with an implicit conversion. Implicit conversions help to convert to and from Java types: <a href="http://www.scala-lang.org/api/2.11.8/#scala.collection.JavaConversions$"><code>JavaConversions</code></a></p>
 <p>Do not change any given method signatures -- only add code.</p>
 <p>Test your implicit conversion by compiling and running <code>ImplicitConversionsExample</code>.</p>
-<h4 id="answer-5a">Answer (5a)</h4>
-<pre><code>  implicit def int2Complex(i: Int): ComplexNumber = (i.toDouble, 0.0)</code></pre>
 <hr />
 <h2 id="part-6-implicit-parameters-and-the-typeclass-pattern">Part 6: Implicit Parameters and the Typeclass Pattern</h2>
 <p><code>tutorial/src/main/scala/com/datascience/education/tutorial/lecture1/TypeClassProblem.scala</code></p>
@@ -349,38 +320,12 @@ Creates a dense vector from its values.</code></pre>
 <h3 id="task-6a-points">Task (6a): <code>points</code></h3>
 <p>Complete the implementation of typeclass <code>Plottable</code>.</p>
 <p><code>points</code> is an <em>abstract</em> method that will be implemented by each concrete instance of <code>Plottable</code>. You need to complete its signature.</p>
-<h4 id="answer-6a">Answer (6a)</h4>
-<pre><code>  trait Plottable[Domain, Range, T[Domain, Range]] {
-    def points(t: T[Domain, Range], ld: List[Domain]): List[Range]
-
-    import breeze.plot._
-
-    def plot(name: String, t: T[Domain, Range], input: List[Domain]): Unit = {
-      val y = points(t, input)
-      println(s&quot;$name: $y&quot;)
-    }
-
-  }</code></pre>
 <h3 id="task-6b-plotdoubledoublemodel">Task (6b): <code>PlotDoubleDoubleModel</code></h3>
 <p>Complete the implementation of <code>PlotDoubleDoubleModel</code>.</p>
 <p>This is a concrete instance of <code>Plottable</code>.</p>
-<h4 id="answer-6b">Answer (6b)</h4>
-<pre><code>  implicit object PlotDoubleDoubleModel extends Plottable[Double, Double, Model] {
-
-    def points(mod: Model[Double, Double], ld: List[Double]): List[Double] =
-      ld.map(mod.pdf)
-
-  }</code></pre>
 <h3 id="task-6c-plotdoubledoublefunction">Task (6c): <code>PlotDoubleDoubleFunction</code></h3>
 <p>Complete the implementation of <code>PlotDoubleDoubleFunction</code>.</p>
 <p>This is a concrete instance of <code>Plottable</code>.</p>
-<h4 id="answer-6c">Answer (6c)</h4>
-<pre><code>  implicit object PlotDoubleDoubleFunction extends Plottable[Double, Double, Function1] {
-
-    def points(func: Double =&gt; Double, ld: List[Double]): List[Double] =
-      ld.map(func)
-
-  }</code></pre>
 <h3 id="task-6d-plotter">Task (6d): <code>plotter</code></h3>
 <p><code>plotter</code> is the counterpart to <code>printLabel</code>. <code>plotter</code> will work with any class <code>T</code> of domain <code>D</code> and range <code>R</code> for which there is a <code>Plottable</code> implemented.</p>
 <p>Implement <code>plotter</code>.</p>
@@ -389,16 +334,7 @@ Creates a dense vector from its values.</code></pre>
 <pre><code>[info] Running tutorialAnswers.lecture3.PlotExample 
 gaussianpdf.png: List(0.08568429602390368, 0.09132454269451096, 0.09709302749160648,
 0.10296813435998739, 0.10892608851627526, 0.11494107034211652, 0.12098536225957168,
-0.1270295282345945, 0.1330426249493774, 0.13899244306549824, 0.1448457763807414,
-0.15056871607740221, 0.15612696668338066, 0.16148617983395713, 0.16661230144589984,
-0.17147192750969195, 0.17603266338214976, 0.18026348123082397, 0.18413507015166167,
-0.18762017345846896, 0.19069390773026207, 0.19333405840142462, 0.19552134698772794,
-0.19723966545394447, 0.1984762737385059, 0.19922195704738202, 0.19947114020071635,
-0.19922195704738202, 0.1984762737385059, 0.19723966545394447, 0.19552134698772797,
-0.19333405840142462, 0.19069390773026204)</code></pre>
-<h4 id="answer-6d">Answer (6d)</h4>
-<pre><code>  def plotter[D,R,T[D,R]](t: T[D,R], ld: List[D], name: String)(implicit plottable: Plottable[D,R,T]): Unit =
-    plottable.plot(name, t, ld)</code></pre>
+0.1270295282345945, 0.1330426249493774, 0.13899244306549824, 0.1448457763807414,...</code></pre>
 <hr />
 <h2 id="resources">Resources</h2>
 <p><a href="https://en.wikipedia.org/wiki/Composition_over_inheritance">Composition over inheritance</a></p>

@@ -17,7 +17,8 @@ ordered by level of abstraction.
 
 ## Part 1: [Simple Inheritance](https://en.wikipedia.org/wiki/Inheritance_(object-oriented_programming))
 
-`code/tutorialAnswers/src/main/scala/tutorialAnswers/lecture3/Hierarchy.scala`
+`tutorial/src/main/scala/com/datascience/education/tutorial/lecture1/Hierarchy.scala`
+
 
 Inheritance is the simplest and earliest-developed pattern of object-oriented programming.
 
@@ -278,7 +279,7 @@ Is `write` in `OutputChannel[-A]` a source or a sink?
 
 ## Part 3: [Type Linearization](https://www.safaribooksonline.com/library/view/programming-scala/9780596801908/ch07s05.html)
 
-`code/tutorialAnswers/src/main/scala/tutorialAnswers/lecture3/TypeLinearization.scala`
+`tutorial/src/main/scala/com/datascience/education/tutorial/lecture1/TypeLinearization.scala`
 
 Based off section 12.1 of *Programming in Scala*
 
@@ -299,7 +300,8 @@ Set up class `Frog` so that it mixes-in traits `Amphibian` and `Philosophical`. 
 
 ## Part 4: The Liskov Substitution Principle
 
-`code/tutorialAnswers/src/main/scala/tutorialAnswers/lecture3/Heirloom.scala`
+`tutorial/src/main/scala/com/datascience/education/tutorial/lecture1/Heirloom.scala`
+
 
 The following program demonstrates a *misuse* of subtyping.
 
@@ -382,7 +384,7 @@ This subtype relationship requires that each descendant can take the place of an
 
 ## Part 5: Implicit Conversions
 
-`code/tutorialAnswers/src/main/scala/tutorialAnswers/lecture3/ImplicitConversions.scala`
+`tutorial/src/main/scala/com/datascience/education/tutorial/lecture1/ImplicitConversions.scala`
 
 In Spark, `Vectors.dense` only accepts `Double`s as arguments.
 
@@ -468,7 +470,7 @@ Test your implicit conversion by compiling and running `ImplicitConversionsExamp
 
 ## Part 6: Implicit Parameters and the Typeclass Pattern
 
-`code/tutorialAnswers/src/main/scala/tutorialAnswers/lecture3/TypeClassProblem.scala`
+`tutorial/src/main/scala/com/datascience/education/tutorial/lecture1/TypeClassProblem.scala`
 
 Read this example: [Label-maker typeclass example](http://debasishg.blogspot.com/2010/06/scala-implicits-type-classes-here-i.html)
 
