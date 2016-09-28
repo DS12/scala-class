@@ -1,7 +1,11 @@
 resolvers ++= Seq(
   "bintray-sbt-plugins" at "http://dl.bintray.com/sbt/sbt-plugin-releases",
   "Sonatype Releases" at "https://oss.sonatype.org/content/repositories/releases/",
-  "Artima Maven Repository" at "http://repo.artima.com/releases"
+  "Artima Maven Repository" at "http://repo.artima.com/releases",
+  "clojars" at "https://clojars.org/repo",
+  "conjars" at "http://conjars.org/repo",
+  "plugins" at "http://repo.spring.io/plugins-release",
+  "sonatype" at "http://oss.sonatype.org/content/groups/public/"
 )
 
 resolvers += Resolver.url(

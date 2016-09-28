@@ -14,8 +14,10 @@ object Common {
   lazy val otherResolvers = Seq(
     "bintray/non" at "http://dl.bintray.com/non/maven",
     "Sonatype Releases" at "https://oss.sonatype.org/content/repositories/releases/",
+    "sonatype" at "http://oss.sonatype.org/content/groups/public/",
     "twitter-repo" at "https://maven.twttr.com",
     "Clojars Repository" at "http://clojars.org/repo",
+    "conjars" at "http://conjars.org/repo",
     "Artima Maven Repository" at "http://repo.artima.com/releases",
     "Spark Packages Repo Bintray" at "http://dl.bintray.com/spark-packages/maven",
     Opts.resolver.sonatypeSnapshots
