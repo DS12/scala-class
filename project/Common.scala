@@ -28,6 +28,10 @@ object Common {
     organization := "com.datascience.education",
     scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature"),
     resolvers ++= otherResolvers,
+    resolvers += Resolver.url(
+      "bintray-sbt-plugins",
+      url("http://dl.bintray.com/sbt/sbt-plugins"))(
+      Resolver.ivyStylePatterns),
     libraryDependencies ++= Dependencies.dependencies
   )
 
