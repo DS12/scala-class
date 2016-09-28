@@ -1,53 +1,63 @@
+#Lecture 13a: Interpreters
 
+![](images/lecture3/gang-of-four-monads.png)
 
-The interpreter is the über pattern of functional programming. Most large programs written in a functional style can be viewed as using this pattern. Amongst many reasons, interpreters allow us to handle effects and still keep desirable properties such as substitution.
+---
 
-Given the importance of interpreters it is not surprising there are many implementation strategies. In this blog post I want to discuss one of the main axes along which implementation strategies vary, which is how far we take reification of actions within the interpreter.
+The interpreter is the über pattern of functional programming.
 
-But first, a quick recap of the interpreter pattern, and the secret cheat code of functional programming, reification.
+Intuition:
 
-What’s An Interpreter?
-Our basic definition of an interpreter is anything that separates describing the computation from running it. That’s quite a mouthful, so let’s see a quick example. In Doodle, a library for vector graphics we are developing, we can describe a picture like so
+We treat the interpreter as part of the runtime.
 
-val picture1 = Image.circle(100)
-When we’re describing a picture we can easily compose a new picture from existing pictures.
+We can talk about programs as values right up until we run them.
+---
 
-val picture2 = picture1 beside picture1
-If we want to draw a picture, we call the draw method. Nothing appears on the screen until we call draw.
+!haskell
+interpretMonoid :: Monoid b => (a -> b) -> ([a] -> b)
+interpretMonoid f [] = mempty
+interpretMonoid f (a : as) = f a <> interpretMonoid f as
 
-picture2.draw
-The result of draw is Unit, so we cannot use this result to construct more pictures.
+---
 
-This illustrates the essential features of the interpreter pattern: describing a picture is the “describing the computation” part, and calling draw is the “running the computation” part.
+Most large programs written in a functional style can be viewed as using this pattern.
+
+Amongst many reasons, interpreters allow us to handle effects and still keep desirable properties such as substitution.
+
+---
 
 Why Do We Use Interpreters?
-One important reason for functional programmers liking the interpreter pattern is how it allows us to deal with effects. Effects are problematic, because they break substitution. Substitution allows easy reasoning about code, so functional programmers strive hard to maintain it. At some point you have to have effects—if not, the programm will not do anything useful. The secret to allowing effects is to delay them until some point in the program where we don’t care about substitution anymore. For example, in a web service we can delay effects till we’ve constructed the program to create the response, and then run that program, causing our database effects and so on to occur. In Doodle we delay effects—drawing—until we’ve fully described the picture we want to draw. If you’re familiar with computer graphics, Doodle is essentially constructing a scene graph.
+One important reason for functional programmers liking the interpreter pattern is how it allows us to deal with effects. Effects are problematic, because they break substitution. Substitution allows easy reasoning about code, so functional programmers strive hard to maintain it. At some point you have to have effects—if not, the program will not do anything useful. The secret to allowing effects is to delay them until some point in the program where we don’t care about substitution anymore. For example, in a web service we can delay effects till we’ve constructed the program to create the response, and then run that program, causing our database effects and so on to occur. In Doodle we delay effects—drawing—until we’ve fully described the picture we want to draw. If you’re familiar with computer graphics, Doodle is essentially constructing a scene graph.
 
-Reification
-Reification is an integral part of the interpreter pattern. Reification means to make the abstract concrete. In the context of interpreters this means to turn an action into data. For example, in the context of Doodle when we call Image.circle(100) this turns into a case class rather than drawing something on the screen. Reification is an essential part of the interpreter pattern as we need to delay running the program for the pattern to work, as described above, and the only way to do this is to create a data structure of some kind.
+---
 
-Opaque and Transparent Interpreters
-With the background out of the way, let’s move to the main content of this post: talking about different implementation strategies. I’m going to use as an example of the Random monad. The Random monad allows us to separate describing how to generate random data from actually introducing randomness. Randomness is an effect (a function that generates a random value breaks substitution, as it returns a different value each time it is called) and so we can use the Random monad to control this effect. The Random monad is very simple to implement and make a good case study of different implementation techniques.
+#Example: Random
 
-Let’s look at two different implementation strategies. For bonus points I’ve implemented a cats monad instance for both, but this has no bearing on the point I’m making.
+The Random monad allows us to separate describing how to generate random data from actually introducing randomness.
+
+Randomness is an effect (a function that generates a random value breaks substitution, as it returns a different value each time it is called) and so we can use the Random monad to control this effect.
+
+---
+
+Let’s look at two different implementation strategies.
 
 The first strategy is to reify the methods to an algebraic data type.
 
-import cats.Monad
 
+import cats.Monad
 sealed trait AlgebraicDataType[A] extends Product with Serializable {
   def run(rng: scala.util.Random = scala.util.Random): A =
     this match {
       case Primitive(sample) => sample(rng)
       case FlatMap(fa, f) => f(fa.run(rng)).run(rng)
     }
-
-  def flatMap[B](f: A => AlgebraicDataType[B]): AlgebraicDataType[B] =
-    FlatMap(this, f)
+  def flatMap[B](f: A => AlgebraicDataType[B]): AlgebraicDataType[B] = FlatMap(this, f)
 
   def map[B](f: A => B): AlgebraicDataType[B] =
     FlatMap(this, (a: A) => AlgebraicDataType.always(f(a)))
 }
+
+
 object AlgebraicDataType {
   def always[A](a: A): AlgebraicDataType[A] =
     Primitive(rng => a)
@@ -112,58 +122,13 @@ The transparent interpreter is more modular than the opaque one. With a transpar
 
 In summary, transparent interpreters trade performance for flexibility. I usually find that flexibility is the right choice.
 
-It’s worth noting there is another implementation technique (there is always another way in Scala.) This is to use anonymous classes, as show belown in AnonymousTrait. This is still an opaque implementation, just one that is much more verbose than Lambda above.
+---
 
-import cats.Monad
+#Modular Interpreters
 
-sealed trait AnonymousTrait[A] { self =>
-  def run(rng: scala.util.Random = scala.util.Random): A
-
-  def flatMap[B](f: A => AnonymousTrait[B]): AnonymousTrait[B] =
-    new AnonymousTrait[B] {
-      def run(rng: scala.util.Random): B =
-        f(self.run(rng)).run(rng)
-    }
-
-  def map[B](f: A => B): AnonymousTrait[B] =
-    new AnonymousTrait[B] {
-      def run(rng: scala.util.Random): B =
-        f(self.run(rng))
-    }
-}
-object AnonymousTrait {
-  def always[A](a: A): AnonymousTrait[A] =
-    new AnonymousTrait[A] {
-      def run(rng: scala.util.Random): A =
-        a
-    }
-
-  def int: AnonymousTrait[Int] =
-    new AnonymousTrait[Int] {
-      def run(rng: scala.util.Random): Int =
-        rng.nextInt()
-    }
-
-  def double: AnonymousTrait[Double] =
-    new AnonymousTrait[Double] {
-      def run(rng: scala.util.Random): Double =
-        rng.nextDouble()
-    }
-
-  implicit object randomInstance extends Monad[AnonymousTrait] {
-    def flatMap[A, B](fa: AnonymousTrait[A])(f: (A) ⇒ AnonymousTrait[B]): AnonymousTrait[B] =
-      fa.flatMap(f)
-
-    def pure[A](x: A): AnonymousTrait[A] =
-      AnonymousTrait.always(x)
-  }
-}
-I’ve also seen this technique used with an unsealed trait. I think this is bad practice. An unsealed trait allows random changes to the semantics by overriding, and doesn’t indicate to the user how they should use the class. Unsealed traits should generally be used for type classes, in my opinion.
-
-Modular Interpreters
 One way we can take advantage of the modularity offered by transparent interpreters is by capturing common patterns in reusable classes. This is exactly what the free monad does. Here’s an example of the Random monad using the free monad implementation in Cats. As you can see, we don’t have to write a great deal of code, and we benefit from an optimised and stack-safe implementation.
 
-object RandomM {
+
   import cats.free.Free
   import cats.{Comonad,Monad}
 
@@ -183,7 +148,10 @@ object RandomM {
       override def map[A, B](fa: Primitive[A])(f: (A) ⇒ B): Primitive[B] =
         Primitive(rng => f(fa.sample(rng)))
     }
-}
+
+
+---
+
 Conclusions
 The transparency tradeoff is a major design decision in creating an interpreter. Over time I feel that as a community we’re moving towards more transparent representations, particularly as techniques like the free monad become more widely known.
 
