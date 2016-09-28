@@ -1,6 +1,8 @@
 resolvers ++= Seq(
   "Artima Maven Repository" at "http://repo.artima.com/releases",
-  "Spark Packages Repo Bintray" at "https://dl.bintray.com/spark-packages/maven/"
+  "Spark Packages Repo Bintray" at "https://dl.bintray.com/spark-packages/maven/",
+  "Sonatype Releases" at "https://oss.sonatype.org/content/repositories/releases/"
+  
 )
 
 addSbtPlugin("org.spark-packages" % "sbt-spark-package" % "0.2.4")
