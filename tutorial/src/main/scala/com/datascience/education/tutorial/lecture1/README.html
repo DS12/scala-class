@@ -323,9 +323,19 @@ Creates a dense vector from its values.</code></pre>
 <h3 id="task-6b-plotdoubledoublemodel">Task (6b): <code>PlotDoubleDoubleModel</code></h3>
 <p>Complete the implementation of <code>PlotDoubleDoubleModel</code>.</p>
 <p>This is a concrete instance of <code>Plottable</code>.</p>
+<p>Use the <a href="http://www.scala-lang.org/api/current/index.html#scala.collection.immutable.List@map%5BB%5D(f:A=%3EB):List%5BB%5D"><code>map</code> method on <code>List</code></a>:</p>
+<pre><code>class List[+A] {
+  def map[B](f: (A) ⇒ B): List[B] = ...
+  // Builds a new collection by applying a function to all elements of this list.
+}</code></pre>
 <h3 id="task-6c-plotdoubledoublefunction">Task (6c): <code>PlotDoubleDoubleFunction</code></h3>
 <p>Complete the implementation of <code>PlotDoubleDoubleFunction</code>.</p>
 <p>This is a concrete instance of <code>Plottable</code>.</p>
+<p>Use the <a href="http://www.scala-lang.org/api/current/index.html#scala.collection.immutable.List@map%5BB%5D(f:A=%3EB):List%5BB%5D"><code>map</code> method on <code>List</code></a>:</p>
+<pre><code>class List[+A] {
+  def map[B](f: (A) ⇒ B): List[B] = ...
+  // Builds a new collection by applying a function to all elements of this list.
+}</code></pre>
 <h3 id="task-6d-plotter">Task (6d): <code>plotter</code></h3>
 <p><code>plotter</code> is the counterpart to <code>printLabel</code>. <code>plotter</code> will work with any class <code>T</code> of domain <code>D</code> and range <code>R</code> for which there is a <code>Plottable</code> implemented.</p>
 <p>Implement <code>plotter</code>.</p>

@@ -364,6 +364,11 @@ Creates a dense vector from its values.</code></pre>
 <h3 id="task-6b-plotdoubledoublemodel">Task (6b): <code>PlotDoubleDoubleModel</code></h3>
 <p>Complete the implementation of <code>PlotDoubleDoubleModel</code>.</p>
 <p>This is a concrete instance of <code>Plottable</code>.</p>
+<p>Use the <a href="http://www.scala-lang.org/api/current/index.html#scala.collection.immutable.List@map%5BB%5D(f:A=%3EB):List%5BB%5D"><code>map</code> method on <code>List</code></a>:</p>
+<pre><code>class List[+A] {
+  def map[B](f: (A) ⇒ B): List[B] = ...
+  // Builds a new collection by applying a function to all elements of this list.
+}</code></pre>
 <h4 id="answer-6b">Answer (6b)</h4>
 <pre><code>  implicit object PlotDoubleDoubleModel extends Plottable[Double, Double, Model] {
 
@@ -374,6 +379,11 @@ Creates a dense vector from its values.</code></pre>
 <h3 id="task-6c-plotdoubledoublefunction">Task (6c): <code>PlotDoubleDoubleFunction</code></h3>
 <p>Complete the implementation of <code>PlotDoubleDoubleFunction</code>.</p>
 <p>This is a concrete instance of <code>Plottable</code>.</p>
+<p>Use the <a href="http://www.scala-lang.org/api/current/index.html#scala.collection.immutable.List@map%5BB%5D(f:A=%3EB):List%5BB%5D"><code>map</code> method on <code>List</code></a>:</p>
+<pre><code>class List[+A] {
+  def map[B](f: (A) ⇒ B): List[B] = ...
+  // Builds a new collection by applying a function to all elements of this list.
+}</code></pre>
 <h4 id="answer-6c">Answer (6c)</h4>
 <pre><code>  implicit object PlotDoubleDoubleFunction extends Plottable[Double, Double, Function1] {
 

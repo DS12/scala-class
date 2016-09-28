@@ -453,11 +453,31 @@ Complete the implementation of `PlotDoubleDoubleModel`.
 
 This is a concrete instance of `Plottable`.
 
+Use the [`map` method on `List`](http://www.scala-lang.org/api/current/index.html#scala.collection.immutable.List@map[B](f:A=%3EB):List[B]):
+
+```
+class List[+A] {
+  def map[B](f: (A) ⇒ B): List[B] = ...
+  // Builds a new collection by applying a function to all elements of this list.
+}
+```
+
+
 ### Task (6c): `PlotDoubleDoubleFunction`
 
 Complete the implementation of `PlotDoubleDoubleFunction`.
 
 This is a concrete instance of `Plottable`.
+
+Use the [`map` method on `List`](http://www.scala-lang.org/api/current/index.html#scala.collection.immutable.List@map[B](f:A=%3EB):List[B]):
+
+```
+class List[+A] {
+  def map[B](f: (A) ⇒ B): List[B] = ...
+  // Builds a new collection by applying a function to all elements of this list.
+}
+```
+
 
 ### Task (6d): `plotter`
 
