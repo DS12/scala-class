@@ -17,7 +17,7 @@
 #Flagged Arguments
 
     !scala
-    def mean2(xs: Seq[Double], empty: Double): Double =
+    def mean(xs: Seq[Double], empty: Double): Double =
       if (xs.isEmpty) empty
       else xs.sum / xs.length
 
@@ -26,7 +26,7 @@
 #Sentinel Values
 
     !scala
-    def mean1(xs: Seq[Double]): Double =
+    def mean(xs: Seq[Double]): Double =
       if (xs.isEmpty) Double.NaN
       else xs.sum / xs.length
 
@@ -120,22 +120,13 @@ Here is a hard-coded version of `map`:
     !scala
     def map[B](f: A => B): Option[B] =
   	  this match {
-          case None => None
-          case Some(a) => Some(f(a))
-        }
+        case None => None
+        case Some(a) => Some(f(a))
+      }
 
 ---
 
-
-#`flatMap` for `Option`
-
-    !scala
-    def flatMap[B](f: A => Option[B]): Option[B] =
-
-
----
-
-Combinators for safely exiting the `Option` monad:
+There are a number of 'non-proper' combinators for safely exiting the `Option` monad. Two examples:
 
 * [`fold`](https://github.com/typelevel/cats/blob/master/core/src/main/scala/cats/Foldable.scala)
 * [`getOrElse`](https://github.com/typelevel/cats/blob/master/core/src/main/scala/cats/data/OptionT.scala)
@@ -146,11 +137,9 @@ Combinators for safely exiting the `Option` monad:
     !scala
     def getOrElse[B>:A](default: => B): B =
   	  this match {
-          case None => default
-          case Some(a) => a
-        }
-
-We will explain the necessity of the lower type bound generic `B` in the `getOrElse` combinator in a bit.
+        case None => default
+        case Some(a) => a
+      }
 
 ---
 
@@ -177,20 +166,12 @@ Implement `flatMap` using `map` & `getOrElse`.
   	  try { Some(a) }
   	  catch { case e: Exception => None }
 
-
-The `None` returned is not informative about the exception thrown.  Next lecture's type `Either` fixes this.
-
 ---
 
-`=>` in a function argument means the argument is lazy.  `=>` does not memoize.
-If `a` were evaluated eagerly, an exception thrown in its evaluation would be outside the try-catch clause.
+The argument here must be lazy, otherwise `Try` will not function.
 
-Think of lazy argument `a: => A` as a function with no input: `() => A`.
 
-  	!scala
-  	def Try[A](lazyA: () => A): Option[A] =
-  	  try { Some( lazyA() ) }
-  	  catch { case e: Exception => None }
+The `None` returned is not informative about the exception thrown.  Next lecture's type `Either` fixes this.
 
 ---
 
@@ -402,7 +383,7 @@ Implement `sequence[A](a: List[Option[A]]): Option[List[A]]`.
 ---
 
     !scala
-    def sequence1[A](a: List[Option[A]]):
+    def sequence[A](a: List[Option[A]]):
       Option[List[A]] =
         a match {
           case Nil => Some(Nil)
@@ -440,7 +421,7 @@ Reimplement `traverse` so that it traverses the list only once.
 ---
 
     !scala
-    def traverse1[A, B] (a: List[A])(f: A => Option[B]):
+    def traverse[A, B] (a: List[A])(f: A => Option[B]):
       Option[List[B]] =
         a match {
           case Nil => Some(Nil)
@@ -452,7 +433,7 @@ Reimplement `traverse` so that it traverses the list only once.
 ---
 
     !scala
-    def traverse2[A, B] (a: List[A])(
+    def traverse[A, B] (a: List[A])(
 	  f: A => Option[B]): Option[List[B]] =
       a match {
         case Nil => Some(Nil)
@@ -464,9 +445,9 @@ Reimplement `traverse` so that it traverses the list only once.
 
 ---
 
-The fact that `traverse1` and `traverse2` are equivalent is a simple result of the Monad laws.
+The fact that the second two implementations of `traverse` are equivalent is a simple result of the associativity law for Monads.
 
-Note also that `traverse` is not equivalent to the other two, it uses only `map2` and is therefore an applicative functor.
+Note also that the first implementation of `traverse` is not equivalent to the other two, it uses only `map2` and is therefore an applicative (but not necessarily monadic) functor.
 
 We'll discuss this more in the weeks to come.
 
