@@ -18,7 +18,7 @@ object Common {
     "Clojars Repository" at "http://clojars.org/repo",
     "Conjars Repository" at "http://conjars.org/repo",
     "Artima Maven Repository" at "http://repo.artima.com/releases",
-    "Spark Packages Repo Bintray" at "http://dl.bintray.com/spark-packages/maven",
+    //"Spark Packages Repo Bintray" at "http://dl.bintray.com/spark-packages/maven",
     Opts.resolver.sonatypeSnapshots
   )
   
