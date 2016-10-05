@@ -8,12 +8,7 @@ resolvers ++= Seq(
   "sonatype" at "http://oss.sonatype.org/content/groups/public/"
 )
 
-resolvers += Resolver.url(
-  "bintray-sbt-plugins",
-  url("http://dl.bintray.com/sbt/sbt-plugins"))(
-  Resolver.ivyStylePatterns)
-
-addSbtPlugin("org.spark-packages" % "sbt-spark-package" % "0.2.4")
+// addSbtPlugin("org.spark-packages" % "sbt-spark-package" % "0.2.4")
 
 addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.14.3")
 

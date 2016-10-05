@@ -4,7 +4,7 @@ import sbtassembly.AssemblyPlugin._
 
 // Layout influenced by https://github.com/TrueCar/mleap/blob/master/build.sbt
 
-spIgnoreProvided := true
+// spIgnoreProvided := true
 
 lazy val root = project.in(file(".")).
   settings(Common.settings).
