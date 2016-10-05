@@ -14,9 +14,10 @@ object Common {
   lazy val otherResolvers = Seq(
     "bintray/non" at "http://dl.bintray.com/non/maven",
     "Sonatype Releases" at "https://oss.sonatype.org/content/repositories/releases/",
+    "sonatype" at "http://oss.sonatype.org/content/groups/public/",
     "twitter-repo" at "https://maven.twttr.com",
     "Clojars Repository" at "http://clojars.org/repo",
-    "Conjars Repository" at "http://conjars.org/repo",
+    "conjars" at "http://conjars.org/repo",
     "Artima Maven Repository" at "http://repo.artima.com/releases",
     //"Spark Packages Repo Bintray" at "http://dl.bintray.com/spark-packages/maven",
     Opts.resolver.sonatypeSnapshots
@@ -29,6 +30,10 @@ object Common {
     organization := "com.datascience.education",
     scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature"),
     resolvers ++= otherResolvers,
+    resolvers += Resolver.url(
+      "bintray-sbt-plugins",
+      url("http://dl.bintray.com/sbt/sbt-plugins"))(
+      Resolver.ivyStylePatterns),
     libraryDependencies ++= Dependencies.dependencies
   )
 
