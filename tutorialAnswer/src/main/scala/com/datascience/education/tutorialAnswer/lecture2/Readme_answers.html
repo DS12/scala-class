@@ -1,0 +1,830 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>Readme_answers.html</title>
+
+</head>
+
+<body>
+
+<h1>Folding Tutorial - Answers</h1>
+
+<h2>Part 0: Setup</h2>
+
+<h3>Task (0a)</h3>
+
+<p>In your editor of choice, open <code>../tutorial/src/main/scala/com/datascience/education/tutorial/lecture2/Folding.scala</code>.  </p>
+
+<h3>Task (0b)</h3>
+
+<ul>
+<li><p>In a terminal, navigate to <code>../tutorial/src/main/scala/com/datascience/education/tutorial/lecture2/</code>.  </p></li>
+<li><p>Enter <code>scala-2.11 -i Folding.scala</code>.  Warnings can be ignored.
+<code>
+bash-3.2$ scala-2.11 -i Folding.scala
+Loading Folding.scala...
+defined object Folding
+Welcome to Scala version 2.11.7 (Java HotSpot(TM) 64-Bit Server VM, Java 1.8.0_74).
+Type in expressions to have them evaluated.
+Type :help for more information.
+scala&gt;
+</code></p></li>
+<li><p>import the members of <code>object Folding</code> 
+<code>
+scala&gt; import Folding._
+import Folding._
+scala&gt;
+</code></p></li>
+<li>enter <code>myToString(List(1,2,3,4,5))</code>
+<code>
+scala&gt;   myToString(List(1,2,3,4,5))
+res0: String = Cons(1, Cons(2, Cons(3, Cons(4, Cons(5, Nil)))))
+scala&gt;
+</code></li>
+</ul>
+
+<h2>Part 1: Refactoring with <code>foldRight</code></h2>
+
+<h3>(1a): Background</h3>
+
+<p><code>myToString</code> is a very simple <a href="http://www.lihaoyi.com/upickle-pprint/pprint/">pretty printer</a>.  </p>
+
+<p>"pretty" is subjective.  In this context, we want to print the <code>List</code> in a way that exposes its structure.</p>
+
+<p>The default <code>String</code> representation of a <code>List</code> makes it look more like an <code>Array</code> or <code>Vector</code>.
+<code>
+scala&gt; List(1,2,3,4)
+res1: List[Int] = List(1, 2, 3, 4)
+</code>
+We want to depict our <code>List</code> as the linked list that it is.
+<code>
+scala&gt; myToString(List(1,2,3,4))
+res2: String = Cons(1, Cons(2, Cons(3, Cons(4, Nil))))
+</code></p>
+
+<h3>(1b): Refactoring using <code>foldRight</code></h3>
+
+<p>We are provided an implementation of <code>foldRight</code></p>
+
+<p><code>
+  def foldRight[A, B](list: List[A], z: B)(f:(A, B) =&gt; B): B =
+    list match {
+      case Nil =&gt; z
+      case x :: xs =&gt; f(x, foldRight(xs, z)(f))
+    }
+</code></p>
+
+<p><a href="https://en.wikipedia.org/wiki/Fold_(higher-order_function">Folding</a>) is initially less familiar than pattern matching and recursion, so it is understandable why pattern matching and recursion are taught first.  Pattern matching is particularly prevalent in Scala development that does not utilize functional programming -- plenty of people use Scala in this way.</p>
+
+<p><em>FP in Scala</em> contains exercises that ask you to use <code>foldLeft</code>, <code>foldRight</code> or other combinators rather than pattern matching.  We will do the same in this tutorial, to develop an intuition for folding.</p>
+
+<p>A <em>primitive</em> combinator may be implemented with pattern matching.  Non-primitive combinators should be implemented on top of other combinators. Of course we can't implement combinator A on top of combinator B, and visa versa.  The implementations of <code>foldLeft</code> and <code>foldRight</code> below are <em>primitive</em>.</p>
+
+<p>We will replace the patterning matching in <code>myToString</code> with <code>foldRight</code> in <code>myToString2</code>.</p>
+
+<p>```
+  def myToString<a href="list: List[A]">A</a>: String = list match {
+    case Nil => "Nil"
+    case head :: tail => "Cons(" + head + ", " + myToString(tail) + ")"
+  }</p>
+
+<p>def myToString2(list: List[String]): String = ???</p>
+
+<p>```</p>
+
+<p>Let's fill in the generic types of <code>foldRight</code>.  We will use <code>foldRight</code> to fold a <code>List</code> of <code>String</code>s into a single <code>String</code>.</p>
+
+<p>```
+  def foldRight<a href="list: List[A], z: B">A, B</a>(f: (A, B) => B): B = ...</p>
+
+<p>def myToString2(list: List[String]): String = 
+    foldRight<a href="list: List[String], z: String">String, String</a>(f: (String, String) => String)
+                                                  ^ base case      ^ Next String in List
+                                                                            ^ Accumulated so far
+                                                                                       ^ Next accumulation
+```</p>
+
+<p>If I were to print out the accumulating <code>String</code> at every step of <code>foldRight</code>, the steps would look like this.</p>
+
+<p><code>
+scala&gt; myToString(List(1,2,3,4))
+  Nil
+  Cons(4, Nil)
+  Cons(3, Cons(4, Nil))
+  Cons(2, Cons(3, Cons(4, Nil)))
+  Cons(1, Cons(2, Cons(3, Cons(4, Nil))))
+res2: String = Cons(1, Cons(2, Cons(3, Cons(4, Nil))))
+</code></p>
+
+<p>Let's implement anonymous function <code>f</code>, to be used in <code>foldRight</code></p>
+
+<p><code>
+(next: String, accumulated: String) =&gt; "Cons(" + next + ", " + accumulated + ")"
+</code></p>
+
+<p>Equivalently,</p>
+
+<p><code>
+  def foo(head: String, tail: String): String =
+    "Cons(" + head + ", " + tail + ")"
+</code></p>
+
+<p>What is the base case?  What <code>String</code> will <code>foldRight</code> produce for an empty <code>List</code>?  "Nil"</p>
+
+<p><code>
+  def myToString2(list: List[String]): String = foldRight(list,"Nil"){
+    (next: String, accumulated: String) =&gt; "Cons(" + next + ", " + accumulated + ")"
+  }
+</code></p>
+
+<p>equivalently</p>
+
+<p><code>
+  def myToString2(list: List[String]): String = foldRight(list,"Nil")(foo)
+</code></p>
+
+<p>Try <code>myToString2</code> with a <code>List</code> of <code>String</code>s</p>
+
+<p>```
+scala>   myToString2(List("1","2","3","4","5"))</p>
+
+<p>res5: String = Cons(1, Cons(2, Cons(3, Cons(4, Cons(5, Nil)))))
+```</p>
+
+<h3>(1c): Folding over a Generic</h3>
+
+<p><code>myToString2</code> needs a fix. <br />
+<code>myToString</code> will turn a List containing any type <code>A</code> into a String.  <a href="http://www.scala-lang.org/api/current/index.html#scala.Any@toString(">Every type in Scala has a String representation</a>:String), so this is allowable.</p>
+
+<p><code>
+  def myToString[A](list: List[A]): String = list match {
+    case Nil =&gt; "Nil"
+    case head :: tail =&gt; "Cons(" + head + ", " + myToString(tail) + ")"
+                          //        ^^ implicit conversion from A to String
+  }
+</code>
+Right now, <code>myToString2</code> will only take in <code>List[String]</code>
+<code>
+  def myToString2(list: List[String]): String = ???
+</code></p>
+
+<p>We need to replace <code>foldRight[String, String]</code> with <code>foldRight[A,String]</code></p>
+
+<p>```
+  def foo2<a href="head: A, tail: String">A</a>: String =
+    "Cons(" + head + ", " + tail + ")"
+               ^^ implicit conversion from A to String</p>
+
+<p>def myToString3<a href="list: List[A]">A</a> = foldRight<a href="list," title="Nil">A,String</a>(foo2)
+```
+Problem solved</p>
+
+<p><code>
+scala&gt; myToString3(List(1,2,3,4))
+res4: String = Cons(1, Cons(2, Cons(3, Cons(4, Nil))))
+</code></p>
+
+<h2>Part 2: <code>foldRight</code> versus <code>foldLeft</code></h2>
+
+<h3>(2a): <code>foldRight</code> intuition</h3>
+
+<p><code>
+  def foldRight[A, B](list: List[A], z: B)(f: (A, B) =&gt; B): B =
+    list match {
+      case Nil =&gt; z
+      case x :: xs =&gt; f(x, foldRight(xs, z)(f))
+    }
+</code></p>
+
+<p>Here is a modified implementation of <code>foldRight</code> that prints the input and output of each call to <code>foldRightPrinter</code>.  It can be used to print stack traces.</p>
+
+<p>```
+  def foldRightPrinter<a href="list: List[A], z: B">A, B</a>(f:(A, B) => B): B = {
+    println(s"input: $list")
+    val out: B = list match {
+      case Nil => z
+      case x :: xs => f(x, foldRightPrinter(xs, z)(f))
+    }
+    println(s"output: $out")
+    out
+  }</p>
+
+<p>def myToString3Printer<a href="list: List[A]">A</a> =
+    foldRightPrinter<a href="list," title="Nil">A,String</a>(foo2)
+```</p>
+
+<p>Stack trace of <code>myToString3Printer</code> with input <code>List(1,2,3,4)</code></p>
+
+<p><code>
+scala&gt; myToString3Printer(List(1,2,3,4))
+input: List(1, 2, 3, 4)
+input: List(2, 3, 4)
+input: List(3, 4)
+input: List(4)
+input: List()
+output: Nil
+output: Cons(4, Nil)
+output: Cons(3, Cons(4, Nil))
+output: Cons(2, Cons(3, Cons(4, Nil)))
+output: Cons(1, Cons(2, Cons(3, Cons(4, Nil))))
+res10: String = Cons(1, Cons(2, Cons(3, Cons(4, Nil))))
+</code></p>
+
+<p><code>List(1,2,3,4)</code> is the tree on the left.</p>
+
+<p>Each application of <code>foo2</code> is an <code>f</code> in the tree on the right.</p>
+
+<p>Each <code>f</code> must wait for the <code>f</code> below it to compute.</p>
+
+<p>Each <code>f</code> "waits" on the stack.  <code>foldRight</code> uses memory in the stack proportionally to the size of its input <code>List</code>.</p>
+
+<p><img src="images/Right-fold-transformation.png" alt="" title="" /></p>
+
+<p><a href="https://en.wikipedia.org/wiki/Fold_(higher-order_function">Source</a>)</p>
+
+<h3>(2b): <code>foldLeft</code> intuition</h3>
+
+<p>Just as before,</p>
+
+<p><code>List(1,2,3,4)</code> is the tree on the left.</p>
+
+<p>Each application of <code>foo2</code> is an <code>f</code> in the tree on the right,</p>
+
+<p><em>but</em> <code>foldLeft</code> <em>does not</em> use memory in the stack proportionally to the size of its input <code>List</code>.  <code>foldLeft</code> <em>does</em> reverse its input.  If your <code>f</code> is not commutative, you need to compensate for this.</p>
+
+<p>In other words, each <code>f</code> does <em>not</em> have to wait.</p>
+
+<p>Left unstated in this diagram is the reversal of the input <code>List</code>.  Note, in the <code>foldRight</code> diagram, <code>z</code> is combined with <code>5</code>.  In the <code>foldLeft</code> diagram, <code>z</code> is combined with <code>1</code>.</p>
+
+<p><img src="images/Left-fold-transformation.png" alt="" title="" /></p>
+
+<p><a href="https://en.wikipedia.org/wiki/Fold_(higher-order_function">Source</a>)</p>
+
+<p>```</p>
+
+<p>def foldRight<a href="list: List[A], z: B">A, B</a>(f: (A, B) => B): B =
+    list match {
+      case Nil => z
+      case head :: tail => f(head, foldRight(tail, z)(f))
+      //                            ^^ has to return before f can be applied
+    }</p>
+
+<p>@annotation.tailrec
+  def foldLeft<a href="list: List[A], z: B">A,B</a>(f: (B, A) => B): B =
+    list match {
+      case Nil => z
+      case head :: tail => foldLeft(tail, f(z, head))(f)
+      //                                  ^^ start combining at the end of the List
+      //                                     rather than at the beginning
+    }
+```
+<a href="http://stackoverflow.com/questions/3114142/what-is-the-scala-annotation-to-ensure-a-tail-recursive-function-is-optimized">\@annotation.tailrec</a></p>
+
+<p>An implementation of <code>foldLeft</code> for producing stack traces.</p>
+
+<p><code>
+  def foldLeftPrinter[A,B](list: List[A], z: B)(f: (B, A) =&gt; B): B = {
+    println(s"input: $list")
+    val out: B = list match {
+      case Nil =&gt; z
+      case head :: tail =&gt; {
+        val zi: B = f(z, head)
+        println(s"f($z, $head) = $zi")
+        foldLeftPrinter(tail, zi)(f)
+      }
+    }
+    println(s"output: $out")
+    out
+  }
+</code></p>
+
+<p>See below, <code>f</code> waits for nothing before it can be applied.</p>
+
+<p><code>
+scala&gt; myToString4Printer(List(1,2,3,4))
+input: List(1, 2, 3, 4)
+f(Nil, 1) = Cons(1, Nil)
+input: List(2, 3, 4)
+f(Cons(1, Nil), 2) = Cons(2, Cons(1, Nil))
+input: List(3, 4)
+f(Cons(2, Cons(1, Nil)), 3) = Cons(3, Cons(2, Cons(1, Nil)))
+input: List(4)
+f(Cons(3, Cons(2, Cons(1, Nil))), 4) = Cons(4, Cons(3, Cons(2, Cons(1, Nil))))
+input: List()
+output: Cons(4, Cons(3, Cons(2, Cons(1, Nil))))
+output: Cons(4, Cons(3, Cons(2, Cons(1, Nil))))
+output: Cons(4, Cons(3, Cons(2, Cons(1, Nil))))
+output: Cons(4, Cons(3, Cons(2, Cons(1, Nil))))
+output: Cons(4, Cons(3, Cons(2, Cons(1, Nil))))
+res14: String = Cons(4, Cons(3, Cons(2, Cons(1, Nil))))
+</code></p>
+
+<p>But notice that <code>res14: String</code> is reversed, compared to the <code>String</code> produced by <code>foldRight</code>.  Reversing the input to <code>myToString4</code> can compensate for this.  (<code>List</code> reversal has its own costs, of course.)</p>
+
+<p><code>foldLeftPrinter</code> actually breaks tail recursion.</p>
+
+<p>The problem is <code>println(s"output: $out")</code>.</p>
+
+<p>Intuitively, a recursive function is <a href="https://en.wikipedia.org/wiki/Tail_call"><em>tail recursive</em></a> if the recursion <em>exits</em> at the bottom.</p>
+
+<p><code>
+  @annotation.tailrec
+  def tailRecursive(i: Int): Int =
+    if (i&gt;100) i
+    else tailRecursive(i+1)
+</code></p>
+
+<p>A recursive function is <em>not</em> tail recursive if the recursion goes <em>down</em>, and then back <em>up</em>, to exit at the top.</p>
+
+<p><code>
+  def notTailRecursive(i: Int): Int =
+    if (i &gt; 100) i
+    else i + notTailRecursive(i+1)
+    //     ^ work waits for notTailRecursive(i+1) to finish
+</code></p>
+
+<h3>(2c): <code>foldRight</code> implemented with <code>foldLeft</code></h3>
+
+<p>We saw in Part 1e that <code>foldLeft</code> behaves like <code>foldRight</code> <em>but</em> its output is reversed.</p>
+
+<p>If your fold operation <code>f</code> is commutative, you'll never notice the difference.</p>
+
+<p>```
+  def sumFoldRight(list: List[Int]): Int =
+    foldRight(list, 0)((next: Int, sum: Int) => next+sum)</p>
+
+<p>def sumFoldLeft(list: List[Int]): Int =
+    foldLeft(list, 0)((sum: Int, next: Int) => next+sum)
+```</p>
+
+<p>Our string building function is <em>not</em> commutative, so we <em>do</em> notice the difference.</p>
+
+<p>We also saw in Part 1e that this negative aspect of <code>foldLeft</code> can be compensated for my reversing the input to <code>foldLeft</code>.</p>
+
+<p>```
+// with foldRight
+scala> myToString3(List(1,2,3,4))
+res17: String = Cons(1, Cons(2, Cons(3, Cons(4, Nil))))</p>
+
+<p>// with foldLeft
+scala> myToString4(List(1,2,3,4))
+res15: String = Cons(4, Cons(3, Cons(2, Cons(1, Nil))))</p>
+
+<p>// with foldLeft
+scala> myToString4(List(4,3,2,1))
+res16: String = Cons(1, Cons(2, Cons(3, Cons(4, Nil))))
+```</p>
+
+<p>Lets bake this fix into a new function, <code>foldRightViaFoldLeft</code>.</p>
+
+<p>```
+def foldRight<a href="list: List[A], z: B">A, B</a>(f:(A, B) => B): B = ...</p>
+
+<p>@annotation.tailrec
+def foldLeft<a href="list: List[A], z: B">A,B</a>(f: (B, A) => B): B = ...
+<code>``
+The arguments to</code>f<code>are reversed in</code>foldRight<code>and</code>foldLeft<code>.</code>f:(A, B) => B<code>versus</code>f:(B, A) => B<code>.
+The reversal has meaning later in the book, with lazy folding on</code>Stream`s.</p>
+
+<p>We compensate for this reversal with an anonymous function, <code>(b: B, a: A) =&gt; f(a,b)</code>
+```
+def foldRightViaFoldLeft<a href="l: List[A], z: B">A,B</a>(f: (A,B) => B): B =
+  foldLeft(l.reverse, z)((b,a) => f(a,b))</p>
+
+<p>``` </p>
+
+<p>Because <code>foldRightViaFoldLeft</code> is implemented on top of <code>foldLeft</code>, <code>foldRightViaFoldLeft</code> is <em>not</em> a primitive combinator.</p>
+
+<p>Note that <code>@annotation.tailrec</code> is unnecessary for <code>foldRightViaFoldLeft</code>.  <code>foldLeft</code> handles this optimization.
+<code>
+@tailrec annotated method contains no recursive calls
+[error]   def foldRightViaFoldLeft[A,B](l: List[A], z: B)(f: (A,B) =&gt; B):
+</code></p>
+
+<p><code>foldRightViaFoldLeft</code> is tail-recursive like <code>foldLeft</code>, <em>but</em> incurs the cost of reversing its input <code>List</code>.</p>
+
+<p><code>foldRightViaFoldLeft</code> is unnecessary when <code>f</code> is commutative -- just use <code>foldLeft</code> in this case.</p>
+
+<h2>Part 3: Building tools</h2>
+
+<p>In this part, we switch from using <code>foldRight</code> and <code>foldLeft</code> implemented above to their production equivalents in the Scala Collections.</p>
+
+<p><a href="http://www.scala-lang.org/api/current/index.html#scala.collection.immutable.List"><code>abstract class List[+A]</code></a> <code>{</code></p>
+
+<pre><code>...
+def foldRight[B](z: B)(op: (A, B) ⇒ B): B = ...
+</code></pre>
+
+<p><a href="http://www.scala-lang.org/api/current/index.html#scala.collection.immutable.List@foldRight[B](z:B">Scaladoc</a>(op:(A,B)=>B):B)</p>
+
+<pre><code>...
+
+def foldLeft[B](z: B)(op: (B, A) ⇒ B): B = ...
+</code></pre>
+
+<p><a href="http://www.scala-lang.org/api/current/index.html#scala.collection.immutable.List@foldLeft[B](z:B">Scaladoc</a>(op:(B,A)=>B):B)</p>
+
+<pre><code>...
+</code></pre>
+
+<p><code>}</code></p>
+
+<h3>(3a): <code>average</code></h3>
+
+<p><code>average</code> uses two folds.  The numerator fold is the sum, and the denominator fold is the count.</p>
+
+<p>```
+  def average(list: List[Double]): Double =
+    list.foldLeft(0.0)(<em>+</em>) /
+    list.foldLeft(0.0)((count, next) => count+1)</p>
+
+<p>```
+Let's make the types more explicit</p>
+
+<p>```
+@annotation.tailrec
+def foldLeft<a href="z: B">B</a>(f: (B, A) => B): B = ...</p>
+
+<p>def average(list: List[Double]): Double =
+  list.foldLeft<a href="0.0">Double</a>((sum: Double, next: Double) => sum + next) /
+  list.foldLeft<a href="0">Int</a>((count: Int, next: Double) => count+1)
+  //                                  ^^ not used for anything
+```</p>
+
+<p>This will throw a runtime exception (0 / 0) if given an empty <code>List</code>.</p>
+
+<h3>Task: <code>average2</code></h3>
+
+<p>Complete the implementation of <code>average2</code>.
+Instead of using two folds to calculate the average of <code>List[Double]</code>, we accomplish the same thing in one fold.</p>
+
+<p>Type <code>B</code> inside <code>foldLeft</code> is a tuple, <code>(Double, Int)</code>.  The first member of the tuple is the sum, and the second member of the tuple is the count.</p>
+
+<p>You can construct a tuple of type <code>(Int, String)</code> like so:
+<code>
+scala&gt; (123, "abc")
+res18: (Int, String) = (123,abc)
+</code></p>
+
+<p>```
+  def average2(list: List[Double]): Double = {</p>
+
+<pre><code>val tuple: (Double, Int) =
+  list.foldLeft[(Double,Int)]((0.0, 0)){
+    case ((sum: Double, count: Int), next: Double) =&gt;
+      ???
+  }
+
+tuple._1 / tuple._2
+</code></pre>
+
+<p>}
+```</p>
+
+<p>This will throw a runtime exception (0 / 0) if given an empty <code>List</code>.</p>
+
+<h3>Task (3b): <code>contains</code></h3>
+
+<p>Fold through a list.  Return false if <code>item</code> is not in the List.  True otherwise.</p>
+
+<p><code>
+  def contains[A](list: List[A], item: A): Boolean =
+    list.foldLeft(false){(detected: Boolean, next: A) =&gt; 
+       detected || item.equals(next)
+    }
+</code></p>
+
+<p>Written more concisely,</p>
+
+<p><code>
+  def contains2[A](list: List[A], item: A): Boolean =
+    list.foldLeft(false)(_ || _ == item)
+</code></p>
+
+<p>Here the "base case" is <code>false</code> -- the List does not contain <code>item</code>.</p>
+
+<p>We choose an initial value of false. That is, we’ll assume the item is not in the list until we can prove otherwise. We use each of the two parameters exactly once and in the proper order, so we can use the ‘_’ shorthand in our function literal. That function literal returns the result so far (a Boolean) ORed with a comparison of the current item and the target value. If the target is ever found, the accumulator becomes true and stays true as foldLeft continues.</p>
+
+<h3>Task (3c): <code>last</code></h3>
+
+<p>Returns the last element of the List.  Intuitively, each element is the "last" until the next iteration of <code>foldLeft</code>.</p>
+
+<p>Even though <code>foldLeft</code> works "in reverse", this works correctly and returns the <code>last</code> element in the input, here.</p>
+
+<p><code>
+  def last[A](list: List[A]): A = list.foldLeft[A](list.head)((_, c) =&gt; c)
+</code>
+The base case is the head of the list -- the last element if the List is of length 1.  Although this element will be processed <em>twice</em>, it makes to difference in practice -- in this case.</p>
+
+<p><code>head</code>, and by extension, <code>last</code>, will throw a run-time exception if the <code>List</code> is empty.</p>
+
+<p>In this example, you are permitted to throw a runtime exception if the <code>List</code> is empty.  Later we will improve upon this.</p>
+
+<p><a href="http://www.scala-lang.org/api/current/index.html#scala.collection.immutable.List@head:A"><code>def head: A</code></a></p>
+
+<p><code>NoSuchElementException if the iterable collection is empty.</code></p>
+
+<p>When it gets to the end of the list, the accumulator holds the last item. We don’t use the accumulator value in the function literal, so it gets parameter name ‘_’</p>
+
+<h3>Task (3d): <code>penultimate</code></h3>
+
+<p>Returns the second-to-last element.  Throws a runtime exception if the List is shorter than 2 elements.</p>
+
+<p>This one is like the function ‘last’, but instead of keeping just the current item it keeps a Pair containing the previous and current items. When foldLeft completes, its result is a Pair containing the next-to-last and last items. The “_1” method returns just the penultimate item. Using a tuple as type <code>B</code> is similar to our solution for <code>average2</code>.  We will also use a tuple for type <code>B</code> in <code>average3</code>.</p>
+
+<p>Hint: Throws a runtime exception if the List is shorter than 2 elements.  Permitted.</p>
+
+<p>Hint: type <code>B</code> is a tuple.  The fold will produce a tuple.  Use <code>tuple._1</code> or <code>tuple._2</code> to extract the penultimate <code>A</code> from the tuple, after the fold has completed.</p>
+
+<p>Hint: use <code>(list.head, list.tail.head)</code></p>
+
+<p><code>
+  def penultimate[A](list: List[A]): A =
+    list.foldLeft( (list.head, list.tail.head) )((r, c) =&gt; (r._2, c) )._1
+</code></p>
+
+<h3>Task (3e): <code>average3</code></h3>
+
+<p>Our previous implementations of <code>average</code> were flawed because a runtime exception (0 / 0) would be thrown if given an empty <code>List</code>.</p>
+
+<p><code>average3</code> will handle an empty List input better.  Build off your implementation of <code>average2</code> and use pattern matching to return <code>Double.NaN</code> if the input list is <code>Nil</code>, instead of throwing a run-time exception like with <code>average2</code>.</p>
+
+<p>Additionally, use the formula for <a href="https://en.wikipedia.org/wiki/Moving_average#Cumulative_moving_average"><em>Cumulative moving average</em></a> to calculate the average <em>inside</em> the fold, rather than outside the fold as in <code>average2</code>.</p>
+
+<p>Type <code>B</code> inside <code>foldLeft</code> is a tuple, <code>(Double, Int)</code>.  The first member of the tuple is the cumulative moving average, and the second member of the tuple is the count.</p>
+
+<p><code>
+  def average3(list: List[Double]): Double =
+    list match {
+      case Nil =&gt; Double.NaN
+      case head :: tail =&gt; tail.foldLeft((head,1)){ (avg, nxt) =&gt;
+        ( (avg._1+(nxt/avg._2)) * avg._2/(avg._2+1), avg._2+1)
+      }._1
+    }
+</code></p>
+
+<h3>Task (3f): <code>kthLast</code></h3>
+
+<p>Generalize <code>penultimate</code>.</p>
+
+<p>Hint: type <code>B</code> is <code>List[A]</code>.</p>
+
+<p>Hint: Grow a list of length <code>k</code>.</p>
+
+<p>Hint: <code>foldRight</code> starts at the <em>end</em> of the input list.</p>
+
+<p><code>
+  def kthLast[A](l: List[A], k: Int) = {
+    def getK[A](elt: A, cache: List[A]): List[A] =
+      if (cache.length == k) cache
+      else elt :: cache
+    l.foldRight(List[A]())(getK) head
+  }
+</code></p>
+
+<h3>Task (3g): <code>passThrough</code></h3>
+
+<p>This builds the intuition for <code>mapViaFoldLeft</code></p>
+
+<p>Use <code>foldLeft</code> or <code>foldRight</code> to simply pass though the list, making no changes to it.</p>
+
+<p><code>
+  def passThrough[A](list: List[A]): List[A] =
+    list.foldLeft(List[A]()) { (xs: List[A], x: A) =&gt; x :: xs }.reverse
+</code></p>
+
+<p><em>or</em></p>
+
+<p><code>
+  def passThrough[A](list: List[A]): List[A] =
+    list.reverse.foldLeft(List[A]()) { (xs: List[A], x: A) =&gt; x :: xs }
+</code></p>
+
+<h3>Task (3h): <code>mapViaFoldLeft</code></h3>
+
+<p>Reminder</p>
+
+<p><code>List(65, 66, 67).map((i: Int) =&gt; i.toChar) = List('A', 'B', 'C')</code></p>
+
+<p>We will re-implement <code>map</code></p>
+
+<p><a href="http://www.scala-lang.org/api/current/index.html#scala.collection.immutable.List@map[B](f:A=>B">def map[B](f: (A) ⇒ B): List[B]</a>:List[B])</p>
+
+<p><code>Builds a new collection by applying a function to all elements of this list.</code></p>
+
+<p>Essentially <code>passThrough</code> but apply <code>f</code> to each element of the input <code>List</code></p>
+
+<p><code>
+  def mapViaFoldLeft[A,B](list: List[A], f: A =&gt; B): List[B] =
+    list.foldLeft(List[B]()) { (xs: List[B], x: A) =&gt;  f(x) :: xs }.reverse
+</code></p>
+
+<p><em>or</em></p>
+
+<p><code>
+  def mapViaFoldLeft[A,B](list: List[A], f: A =&gt; B): List[B] =
+    list.reverse.foldLeft(List[B]()) { (xs: List[B], x: A) =&gt;  f(x) :: xs }
+</code></p>
+
+<h3>(3i): <code>unique</code></h3>
+
+<p>Remove duplicate elements from the input <code>List</code>.  Preserve the order of the unique elements in the input <code>List</code>.</p>
+
+<p>Intuitively, build a new list <code>accumulator</code> and only prepend elements that aren't already contained by <code>accumulator</code>.</p>
+
+<p><code>
+  def unique[A](list: List[A]): List[A] =
+    list.foldLeft(List[A]()) { (accumulator: List[A], next: A) =&gt;
+      if ( accumulator.contains(next) ) accumulator
+      else next :: accumulator
+    }.reverse
+</code></p>
+
+<p>As usual, we start with an empty list. foldLeft looks at each list item and if it’s already contained in the accumulator then then it stays as it is. If it’s not in the accumulator then it’s appended. This code bears a striking similarity to the ‘reverse’ function we wrote earlier except for the “if (r.contains(c)) r” part. Because of this, the foldLeft result is actually the original list with duplicates removed, but in reverse order. To keep the output in the same order as the input, we add the call to reverse.</p>
+
+<h3>(3j): <code>double</code></h3>
+
+<p>Make a copy of each element of the list.  Pair the copy with the original.</p>
+
+<p><code>List(1,2,3) =&gt; List(1,1,2,2,3,3)</code></p>
+
+<p><code>Cons(1,Cons(2,Cons(3,Nil))) =&gt; Cons(1,Cons(1,Cons(2,Cons(2,Cons(3,Cons(3,Nil))))))</code></p>
+
+<p>Reverse to preserve order.</p>
+
+<p><code>
+  def double[A](list: List[A]): List[A] =
+    list.foldLeft(List[A]())((r,c) =&gt; c :: c :: r).reverse
+</code></p>
+
+<p>See a pattern? When you use foldLeft to transform one list into another, you usually end up with the reverse of what you really want.</p>
+
+<p>Alternately, you could have used the foldRight method instead. This does the same thing as foldLeft, except it accumulates its result from back to front instead of front to back.</p>
+
+<h3>(3k): <code>stackSort</code></h3>
+
+<p>An implementation of <a href="https://en.wikipedia.org/wiki/Insertion_sort">insertion sort</a>.</p>
+
+<p>Not <a href="https://en.wikipedia.org/wiki/In-place_algorithm">in-place</a> insertion sort.</p>
+
+<p>Uses <a href="http://www.scala-lang.org/api/current/index.html#scala.collection.immutable.List@partition(p:A=>Boolean"><code>partition</code> on the Scala Collections immutable list.</a>:(Repr,Repr))</p>
+
+<p>```
+def partition(p: (A) ⇒ Boolean): (List[A], List[A])</p>
+
+<p>Partitions this traversable collection in two traversable collections according to a predicate.
+```</p>
+
+<p><code>partition</code> requires a function to split the list by.  For each element in the list being partitioned, if the function returns false, the element goes in the left List.  Otherwise, the right List.</p>
+
+<p><code>front</code> and <code>back</code> are two lists.  <code>front</code> will be all elements less than <code>next</code>.  <code>back</code> will be all elements equal or greater than <code>next</code>.</p>
+
+<p><code>partition</code> does not order the elements in <code>front</code> and <code>back</code>, but they will have been ordered correctly by previous steps of the fold.</p>
+
+<p><code>
+val (front, back) = ordered.partition{(a: A) =&gt;
+        implicitly[Ordering[A]].lt(next, a)
+      }
+</code>
+<a href="http://www.scala-lang.org/api/current/index.html#scala.math.Ordering"><code>Ordering</code></a></p>
+
+<p><a href="http://www.scala-lang.org/api/current/index.html#scala.math.Ordering@lt(x:T,y:T"><code>less than</code></a>:Boolean)
+```
+def lt(x: T, y: T): Boolean</p>
+
+<p>Return true if x &lt; y in the ordering.</p>
+
+<p>```</p>
+
+<p>The sorting algorithm.  For each element in <code>list</code>, partition the ordered list and insert the element in the middle.</p>
+
+<p>```
+  def stackSort<a href="list: List[A]">A : Ordering</a>: List[A] =
+    list.foldLeft(List<a href="">A</a>) { (ordered: List[A], next: A) =>
+      val (front, back) = ordered.partition{(a: A) =>
+        implicitly[Ordering[A]].lt(next, a)
+      }</p>
+
+<pre><code>  front ::: next :: back
+  //        ^ insert the next element in the middle
+  //        ^ next is greater than all elements in front
+  //       and less than or equal to the least element of back
+}
+</code></pre>
+
+<p>```</p>
+
+<p>This can be done as an insertion sort using the foldLeft API. First, the type parameter ensures that we have elements that can be arranged in order. We start, predictably, with an empty list as our initial accumulator. Then, for each item we assume the accumulator is in order (which it always will be), and use span to split it into two sub-lists: all already-sorted items less than the current item, and all already-sorted items greater than or equal to the current item. We put the current item in between these two and the accumulator remains sorted. This is, of course, not the fastest way to sort a list. But it’s a neat foldLeft trick.</p>
+
+<h3>(3l): Max difference</h3>
+
+<p>Find the maximum difference between any pair of integers in the input <code>List[Int]</code>.</p>
+
+<p>The naive solution is to generate every pair of integers, and calculate the difference of each pair.</p>
+
+<p>We will find the answer in one pass though the input <code>List[Int]</code>.</p>
+
+<p>A 3-tuple <code>(Int, Int, Int)</code> stores <code>(minimum number encountered, maximum number encountered, maximum difference encountered)</code>.</p>
+
+<p>This tuple is updated with each element taken from the input <code>List[Int]</code>:
+<code>
+  def updateDiffs(tup: (Int, Int, Int), x: Int): (Int, Int, Int) =
+    tup match {
+      case (mn, mx, diff) if x &lt; mn =&gt; (x, mx, mx-x) // a new low
+      case (mn, mx, diff) if x &gt; mx =&gt; (mn, x, x-mn) // a new high
+      case _ =&gt; tup // element x was not higher or lower than elements previously encountered.  Maximum difference remains the same.
+    }
+</code></p>
+
+<p>Note that a single value of <code>x</code> cannot set <em>both</em> "a new low" and "a new high" -- each case "breaks" the pattern match.  In a <a href="https://docs.oracle.com/javase/tutorial/java/nutsandbolts/switch.html">Java Switch statement</a>, a single input may match more than one case, if <code>break;</code> is not used.  </p>
+
+<p><code>break;</code> is not used in Scala, but Scala pattern matching breaks out of each case -- <code>break</code> is built-in to Scala pattern matching.  If matching multiple cases were allowed in Scala, it would be <em>anti-pattern</em>.</p>
+
+<p>The third element of the 3-tuple isn't necessary, because we could of course calculate the difference at the end of the fold, with the known highest and lowest numbers from the input.  We want to move as much logic as possible <em>inside</em> the fold, for extendability later.  Maybe it'd be useful to know the maximum difference thus far in the fold, in some future use case.</p>
+
+<p><code>updateDiffs</code> fits nicely with <code>foldLeft</code></p>
+
+<p>```
+def updateDiffs(tup: (Int, Int, Int), x: Int): (Int, Int, Int) = ...</p>
+
+<p>// list[A].foldLeft<a href="z: B">B</a>(op: (B, A) ⇒ B): B</p>
+
+<p>A = Int</p>
+
+<p>B = (Int, Int, Int)
+```</p>
+
+<p>We need an <em>initial</em> tuple for the starting value <code>z</code> of the fold.</p>
+
+<p>```
+  list.foldLeft((???, ???, ???)) {(tup, x) => updateDiffs(tup,x)}</p>
+
+<h2>```</h2>
+
+<p><em>Not</em> appropriate:</p>
+
+<ul>
+<li><code>Int.MaxValue</code> for <code>minimum number encountered</code></li>
+<li><code>Int.MinValue</code> for <code>maximum number encountered</code></li>
+<li><code>0</code> for either <code>minimum number encountered</code> or <code>maximum number encountered</code></li>
+<li><code>0</code> for maximum difference</li>
+</ul>
+
+<p>In <em>some cases</em>, these would cause incorrect output.</p>
+
+<p>For example:</p>
+
+<ul>
+<li><p>In the case of single element list, the single element would set <code>minimum number encountered</code>.  The maximum difference would be calculated as <code>Int.MinValue - single element</code>.  Aside from being outside the range of <code>Integer</code>, it is incorrect.</p></li>
+<li><p>In the case of a list of strictly decreasing elements, only <code>minimum number encountered</code> would be overwritten.  Again, the maximum difference calculated would be incorrect.</p></li>
+<li><p>The maximum difference of elements of a single-element <code>List</code> should not be <code>0</code> -- it should be a sentinel value like <code>-1</code></p></li>
+</ul>
+
+<hr />
+
+<p>First, eliminate processing of empty lists with a pattern match.  Any <code>List</code> not equal to <code>Nil</code> has a head and tail.  This pattern match has full coverage:</p>
+
+<p><code>
+  def maxDifference(list: List[Int]): Int = list match {
+    case Nil =&gt; -1
+    case head :: tail =&gt; ???
+  }
+</code>
+Use the head value (the first value in the <code>List</code>) for the starting <code>minimum number encountered</code> <em>and</em> <code>maximum number encountered</code>.  The maximum difference of a single-element <code>List</code> will be sentinel value <code>-1</code>:</p>
+
+<p><code>
+  list.foldLeft((head, head, -1)) {(tup, x) =&gt; updateDiffs(tup,x)}
+</code></p>
+
+<p>Plug into the pattern match.  Extract the maximum difference from the 3-tuple -- it is all we need.</p>
+
+<p><code>
+  def maxDifference(list: List[Int]): Int = list match {
+    case Nil =&gt; -1
+    case head :: tail =&gt; tail.foldLeft((head, head, -1)) {(tup, x) =&gt;
+      updateDiffs(tup,x)}._3  // &lt;&lt;&lt;&lt;&lt;&lt; extract the third member of the 3-tuple
+  }
+</code></p>
+
+<p>Usage:
+```
+scala>   maxDifference(List(2,3,10,2,4,8,1))</p>
+
+<p>res3: Int = 9</p>
+
+<p>scala>   maxDifference(List(1,10,-10,100))</p>
+
+<p>res4: Int = 110</p>
+
+<p>scala>   maxDifference(List(5))</p>
+
+<p>res5: Int = -1</p>
+
+<p>```</p>
+
+</body>
+</html>
