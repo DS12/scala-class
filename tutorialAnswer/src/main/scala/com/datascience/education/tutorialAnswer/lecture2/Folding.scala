@@ -1,4 +1,4 @@
-package tutorials.lecture2
+package com.datascience.education.tutorialAnswer.lecture2
 import scala.language.postfixOps
 
 object Folding {
