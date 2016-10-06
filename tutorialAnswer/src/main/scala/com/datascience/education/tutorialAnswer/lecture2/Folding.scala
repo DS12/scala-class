@@ -133,7 +133,7 @@ object Folding {
     val tuple: (Double, Int) =
       list.foldLeft[(Double,Int)]((0.0, 0)){
         case ((sum: Double, count: Int), next: Double) =>
-          ???
+          (next+sum, count+1)
       }
 
     tuple._1 / tuple._2
