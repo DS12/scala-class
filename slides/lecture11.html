@@ -1426,30 +1426,8 @@ extend (extract _) == id
         <div class="slide">
           <div class="inner">
             
-            <header><h1>Application: Rose Trees</h1></header>
             
-            
-            <section><p>1
-case class Tree<a href="tip: A, sub: List[Tree[A]]">A</a></p>
-<p>Rose Trees are non-empty trees. A tree of this sort has a value of type A at the tip, and a (possibly empty) list of subtrees underneath. One obvious use case is something like a directory structure, where each tip is a directory and the corresponding sub is its subdirectories.</p>
-<p>This is also a comonad. The counit is obvious, we just get the tip. And here’s a duplicate for this structure:</p>
-<p>1
-2
-  def duplicate: Tree[Tree[A]] =
-    Tree(this, sub.map(_.duplicate))
-Now, this obviously gives us a tree of trees, but what is the structure of that tree? It will be a tree of all the subtrees. The tip will be this tree, and the tip of each proper subtree under it will be the entire subtree at the corresponding point in the original tree.</p>
-<p>That is, when we say t.duplicate.map(f) (or equivalently t extend f), our f will receive each subtree of t in turn and perform some calculation over that entire subtree. The result of the whole expression t extend f will be a tree mirroring the structure of t, except each node will contain f applied to the corresponding subtree of t.</p>
-<h2>To carry on with our directory example, we can imagine wanting a detailed space usage summary of a directory structure, with the size of the whole tree at the tip and the size of each subdirectory underneath as tips of the subtrees, and so on. Then d extend size creates the tree of sizes of recursive subdirectories of d.</h2>
-<p>Comparing comonads to monads (again)</p>
-<p>Given this difference, we can make some statements about what it means:</p>
-<p>Free[F,A] is a type of “leafy tree” that branches according to F, with values of type A at the leaves, while Cofree[F,A] is a type of “node-valued tree” that branches according to F with values of type A at the nodes.
-If Exp defines the structure of some expression language, then Free[Exp,A] is the type of abstract syntax trees for that language, with free variables of type A, and monadic bind literally binds expressions to those variables. Dually, Cofree[Exp,A] is the type of closed exresspions whose subexpressions are annotated with values of type A, and comonadic extend reannotates the tree. For example, if you have a type inferencer infer, then e extend infer will annotate each subexpression of e with its inferred type.
-This comparison of Free and Cofree actually says something about monads and comonads in general:</p>
-<p>All monads can model some kind of leafy tree structure, and all comonads can be modeled by some kind of node-valued tree structure.
-In a monad M, if f: A =&gt; M[B], then xs map f allows us to take the values at the leaves (a:A) of a monadic structure xs and substitute an entire structure (f(a)) for each value. A subsequent join then renormalizes the structure, eliminating the “seams” around our newly added substructures. In a comonad W, xs.duplicate denormalizes, or exposes the substructure of xs:W[A] to yield W[W[A]]. Then we can map a function f: W[A] =&gt; B over that to get a B for each part of the substructure and redecorate the original structure with those values. (See Uustalu and Vene’s excellent paper The Dual of Substitution is Redecoration for more on this connection.)
-A monad defines a class of programs whose subexpressions are incrementally generated from the outputs of previous expressions. A comonad defines a class of programs that incrementally generate output from the substructure of previous expressions.
-A monad adds structure by consuming values. A comonad adds values by consuming structure.</p>
-<p>The return method injects a pure value into a monadic value (having no effect).</p>
+            <section><p>The return method injects a pure value into a monadic value (having no effect).</p>
 <p>return  :: Monad m     =&gt; a -&gt; m a
 The dual to monadic return is extract (sometimes called “counit” or “coreturn“), which extracts a value out of a comonadic value (discarding the value’s context). category-extras library splites this method out from comonad into the Copointed class:</p>
 <p>extract :: Copointed w =&gt; w a -&gt; a
@@ -1830,7 +1808,7 @@ Dually, comonads have a way to duplicate one level into two:</p>
       
       
       <tr id="toc-row-39">
-        <th><a href="#slide39">Application: Rose Trees</a></th>
+        <th><a href="#slide39">-</a></th>
         <td><a href="#slide39">39</a></td>
       </tr>
       
