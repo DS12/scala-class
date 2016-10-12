@@ -22,50 +22,46 @@ An ill-posed puzzle will have no solution.
 
 ###(0b): Environment setup
 
-Open class `labExercises.lecture1.Sudoku` in your editor, located in file `code/labExercises/src/main/scala/labExercises/lecture1/Sudoku.scala`.
+Open object `Sudoku` in your editor, located in file `scala-class/misc/src/main/scala/com/datascience/education/misc/sudoku/Sudoku.scala`.
 
-In the terminal, start SBT in the `code` directory:
+In the terminal, start SBT in the `scala-class` directory:
 
 ```
 bash-3.2$ pwd
-../code
+../scala-class
 bash-3.2$ sbt
 Java HotSpot(TM) 64-Bit Server VM warning: ignoring option MaxPermSize=384m; support was removed in 8.0
-[info] Loading project definition from ../code/project
-[info] Set current project to code (in build file:../code/)
-[info] Set current project to slideCode (in build file:../code/)
+[info] Loading project definition from ../scala-class/project
+[info] Set current project to scala-class (in build file:../scala-class/)
 > 
 ```
 
-Enter sub-project `labExercises`:
+Enter sub-project `misc`:
 
 ```
-> project labExercises
-project labExercises
-[info] Set current project to labExercises (in build file:/Users/peterbecich/scala-for-data-scientists/code/)
+> project misc
+[info] Set current project to misc (in build file:/Users/.../scala-class/)
 > 
 ```
 
-Run `labExercises.lecture1.SudokuPreview`: 
+Run `SudokuPreview`: 
 
 ```
 > run
 run
-[info] Compiling 1 Scala source to ../code/labExercises/target/scala-2.11/classes...
+[info]  Compiling 1 Scala source to /Users/.../scala-class/common/target/scala-2.11/classes...
+...
 [warn] Multiple main classes detected.  Run 'show discoveredMainClasses' to see the list
 
 Multiple main classes detected, select one to run:
 
- [1] labExercises.lecture1.SudokuPreview
- [2] labExercises.lecture1.SudokuSolve
- [3] labExercises.lecture10.HashMapMonoidExamples
- [4] labExercises.lecture10.JaccardLaws
- ...
+ [1] com.datascience.education.misc.sudoku.SudokuPreview
+ [2] com.datascience.education.misc.sudoku.SudokuSolve
  
 Enter number: 1
 1
 
-[info] Running labAnswers.lecture1.SudokuPreview 
+[info] Running com.datascience.education.misc.sudoku.SudokuPreview 
 find solutions for this Sudoku board:
 5 3 0 0 7 0 0 0 0
 6 0 0 1 9 5 0 0 0
@@ -106,7 +102,7 @@ tiles
 6 6 6 7 7 7 8 8 8
 6 6 6 7 7 7 8 8 8
 6 6 6 7 7 7 8 8 8
-[success] Total time: 82 s, completed May 22, 2016 8:02:07 PM
+[success] Total time: 82 s, completed Oct 12, 2016 8:02:07 AM
 > 
 
 
@@ -308,17 +304,14 @@ See [documentation on for-comprehensions](http://docs.scala-lang.org/tutorials/t
 ```
 > run 
 run 
-[info] Compiling 1 Scala source to ../labExercises/target/scala-2.11/classes...
 [warn] Multiple main classes detected.  Run 'show discoveredMainClasses' to see the list
 Multiple main classes detected, select one to run:
- [1] labAnswers.lecture1.SudokuBoardGenerate
- [2] labAnswers.lecture1.SudokuPreview
- [3] labAnswers.lecture1.SudokuSolver
- [4] labAnswers.lecture10.HashMapMonoidExamples
- ...
-Enter number: 3
-3
-[info] Running labAnswers.lecture1.SudokuSolver 
+ [1] com.datascience.education.misc.sudoku.SudokuPreview
+ [2] com.datascience.education.misc.sudoku.SudokuSolver
+ 
+Enter number: 2
+2
+[info] Running com.datascience.education.misc.sudoku.SudokuSolver 
 find solutions for this Sudoku board:
 5 3 0 0 7 0 0 0 0
 6 0 0 1 9 5 0 0 0
@@ -339,7 +332,7 @@ solution
 9 6 1 5 3 7 2 8 4
 2 8 7 4 1 9 6 3 5
 3 4 5 2 8 6 1 7 9
-[success] Total time: 9 s, completed May 23, 2016 2:53:17 PM
+[success] Total time: 9 s, completed Oct 12, 2016 2:53:17 PM
 > 
 
 
