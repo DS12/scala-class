@@ -2,40 +2,161 @@
 
 ![](images/lecture3/gang-of-four-monads.png)
 
+Much of this lecture is drawn from Noel Welsh's excellent article ["Opaque and Transparent Interpreters"](http://underscore.io/blog/posts/2016/06/27/opaque-transparent-interpreters.html).
+
+---
+
+Let's begin with a simple algebraic data type:
+
+		!scala
+		sealed trait Interact[A]
+		case class Ask(prompt: String) extends Interact[String]
+		case class Tell(msg: String) extends Interact[Unit]
+
+---
+
+In the ADT above, each node in the ADT represents verbs or actions that your Application exposes through its API.
+
+Each one of the operations exposes the type of input arguments and what outputs they produce.
+
+In this way, asking the user for a value requires a prompt message `Ask(prompt: String)` and will return a value once the user provides the input extends `Interact[String]`.
+
+---
+
+Once you have the operations defined you can lift them into the context of `Free` with `liftF`, which is what you will ultimately use to write your program.
+
+		!scala
+		import cats.free._
+		object InteractOps {
+		    def ask(prompt: String) : Free[Interact, String] =
+		        Free.liftF[Interact, String](Ask(prompt))
+		    def tell(msg: String) : Free[Interact, Unit] =
+		        Free.liftF[Interact, Unit](Tell(msg))
+		}
+
+---
+
+Now that we have smart constructors wrapping our ADT, we can write a program like this:
+
+		!scala
+		import InteractOps._
+		val program = for {
+		    cat <- ask("What's the kitty's name?")
+		    _ <- tell(s"You said $cat")
+		} yield ()
+
+---
+
+Note that there isn’t an implementation for `Ask` and `Tell` yet. At this point, our program is nothing but a tree-like structure:
+
+		!scala
+		Gosub(
+		    Suspend(
+		        Ask(What's the kitty's name?)),
+		        ...)
+
+---
+
+Each time `flatMap` is invoked through the use of for comprehensions, the tree continues to branch and grow by chaining operations that will be performed sequentially down the road once they’ve been evaluated.
+
+However in order to evaluate this `Free` structure, we must provide an interpreter.
+
+---
+
+An interpreter in the context of free monads is a function called a natural transformation.
+
+A natural transformation (usually notated in Scala as `~>`) transforms a functor `F[_]` into another functor `G[_]`.
+
+In this context it transforms the initial ADT based operations into an actual value wrapped by a target runtime monad, such as `Task`, `Future`, `Option` etc.
+
+---
+
+The target monad here is `Id`, which does nothing but wrap a value:
+
+		!scala
+		import cats.{Id, ~>}
+		def interpreter : Interact ~> Id = new (Interact ~> Id) {
+		    def apply[A](fa: Interact[A]) : Id[A] = fa match {
+		        case Ask(prompt) => println(prompt); readLine
+		        case Tell(msg) => println(msg)
+		    }
+		}
+
+
+---
+
+Finally, you can interpret your program like this:
+
+		!scala
+		val evaluated = program foldMap interpreter
+		//What's the kitty's name? <Waits for user input>
+		//You said Tom
+
+---
+
+This might remind you of our free monoid discussion from last time:
+
+		!haskell
+		interpretMonoid :: Monoid b => (a -> b) -> ([a] -> b)
+		interpretMonoid f [] = mempty
+		interpretMonoid f (a : as) = f a <> interpretMonoid f as
+
 ---
 
 The interpreter is the über pattern of functional programming.
 
-Intuition:
-
-We treat the interpreter as part of the runtime.
-
-We can talk about programs as values right up until we run them.
----
-
-!haskell
-interpretMonoid :: Monoid b => (a -> b) -> ([a] -> b)
-interpretMonoid f [] = mempty
-interpretMonoid f (a : as) = f a <> interpretMonoid f as
-
----
 
 Most large programs written in a functional style can be viewed as using this pattern.
 
-Amongst many reasons, interpreters allow us to handle effects and still keep desirable properties such as substitution.
+---
+
+The idea is to treat the interpreter as part of the runtime, and treat programs as values right up until we run them.
+
+This decouples business logic not just from implementation, but also runtime interpretation, allowing us to handle effects and still keep desirable properties such as substitution.
 
 ---
 
-Why Do We Use Interpreters?
-One important reason for functional programmers liking the interpreter pattern is how it allows us to deal with effects. Effects are problematic, because they break substitution. Substitution allows easy reasoning about code, so functional programmers strive hard to maintain it. At some point you have to have effects—if not, the program will not do anything useful. The secret to allowing effects is to delay them until some point in the program where we don’t care about substitution anymore. For example, in a web service we can delay effects till we’ve constructed the program to create the response, and then run that program, causing our database effects and so on to occur. In Doodle we delay effects—drawing—until we’ve fully described the picture we want to draw. If you’re familiar with computer graphics, Doodle is essentially constructing a scene graph.
+One important reason for functional programmers liking the interpreter pattern is how it allows us to deal with effects.
+
+Effects are problematic, because they break substitution. Substitution allows easy reasoning about code, so functional programmers strive hard to maintain it.
+
+At some point you have to have effects—if not, the program will not do anything useful.
+
+The secret to allowing effects is to delay them until some point in the program where we don’t care about substitution anymore.
+
+
+---
+
+#Example: Doobie
+
+For example, with a jdbc connection we can delay effects till we’ve constructed the query we'd like to use.
+
+		!scala
+		import doobie.imports._
+		import doobie.util.compat.cats.monad._
+		import cats._, cats.data._, cats.implicits._
+		val xa = DriverManagerTransactor[IOLite](
+		  "org.postgresql.Driver", "jdbc:postgresql:world", "postgres", ""
+		)
+
+---
+
+		!scala
+		val program =
+		  for {
+		    a <- sql"select 42".query[Int].unique
+		    b <- sql"select random()".query[Double].unique
+		  } yield (a, b)
+		program.transact(xa).unsafePerformIO
+		//res0: (Int, Double) = (42,0.3444089279510081)
 
 ---
 
 #Example: Random
 
-The Random monad allows us to separate describing how to generate random data from actually introducing randomness.
+The `Random` monad allows us to separate describing how to generate random data from actually introducing randomness.
 
-Randomness is an effect (a function that generates a random value breaks substitution, as it returns a different value each time it is called) and so we can use the Random monad to control this effect.
+Randomness is an effect (a function that generates a random value breaks substitution, as it returns a different value each time it is called) and we want to use the `Random` monad to control this effect.
 
 ---
 
@@ -43,121 +164,151 @@ Let’s look at two different implementation strategies.
 
 The first strategy is to reify the methods to an algebraic data type.
 
+---
 
-import cats.Monad
-sealed trait AlgebraicDataType[A] extends Product with Serializable {
-  def run(rng: scala.util.Random = scala.util.Random): A =
-    this match {
-      case Primitive(sample) => sample(rng)
-      case FlatMap(fa, f) => f(fa.run(rng)).run(rng)
-    }
-  def flatMap[B](f: A => AlgebraicDataType[B]): AlgebraicDataType[B] = FlatMap(this, f)
+		!scala
+		import cats.Monad
+		sealed trait ADT[A] extends Product with Serializable {
+		  def run(rng: scala.util.Random = scala.util.Random): A =
+		    this match {
+		      case Prim(sample) => sample(rng)
+		      case FlatMap(fa, f) => f(fa.run(rng)).run(rng)
+		    }
+		  def flatMap[B](f: A => ADT[B]): ADT[B] = FlatMap(this, f)
 
-  def map[B](f: A => B): AlgebraicDataType[B] =
-    FlatMap(this, (a: A) => AlgebraicDataType.always(f(a)))
-}
+		  def map[B](f: A => B): ADT[B] =
+		    FlatMap(this, (a: A) => ADT.always(f(a)))
+		}
 
+---
 
-object AlgebraicDataType {
-  def always[A](a: A): AlgebraicDataType[A] =
-    Primitive(rng => a)
+		!scala
+		object ADT {
+		  def always[A](a: A): ADT[A] = Prim(rng => a)
+		  def int: ADT[Int] = Prim(rng => rng.nextInt())
+		  def double: ADT[Double] = Prim(rng => rng.nextDouble())
 
-  def int: AlgebraicDataType[Int] =
-    Primitive(rng => rng.nextInt())
+		  implicit object randomInstance extends Monad[ADT] {
+		    def flatMap[A, B](fa: ADT[A])(f: (A) ⇒ ADT[B]): ADT[B] =
+		      fa.flatMap(f)
+		    def pure[A](x: A): ADT[A] =
+		      ADT.always(x)
+		  }
+		}
+		case class FlatMap[A,B](fa: ADT[A], f: A => ADT[B]) extends ADT[B]
+		case class Prim[A](sample: scala.util.Random => A) extends ADT[A]
 
-  def double: AlgebraicDataType[Double] =
-    Primitive(rng => rng.nextDouble())
+---
 
-  implicit object randomInstance extends Monad[AlgebraicDataType] {
-    def flatMap[A, B](fa: AlgebraicDataType[A])(f: (A) ⇒ AlgebraicDataType[B]): AlgebraicDataType[B] =
-      fa.flatMap(f)
-
-    def pure[A](x: A): AlgebraicDataType[A] =
-      AlgebraicDataType.always(x)
-  }
-}
-final case class FlatMap[A,B](fa: AlgebraicDataType[A], f: A => AlgebraicDataType[B]) extends AlgebraicDataType[B]
-final case class Primitive[A](sample: scala.util.Random => A) extends AlgebraicDataType[A]
 An alternative implementation strategy is to reify with functions.
 
-import cats.Monad
-
-final case class Lambda[A](get: scala.util.Random => A) {
-  def run(rng: scala.util.Random = scala.util.Random): A =
-    get(rng)
-
-  def flatMap[B](f: A => Lambda[B]): Lambda[B] =
-    Lambda((rng: scala.util.Random) => f(get(rng)).run(rng))
-
-  def map[B](f: A => B): Lambda[B] =
-    Lambda((rng: scala.util.Random) => f(get(rng)))
-}
-object Lambda {
-  def always[A](a: A): Lambda[A] =
-    Lambda(rng => a)
-
-  def int: Lambda[Int] =
-    Lambda(rng => rng.nextInt())
-
-  def double: Lambda[Double] =
-    Lambda(rng => rng.nextDouble())
-
-  implicit object randomInstance extends Monad[Lambda] {
-    def flatMap[A, B](fa: Lambda[A])(f: (A) ⇒ Lambda[B]): Lambda[B] =
-      fa.flatMap(f)
-
-    def pure[A](x: A): Lambda[A] =
-      Lambda.always(x)
-  }
-}
-I call the former strategy (AlgebraicDataType) a transparent interpreter, because we can programmatically inspect the AlgebraicDataType data structure, and the later strategy (Lambda) an opaque interpreter, because we can’t look into the anonymous functions. Update: in the literature you’ll find the terms shallow and deep embedding are used for what I call opaque and transparent respectively. Thanks for Gabriel Claramunt for pointing this out.
-
-There are two ways in which the opaque interpreter is superior to the transparent interpreter.
-
-The opaque interpreter doesn’t require we implement an algebraic data type to represent the “language” we want to interpret. This certainly saves on the typing. In some sense functions are universal interpreters. We can represent any language we like in terms of functions, so long as we can accept the semantics we get from Scala.
-
-The other main advantage of the opaque interpreter is that code within a function is just code. The compiler is going to have a much easier time optimising the opaque representation than the transparent one. We can say the opaque representation is more transparent to the compiler.
-
-The transparent interpreter is more modular than the opaque one. With a transparent interpreter we can see the structure of the program we’re interpreting in terms of its algebraic data type representation. This means we can choose to interpret it in different ways. For instance, we could print logging information during interpretation, or run in a distributed environment, or use a “stackless” implementation to avoid overflowing the stack in deeply nested calls. With the opaque representation we can’t make these choices.
-
-In summary, transparent interpreters trade performance for flexibility. I usually find that flexibility is the right choice.
+		!scala
+		final case class Lambda[A](get: scala.util.Random => A) {
+		  def run(rng: scala.util.Random = scala.util.Random): A =
+		    get(rng)
+		  def flatMap[B](f: A => Lambda[B]): Lambda[B] =
+		    Lambda((rng: scala.util.Random) => f(get(rng)).run(rng))
+		  def map[B](f: A => B): Lambda[B] =
+		    Lambda((rng: scala.util.Random) => f(get(rng)))
+		}
 
 ---
 
-#Modular Interpreters
-
-One way we can take advantage of the modularity offered by transparent interpreters is by capturing common patterns in reusable classes. This is exactly what the free monad does. Here’s an example of the Random monad using the free monad implementation in Cats. As you can see, we don’t have to write a great deal of code, and we benefit from an optimised and stack-safe implementation.
-
-
-  import cats.free.Free
-  import cats.{Comonad,Monad}
-
-  type Random[A] = Free[Primitive,A]
-  final case class Primitive[A](sample: scala.util.Random => A)
-
-  implicit val randomMonad: Monad[Random] = Free.freeMonad
-
-  implicit def randomInterpreter(implicit rng: scala.util.Random = scala.util.Random): Comonad[Primitive] =
-    new Comonad[Primitive] {
-      override def coflatMap[A, B](fa: Primitive[A])(f: (Primitive[A]) ⇒ B): Primitive[B] =
-        Primitive(rng => f(fa))
-
-      override def extract[A](x: Primitive[A]): A =
-        x.sample(rng)
-
-      override def map[A, B](fa: Primitive[A])(f: (A) ⇒ B): Primitive[B] =
-        Primitive(rng => f(fa.sample(rng)))
-    }
-
+		!scala
+		object Lambda {
+		  def always[A](a: A): Lambda[A] = Lambda(rng => a)
+		  def int: Lambda[Int] = Lambda(rng => rng.nextInt())
+		  def double: Lambda[Double] = Lambda(rng => rng.nextDouble())
+		  implicit object randomInstance extends Monad[Lambda] {
+		    def flatMap[A, B](fa: Lambda[A])(f: (A) ⇒ Lambda[B]): Lambda[B] =
+		      fa.flatMap(f)
+		    def pure[A](x: A): Lambda[A] =
+		      Lambda.always(x)
+		  }
+		}
 
 ---
 
-Conclusions
-The transparency tradeoff is a major design decision in creating an interpreter. Over time I feel that as a community we’re moving towards more transparent representations, particularly as techniques like the free monad become more widely known.
+In the literature, the former strategy (`ADT`) is called a shallow embedding, because we can programmatically inspect the `ADT` data structure.
 
-Note that transparency is not a binary choice. Even in the transparent implementation above, we have opaque functions passed to flatMap and friends. The ultimate endpoint of a transparent implementation is implementing all language features—conditionals, binding constructs, and everything else—within the little language we’re defining.
+The latter strategy (`Lambda`) is called a deep embedding, because we can’t look into the anonymous functions.
 
-The opaque interpreter reminds of higher order abstract syntax (HOAS), which a technique for representing variable binding in an interpreter by reusing the host language’s implementation. HOAS has the same drawback as our opaque interpreters: since we can’t inspect the structure of the bindings in HOAS we have to use the host language’s semantics. There is some work on removing this restriction. I’m not familiar enough with this work to say if and how it applies to the discussion here.
+There are two ways in which the deep embedding is superior to the shallow embedding.
+
+---
+
+First, the deep embedding doesn’t require us to implement an algebraic data type to represent the “language” we want to interpret.
+
+We can rely on functions, which in some sense are universal interpreters.
+
+We can represent any language we like in terms of functions, so long as we can accept the semantics we get.
+
+---
+
+The second main advantage of the deep embedding is that code within a function is just code.
+
+The compiler is going to have a much easier time optimizing the opaque representation than the transparent one.
+
+We can say the opaque representation is more transparent to the compiler.
+
+---
+
+However, the shallow embedding is more modular than the opaque one.
+
+With a shallow embedding we can see the structure of the program we’re interpreting in terms of its ADT representation.
+
+This means we can choose to interpret it in different ways.
+
+---
+
+For instance, we could print logging information during interpretation, or run in a distributed environment, or use a “stackless” implementation to avoid overflowing the stack in deeply nested calls.
+
+We can also take advantage of the modularity offered by shallow embeddings is by capturing common patterns in reusable classes.
+
+This is exactly what the free monad does.
+---
+
+#Example: Random with Cats
+
+Let's look at an implementation using the Cats free monad.
+
+This time we'll add a twist: we'll make the interpreter comonadic.
+
+---
+
+		!scala
+		import cats.free.Free
+		import cats.{Comonad,Monad}
+		type Random[A] = Free[Prim,A]
+		final case class Prim[A](sample: scala.util.Random => A)
+		implicit val randomMonad: Monad[Random] = Free.freeMonad
+		implicit def randomInterpreter(implicit rng: scala.util.Random = scala.util.Random): Comonad[Prim] =
+		  new Comonad[Prim] {
+		    override def coflatMap[A, B](fa: Prim[A])(f: (Prim[A]) => B): Prim[B] =
+		      Prim(rng => f(fa))
+		    override def counit[A](fa: Prim[A]): A =
+		      fa.sample(rng)
+		    override def map[A, B](fa: Prim[A])(f: (A) => B): Prim[B] =
+		      Prim(rng => f(fa.sample(rng)))
+		  }
+
+---
+
+		!scala
+		val a: Prim[Int] = Prim {_.nextInt}
+		//a: Prim[Int] = Prim(<function1>)
+		val foo = randomInterpreter
+		//foo: cats.Comonad[Prim] = $anon$1@5d62ad43
+		foo.counit(a)
+		//res0: Int = 160270087
+		foo.coflatMap(a)(foo.extract(_).toRadians)
+		//res1: Prim[Float] = Prim(<function1>)
+
+---
+
+Note that transparency is not a binary choice; even in the transparent implementation above, we have opaque functions passed to flatMap.
+
+The ultimate endpoint of a transparent implementation is implementing all language features—conditionals, binding constructs, and everything else—within the little language we’re defining.
 
 
 ---
@@ -174,3 +325,5 @@ http://underscore.io/blog/posts/2015/04/14/free-monads-are-simple.html#fnref:con
 https://www.youtube.com/watch?v=M5MF6M7FHPo
 https://www.youtube.com/watch?v=rK53C-xyPWw
 https://www.youtube.com/watch?v=M258zVn4m2M
+
+https://github.com/DS12/scala-private/blob/master/code/tutorialAnswers/src/main/scala/tutorialAnswers/quasar/IO3.scala
