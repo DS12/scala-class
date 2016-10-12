@@ -5,10 +5,10 @@
 ## Part 0: Setup
 
 ### Task (0a)
-In your editor of choice, open `../code/tutorials/src/main/scala/tutorials/lecture2/Folding.scala`.  Equivalently, `../code/tutorials/lecture2/Folding.scala`.
+In your editor of choice, open `../tutorial/src/main/scala/com/datascience/education/tutorial/lecture2/Folding.scala`.
 
 ### Task (0b)
-* In a terminal, navigate to `../code/tutorials/src/main/scala/tutorials/lecture2/`
+* In a terminal, navigate to `../tutorial/src/main/scala/com/datascience/education/tutorial/lecture2/`
 * Enter `scala-2.11 -i Folding.scala`.  Warnings can be ignored.
 ```
 bash-3.2$ scala-2.11 -i Folding.scala
