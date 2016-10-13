@@ -1,4 +1,4 @@
-package tutorialAnswers.lecture11
+package com.datascience.education.tutorialAnswer.lecture3
 
 import cats.data.Reader
 import cats.syntax.applicative._
@@ -88,20 +88,17 @@ object DatabaseQueriesAndUpdates {
   // Task 2e
   def checkPassword(username: String, passwordClear: String): DatabaseReader[Boolean] =
     Reader { (db: Database) =>
-      db.passwords.get(username).filter { case (salt: String, hash: String) =>
+      db.passwords.get(username).exists { case (salt: String, hash: String) =>
         // val hashedCandidate = BCrypt.hashpw(passwordClear, salt)
         BCrypt.checkpw(passwordClear, hash)
-      }.isDefined
+      }
     }
 
   // Task 2f
   def checkLogin(userId: Int, passwordClear: String): DatabaseReader[Boolean] =
-    findUsername(userId).flatMap { opUsername =>
-
-      opUsername match {
+    findUsername(userId).flatMap {
         case Some(username) => checkPassword(username, passwordClear)
         case _ => false.pure[DatabaseReader]
-      }
     }
 
 

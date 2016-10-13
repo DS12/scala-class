@@ -1,4 +1,4 @@
-package tutorialAnswers.lecture11
+package com.datascience.education.tutorialAnswer.lecture3
 
 import scala.concurrent._
 
@@ -47,7 +47,7 @@ import cats.data.Writer
 object FactorialWriter {
 
   // Task (1a)
-  import cats.std.vector._
+  import cats.instances.vector._
   type Logged[A] = Writer[Vector[String], A]
 
   // Task (1b)
