@@ -50,7 +50,9 @@ Laziness is a fundamental component of this.
 
 `cats.Eval` is a monad that allows us to abstract over different models of evaluation.
 
-We typically hear of two such models: eager and lazy.
+It is similar to `fs2.Task` from the Functional Streams for Scala library (see [fs2](https://github.com/functional-streams-for-scala/fs2) and chapter 15 of FPS).
+
+We typically hear of two such evaluation models: eager and lazy.
 
 
 ---
@@ -400,12 +402,9 @@ Note that the call-by-name syntax in the smart constructor removes need for thun
 With strict evaluation, `fibonacciHelper` would be an endless loop and lead to stack overflow.
 
 	!scala
-	def fibonacciHelper(a: Int, b: Int): Stream[Int] =
-      Stream.cons(a, fibonacciHelper(b, a+b))
-
-	val fibonacci: Stream[Int] = fibonacciHelper(0, 1)
-
-	fibonacci.print(22)
+def fibonacciHelper(a: Int, b: Int): Stream[Int] = Stream.cons(a, fibonacciHelper(b, a+b))
+val fibonacci: Stream[Int] = fibonacciHelper(0, 1)
+fibonacci.print(22)
 
 <br />
 
