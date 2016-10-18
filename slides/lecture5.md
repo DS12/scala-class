@@ -315,10 +315,10 @@ Note that the call-by-name syntax in the smart constructor removes need for thun
 
 # Example: `from`
 
-	!scala
-	def from(i: Int): Stream[Int] = cons(i, from(i + 1))
-  Stream.from(0).print(8)
-  //???
+  	!scala
+  	def from(i: Int): Stream[Int] = cons(i, from(i + 1))
+    Stream.from(0).print(8)
+    //???
 
 
 ---

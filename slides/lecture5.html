@@ -1053,10 +1053,10 @@ This line of inquiry leads ultimately to the <code>Free</code> monad in lecture 
             
             
             <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">from</span><span class="o">(</span><span class="n">i</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="n">cons</span><span class="o">(</span><span class="n">i</span><span class="o">,</span> <span class="n">from</span><span class="o">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">))</span>
+<span class="nc">Stream</span><span class="o">.</span><span class="n">from</span><span class="o">(</span><span class="mi">0</span><span class="o">).</span><span class="n">print</span><span class="o">(</span><span class="mi">8</span><span class="o">)</span>
+<span class="c1">//???</span>
 </pre></div>
-
-<p>Stream.from(0).print(8)
-  //???</p></section>
+</section>
             
           </div>
           <div class="presenter_notes">
