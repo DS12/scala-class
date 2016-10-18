@@ -313,55 +313,33 @@ Note that the call-by-name syntax in the smart constructor removes need for thun
 
 ---
 
-# Example: `from`
-
-  	!scala
-  	def from(i: Int): Stream[Int] = cons(i, from(i + 1))
-    Stream.from(0).print(8)
-    //???
-
-
----
-
 # Exercise
 
-Use the `cons` smart constructor to implement a sine wave.  Implement the sine wave for multiples of π/3 radian, or multiples of π/2 radian.
-<br />
-<br />
-Utilize `math.sqrt(Double): Double`
-<br />
-<br />
+Use the `cons` smart constructor to implement a sine wave sampled at multiples of π/3 radians.
 
+---
+
+
+---
+
+Here's one approach. Create the top half of the circle 'by hand', then use it to create the bottom half :
 
 	!scala
-	def sinePositive: Stream[Double] = ???
-
-
-	def sineNegative: Stream[Double] =
-      sinePositive.map { d => -1*d }
-
----
-`sinePositive` corresponds to the top half of the unit circle, including `(1, 0)` and excluding `(-1, 0)`
-![](images/lecture5/unit_circle.png)
-
----
+	def sinePos: Stream[Double] = ???
+	def sineNeg: Stream[Double] = sinePos.map { d => -1*d }
 
 ---
 
 	!scala
-	def sinePositive: Stream[Double] =
+	def sine: Stream[Double] =
       Stream.cons(0,
         Stream.cons(1.0/2,
           Stream.cons(math.sqrt(3)/2,
             Stream.cons(1.0,
               Stream.cons(math.sqrt(3)/2,
-                Stream.cons(1.0/2, sineNegative)
+                Stream.cons(1.0/2, sineNeg)
 	  )))))
-
-	def sineNegative: Stream[Double] =
-      sinePositive.map { d => -1*d }
-
-	sinePositive.print(32)
+	sine.take(32)
 
 ---
 
@@ -381,265 +359,61 @@ Utilize `math.sqrt(Double): Double`
 	0.5
 	...
 
-
 ---
 
-#foldRight
-
-`foldRight` on `List`
-
-	!scala
-	trait List[+A] {
-	  ...
-	  def foldRight[B](z: B)
-	                  (f: (A, B) => B): B =
-        as match {
-          case Nil => z
-          case Cons(a, tail) =>
-		    f(a, tail.foldRight(z)(f))
-        }
-	  ...
-    }
-
----
-
-
-`foldRight` on `Stream`
-
-	!scala
-	trait Stream[+A] {
-	  ...
-      def foldRight[B](z: => B)
-		              (f: (A, => B) => B): B =
-	    this match {
-		  case Empty => z
-		  case cons(head, lazyTail) =>
-		    f(head, lazyTail.foldRight(z)(f))
-		}
-	  ...
-    }
-
-.notes: Remind them lazy tail in Stream.cons; case class Cons[+C](h: () => C, t: () => Stream[C])
-
----
-
-
-`foldRight` is not suitable to be used on an infinite `Stream`.
-
-Furthermore, `foldRight` is not tail-recursive.
-<br />
-<br />
-<br />
-<br />
-
-	!scala
-	trait Stream[+A] {
-	  ...
-      def foldRight[B](z: => B)
-		              (f: (A, => B) => B): B = ...
-	  ...
-    }
-
-.notes: Point out which combinators on `Stream` are suitable to be used on an infinite `Stream`, and which are not
-
----
-
-Limit an infinite `Stream` to a finite length with `take` before calling `foldRight`.  
-
-Despite this precaution, a `Stream` of finite length [may still overflow the stack because of `foldRight`'s tail-calls.](https://groups.google.com/forum/#!topic/scala-functional/MKZ5olHHSwQ)
-
-<br />
-<br />
-
-	!scala
-    val summed =
-	  Stream.from(0).take(100).foldRight(0)(_+_)
-
-	println(s"sum of 0 to 99, inclusive = $summed")
-
-	// sum of 0 to 99, inclusive = 4950
-
-
----
-#map
-
-	!scala
-	trait Stream[+A] {
-	  ...
-	  def map[B](f: A => B): Stream[B] = {
-        def g(a: A, sb: => Stream[B]): Stream[B] =
-	      cons(f(a), sb)
-
-        foldRight(empty[B])(g)
-      }
-	  ...
-	}
-
----
-
-	!scala
-	val radians: Stream[Double] =
-	  Stream.from(0).map { i =>
-	                       i.toDouble * math.Pi / 3 }
-
-
-	val cosineWave: Stream[Double] =
-	  radians.map { d => math.cos(d) }
-
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-
-
-.notes: An implementation of `map` on an `Array` can process the elements in parallel because an `Array` provides O(1) access to any element.  An implementation of `map` on a `List` cannot process the elements in parallel because a `List` provides O(n) access to any element.  Mapping over a List occurs sequentially.  Understanding this, it is more intuitive how `map` on a `Stream` is sequential and lazy.  In this example, `66.toChar` preceed the lazy evaluation of `67.toChar`, and so on.  Anyone who thinks mapping over a `List` happens "all at once" will be confused by mapping over a Stream.
-
----
-
-![](images/lecture5/sine_wave.png)
-
-
-
----
-#flatMap
-
-	!scala
-	trait Stream[+A] {
-	  ...
-	  def append[B >: A](appended: Stream[B]):
-	    Stream[B] = ...
-
-	  def flatMap[B](f: A => Stream[B]):
-	    Stream[B] = {
-        def g(a: A, sb: => Stream[B]) =
-          f(a).append(sb)
-
-        foldRight(empty[B])(g)
-      }
-	  ...
-    }
-
-.notes: It is impossible for `map` to lengthen the Stream.  `flatMap` can do this.  We can interpolate more points in the sine wave with `flatMap`
-
----
-
-#Example: Interpolation
-
-	!scala
-	// def flatMap[B](f: A => Stream[B]): Stream[B]
-
-	val interpolatedSineWave: Stream[Double] =
-	  sineWave.take(32).flatMap { d =>
-        Stream.cons(d, Stream.cons(d, Stream.empty))
-      }
-
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-
-
-in `slideCode.lecture5.SineWave`
-
----
-
-![](images/lecture5/sine_wave_interpolated.png)
-
-
----
 # Exercise
 
-We can turn an infinite `Stream` into a finite `Stream` with `take.`  `take` is a method that exists inside the `Stream` trait.
+We can turn an infinite `Stream` into a finite `Stream` with `take`.  
 
-`countFromZero.take(6)` will insert an `Empty` after the sixth element of the infinite `Stream`.
+`foo.take(6)` will insert an `Empty` after the sixth element of `foo`.
 
-Complete the implementation of `take`:
-
-	!scala
-	trait Stream[+A] {
-	  ...
+  	!scala
+  	trait Stream[+A] {
       def take(n: Int): Stream[A] = this match {
-	    case cons(head, lazyTail) if ??? => ???
-		case cons(head, lazyTail) if ??? => ???
-		case Empty => empty[A]
-	  }
-	  ...
-	}
-<br />
-<br />
+  	    case cons(head, lazyTail) if ??? => ???
+  		  case cons(head, lazyTail) if ??? => ???
+  		  case Empty => empty[A]
+  	  }
+  	}
 
-`print` relies upon `take`
 
 ---
 
 ---
 
-	!scala
-	trait Stream[+A] {
-	  ...
+  	!scala
+  	trait Stream[+A] {
       def take(n: Int): Stream[A] = this match {
-	    case cons(head, lazyTail) if n>0 =>
-		  cons(h, lazyTail.take(n-1))
-		case cons(head, lazyTail) if n<=0 =>
-		  empty[A]
-		case Empty =>
-		  empty[A]
-	  }
-	  ...
-	}
+  	    case cons(head, lazyTail) if n>0 =>
+  		    cons(head, lazyTail.take(n-1))
+  		  case cons(head, lazyTail) if n<=0 => empty[A]
+  		  case Empty => empty[A]
+  	  }
+  	}
 
 ---
-Trace
+#Example: `from`
 
-	from(0).take(4)
-	cons(0, from(1).take(3))
-	cons(0, cons(1, from(2).take(2)))
-	cons(0, cons(1, cons(2, from(3).take(1))))
-	cons(0, cons(1, cons(2, cons(3, from(4).take(0)))))
-	cons(0, cons(1, cons(2, cons(3, Empty))))
-
-.notes: Evaluation is explained later.  `take` is not evaluation.  If only two elements are evaluated, then this trace will be shortened.
-
----
-
-# Evaluation
-
-Exiting the `Stream`
-
-	!scala
-	trait Stream[+A] {
-	  ...
-	  def print(upTo: Int): Unit = {
-        def f(a: A, remaining: => Int): Int = {
-          println(a)
-          remaining - 1
-        }
-        this.take(upTo).foldRight(upTo)(f)
-      }
-      ...
-	}
+  	!scala
+  	def from(i: Int): Stream[Int] = cons(i, from(i + 1))
+    Stream.from(0).take(4)
+    //???
 
 
 ---
 
-	!scala
-	trait Stream[+A] {
-	  ...
-	  def force(n: Int): List[A] = {
-        def f(a: A, la: => List[A]) = a::la
+    from(0).take(4)
+    cons(0, from(1).take(3))
+    cons(0, cons(1, from(2).take(2)))
+    cons(0, cons(1, cons(2, from(3).take(1))))
+    cons(0, cons(1, cons(2, cons(3, from(4).take(0)))))
+    cons(0, cons(1, cons(2, cons(3, Empty))))
 
-        this.take(n).foldRight(List[A]())(f)
-      }
-      ...
-	}
 
 ---
 
-#Example: Transposing a Computation
+#Example: Transposition
+
 
     !scala
     def foo(i: Int) = {println(i); i + 10}
@@ -656,7 +430,7 @@ Exiting the `Stream`
 ---
 
     !scala
-    Stream(1,2,3).map(foo).filter(bar).force
+    Stream(1,2,3).map(foo).filter(bar).take(1)
     //1
     //11
     //2
@@ -665,6 +439,52 @@ Exiting the `Stream`
     //13
     //res1: Stream[Int] = Stream(12)
 
+
+---
+
+#foldRight
+
+Recall from our folds tutorial that `foldRight` on a list looks like this:
+
+  	!scala
+  	trait List[+A] {
+  	  def foldRight[B](z: B)
+  	    (f: (A, B) => B): B =
+        this match {
+          case Nil => z
+          case Cons(a, tail) =>
+		        f(a, tail.foldRight(z)(f))
+        }
+      }
+
+---
+
+We can use the same pattern to create an (unsafe) `foldRight` for our `Stream`:
+
+  	!scala
+  	trait Stream[+A] {
+      def foldRight[B](z: => B)
+  		  (f: (A, => B) => B): B =
+  	    this match {
+  		    case Empty => z
+  		    case cons(head, lazyTail) =>
+  		      f(head, lazyTail.foldRight(z)(f))
+  	 	  }
+    }
+
+---
+
+Here is the stack-safe trampolined version from [Cats](https://github.com/typelevel/cats/blob/master/core/src/main/scala/cats/instances/stream.scala):
+
+    !scala
+    def foldRight[A, B](lb: Eval[B])
+      (f: (A, Eval[B]) => Eval[B]): Eval[B] =
+      Now(this).flatMap { s =>
+        if (s.isEmpty) lb
+        else f(s.head, Eval.defer(s.tail.foldRight(lb)(f)))
+      }
+
+Note that we don't use pattern matching to deconstruct the stream, since that would needlessly force evaluation of the tail.
 
 ---
 
