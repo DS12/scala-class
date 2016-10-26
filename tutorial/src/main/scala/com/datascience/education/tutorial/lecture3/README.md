@@ -306,7 +306,7 @@ Implement
 
 ## Part 3: Property-based Testing
 
-`scala-class/tutorials/src/main/scala/com/datascience/education/tutorial/lecture3//DatabaseSpec.scala`
+`scala-class/tutorials/src/test/scala/com/datascience/education/tutorial/lecture3/DatabaseSpec.scala`
 
 `scala-class/tutorials/src/main/scala/com/datascience/education/tutorial/lecture3/Database.scala`
 
