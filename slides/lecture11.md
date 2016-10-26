@@ -44,6 +44,11 @@ And instead of being able to `join` two levels of a monad into one, we can `dupl
 
 ---
 
+Intuitively, a monad adds structure by consuming values, whereas a comonad adds values by consuming structure.
+
+A monad defines a class of programs whose subexpressions are incrementally generated from the outputs of previous expressions, whereas a comonad defines a class of programs that incrementally generate output from the substructure of previous expressions.
+
+---
 
 #comonad laws
 
@@ -385,6 +390,7 @@ One definition of `Lens`: `Lens(s,a) = a => Store(s,a)`
 Hence the statement "Lenses are the coalgebras of the costate comonad"
 
 ---
+
 
 #Homework
 
