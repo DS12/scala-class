@@ -306,10 +306,15 @@ Implement
 
 ## Part 3: Property-based Testing
 
-`scala-class/tutorials/src/main/scala/com/datascience/education/tutorial/lecture3//DatabaseSpec.scala`
+`scala-class/tutorials/src/test/scala/com/datascience/education/tutorial/lecture3/DatabaseSpec.scala`
 
 `scala-class/tutorials/src/main/scala/com/datascience/education/tutorial/lecture3/Database.scala`
 
+Materials of the `ScalaCheck` library can be found at:
+
+- [https://www.scalacheck.org/](https://www.scalacheck.org/)
+- [https://github.com/rickynils/scalacheck/blob/master/doc/UserGuide.md](https://github.com/rickynils/scalacheck/blob/master/doc/UserGuide.md) 
+- [https://www.scalacheck.org/files/scalacheck_2.11-1.13.1-api/index.html#package](https://www.scalacheck.org/files/scalacheck_2.11-1.13.1-api/index.html#package)
 
 For some of these tests it may be necessary to replace `forAll` with
 
