@@ -1,4 +1,4 @@
-# Lecture 3 Tutorial: Monads
+# Monad Tutorial - Answers
 
 
 ----------------
@@ -6,7 +6,7 @@
 ## Part 1: [`WriterT[Id,L,V]`](http://typelevel.org/cats/api/#cats.data.WriterT) ([`Writer[L,V]`](https://github.com/typelevel/cats/blob/master/core/src/main/scala/cats/data/package.scala#L39))
 
 
-`scala-class/tutorials/src/main/scala/com/datascience/education/tutorial/lecture3/AsynchronousFactorials.scala`
+`code/tutorialAnswers/src/main/scala/tutorialAnswers/lecture11/AsynchronousFactorials.scala`
 
 There are some similarities between `WriterT` and [`StateT`](http://typelevel.org/cats/api/index.html#cats.data.StateT).
 
@@ -34,29 +34,29 @@ A method that calculates factorial asynchronously is provided.  It is a surrogat
 
 ```
 
-[info] Running com.datascience.education.tutorial.lecture3.AsynchronousFactorialsExample
+[info] Running tutorialAnswers.lecture11.AsynchronousFactorialsExample 
 unrelated: 1
 factorial(0) = 1
-unrelated: 2
 factorial(1) = 1
-unrelated: 3
+unrelated: 2
 factorial(2) = 2
-unrelated: 4
+unrelated: 3
 factorial(3) = 6
-unrelated: 5
+unrelated: 4
 factorial(4) = 24
+unrelated: 5
 factorial(5) = 120
 unrelated: 6
 factorial(6) = 720
 unrelated: 7
-unrelated: 8
 factorial(7) = 5040
+unrelated: 8
 unrelated: 9
 factorial(8) = 40320
-factorial(9) = 362880
 unrelated: 10
-factorial(10) = 3628800
+factorial(9) = 362880
 unrelated: 11
+factorial(10) = 3628800
 factorial 10 is 3628800
 unrelated: 12
 unrelated: 13
@@ -67,16 +67,6 @@ unrelated: 17
 unrelated: 18
 unrelated: 19
 unrelated: 20
-unrelated: 21
-unrelated: 22
-unrelated: 23
-unrelated: 24
-unrelated: 25
-unrelated: 26
-unrelated: 27
-unrelated: 28
-unrelated: 29
-unrelated: 30
 ```
 
 The `Future` prints "factorial 10 is 3628800" when complete.
@@ -84,40 +74,30 @@ The `Future` prints "factorial 10 is 3628800" when complete.
 This quickly becomes unwieldy when multiple asynchronous processes are running concurrently.  Here we calculate the 10th and 20th Factorial numbers (0-indexed), which, incidentially, rolls over the maximum `Int`:
 
 ```
-[info] Running com.datascience.education.tutorial.lecture3.AsynchronousFactorialsExample 
-factorial(0) = 1
-factorial(0) = 1
+[info] Running tutorialAnswers.lecture11.AsynchronousFactorialsExample 
 unrelated: 1
-factorial(1) = 1
-factorial(1) = 1
+factorial(0) = 1
+factorial(0) = 1
 unrelated: 2
-factorial(2) = 2
-factorial(2) = 2
+factorial(1) = 1
+factorial(1) = 1
 unrelated: 3
+factorial(2) = 2
+factorial(2) = 2
 factorial(3) = 6
 factorial(3) = 6
 ...
 unrelated: 17
-factorial(16) = 2004189184
 factorial(17) = -288522240
 unrelated: 18
-unrelated: 19
 factorial(18) = -898433024
-unrelated: 20
+unrelated: 19
 factorial(19) = 109641728
-unrelated: 21
+unrelated: 20
 factorial(20) = -2102132736
 factorial 20 is -2102132736
+unrelated: 21
 unrelated: 22
-unrelated: 23
-unrelated: 24
-unrelated: 25
-unrelated: 26
-unrelated: 27
-unrelated: 28
-unrelated: 29
-unrelated: 30
-
 ```
 
 A `Future` which returns a `Writer` will clean up this example.  (Jumping ahead to monad transformers, there is another improvement to be made, here.)
@@ -145,6 +125,12 @@ Find an `implicit` from the Cats Scaladoc that will satisfy this requirement.
 [`Writer[L,V]`](https://github.com/typelevel/cats/blob/master/core/src/main/scala/cats/data/package.scala#L39) is a type alias for [`WriterT[Id,L,V]`](http://typelevel.org/cats/api/#cats.data.WriterT), and `FlatMap[Id]` is provided.
 
 
+#### Answer 
+
+```
+  type Logged[A] = Writer[Vector[String], A]
+```
+
 ### Task (1b): `factorial`
 
 Complete the signature and implement `factorial`.  Use `Logged`.
@@ -162,6 +148,38 @@ Otherwise, the log message of `factorial(n)` should be `"factorial($n) = ..."`
 
 Write a simple test in `FactorialWriterExample`.
 
+#### Answer 
+
+```
+  def factorial(n: Int): Logged[Int] = {
+    // val fact = if(n == 0) 1 else n*factorial(n-1)
+
+    val fact: Logged[Int] =
+      if(n == 0)
+        1.writer(Vector("hit bottom"))
+      else
+        factorial(n-1).flatMap( f =>
+          (n*f).writer(Vector(s"factorial($n) = ${n*f}"))
+        )
+
+    Thread.sleep(500)
+    //Writer(Vector(s"factorial($n) = $fact"), fact)
+
+    fact
+  }
+```
+
+
+```
+
+  // Task 1b
+  val fact10 = factorial(10)
+
+  val out = fact10.run
+
+  println(out)
+
+```
 
 ### Task (1c): `factorialAsync`
 
@@ -172,6 +190,14 @@ Complete the signature and wrap `factorial` in a `Future`.
   def factorialAsync(n: Int): ???
 ```
 
+
+#### Answer 
+
+```
+  def factorialAsync(n: Int): Future[Logged[Int]] =
+    Future(factorial(n))
+```
+
 ### Task (1d): Testing
 
 In `FactorialWriterAsyncExample`, use `factorialAsync` to calculate two Factorials asynchronously.  Don't `zip` or combine them.
@@ -180,12 +206,46 @@ Hint: Ensure that the `Writer`s inside actually *begin* work.
 
 Choose between `Await` and `onSuccess` to print the result.
 
+#### Answer 
+
+
+```
+  // Task 1d
+  // use transformer here, later
+  val futureFact10 = factorialAsync(10)
+  val futureFact12 = factorialAsync(12)
+
+  val fact10 = futureFact10.map(write => write.run)
+  val fact12 = futureFact12.map(write => write.run)
+
+  futureFact10.onSuccess {
+    case tup => println(tup)
+  }
+
+  futureFact12.onSuccess {
+    case tup => println(tup)
+  }
+```
+
+
+
+```
+WriterT((Vector(hit bottom, factorial(1) = 1, factorial(2) = 2, factorial(3) = 6,
+factorial(4) = 24, factorial(5) = 120, factorial(6) = 720, factorial(7) = 5040, 
+factorial(8) = 40320, factorial(9) = 362880, factorial(10) = 3628800),3628800))
+
+WriterT((Vector(hit bottom, factorial(1) = 1, factorial(2) = 2, factorial(3) = 6, 
+factorial(4) = 24, factorial(5) = 120, factorial(6) = 720, factorial(7) = 5040, 
+factorial(8) = 40320, factorial(9) = 362880, factorial(10) = 3628800, 
+factorial(11) = 39916800, factorial(12) = 479001600),479001600))
+```
+
 -------------------
 
 ## Part 2: [`Kleisli[Id, A, B]`](http://typelevel.org/cats/api/#cats.data.Kleisli) ([`Reader[A,B]`](https://github.com/typelevel/cats/blob/master/core/src/main/scala/cats/data/package.scala#L34))
 
 
-`scala-class/tutorials/src/main/scala/com/datascience/education/tutorial/lecture3/Database.scala`
+`code/tutorialAnswers/src/main/scala/tutorialAnswers/lecture11/Database.scala`
 
 
 With the `State` Monad, we could thread an `S` through our program implicitly.  As long as we used the combinators that did not handle `S` directly, we were assured that `S` transitioned correctly.
@@ -229,6 +289,7 @@ Usernames, user IDs, salts and password hashes are stored in these [mutable `Map
   val passwords: MutableMap[String, (String,String)]
 ```
 
+
 ### Task (2a): type alias
 
 Define 
@@ -240,6 +301,12 @@ Define
 so that any instance of trait `Database` can be used as the "resource" in our `DatabaseReader` methods.
 
 
+#### Answer 
+
+```
+  type DatabaseReader[A] = Reader[Database, A]
+```
+
 ### Task (2b): `findUsername`
 
 Complete the signature and implement 
@@ -247,6 +314,16 @@ Complete the signature and implement
 ```
 def findUsername(userId: Int) = ???
 ```
+
+#### Answer 
+
+```
+  def findUsername(userId: Int): DatabaseReader[Option[String]] =
+    Reader { (db: Database) =>
+      db.users.get(userId)
+    }
+```
+
 
 ### Task (2c): `findUserId`
 
@@ -258,12 +335,29 @@ Complete the signature and Implement
 ```
 
 
+#### Answer 
+
+```
+  def findUserId(username: String): DatabaseReader[Option[Int]] =
+    Reader { (db: Database) =>
+      db.users.find{case (userId: Int, usern: String) =>
+        usern == username}.map(_._1)
+    }
+```
+
 ### Task (2d): `userExists`
 
 Complete the signature and implement 
 
 ```
 def userExists(username: String): ???
+```
+
+#### Answer 
+
+```
+  def userExists(username: String): DatabaseReader[Boolean] =
+    findUserId(username).map(option => option.isDefined)
 ```
 
 ### Task (2e): `checkPassword`
@@ -274,6 +368,14 @@ Complete the signature and implement
   def checkPassword(username: String, passwordClear: String): ???
 ```
 
+#### Answer 
+
+```
+  def checkPassword(username: String, passwordClear: String): DatabaseReader[Boolean] =
+    Reader { (db: Database) =>
+      db.passwords.get(username).filter(BCrypt.checkpw(passwordClear, _)).isDefined
+    }
+```
 
 ### Task (2f): `checkLogin`
 
@@ -282,6 +384,22 @@ Complete the signature and implement
 ```
   def checkLogin(userId: Int, passwordClear: String): ???
 ```
+
+#### Answer 
+
+```
+  def checkLogin(userId: Int, passwordClear: String): DatabaseReader[Boolean] =
+    findUsername(userId).flatMap { opUsername =>
+
+      opUsername match {
+        case Some(username) => checkPassword(username, passwordClear)
+        case _ => false.pure[DatabaseReader]
+      }
+    }
+```
+
+
+
 
 ### Task (2g): salt and `createUser`
 
@@ -301,14 +419,36 @@ Implement
   def createUser(username: String, passwordClear: String): ???
 ```
 
+#### Answer 
+
+```
+  def createUser(username: String, passwordClear: String):
+      DatabaseReader[Option[Int]] =
+    userExists(username).flatMap { (exists: Boolean) =>
+      // println(s"create user $username $passwordClear exists $exists")
+      if(exists) Reader ( _ => None)
+      else Reader { (db: Database) => 
+        val id = db.genId
+        val salt: String = BCrypt.gensalt()
+        val passwordHashed = BCrypt.hashpw(passwordClear, salt)
+
+        db.users.update(id, username)
+        db.passwords.update(username, (salt, passwordHashed))
+
+        // println(db)
+
+        Some(id)
+      }
+    }
+```
 
 ----------------------------
 
 ## Part 3: Property-based Testing
 
-`scala-class/tutorials/src/main/scala/com/datascience/education/tutorial/lecture3//DatabaseSpec.scala`
+`code/tutorialAnswers/src/test/scala/tutorialAnswers/lecture11/DatabaseSpec.scala`
 
-`scala-class/tutorials/src/main/scala/com/datascience/education/tutorial/lecture3/Database.scala`
+`code/tutorialAnswers/src/main/scala/tutorialAnswers/lecture11/Database.scala`
 
 
 For some of these tests it may be necessary to replace `forAll` with
@@ -340,6 +480,22 @@ Implement test
 ```
 
 
+#### Answer 
+
+```
+  property("User does not exist in database") {
+
+    val testDB = TestDatabase()
+
+    forAll(Gen.alphaStr) {
+      case (username: String) =>
+      userExists(username).run(testDB) should be (false)
+    }
+
+  }
+```
+
+
 ### Task (3b): `createUser` works
 
 The full signature of `createUser` was not given.  Test the return type of the implementation you decided upon.
@@ -349,6 +505,25 @@ property("create user") {
    ...
   }
 ```
+
+
+#### Answer 
+
+```
+  property("create user") {
+    val testDB = TestDatabase()
+
+    check {
+      forAllNoShrink(Gen.zip(nonEmptyString, nonEmptyString)) {
+        case (username: String, passwordClear: String) =>
+          val out = createUser(username, passwordClear).run(testDB)
+          out.isDefined
+      }
+    }
+
+  }
+```
+
 
 ### Task (3c): User exists
 
@@ -365,6 +540,33 @@ Insert a random user into the database and check they exist.
 Don't check that the password hashing works, here.  That's in the next <b>Task</b>
 
 
+#### Answer 
+
+
+```
+  property("User exists in database") {
+
+    val testDB = TestDatabase()
+
+    def createAndCheck(username: String, password: String): DatabaseReader[Boolean] =
+      createUser(username, password).flatMap { opUserId =>
+        opUserId match {
+          case Some(userId) => findUserId(username).map(_.isDefined)
+          case _ => false.pure[DatabaseReader]
+        }
+      }
+
+    check {
+      forAllNoShrink(Gen.zip(nonEmptyString, nonEmptyString)) {
+        case (username: String, passwordClear: String) =>
+          val out = createAndCheck(username, passwordClear).run(testDB)
+          out == true
+      }
+    }
+
+  }
+```
+
 
 ### Task (3d): Password works
 
@@ -378,6 +580,34 @@ Similar to prior <b>Task</b>.  Test that a valid password is successfully authen
 	 
 ```
 
+#### Answer 
+
+```
+  property("Password works") {
+
+    val testDB = TestDatabase()
+
+    def createAndCheckLogin(username: String, password: String): DatabaseReader[Boolean] =
+      createUser(username, password).flatMap { opUserId =>
+        opUserId match {
+          case Some(userId) => checkLogin(userId, password)
+          case _ => false.pure[DatabaseReader]
+        }
+      }
+
+    check {
+      forAllNoShrink(Gen.zip(nonEmptyString, nonEmptyString)) {
+        case (username: String, passwordClear: String) =>
+          val out = createAndCheckLogin(username, passwordClear).run(testDB)
+          out == true
+      }
+    }
+
+  }
+
+
+```
+
 ### Task (3e): Bad password fails
 
 
@@ -388,6 +618,31 @@ Similar to prior <b>Task</b>.  Test that a valid password is successfully authen
   }  
 ```
 
+#### Answer 
+
+```
+  property("Bad password fails") {
+
+    val testDB = TestDatabase()
+
+    def createAndCheckLogin(username: String, password: String, badPassword: String): DatabaseReader[Boolean] =
+      createUser(username, password).flatMap { opUserId =>
+        opUserId match {
+          case Some(userId) => checkLogin(userId, badPassword)
+          case _ => false.pure[DatabaseReader]
+        }
+      }
+
+    check {
+      forAllNoShrink(Gen.zip(nonEmptyString, nonEmptyString, nonEmptyString)) {
+        case (username: String, passwordClear: String, badPassword: String) =>
+          val out = createAndCheckLogin(username, passwordClear, badPassword+"z").run(testDB)
+          out == false
+      }
+    }
+
+  }  
+```
 
 
 ---------------------
