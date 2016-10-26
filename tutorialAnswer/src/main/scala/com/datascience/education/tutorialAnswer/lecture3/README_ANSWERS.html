@@ -5,16 +5,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-<title>README.html</title>
+<title>README_ANSWERS.html</title>
 
 </head>
 
 <body>
 
-<h1 id="lecture-3-tutorial-monads">Lecture 3 Tutorial: Monads</h1>
+<h1 id="monad-tutorial---answers">Monad Tutorial - Answers</h1>
 <hr />
 <h2 id="part-1-writertidlv-writerlv">Part 1: <a href="http://typelevel.org/cats/api/#cats.data.WriterT"><code>WriterT[Id,L,V]</code></a> (<a href="https://github.com/typelevel/cats/blob/master/core/src/main/scala/cats/data/package.scala#L39"><code>Writer[L,V]</code></a>)</h2>
-<p><code>scala-class/tutorials/src/main/scala/com/datascience/education/tutorial/lecture3/AsynchronousFactorials.scala</code></p>
+<p><code>code/tutorialAnswers/src/main/scala/tutorialAnswers/lecture11/AsynchronousFactorials.scala</code></p>
 <p>There are some similarities between <code>WriterT</code> and <a href="http://typelevel.org/cats/api/index.html#cats.data.StateT"><code>StateT</code></a>.</p>
 <pre><code>new WriterT(run: F[(L, V)]) {
   val run: F[(L, V)] = ...
@@ -30,29 +30,29 @@
 }</code></pre>
 <p>A method that calculates factorial asynchronously is provided. It is a surrogate for any recursive or iterative method that requires logging. <code>factorialAsync</code> logs its progress to the console.</p>
 <pre><code>
-[info] Running com.datascience.education.tutorial.lecture3.AsynchronousFactorialsExample
+[info] Running tutorialAnswers.lecture11.AsynchronousFactorialsExample 
 unrelated: 1
 factorial(0) = 1
-unrelated: 2
 factorial(1) = 1
-unrelated: 3
+unrelated: 2
 factorial(2) = 2
-unrelated: 4
+unrelated: 3
 factorial(3) = 6
-unrelated: 5
+unrelated: 4
 factorial(4) = 24
+unrelated: 5
 factorial(5) = 120
 unrelated: 6
 factorial(6) = 720
 unrelated: 7
-unrelated: 8
 factorial(7) = 5040
+unrelated: 8
 unrelated: 9
 factorial(8) = 40320
-factorial(9) = 362880
 unrelated: 10
-factorial(10) = 3628800
+factorial(9) = 362880
 unrelated: 11
+factorial(10) = 3628800
 factorial 10 is 3628800
 unrelated: 12
 unrelated: 13
@@ -62,52 +62,33 @@ unrelated: 16
 unrelated: 17
 unrelated: 18
 unrelated: 19
-unrelated: 20
-unrelated: 21
-unrelated: 22
-unrelated: 23
-unrelated: 24
-unrelated: 25
-unrelated: 26
-unrelated: 27
-unrelated: 28
-unrelated: 29
-unrelated: 30</code></pre>
+unrelated: 20</code></pre>
 <p>The <code>Future</code> prints &quot;factorial 10 is 3628800&quot; when complete.</p>
 <p>This quickly becomes unwieldy when multiple asynchronous processes are running concurrently. Here we calculate the 10th and 20th Factorial numbers (0-indexed), which, incidentially, rolls over the maximum <code>Int</code>:</p>
-<pre><code>[info] Running com.datascience.education.tutorial.lecture3.AsynchronousFactorialsExample 
-factorial(0) = 1
-factorial(0) = 1
+<pre><code>[info] Running tutorialAnswers.lecture11.AsynchronousFactorialsExample 
 unrelated: 1
-factorial(1) = 1
-factorial(1) = 1
+factorial(0) = 1
+factorial(0) = 1
 unrelated: 2
-factorial(2) = 2
-factorial(2) = 2
+factorial(1) = 1
+factorial(1) = 1
 unrelated: 3
+factorial(2) = 2
+factorial(2) = 2
 factorial(3) = 6
 factorial(3) = 6
 ...
 unrelated: 17
-factorial(16) = 2004189184
 factorial(17) = -288522240
 unrelated: 18
-unrelated: 19
 factorial(18) = -898433024
-unrelated: 20
+unrelated: 19
 factorial(19) = 109641728
-unrelated: 21
+unrelated: 20
 factorial(20) = -2102132736
 factorial 20 is -2102132736
-unrelated: 22
-unrelated: 23
-unrelated: 24
-unrelated: 25
-unrelated: 26
-unrelated: 27
-unrelated: 28
-unrelated: 29
-unrelated: 30</code></pre>
+unrelated: 21
+unrelated: 22</code></pre>
 <p>A <code>Future</code> which returns a <code>Writer</code> will clean up this example. (Jumping ahead to monad transformers, there is another improvement to be made, here.)</p>
 <h3 id="task-1a-type-loggeda">Task (1a): <code>type Logged[A]</code></h3>
 <p>Implement</p>
@@ -118,6 +99,8 @@ unrelated: 30</code></pre>
   implicit flatMapF: FlatMap[F], semigroupL: Semigroup[L]): WriterT[F, L, U]</code></pre>
 <p>Find an <code>implicit</code> from the Cats Scaladoc that will satisfy this requirement.</p>
 <p><a href="https://github.com/typelevel/cats/blob/master/core/src/main/scala/cats/data/package.scala#L39"><code>Writer[L,V]</code></a> is a type alias for <a href="http://typelevel.org/cats/api/#cats.data.WriterT"><code>WriterT[Id,L,V]</code></a>, and <code>FlatMap[Id]</code> is provided.</p>
+<h4 id="answer">Answer</h4>
+<pre><code>  type Logged[A] = Writer[Vector[String], A]</code></pre>
 <h3 id="task-1b-factorial">Task (1b): <code>factorial</code></h3>
 <p>Complete the signature and implement <code>factorial</code>. Use <code>Logged</code>.</p>
 <p>It is a recursive function. Insert <code>Thread.sleep(500)</code> at the end of your implementation, but before the returned value, so that each call of <code>factorial</code> costs 500 milliseconds.</p>
@@ -126,16 +109,68 @@ unrelated: 30</code></pre>
 <p>The log message of <code>factorial(1)</code> should be &quot;hit bottom&quot;, or something similar.</p>
 <p>Otherwise, the log message of <code>factorial(n)</code> should be <code>&quot;factorial($n) = ...&quot;</code></p>
 <p>Write a simple test in <code>FactorialWriterExample</code>.</p>
+<h4 id="answer-1">Answer</h4>
+<pre><code>  def factorial(n: Int): Logged[Int] = {
+    // val fact = if(n == 0) 1 else n*factorial(n-1)
+
+    val fact: Logged[Int] =
+      if(n == 0)
+        1.writer(Vector(&quot;hit bottom&quot;))
+      else
+        factorial(n-1).flatMap( f =&gt;
+          (n*f).writer(Vector(s&quot;factorial($n) = ${n*f}&quot;))
+        )
+
+    Thread.sleep(500)
+    //Writer(Vector(s&quot;factorial($n) = $fact&quot;), fact)
+
+    fact
+  }</code></pre>
+<pre><code>
+  // Task 1b
+  val fact10 = factorial(10)
+
+  val out = fact10.run
+
+  println(out)
+</code></pre>
 <h3 id="task-1c-factorialasync">Task (1c): <code>factorialAsync</code></h3>
 <p>Complete the signature and wrap <code>factorial</code> in a <code>Future</code>.</p>
 <pre><code>  def factorialAsync(n: Int): ???</code></pre>
+<h4 id="answer-2">Answer</h4>
+<pre><code>  def factorialAsync(n: Int): Future[Logged[Int]] =
+    Future(factorial(n))</code></pre>
 <h3 id="task-1d-testing">Task (1d): Testing</h3>
 <p>In <code>FactorialWriterAsyncExample</code>, use <code>factorialAsync</code> to calculate two Factorials asynchronously. Don't <code>zip</code> or combine them.</p>
 <p>Hint: Ensure that the <code>Writer</code>s inside actually <em>begin</em> work.</p>
 <p>Choose between <code>Await</code> and <code>onSuccess</code> to print the result.</p>
+<h4 id="answer-3">Answer</h4>
+<pre><code>  // Task 1d
+  // use transformer here, later
+  val futureFact10 = factorialAsync(10)
+  val futureFact12 = factorialAsync(12)
+
+  val fact10 = futureFact10.map(write =&gt; write.run)
+  val fact12 = futureFact12.map(write =&gt; write.run)
+
+  futureFact10.onSuccess {
+    case tup =&gt; println(tup)
+  }
+
+  futureFact12.onSuccess {
+    case tup =&gt; println(tup)
+  }</code></pre>
+<pre><code>WriterT((Vector(hit bottom, factorial(1) = 1, factorial(2) = 2, factorial(3) = 6,
+factorial(4) = 24, factorial(5) = 120, factorial(6) = 720, factorial(7) = 5040, 
+factorial(8) = 40320, factorial(9) = 362880, factorial(10) = 3628800),3628800))
+
+WriterT((Vector(hit bottom, factorial(1) = 1, factorial(2) = 2, factorial(3) = 6, 
+factorial(4) = 24, factorial(5) = 120, factorial(6) = 720, factorial(7) = 5040, 
+factorial(8) = 40320, factorial(9) = 362880, factorial(10) = 3628800, 
+factorial(11) = 39916800, factorial(12) = 479001600),479001600))</code></pre>
 <hr />
 <h2 id="part-2-kleisliid-a-b-readerab">Part 2: <a href="http://typelevel.org/cats/api/#cats.data.Kleisli"><code>Kleisli[Id, A, B]</code></a> (<a href="https://github.com/typelevel/cats/blob/master/core/src/main/scala/cats/data/package.scala#L34"><code>Reader[A,B]</code></a>)</h2>
-<p><code>scala-class/tutorials/src/main/scala/com/datascience/education/tutorial/lecture3/Database.scala</code></p>
+<p><code>code/tutorialAnswers/src/main/scala/tutorialAnswers/lecture11/Database.scala</code></p>
 <p>With the <code>State</code> Monad, we could thread an <code>S</code> through our program implicitly. As long as we used the combinators that did not handle <code>S</code> directly, we were assured that <code>S</code> transitioned correctly.</p>
 <pre><code>S =&gt; (S, A)
          v
@@ -161,21 +196,51 @@ unrelated: 30</code></pre>
 <p>Define</p>
 <pre><code>  type DatabaseReader[A] = ???</code></pre>
 <p>so that any instance of trait <code>Database</code> can be used as the &quot;resource&quot; in our <code>DatabaseReader</code> methods.</p>
+<h4 id="answer-4">Answer</h4>
+<pre><code>  type DatabaseReader[A] = Reader[Database, A]</code></pre>
 <h3 id="task-2b-findusername">Task (2b): <code>findUsername</code></h3>
 <p>Complete the signature and implement</p>
 <pre><code>def findUsername(userId: Int) = ???</code></pre>
+<h4 id="answer-5">Answer</h4>
+<pre><code>  def findUsername(userId: Int): DatabaseReader[Option[String]] =
+    Reader { (db: Database) =&gt;
+      db.users.get(userId)
+    }</code></pre>
 <h3 id="task-2c-finduserid">Task (2c): <code>findUserId</code></h3>
 <p>Complete the signature and Implement</p>
 <pre><code>  def findUserId(username: String): ???</code></pre>
+<h4 id="answer-6">Answer</h4>
+<pre><code>  def findUserId(username: String): DatabaseReader[Option[Int]] =
+    Reader { (db: Database) =&gt;
+      db.users.find{case (userId: Int, usern: String) =&gt;
+        usern == username}.map(_._1)
+    }</code></pre>
 <h3 id="task-2d-userexists">Task (2d): <code>userExists</code></h3>
 <p>Complete the signature and implement</p>
 <pre><code>def userExists(username: String): ???</code></pre>
+<h4 id="answer-7">Answer</h4>
+<pre><code>  def userExists(username: String): DatabaseReader[Boolean] =
+    findUserId(username).map(option =&gt; option.isDefined)</code></pre>
 <h3 id="task-2e-checkpassword">Task (2e): <code>checkPassword</code></h3>
 <p>Complete the signature and implement</p>
 <pre><code>  def checkPassword(username: String, passwordClear: String): ???</code></pre>
+<h4 id="answer-8">Answer</h4>
+<pre><code>  def checkPassword(username: String, passwordClear: String): DatabaseReader[Boolean] =
+    Reader { (db: Database) =&gt;
+      db.passwords.get(username).filter(BCrypt.checkpw(passwordClear, _)).isDefined
+    }</code></pre>
 <h3 id="task-2f-checklogin">Task (2f): <code>checkLogin</code></h3>
 <p><code>checkLogin</code> should utilize <code>checkPassword</code>.</p>
 <pre><code>  def checkLogin(userId: Int, passwordClear: String): ???</code></pre>
+<h4 id="answer-9">Answer</h4>
+<pre><code>  def checkLogin(userId: Int, passwordClear: String): DatabaseReader[Boolean] =
+    findUsername(userId).flatMap { opUsername =&gt;
+
+      opUsername match {
+        case Some(username) =&gt; checkPassword(username, passwordClear)
+        case _ =&gt; false.pure[DatabaseReader]
+      }
+    }</code></pre>
 <h3 id="task-2g-salt-and-createuser">Task (2g): salt and <code>createUser</code></h3>
 <p>Skim <a href="https://en.wikipedia.org/wiki/Salt_(cryptography)">salt</a>:</p>
 <blockquote>
@@ -187,10 +252,29 @@ unrelated: 30</code></pre>
 <p>Read the example of <code>jBCrypt</code> usage: <a href="http://www.mindrot.org/projects/jBCrypt/">jBCrypt</a></p>
 <p>Implement</p>
 <pre><code>  def createUser(username: String, passwordClear: String): ???</code></pre>
+<h4 id="answer-10">Answer</h4>
+<pre><code>  def createUser(username: String, passwordClear: String):
+      DatabaseReader[Option[Int]] =
+    userExists(username).flatMap { (exists: Boolean) =&gt;
+      // println(s&quot;create user $username $passwordClear exists $exists&quot;)
+      if(exists) Reader ( _ =&gt; None)
+      else Reader { (db: Database) =&gt; 
+        val id = db.genId
+        val salt: String = BCrypt.gensalt()
+        val passwordHashed = BCrypt.hashpw(passwordClear, salt)
+
+        db.users.update(id, username)
+        db.passwords.update(username, (salt, passwordHashed))
+
+        // println(db)
+
+        Some(id)
+      }
+    }</code></pre>
 <hr />
 <h2 id="part-3-property-based-testing">Part 3: Property-based Testing</h2>
-<p><code>scala-class/tutorials/src/test/scala/com/datascience/education/tutorial/lecture3/DatabaseSpec.scala</code></p>
-<p><code>scala-class/tutorials/src/main/scala/com/datascience/education/tutorial/lecture3/Database.scala</code></p>
+<p><code>code/tutorialAnswers/src/test/scala/tutorialAnswers/lecture11/DatabaseSpec.scala</code></p>
+<p><code>code/tutorialAnswers/src/main/scala/tutorialAnswers/lecture11/Database.scala</code></p>
 <p>For some of these tests it may be necessary to replace <code>forAll</code> with</p>
 <pre><code>    check {
       forAllNoShrink(...) { ...
@@ -204,10 +288,34 @@ unrelated: 30</code></pre>
 <pre><code>  property(&quot;User does not exist in database&quot;) {
     ...
   }</code></pre>
+<h4 id="answer-11">Answer</h4>
+<pre><code>  property(&quot;User does not exist in database&quot;) {
+
+    val testDB = TestDatabase()
+
+    forAll(Gen.alphaStr) {
+      case (username: String) =&gt;
+      userExists(username).run(testDB) should be (false)
+    }
+
+  }</code></pre>
 <h3 id="task-3b-createuser-works">Task (3b): <code>createUser</code> works</h3>
 <p>The full signature of <code>createUser</code> was not given. Test the return type of the implementation you decided upon.</p>
 <pre><code>property(&quot;create user&quot;) {
    ...
+  }</code></pre>
+<h4 id="answer-12">Answer</h4>
+<pre><code>  property(&quot;create user&quot;) {
+    val testDB = TestDatabase()
+
+    check {
+      forAllNoShrink(Gen.zip(nonEmptyString, nonEmptyString)) {
+        case (username: String, passwordClear: String) =&gt;
+          val out = createUser(username, passwordClear).run(testDB)
+          out.isDefined
+      }
+    }
+
   }</code></pre>
 <h3 id="task-3c-user-exists">Task (3c): User exists</h3>
 <p>Insert a random user into the database and check they exist.</p>
@@ -216,6 +324,28 @@ unrelated: 30</code></pre>
     ...
   }</code></pre>
 <p>Don't check that the password hashing works, here. That's in the next <b>Task</b></p>
+<h4 id="answer-13">Answer</h4>
+<pre><code>  property(&quot;User exists in database&quot;) {
+
+    val testDB = TestDatabase()
+
+    def createAndCheck(username: String, password: String): DatabaseReader[Boolean] =
+      createUser(username, password).flatMap { opUserId =&gt;
+        opUserId match {
+          case Some(userId) =&gt; findUserId(username).map(_.isDefined)
+          case _ =&gt; false.pure[DatabaseReader]
+        }
+      }
+
+    check {
+      forAllNoShrink(Gen.zip(nonEmptyString, nonEmptyString)) {
+        case (username: String, passwordClear: String) =&gt;
+          val out = createAndCheck(username, passwordClear).run(testDB)
+          out == true
+      }
+    }
+
+  }</code></pre>
 <h3 id="task-3d-password-works">Task (3d): Password works</h3>
 <p>Similar to prior <b>Task</b>. Test that a valid password is successfully authenticated.</p>
 <pre><code>  property(&quot;Password works&quot;) {
@@ -223,9 +353,55 @@ unrelated: 30</code></pre>
      
      }
      </code></pre>
+<h4 id="answer-14">Answer</h4>
+<pre><code>  property(&quot;Password works&quot;) {
+
+    val testDB = TestDatabase()
+
+    def createAndCheckLogin(username: String, password: String): DatabaseReader[Boolean] =
+      createUser(username, password).flatMap { opUserId =&gt;
+        opUserId match {
+          case Some(userId) =&gt; checkLogin(userId, password)
+          case _ =&gt; false.pure[DatabaseReader]
+        }
+      }
+
+    check {
+      forAllNoShrink(Gen.zip(nonEmptyString, nonEmptyString)) {
+        case (username: String, passwordClear: String) =&gt;
+          val out = createAndCheckLogin(username, passwordClear).run(testDB)
+          out == true
+      }
+    }
+
+  }
+
+</code></pre>
 <h3 id="task-3e-bad-password-fails">Task (3e): Bad password fails</h3>
 <pre><code>  property(&quot;Bad password fails&quot;) {
      ...
+
+  }  </code></pre>
+<h4 id="answer-15">Answer</h4>
+<pre><code>  property(&quot;Bad password fails&quot;) {
+
+    val testDB = TestDatabase()
+
+    def createAndCheckLogin(username: String, password: String, badPassword: String): DatabaseReader[Boolean] =
+      createUser(username, password).flatMap { opUserId =&gt;
+        opUserId match {
+          case Some(userId) =&gt; checkLogin(userId, badPassword)
+          case _ =&gt; false.pure[DatabaseReader]
+        }
+      }
+
+    check {
+      forAllNoShrink(Gen.zip(nonEmptyString, nonEmptyString, nonEmptyString)) {
+        case (username: String, passwordClear: String, badPassword: String) =&gt;
+          val out = createAndCheckLogin(username, passwordClear, badPassword+&quot;z&quot;).run(testDB)
+          out == false
+      }
+    }
 
   }  </code></pre>
 <hr />
