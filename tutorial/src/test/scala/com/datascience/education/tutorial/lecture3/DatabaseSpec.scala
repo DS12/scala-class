@@ -19,8 +19,16 @@ class DatabaseSpec extends PropSpec with
   import DatabaseQueriesAndUpdates._
 
   // Task 3a
-  // property("User does not exist in database") { ???
-  // }
+//  property("User does not exist in database") {
+//
+//    val testDB = TestDatabase()
+//
+//    forAll(Gen.alphaStr) {
+//      case (username: String) =>
+//      userExists(username).run(testDB) should be (false)
+//    }
+//
+//  }
 
 
   // val nonEmptyString = Gen.nonEmptyContainerOf(Gen.alphaStr)
