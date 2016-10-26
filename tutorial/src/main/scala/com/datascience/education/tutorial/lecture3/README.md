@@ -6,7 +6,7 @@
 ## Part 1: [`WriterT[Id,L,V]`](http://typelevel.org/cats/api/#cats.data.WriterT) ([`Writer[L,V]`](https://github.com/typelevel/cats/blob/master/core/src/main/scala/cats/data/package.scala#L39))
 
 
-`code/tutorials/src/main/scala/tutorials/lecture11/AsynchronousFactorials.scala`
+`scala-class/tutorials/src/main/scala/com/datascience/education/tutorial/lecture3/AsynchronousFactorials.scala`
 
 There are some similarities between `WriterT` and [`StateT`](http://typelevel.org/cats/api/index.html#cats.data.StateT).
 
@@ -34,29 +34,29 @@ A method that calculates factorial asynchronously is provided.  It is a surrogat
 
 ```
 
-[info] Running tutorials.lecture11.AsynchronousFactorialsExample 
+[info] Running com.datascience.education.tutorial.lecture3.AsynchronousFactorialsExample
 unrelated: 1
 factorial(0) = 1
-factorial(1) = 1
 unrelated: 2
-factorial(2) = 2
+factorial(1) = 1
 unrelated: 3
-factorial(3) = 6
+factorial(2) = 2
 unrelated: 4
-factorial(4) = 24
+factorial(3) = 6
 unrelated: 5
+factorial(4) = 24
 factorial(5) = 120
 unrelated: 6
 factorial(6) = 720
 unrelated: 7
-factorial(7) = 5040
 unrelated: 8
+factorial(7) = 5040
 unrelated: 9
 factorial(8) = 40320
-unrelated: 10
 factorial(9) = 362880
-unrelated: 11
+unrelated: 10
 factorial(10) = 3628800
+unrelated: 11
 factorial 10 is 3628800
 unrelated: 12
 unrelated: 13
@@ -67,6 +67,16 @@ unrelated: 17
 unrelated: 18
 unrelated: 19
 unrelated: 20
+unrelated: 21
+unrelated: 22
+unrelated: 23
+unrelated: 24
+unrelated: 25
+unrelated: 26
+unrelated: 27
+unrelated: 28
+unrelated: 29
+unrelated: 30
 ```
 
 The `Future` prints "factorial 10 is 3628800" when complete.
@@ -74,30 +84,40 @@ The `Future` prints "factorial 10 is 3628800" when complete.
 This quickly becomes unwieldy when multiple asynchronous processes are running concurrently.  Here we calculate the 10th and 20th Factorial numbers (0-indexed), which, incidentially, rolls over the maximum `Int`:
 
 ```
-[info] Running tutorials.lecture11.AsynchronousFactorialsExample 
+[info] Running com.datascience.education.tutorial.lecture3.AsynchronousFactorialsExample 
+factorial(0) = 1
+factorial(0) = 1
 unrelated: 1
-factorial(0) = 1
-factorial(0) = 1
+factorial(1) = 1
+factorial(1) = 1
 unrelated: 2
-factorial(1) = 1
-factorial(1) = 1
+factorial(2) = 2
+factorial(2) = 2
 unrelated: 3
-factorial(2) = 2
-factorial(2) = 2
 factorial(3) = 6
 factorial(3) = 6
 ...
 unrelated: 17
+factorial(16) = 2004189184
 factorial(17) = -288522240
 unrelated: 18
-factorial(18) = -898433024
 unrelated: 19
-factorial(19) = 109641728
+factorial(18) = -898433024
 unrelated: 20
+factorial(19) = 109641728
+unrelated: 21
 factorial(20) = -2102132736
 factorial 20 is -2102132736
-unrelated: 21
 unrelated: 22
+unrelated: 23
+unrelated: 24
+unrelated: 25
+unrelated: 26
+unrelated: 27
+unrelated: 28
+unrelated: 29
+unrelated: 30
+
 ```
 
 A `Future` which returns a `Writer` will clean up this example.  (Jumping ahead to monad transformers, there is another improvement to be made, here.)
@@ -165,7 +185,7 @@ Choose between `Await` and `onSuccess` to print the result.
 ## Part 2: [`Kleisli[Id, A, B]`](http://typelevel.org/cats/api/#cats.data.Kleisli) ([`Reader[A,B]`](https://github.com/typelevel/cats/blob/master/core/src/main/scala/cats/data/package.scala#L34))
 
 
-`code/tutorials/src/main/scala/tutorials/lecture11/Database.scala`
+`scala-class/tutorials/src/main/scala/com/datascience/education/tutorial/lecture3/Database.scala`
 
 
 With the `State` Monad, we could thread an `S` through our program implicitly.  As long as we used the combinators that did not handle `S` directly, we were assured that `S` transitioned correctly.
@@ -286,10 +306,15 @@ Implement
 
 ## Part 3: Property-based Testing
 
-`code/tutorials/src/test/scala/tutorials/lecture11/DatabaseSpec.scala`
+`scala-class/tutorials/src/test/scala/com/datascience/education/tutorial/lecture3/DatabaseSpec.scala`
 
-`code/tutorials/src/main/scala/tutorials/lecture11/Database.scala`
+`scala-class/tutorials/src/main/scala/com/datascience/education/tutorial/lecture3/Database.scala`
 
+Materials of the `ScalaCheck` library can be found at:
+
+- [https://www.scalacheck.org/](https://www.scalacheck.org/)
+- [https://github.com/rickynils/scalacheck/blob/master/doc/UserGuide.md](https://github.com/rickynils/scalacheck/blob/master/doc/UserGuide.md) 
+- [https://www.scalacheck.org/files/scalacheck_2.11-1.13.1-api/index.html#package](https://www.scalacheck.org/files/scalacheck_2.11-1.13.1-api/index.html#package)
 
 For some of these tests it may be necessary to replace `forAll` with
 

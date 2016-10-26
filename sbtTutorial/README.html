@@ -5,15 +5,18 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-<title>README.html</title>
+<title>README.html<sbtTutorial></title>
 
 </head>
 
 <body>
 
-<h1 id="sbt-lab">SBT Lab</h1>
+<h1>SBT Lab</h1>
+
 <p>This lab teaches the basics of the Simple Build Tool.</p>
-<p>Specifically:</p>
+
+<p>Specifically: </p>
+
 <ul>
 <li>multiple sub-project build</li>
 <li>dependency resolution</li>
@@ -23,321 +26,575 @@
 <li><a href="https://en.wikipedia.org/wiki/Java_package">Java/Scala package hierarchy</a></li>
 <li>how repositories are organized</li>
 </ul>
-<p>There is no implementation required <b>Parts 1, 2, and 3</b>. Your tasks are in <b>Parts 4 and 5</b>.</p>
-<h2 id="part-1-minimal">Part 1: <code>minimal</code></h2>
+
+<p>There is no implementation required <b>Parts 1, 2, and 3</b>.  Your tasks are in <b>Parts 4 and 5</b>.</p>
+
+<h2>Part 1: <code>minimal</code></h2>
+
 <p><code>scala-class/sbtTutorial/minimal/src/main/scala</code></p>
+
 <p>Directory <code>minimal</code> contains an SBT build definition that is close to minimal complexity, and some very simple Scala code in <code>minimal/src/main/scala/Hello.scala</code>.</p>
+
 <p>Start SBT inside directory <code>minimal</code>:</p>
-<pre><code>bash-3.2$ pwd
+
+<p>```
+bash-3.2$ pwd
 ../sbtTutorial/minimal
 bash-3.2$ sbt
 Java HotSpot(TM) 64-Bit Server VM warning: ignoring option MaxPermSize=384m; support was removed in 8.0
 [info] Loading global plugins from /Users/peterbecich/dotfiles/sbt/0.13/plugins
 [info] Loading project definition from ../sbtTutorial/minimal/project
-[info] Set current project to hello (in build file:../sbtTutorial/minimal/)
-&gt; </code></pre>
-<p>Two runnable main classes are defined in <code>Hello.scala</code>. This means that <code>run</code> will prompt you to choose a main class to run:</p>
-<pre><code>&gt; run 
+[info] Set current project to hello (in build file:../sbtTutorial/minimal/)</p>
+
+<blockquote>
+  <p>```</p>
+</blockquote>
+
+<p>Two runnable main classes are defined in <code>Hello.scala</code>.  This means that <code>run</code> will prompt you to choose a main class to run:</p>
+
+<p>```</p>
+
+<blockquote>
+  <p>run 
 run 
-[warn] Multiple main classes detected.  Run &#39;show discoveredMainClasses&#39; to see the list
+[warn] Multiple main classes detected.  Run 'show discoveredMainClasses' to see the list</p>
+</blockquote>
 
-Multiple main classes detected, select one to run:
+<p>Multiple main classes detected, select one to run:</p>
 
- [1] Hello
+<p>[1] Hello
  [2] Hello2
 ^JEnter number: 1
-1
+1</p>
 
-[info] Running Hello 
+<p>[info] Running Hello 
 hello
-[success] Total time: 4 s, completed May 21, 2016 5:14:34 PM
-&gt; </code></pre>
+[success] Total time: 4 s, completed May 21, 2016 5:14:34 PM</p>
+
+<blockquote>
+  <p>```</p>
+</blockquote>
+
 <p><code>minimal/build.sbt</code> is a <a href="http://www.scala-sbt.org/0.13/docs/Basic-Def.html">build definition</a>.</p>
+
 <p>It is not an absolutely minimal build definition, <a href="http://alvinalexander.com/scala/sbt-syntax-examples">as shown here</a>:</p>
-<pre><code>name := &quot;Test 1&quot;
 
-version := &quot;1.0&quot;
+<p>```
+name := "Test 1"</p>
 
-scalaVersion := &quot;2.9.1&quot;</code></pre>
-<p>The reason we skip over this absolutely minimal build definition is that such a build definition is not suitable to be expanded to multiple sub-projects, as show in <b>Part 2</b>. Our Scala code, and supporting code like build definitions, will keep scalability in mind whenever possible.</p>
+<p>version := "1.0"</p>
+
+<p>scalaVersion := "2.9.1"
+```</p>
+
+<p>The reason we skip over this absolutely minimal build definition is that such a build definition is not suitable to be expanded to multiple sub-projects, as show in <b>Part 2</b>.  Our Scala code, and supporting code like build definitions, will keep scalability in mind whenever possible.</p>
+
 <p>The version of SBT is set outside <code>minimal/build.sbt</code>, in <code>minimal/project/build.properties</code>.</p>
-<h2 id="part-2-multi">Part 2: <code>multi</code></h2>
+
+<h2>Part 2: <code>multi</code></h2>
+
 <p><code>scala-class-private/sbtTutorial/multi</code></p>
+
 <p>Directory <code>multi</code> contains an SBT build definition with multiple SBT sub-projects.</p>
+
 <p>Start SBT inside directory <code>multi</code>.</p>
-<p>You can list the sub-projects with <code>projects</code>:</p>
-<pre><code>&gt; projects
+
+<p>You can list the sub-projects with <code>projects</code>:
+```</p>
+
+<blockquote>
+  <p>projects
 projects
 [info]   * backend
 [info]     frontend
-[info]     root
-&gt; </code></pre>
-<p><code>backend</code> and <code>frontend</code> are defined in <code>multi/build.sbt</code>. <a href="http://www.scala-sbt.org/0.13/docs/Multi-Project.html#Default+root+project">The <code>root</code> sub-project</a> will exist in any SBT project.</p>
+[info]     root</p>
+
+<p>```</p>
+</blockquote>
+
+<p><code>backend</code> and <code>frontend</code> are defined in <code>multi/build.sbt</code>. <a href="http://www.scala-sbt.org/0.13/docs/Multi-Project.html#Default+root+project">The <code>root</code> sub-project</a> will exist in any SBT project. </p>
+
 <p>Enter project <code>frontend</code>:</p>
-<pre><code>&gt; project frontend
+
+<p>```</p>
+
+<blockquote>
+  <p>project frontend
 project frontend
-[info] Set current project to frontend (in build file:/Users/peterbecich/misc-private/sbtTutorial/multi/)
-&gt; </code></pre>
+[info] Set current project to frontend (in build file:/Users/peterbecich/misc-private/sbtTutorial/multi/)</p>
+
+<p>```</p>
+</blockquote>
+
 <p>Type <code>run</code>:</p>
-<pre><code>&gt; run 
+
+<p>```</p>
+
+<blockquote>
+  <p>run 
 run 
 [info] Running com.datascience.reporting.PrintPi 
 Pi is estimated to equal 3.1484375 with 4096 Monte Carlo iterations
-[success] Total time: 1 s, completed May 21, 2016 5:45:53 PM
-&gt; </code></pre>
+[success] Total time: 1 s, completed May 21, 2016 5:45:53 PM</p>
+
+<p>```</p>
+</blockquote>
+
 <p>This SBT project demonstrates a dependency of <code>frontend</code> upon <code>backend</code>.</p>
-<h3 id="reduction-of-code-duplication">reduction of code duplication</h3>
-<p>Simple code re-use is demonstrated. <code>commonSettings</code> is shared by <code>backend</code> and <code>frontend</code>.</p>
-<p>Settings can be stacked. Settings specific to sub-project <code>frontEnd</code> are stacked with <code>commonSettings</code>:</p>
-<pre><code>settings(
-    name := &quot;frontend&quot;,
-    version := &quot;1.0&quot;
-  ).settings(commonSettings:_*)</code></pre>
-<h3 id="aggregates"><a href="http://www.scala-sbt.org/0.13/docs/Multi-Project.html#Aggregation"><code>aggregates</code></a></h3>
-<pre><code>lazy val frontend = (project in file(&quot;frontend&quot;)).
+
+<h3>reduction of code duplication</h3>
+
+<p>Simple code re-use is demonstrated.  <code>commonSettings</code> is shared by <code>backend</code> and <code>frontend</code>.  </p>
+
+<p>Settings can be stacked.  Settings specific to sub-project <code>frontEnd</code> are stacked with <code>commonSettings</code>:</p>
+
+<p><code>
+settings(
+    name := "frontend",
+    version := "1.0"
+  ).settings(commonSettings:_*)
+</code></p>
+
+<h3><a href="http://www.scala-sbt.org/0.13/docs/Multi-Project.html#Aggregation"><code>aggregates</code></a></h3>
+
+<p><code>
+lazy val frontend = (project in file("frontend")).
   settings(
     ...
-  ).settings(commonSettings:_*).aggregates(backend)</code></pre>
-<p><code>aggregates(backend)</code> means that whenever sub-project <code>frontend</code> is compiled, sub-project <code>backend</code> will be compiled. It does not bring <code>backend</code>'s code into <code>frontend</code>'s scope. It is one-directional.</p>
-<pre><code>lazy val backend = (project in file(&quot;backend&quot;)).
-  ....aggregates(frontend)</code></pre>
-<p>would be necessary for bi-directional dependence. With such tight coupling, the use of multiple sub-projects is called into question.</p>
+  ).settings(commonSettings:_*).aggregates(backend)
+</code></p>
+
+<p><code>aggregates(backend)</code> means that whenever sub-project <code>frontend</code> is compiled, sub-project <code>backend</code> will be compiled.  It does not bring <code>backend</code>'s code into <code>frontend</code>'s scope.  It is one-directional.</p>
+
+<p><code>
+lazy val backend = (project in file("backend")).
+  ....aggregates(frontend)
+</code></p>
+
+<p>would be necessary for bi-directional dependence.  With such tight coupling, the use of multiple sub-projects is called into question.</p>
+
 <p>By default, <code>root</code> aggregates all other sub-projects.</p>
-<h3 id="dependson"><a href="http://www.scala-sbt.org/0.13/docs/Multi-Project.html#Classpath+dependencies"><code>dependsOn</code></a></h3>
-<p><code>aggregates</code> is a subset of the functionality of <code>dependsOn</code>.</p>
-<pre><code>lazy val frontend = (project in file(&quot;frontend&quot;)).
+
+<h3><a href="http://www.scala-sbt.org/0.13/docs/Multi-Project.html#Classpath+dependencies"><code>dependsOn</code></a></h3>
+
+<p><code>
+lazy val frontend = (project in file("frontend")).
   settings(
     ...
-  ).settings(commonSettings:_*).dependsOn(backend)</code></pre>
+  ).settings(commonSettings:_*).dependsOn(backend)
+</code></p>
+
 <p><code>dependsOn(backend)</code> gives <code>frontend</code> access to <code>backend</code>'s code.</p>
-<h3 id="java-package-hierarchy">Java package hierarchy</h3>
-<p>Informally, code can be located by filesystem location (<code>multi/backend/src/main/scala/MonteCarlo.scala</code>) or by Java package (<code>com.datascience.approximations.MonteCarlo</code>).</p>
-<p>I suggest referring to these separate systems as the <em>filesystem hierarchy</em> and the <em>class hierarchy</em>, respectively. Either one of these will be useful to refer a colleague to a particular piece of code.</p>
-<p>Java and Scala code only cares about class hierarchy, though. Outside of the REPL, you cannot import Scala code from a file (<code>import src/main/scala/Foo.scala</code>) -- rather, import from a class (<code>import backend.Foo</code>).</p>
+
+<p><a href="https://github.com/sbt/sbt-assembly#assembly-task">To assemble a runnable JAR with multiple sub-projects</a>, the <code>root</code> sub-project must depend on the sub-project containing the runnable class.</p>
+
+<p><code>aggregates</code> is <em>not</em> strictly a subset of the functionality of <code>dependsOn</code>.</p>
+
+<p><code>aggregates</code> will make the "aggregator" sub-project run the tests of the "aggregated" sub-projects.  <code>dependsOn</code> will not do this.</p>
+
+<p>See <a href="http://stackoverflow.com/questions/32884308/how-to-make-sbt-test-to-run-tests-in-main-project-and-all-subprojects-or-some">How to make <code>sbt test</code> to run tests in main project and all subprojects (or some selected set)</a></p>
+
+<h3>Java package hierarchy</h3>
+
+<p>Informally, code can be located by filesystem location (<code>multi/backend/src/main/scala/MonteCarlo.scala</code>) or by Java package (<code>com.datascience.approximations.MonteCarlo</code>).  </p>
+
+<p>I suggest referring to these separate systems as the <em>filesystem hierarchy</em> and the <em>class hierarchy</em>, respectively.  Either one of these will be useful to refer a colleague to a particular piece of code.  </p>
+
+<p>Java and Scala code only cares about class hierarchy, though.  Outside of the REPL, you cannot import Scala code from a file (<code>import src/main/scala/Foo.scala</code>) -- rather, import from a class (<code>import backend.Foo</code>).</p>
+
 <p>Because of the importance of the class hierarchy, I recommend thinking in terms of packages and classes more often than <code>.scala</code> files.</p>
+
 <p>You can navigate by package or class in any IDE:</p>
+
 <p><a href="https://www.jetbrains.com/help/idea/2016.1/navigating-to-class-file-or-symbol-by-name.html">IntelliJ's Navigate by Name</a></p>
+
 <p><a href="http://stackoverflow.com/a/5298518/1007926">Eclipse</a></p>
-<h3 id="code">code</h3>
-<p>You can find two pieces of code in</p>
+
+<h3>code</h3>
+
+<p>You can find two pieces of code in </p>
+
 <ul>
-<li><code>com.datascience.approximations.MonteCarlo</code>
+<li><p><code>com.datascience.approximations.MonteCarlo</code></p>
+
 <ul>
 <li>located in <code>multi/backend/src/main/scala/MonteCarlo.scala</code></li>
 </ul></li>
-<li><code>com.datascience.reporting.PrintPi</code>
+<li><p><code>com.datascience.reporting.PrintPi</code></p>
+
 <ul>
 <li>located in <code>multi/frontend/src/main/scala/PrintPi.scala</code></li>
 </ul></li>
 </ul>
-<p>Note that the class and filesystem hierarchies do not necessarily correspond. <code>PrintPi</code>'s class hierarchy does not incorparate <code>frontend</code>. This demonstrates how these two hierarchies can be &quot;orthogonal&quot;.</p>
-<p><a href="https://www.jetbrains.com/help/idea/2016.1/navigating-to-class-file-or-symbol-by-name.html">IntelliJ's Navigate by Name</a> tool or a similar tool will hunt down the class for you. This is the way to find a class of ambiguous filesystem location.</p>
-<h2 id="part-3-usingcats">Part 3: <code>usingCats</code></h2>
-<p><code>scala-class/sbtTutorial/usingCats</code></p>
-<p><code>usingCats</code> shows how to add an external dependency. This SBT project contains only a single sub-project.</p>
-<p>Start SBT inside directory <code>usingCats</code>.</p>
-<p>The <a href="http://typelevel.org/cats/">Cats library</a> is a dependency:</p>
-<pre><code>lazy val root = (project in file(&quot;.&quot;)).
-  settings(
-    name := &quot;hello&quot;,
-    version := &quot;1.0&quot;,
-    scalaVersion := &quot;2.11.8&quot;,
-    libraryDependencies += &quot;org.typelevel&quot; % &quot;cats-core_2.11&quot; % &quot;0.5.0&quot;
 
-  )</code></pre>
+<p>Note that the class and filesystem hierarchies do not necessarily correspond.  <code>PrintPi</code>'s class hierarchy does not incorparate <code>frontend</code>.  This demonstrates how these two hierarchies can be "orthogonal".</p>
+
+<p><a href="https://www.jetbrains.com/help/idea/2016.1/navigating-to-class-file-or-symbol-by-name.html">IntelliJ's Navigate by Name</a> tool or a similar tool will hunt down the class for you.  This is the way to find a class of ambiguous filesystem location.</p>
+
+<h2>Part 3: <code>usingCats</code></h2>
+
+<p><code>scala-class/sbtTutorial/usingCats</code></p>
+
+<p><code>usingCats</code> shows how to add an external dependency.  This SBT project contains only a single sub-project.</p>
+
+<p>Start SBT inside directory <code>usingCats</code>.</p>
+
+<p>The <a href="http://typelevel.org/cats/">Cats library</a> is a dependency:</p>
+
+<p>```
+lazy val root = (project in file(".")).
+  settings(
+    name := "hello",
+    version := "1.0",
+    scalaVersion := "2.11.8",
+    libraryDependencies += "org.typelevel" % "cats-core_2.11" % "0.5.0"</p>
+
+<p>)
+```</p>
+
 <p><code>usingCats</code> contains a warm-up exercise for Monads week, based upon <a href="http://eed3si9n.com/herding-cats/Reader.html">this resource</a>.</p>
+
 <p>Look at class <code>com.datascience.storage.UserExperiment</code>, located in <code>usingCats/src/main/scala/UserRepository.scala</code>.</p>
-<p>Many things are imported from the Scala standard library and the Cats library:</p>
-<pre><code>import scala.util.Try
+
+<p>Many things are imported from the Scala standard library and the Cats library:
+```
+import scala.util.Try
 import cats._
 import cats.std.all._
 import cats.syntax.functor._
-import cats.data.Kleisli
-</code></pre>
-<p>Let's hone in on <code>import cats.data.Kleisli</code>.</p>
-<p>Cats objects and classes are organized by package/class hierarchy. <code>Kleisli</code> exists in package <code>cats.data</code>.</p>
-<p>ScalaDoc is organized by package/class hierarchy. <a href="http://typelevel.org/cats/api/#cats.data.Kleisli">ScalaDoc for <code>cats.data.Kleisli</code></a></p>
-<div class="figure">
-<img src="images/cats_data_kleisli.png" />
+import cats.data.Kleisli</p>
 
-</div>
-<p>Some class hierarchies begin with a company name, like <code>org.typelevel.discipline.Laws</code> or <code>com.datascience.storage.UserExperiment</code>. Others do not, like <code>cats.data.Kleisli</code>.</p>
-<p>The example, revisited in Week 11, demonstrates the use of a Reader Monad (Kleisli) for dependency injection. The dependency is a repository of mafiosos. Proper use of dependency injection assures us that our logic is not &quot;hard-wired&quot; to any particular mafioso repository. We can swap alternative repositories in and out and re-use the logic we have implemented.</p>
-<pre><code>&gt; run 
+<p>```</p>
+
+<p>Let's hone in on <code>import cats.data.Kleisli</code>.</p>
+
+<p>Cats objects and classes are organized by package/class hierarchy.  <code>Kleisli</code> exists in package <code>cats.data</code>.</p>
+
+<p>ScalaDoc is organized by package/class hierarchy.  <a href="http://typelevel.org/cats/api/#cats.data.Kleisli">ScalaDoc for <code>cats.data.Kleisli</code></a></p>
+
+<p><img src="images/cats_data_kleisli.png" alt="" title="" /></p>
+
+<p>Some class hierarchies begin with a company name, like <code>org.typelevel.discipline.Laws</code> or <code>com.datascience.storage.UserExperiment</code>.  Others do not, like <code>cats.data.Kleisli</code>.</p>
+
+<p>The example, revisited in Week 11, demonstrates the use of a Reader Monad (Kleisli) for dependency injection.  The dependency is a repository of mafiosos.  Proper use of dependency injection assures us that our logic is not "hard-wired" to any particular mafioso repository.  We can swap alternative repositories in and out and re-use the logic we have implemented.</p>
+
+<p>```</p>
+
+<blockquote>
+  <p>run 
 run 
 [info] Running com.datascience.storage.UserExample 
 describe Fredo
-Fredo&#39;s boss is Michael
+Fredo's boss is Michael
 describe Sonny
 None
 the absence of Sonny in the repository is handled safely
-[success] Total time: 2 s, completed May 21, 2016 6:01:20 PM
-&gt; </code></pre>
-<h2 id="part-4-usingbreeze-task">Part 4: <code>usingBreeze</code> Task</h2>
+[success] Total time: 2 s, completed May 21, 2016 6:01:20 PM</p>
+
+<p>```</p>
+</blockquote>
+
+<h2>Part 4: <code>usingBreeze</code> Task</h2>
+
 <p><code>scala-class/sbtTutorial/usingBreeze</code></p>
+
 <p>Use <code>minimal</code>, <code>multi</code>, and <code>usingCats</code> to set up the SBT project in directory <code>usingBreeze</code>.</p>
+
 <p>Start SBT inside directory <code>usingBreeze</code>.</p>
+
 <p><code>usingBreeze</code> depends on 3 Breeze libraries, found here:</p>
-<p><a href="https://github.com/scalanlp/breeze#sbt" class="uri">https://github.com/scalanlp/breeze#sbt</a></p>
+
+<p><a href="https://github.com/scalanlp/breeze#sbt">https://github.com/scalanlp/breeze#sbt</a></p>
+
 <ul>
 <li>Breeze</li>
 <li>Breeze Natives</li>
 <li>Breeze Viz</li>
 </ul>
+
 <p><code>usingBreeze</code> has two runnable sub-projects:</p>
+
 <ul>
-<li><code>distributions</code>
+<li><p><code>distributions</code></p>
+
 <ul>
 <li><code>distributions</code> depends on Breeze and Breeze Natives.</li>
 </ul></li>
-<li><code>plotting</code>
+<li><p><code>plotting</code> </p>
+
 <ul>
-<li><code>plotting</code> depends on <code>distributions</code>. This is an internal dependency.</li>
-<li><code>plotting</code> also depends on Breeze, Breeze Natives, and Breeze Viz. These are <a href="https://www.ibm.com/support/knowledgecenter/SSMKHH_9.0.0/com.ibm.etools.mft.doc/ac30280_.htm%23ac30280_">external dependencies</a>.</li>
+<li><code>plotting</code> depends on <code>distributions</code>.  This is an internal dependency.</li>
+<li><code>plotting</code> also depends on Breeze, Breeze Natives, and Breeze Viz.  These are <a href="https://www.ibm.com/support/knowledgecenter/SSMKHH_9.0.0/com.ibm.etools.mft.doc/ac30280_.htm%23ac30280_">external dependencies</a>.</li>
 </ul></li>
 </ul>
-<p>Set up these two sub-projects in <code>usingBreeze/build.sbt</code> and try to reduce code duplication.</p>
-<h3 id="task-4a-set-up-distributions">Task 4a: Set up <code>distributions</code></h3>
-<p><code>distributions</code> is not dependent on <code>plotting</code>. That means <code>plotting</code> can remain uncompilable and unrunnable while <code>distributions</code> is runnable.</p>
-<p>Resolve the dependencies of <code>distributions</code>. Do not add dependencies that <code>distributions</code> does not need -- Breeze Viz.</p>
-<p>At the SBT prompt, enter the <code>distributions</code> sub-project.</p>
-<p><code>reload</code> at the SBT prompt to take in changes made to <code>build.sbt</code>.</p>
-<p><code>run</code> to see some outputs of various statistical distributions.</p>
-<h3 id="task-4b-set-up-plotting">Task 4b: Set up <code>plotting</code></h3>
-<p><code>plotting</code> depends on <code>distributions</code>, so will not be compilable or runnable if <code>distributions</code> is not set up correctly.</p>
-<p>Resolve the dependencies of <code>plotting</code>.</p>
-<p><code>reload</code> at the SBT prompt to take in changes made to <code>build.sbt</code>.</p>
-<p><code>run</code> to produce plots of two distributions. The rendered PNGs will appear in <code>usingBreeze/</code>.</p>
-<div class="figure">
-<img src="images/gaussian_histogram_example.png" />
 
-</div>
-<h3 id="task-4c-set-up-root">Task 4c: Set up <code>root</code></h3>
+<p>Set up these two sub-projects in <code>usingBreeze/build.sbt</code> and try to reduce code duplication.</p>
+
+<h3>Task 4a: Set up <code>distributions</code></h3>
+
+<p><code>distributions</code> is not dependent on <code>plotting</code>.  That means <code>plotting</code> can remain uncompilable and unrunnable while <code>distributions</code> is runnable.</p>
+
+<p>Resolve the dependencies of <code>distributions</code>.  Do not add dependencies that <code>distributions</code> does not need -- Breeze Viz.</p>
+
+<p>At the SBT prompt, enter the <code>distributions</code> sub-project.</p>
+
+<p><code>reload</code> at the SBT prompt to take in changes made to <code>build.sbt</code>.</p>
+
+<p><code>run</code> to see some outputs of various statistical distributions.</p>
+
+<h3>Task 4b: Set up <code>plotting</code></h3>
+
+<p><code>plotting</code> depends on <code>distributions</code>, so will not be compilable or runnable if <code>distributions</code> is not set up correctly.</p>
+
+<p>Resolve the dependencies of <code>plotting</code>.</p>
+
+<p><code>reload</code> at the SBT prompt to take in changes made to <code>build.sbt</code>.</p>
+
+<p><code>run</code> to produce plots of two distributions.  The rendered PNGs will appear in <code>usingBreeze/</code>.</p>
+
+<p><img src="images/gaussian_histogram_example.png" alt="" title="" /></p>
+
+<h3>Task 4c: Set up <code>root</code></h3>
+
 <p>Skim the documentation on the <a href="http://www.scala-sbt.org/0.13/docs/Multi-Project.html#Default+root+project"><em>default <code>root</code> sub-project</em></a>.</p>
+
 <blockquote>
-<p>If a project is not defined for the root directory in the build, sbt creates a default one that aggregates all other projects in the build.</p>
+  <p>If a project is not defined for the root directory in the build, sbt creates a default one that aggregates all other projects in the build. </p>
 </blockquote>
+
 <p>Define <code>root</code> explicitly instead of letting SBT create it implicitly.</p>
+
 <p><code>root</code> should aggregate <code>distributions</code> and <code>plotting</code>.</p>
-<h3 id="task-4d-refactor-to-reduce-duplication">Task 4d: Refactor to reduce duplication</h3>
+
+<h3>Task 4d: Refactor to reduce duplication</h3>
+
 <p><code>plotting</code> and <code>distributions</code> share two external dependencies.</p>
-<p>Take another look at <code>multi/build.sbt</code> from <b>Part 2</b>. Define <code>commonSettings</code> so that these two dependencies only appear once in <code>usingBreeze.sbt</code>. Use stacking, as described in <b>Part 2</b>, to resolve <code>plotting</code>'s third external dependency -- Breeze Viz.</p>
-<p>There will be no difference in the behavior of <code>plotting</code> or <code>distributions</code>, but you have eliminated some obvious code duplication and room for error. Come time to change the version of these Breeze dependencies, there will be less room for error.</p>
+
+<p>Take another look at <code>multi/build.sbt</code> from <b>Part 2</b>.  Define <code>commonSettings</code> so that these two dependencies only appear once in <code>usingBreeze.sbt</code>.  Use stacking, as described in <b>Part 2</b>, to resolve <code>plotting</code>'s third external dependency -- Breeze Viz.</p>
+
+<p>There will be no difference in the behavior of <code>plotting</code> or <code>distributions</code>, but you have eliminated some obvious code duplication and room for error.  Come time to change the version of these Breeze dependencies, there will be less room for error.</p>
+
 <p>Use <a href="http://www.scala-sbt.org/0.13/docs/Basic-Def.html#How+build.sbt+defines+settings"><em>How <code>build.sbt</code> defines settings</em></a> as a guide:</p>
-<pre><code>lazy val commonSettings = Seq(
-  organization := &quot;com.example&quot;,
-  version := &quot;0.1.0&quot;,
-  scalaVersion := &quot;2.11.8&quot;
-)</code></pre>
-<h3 id="terminal-commands-you-will-use">Terminal commands you will use</h3>
+
+<p><code>
+lazy val commonSettings = Seq(
+  organization := "com.example",
+  version := "0.1.0",
+  scalaVersion := "2.11.8"
+)
+</code></p>
+
+<h3>Terminal commands you will use</h3>
+
 <ul>
 <li><p><code>sbt</code> in the root of <code>minimal</code>, <code>multi</code>, <code>usingCats</code> or <code>usingBreeze</code> to enter SBT.</p></li>
 <li><p><code>sbt</code> in a sub-folder an SBT project will not load the project correctly.</p></li>
 </ul>
-<h3 id="sbt-commands-you-will-use">SBT commands you will use</h3>
+
+<h3>SBT commands you will use</h3>
+
 <ul>
-<li><p><code>projects</code> - list the sub-projects. The one with an asterix is the sub-project you're currently in.</p></li>
+<li><p><code>projects</code> - list the sub-projects.  The one with an asterix is the sub-project you're currently in.</p></li>
 <li><p><code>project X</code> - enter a sub-project</p></li>
-<li><p><code>reload</code> - reload <code>build.sbt</code>. Equivalent to exiting SBT and starting it again.</p></li>
+<li><p><code>reload</code> - reload <code>build.sbt</code>.  Equivalent to exiting SBT and starting it again.</p></li>
 <li><p><code>compile</code> - fetches dependencies if necessary</p></li>
 <li><p><code>run</code> - run the main method in an SBT sub-project, or pick a main method if there is more than one is an SBT sub-project</p></li>
 <li><p><code>exit</code></p></li>
 <li><p><code>help</code> - Displays this help message or prints detailed help on requested commands (run <code>help &lt;command&gt;</code>)</p></li>
 </ul>
-<h2 id="part-5-usingbreezerefactored-task">Part 5: <code>usingBreezeRefactored</code> Task</h2>
+
+<h2>Part 5: <code>usingBreezeRefactored</code> Task</h2>
+
 <p><code>scala-class/sbtTutorial/usingBreezeRefactored</code></p>
+
 <p>In this <b>Part</b> we will refactor our build configuration from <b>Part 4</b> in the style of the <a href="https://github.com/TrueCar/mleap">MLeap library</a>.</p>
+
 <p>We will split our <code>build.sbt</code> into multiple files: <code>build.sbt</code>, <code>project/Common.scala</code> and <code>project/Dependencies.scala</code>.</p>
+
 <p>The extra imports in the <code>*.scala</code> files</p>
-<pre><code>import sbt._
-import Keys._</code></pre>
+
+<p><code>
+import sbt._
+import Keys._
+</code></p>
+
 <p>are explained in <a href="http://stackoverflow.com/a/18010698/1007926"><em>What is the difference between <code>build.sbt</code> and <code>build.scala</code>?</em></a>.</p>
-<h3 id="task-5a-common">Task 5a: <code>Common</code></h3>
+
+<h3>Task 5a: <code>Common</code></h3>
+
 <p><code>scala-class/sbtTutorial/usingBreezeRefactored/project/Common.scala</code></p>
+
 <p>Emulate <a href="https://github.com/TrueCar/mleap/blob/master/project/Common.scala"><code>mleap/project/Common.scala</code></a></p>
+
 <p>Refactor <code>commonSettings</code> from <code>scala-class/sbtTutorial/usingBreeze/build.sbt</code> in <b>Part 4</b>.</p>
-<pre><code>import sbt._
-import Keys._
 
-object Common {
+<p>```
+import sbt._
+import Keys._</p>
 
-  lazy val commonSettings: Seq[Def.Setting[_]] = ???
+<p>object Common {</p>
 
-}</code></pre>
+<p>lazy val commonSettings: Seq[Def.Setting[_]] = ???</p>
+
+<p>}
+```</p>
+
 <p>Define the <em>organization</em> as <code>com.datascience.education</code>.</p>
+
 <p>Include</p>
-<pre><code>    scalacOptions ++= Seq(&quot;-unchecked&quot;, &quot;-deprecation&quot;, &quot;-feature&quot;)</code></pre>
-<h3 id="task-5b-scalaver">Task 5b: <code>scalaVer</code></h3>
+
+<p><code>
+    scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature")
+</code></p>
+
+<h3>Task 5b: <code>scalaVer</code></h3>
+
 <p><code>scala-class/sbtTutorial/usingBreezeRefactored/project/Common.scala</code></p>
+
 <p>Emulate <a href="https://github.com/TrueCar/mleap/blob/master/project/Common.scala"><code>mleap/project/Common.scala</code></a></p>
+
 <p>Factor out the string containing the version of Scala from <code>commonSettings</code>.</p>
-<pre><code>import sbt._
-import Keys._
 
-object Common {
+<p>```
+import sbt._
+import Keys._</p>
 
-  // use Scala 2.11.8
-  val scalaVer: String = ???
+<p>object Common {</p>
 
-  lazy val commonSettings: Seq[Def.Setting[_]] = ???
+<p>// use Scala 2.11.8
+  val scalaVer: String = ???</p>
 
-}</code></pre>
-<h3 id="task-5c-additional-resolvers">Task 5c: additional resolvers</h3>
+<p>lazy val commonSettings: Seq[Def.Setting[_]] = ???</p>
+
+<p>}
+```</p>
+
+<h3>Task 5c: additional resolvers</h3>
+
 <p><code>scala-class/sbtTutorial/usingBreezeRefactored/project/Common.scala</code></p>
+
 <p>Emulate <a href="https://github.com/TrueCar/mleap/blob/master/project/Common.scala"><code>mleap/project/Common.scala</code></a></p>
+
 <p>Skim over <a href="http://www.scala-sbt.org/0.13/docs/Resolvers.html">SBT's documentation on Resolvers</a>.</p>
-<p>Fill in</p>
-<pre><code>  lazy val otherResolvers: Seq[Resolver] = ???</code></pre>
+
+<p>Fill in </p>
+
+<p><code>
+  lazy val otherResolvers: Seq[Resolver] = ???
+</code></p>
+
 <p>with</p>
-<pre><code>&quot;bintray/non&quot; at &quot;http://dl.bintray.com/non/maven&quot;,</code></pre>
+
+<p><code>
+"bintray/non" at "http://dl.bintray.com/non/maven",
+</code></p>
+
 <p>and</p>
-<pre><code>&quot;Sonatype Releases&quot; at &quot;https://oss.sonatype.org/content/repositories/releases/&quot;</code></pre>
-<p>.</p>
+
+<p><code>
+"Sonatype Releases" at "https://oss.sonatype.org/content/repositories/releases/"
+</code>
+.</p>
+
 <p>Put <code>otherResolvers</code> into <code>commonSettings</code> with, right below the <code>organization</code>:</p>
-<pre><code>    resolvers ++= otherResolvers</code></pre>
-<h3 id="task-5d-dependencies">Task 5d: <code>Dependencies</code></h3>
+
+<p><code>
+    resolvers ++= otherResolvers
+</code></p>
+
+<h3>Task 5d: <code>Dependencies</code></h3>
+
 <p><code>scala-class/sbtTutorial/usingBreezeRefactored/project/Dependencies.scala</code></p>
+
 <p>Emulate <a href="https://github.com/TrueCar/mleap/blob/master/project/Dependencies.scala"><code>mleap/project/Dependencies.scala</code></a>.</p>
+
 <p>Refactor <code>libraryDependencies</code> from <code>scala-class/sbtTutorial/usingBreeze/build.sbt</code> in <b>Part 4</b>.</p>
-<p>Fill in</p>
-<pre><code>  lazy val commonDependencies: Seq[ModuleID] = ???</code></pre>
+
+<p>Fill in </p>
+
+<p><code>
+  lazy val commonDependencies: Seq[ModuleID] = ???
+</code></p>
+
 <p>and</p>
-<pre><code>  lazy val plottingDependencies: Seq[ModuleID] = ???</code></pre>
-<p>. <code>plottingDependencies</code> should not include the <code>commonDependencies</code>. They can be combined, if need be, with <code>commonDependencies.union(plottingDependencies)</code>. <a href="http://www.scala-lang.org/files/archive/api/2.11.8/#scala.collection.immutable.Seq">You have all the methods of <code>Seq</code> at your disposal.</a></p>
-<h3 id="task-5e-breezeversion">Task 5e: <code>breezeVersion</code></h3>
+
+<p><code>
+  lazy val plottingDependencies: Seq[ModuleID] = ???
+</code></p>
+
+<p>.  <code>plottingDependencies</code> should not include the <code>commonDependencies</code>.  They can be combined, if need be, with <code>commonDependencies.union(plottingDependencies)</code>.  <a href="http://www.scala-lang.org/files/archive/api/2.11.8/#scala.collection.immutable.Seq">You have all the methods of <code>Seq</code> at your disposal.</a></p>
+
+<h3>Task 5e: <code>breezeVersion</code></h3>
+
 <p><code>scala-class/sbtTutorial/usingBreezeRefactored/project/Dependencies.scala</code></p>
+
 <p>Factor out the version of Breeze into a <code>val</code>:</p>
-<pre><code>  val breezeVersion: String = ???</code></pre>
-<h3 id="task-5f-compiler-plugins">Task 5f: compiler plugins</h3>
+
+<p><code>
+  val breezeVersion: String = ???
+</code></p>
+
+<h3>Task 5f: compiler plugins</h3>
+
 <p><code>scala-class/sbtTutorial/usingBreezeRefactored/project/Dependencies.scala</code></p>
+
 <p>Skim the <a href="http://www.scala-sbt.org/1.0/docs/Compiler-Plugins.html">SBT documentation on compiler plugins.</a></p>
-<p><a href="https://github.com/milessabin/si2712fix-plugin">si2712fix-plugin</a> and <a href="https://github.com/non/kind-projector">kind-projector</a> are compiler plugins. They are dependencies, but must be wrapped with <code>compilerPlugin(...)</code>.</p>
+
+<p><a href="https://github.com/milessabin/si2712fix-plugin">si2712fix-plugin</a> and <a href="https://github.com/non/kind-projector">kind-projector</a> are compiler plugins.  They are dependencies, but must be wrapped with <code>compilerPlugin(...)</code>.</p>
+
 <p>The necessity of these two particular compiler plugins is a topic for another day.</p>
-<pre><code>  val kindProjector = compilerPlugin(&quot;org.spire-math&quot; % &quot;kind-projector&quot; % &quot;0.9.0&quot; cross CrossVersion.binary)
-  val si2712 = compilerPlugin(&quot;com.milessabin&quot; % &quot;si2712fix-plugin&quot; % &quot;1.2.0&quot; cross CrossVersion.full)</code></pre>
+
+<p><code>
+  val kindProjector = compilerPlugin("org.spire-math" % "kind-projector" % "0.9.0" cross CrossVersion.binary)
+  val si2712 = compilerPlugin("com.milessabin" % "si2712fix-plugin" % "1.2.0" cross CrossVersion.full)
+</code></p>
+
 <p>Append these two dependencies to <code>commonDependencies: Seq[ModuleID]</code>.</p>
-<h3 id="task-5g-putting-common-dependencies-in-common-settings">Task 5g: putting common dependencies in common settings</h3>
+
+<h3>Task 5g: putting common dependencies in common settings</h3>
+
 <p><code>scala-class/sbtTutorial/usingBreezeRefactored/project/Dependencies.scala</code></p>
+
 <p>Include <code>Dependencies.commonDependencies</code> with <code>scalaVersion</code>, <code>organization</code>, <code>scalacOptions</code> and <code>resolvers</code> in:</p>
-<pre><code>lazy val commonSettings: Seq[Def.Setting[_]] = ???</code></pre>
-<h3 id="task-5h-build.sbt">Task 5h: <code>build.sbt</code></h3>
+
+<p><code>
+lazy val commonSettings: Seq[Def.Setting[_]] = ???
+</code></p>
+
+<h3>Task 5h: <code>build.sbt</code></h3>
+
 <p><code>scala-class/sbtTutorial/usingBreezeRefactored/build.sbt</code></p>
-<p>Copy and refactor</p>
-<pre><code>lazy val root = ???
 
-lazy val distributions = ???
+<p>Copy and refactor </p>
 
-lazy val plotting = ???</code></pre>
+<p>```
+lazy val root = ???</p>
+
+<p>lazy val distributions = ???</p>
+
+<p>lazy val plotting = ???
+```</p>
+
 <p>from <code>scala-class/sbtTutorial/usingBreeze/build.sbt</code> in <b>Part 4</b>.</p>
+
 <p><code>root</code> should aggregate <code>distributions</code> and <code>plotting</code>.</p>
+
 <p><code>plotting</code> should depend on <code>distributions</code>.</p>
+
 <p>Ensure the <code>plotting</code> sub-project has access to <code>Dependencies.plottingDependencies</code>.</p>
+
 <p>This <code>build.sbt</code> will be much more concise than <code>scala-class/sbtTutorial/usingBreeze/build.sbt</code> in <b>Part 4</b>.</p>
-<h2 id="references">References</h2>
+
+<h2>References</h2>
+
 <p><a href="http://www.scala-sbt.org/0.13.12/api/#package">SBT 0.13 Scaladoc</a></p>
+
 <p><a href="http://www.scala-sbt.org/0.13/docs/Basic-Def-Examples.html">.sbt build examples</a></p>
+
 <p><a href="http://www.scala-sbt.org/0.13.12/api/#sbt.ModuleID"><code>ModuleID</code> Scaladoc</a> - the type that holds a dependency</p>
+
 <p><a href="http://www.scala-sbt.org/0.13.12/api/#sbt.Resolver"><code>Resolver</code> Scaladoc</a></p>
+
 <p><a href="http://www.scala-sbt.org/0.13.12/api/#sbt.Init$Setting"><code>Def.Setting</code> Scaladoc</a></p>
 
 </body>
