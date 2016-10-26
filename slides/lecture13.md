@@ -486,6 +486,7 @@ The free monad is just an abstract syntax tree representation of a monad. It has
 
 [Free Monads and Free Monoids](http://blog.higher-order.com/blog/2013/08/20/free-monads-and-free-monoids/)
 http://underscore.io/blog/posts/2015/04/23/deriving-the-free-monad.html
+http://www.47deg.com/blog/fp-for-the-average-joe-part3-free-monads
 
 http://blog.scalac.io/2016/06/02/overview-of-free-monad-in-cats.html
 http://eed3si9n.com/herding-cats/Free-monads.html

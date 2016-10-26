@@ -149,8 +149,6 @@ By default, `root` aggregates all other sub-projects.
 
 ### [`dependsOn`](http://www.scala-sbt.org/0.13/docs/Multi-Project.html#Classpath+dependencies)
 
-`aggregates` is a subset of the functionality of `dependsOn`.
-
 ```
 lazy val frontend = (project in file("frontend")).
   settings(
@@ -159,6 +157,16 @@ lazy val frontend = (project in file("frontend")).
 ```
 
 `dependsOn(backend)` gives `frontend` access to `backend`'s code.
+
+[To assemble a runnable JAR with multiple sub-projects](https://github.com/sbt/sbt-assembly#assembly-task), the `root` sub-project must depend on the sub-project containing the runnable class.
+
+
+`aggregates` is *not* strictly a subset of the functionality of `dependsOn`.
+
+`aggregates` will make the "aggregator" sub-project run the tests of the "aggregated" sub-projects.  `dependsOn` will not do this.
+
+See [How to make `sbt test` to run tests in main project and all subprojects (or some selected set)](http://stackoverflow.com/questions/32884308/how-to-make-sbt-test-to-run-tests-in-main-project-and-all-subprojects-or-some)
+
 
 ### Java package hierarchy
 

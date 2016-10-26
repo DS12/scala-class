@@ -720,7 +720,7 @@ First, eliminate processing of empty lists with a pattern match.  Any `List` not
 The maximum difference of a single-element `List` will be sentinel value `-1`:
 
 ```
-  list.foldLeft((???,???, 1 )) {(???, ???) => ???}
+  list.foldLeft((???,???, -1 )) {(???, ???) => ???}
 ```
 
 Plug into the pattern match.  Extract the maximum difference from the 3-tuple -- it is all we need.
