@@ -13,16 +13,15 @@ sealed trait FlawedOption[A] {
   // See FlawedOptionSpec
   // Task (5a)
 
-  // def map[B](f: A => B): FlawedOption[B] = this match {
-  //   case Some(a) => Some(f(a))
-  //   case None => None
-  // }
-
-  // def getOrElse(default: => A): A = this match {
-  //   case Some(a) => a
-  //   case None => default
-  // }
-
+  //   def map[B](f: A => B): FlawedOption[B] = this match {
+  //     case FlawedSome(a) => FlawedSome(f(a))
+  //     case FlawedNone => FlawedNone
+  //   }
+  //
+  //   def getOrElse(default: => A): A = this match {
+  //     case FlawedSome(a) => a
+  //     case FlawedNone => default
+  //   }
 
 
 }

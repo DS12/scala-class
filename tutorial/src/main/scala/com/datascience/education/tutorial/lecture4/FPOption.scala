@@ -20,8 +20,8 @@ sealed trait FPOption[A] {
 
   // Part (5b)
   // def getOrElse(default: => A): A = this match {
-  //   case Some(a) => a
-  //   case None => default
+  //   case FPSome(a) => a
+  //   case FPNone => default
   // }
 
 
