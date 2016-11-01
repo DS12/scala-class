@@ -1,13 +1,6 @@
 package com.datascience.education.tutorialCommon.lecture4
 
-import org.scalatest._
 import org.scalatest.{FunSuite, Matchers}
-
-import scala.Option
-import scala.Some
-import scala.None
-
-import java.util.UUID
 
 /*
  The typeclass pattern may be useful to unify test implementations 
@@ -37,7 +30,7 @@ import java.util.UUID
 
  */
 
-class EmployeesSpec[Employee, Employees, Email](
+class CommonEmployeesSpec[Employee, Employees, Email](
   implicit
     et: Employee => EmployeeTypeclass[Email], Employees: EmployeesTypeclass[Employee, Email]
 ) extends FunSuite with Matchers {

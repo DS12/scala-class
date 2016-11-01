@@ -1,13 +1,6 @@
 package com.datascience.education.tutorialCommon.lecture4
 
-import org.scalatest._
 import org.scalatest.{FunSuite, Matchers}
-
-//import EmptySet._
-
-import scala.Option
-import scala.Some
-import scala.None
 
 class CommonEmptySetSpec[EmptySet](implicit EmptySet: EmptySetTypeclass) extends FunSuite with Matchers {
 
