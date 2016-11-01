@@ -4,22 +4,27 @@ import org.scalatest.{FunSuite, Matchers}
 
 class FlawedOptionSpec extends FunSuite with Matchers {
 
-  test("`map` should not compile when the type parameter of `FlawedOption` is invariant") {
+  test("Methods in FlawedOption should not compile when the type parameter of `FlawedOption` is invariant") {
     """
-       def map[B](f: A => B): FlawedOption[B] = this match {
-         case FlawedSome(a) => FlawedSome(f(a))
-         case FlawedNone => FlawedNone
-       }
-    """ shouldNot compile
-  }
+      sealed trait FlawedOption[A] {
+        import FlawedOption._
 
-  test("`getOrElse` should not compile when the type parameter of `FlawedOption` is invariant") {
-    """
-      def getOrElse(default: => A): A = this match {
-        case FlawedSome(a) => a
-        case FlawedNone => default
+           def map[B](f: A => B): FlawedOption[B] = this match {
+             case FlawedSome(a) => FlawedSome(f(a))
+             case FlawedNone => FlawedNone
+           }
+
+           def getOrElse(default: => A): A = this match {
+             case FlawedSome(a) => a
+             case FlawedNone => default
+           }
+      }
+
+      object FlawedOption {
+        case class FlawedSome[A](get: A) extends FlawedOption[A]
+        case object FlawedNone extends FlawedOption[Nothing]
       }
     """ shouldNot compile
   }
-  
+
 }
