@@ -7,7 +7,6 @@ object EmptySetSpec {
 
   implicit val emptySetTypeclass = new EmptySetTypeclass {
 
-    import EmptySet._
     def sumList(l: List[Int]): Int = EmptySet.sumList(l)
     def prodList(ds: List[Double]): Double = EmptySet.prodList(ds)
     

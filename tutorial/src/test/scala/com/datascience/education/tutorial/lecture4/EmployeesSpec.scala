@@ -1,17 +1,10 @@
 package com.datascience.education.tutorial.lecture4
 
-import org.scalatest._
-import org.scalatest.{FunSuite, Matchers}
-
-import scala.Option
-import scala.Some
-import scala.None
-
 import java.util.UUID
 
 import scala.language.implicitConversions
 
-import com.datascience.education.tutorialCommon.lecture4.{EmployeesSpec => CommonEmployeesSpec}
+import com.datascience.education.tutorialCommon.lecture4.CommonEmployeesSpec
 
 import Employees._
 
@@ -40,5 +33,5 @@ import EmployeesSpec._
 
 // uncomment when ready to test
 // class EmployeesSpec
-//     extends CommonEmployeesSpec()(employeeTypeclass, employeesTypeclass)
+//     extends CommonEmployeesSpec()(employeeTypeclass _, employeesTypeclass)
 
