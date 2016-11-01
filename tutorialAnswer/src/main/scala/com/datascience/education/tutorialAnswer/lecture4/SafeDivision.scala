@@ -1,13 +1,5 @@
 package com.datascience.education.tutorialAnswer.lecture4
 
-import scala.Option
-import scala.Some
-import scala.None
-
-import cats.Applicative
-import cats.instances.list._
-
-
 object SafeDivision {
 
   // Task (2a)
@@ -37,16 +29,9 @@ object SafeDivision {
 
   // Task (2c)
   // answer
-  def safeDivInt(numerator: Int, denominator: Int): Option[Int] =
-    try {
-      Some(numerator / denominator)
-    } catch {
-      case ae: java.lang.ArithmeticException => None
-    }
-
   def squareRootFrac(numerator: Int, denominator: Int): Option[Double] =
-    safeDivInt(numerator, denominator).flatMap { _ =>
-      val squareRoot: Double = math.sqrt(numerator.toDouble / denominator)
+    safeDiv(numerator, denominator).flatMap { frac =>
+      val squareRoot: Double = math.sqrt(frac)
       if (squareRoot.isNaN)
         None
       else
@@ -58,7 +43,6 @@ object SafeDivision {
 
   def traverseSqrtFractions(ll: List[(Int, Int)]): Option[List[Double]] =
     traverse(ll)(squareRootFrac)
-
 
 }
 
