@@ -512,9 +512,12 @@ scala> :t Option
 Option.type
 ```
 
-### Task (5a): compilation errors in of `FlawedOption`
+### Task (5a): Compilation errors of `FlawedOption`
 
-Uncomment the methods implemented inside the trait of `FlawedOption`. Investigate the compilation errors, and use these compilation errors as a clue for the solution to the next task. Comment out the methods before continuing to `FPOption`.  
+Investigate the compilation errors for the given implementation of `FlawedOption`, and use these compilation errors as a clue for the solution to the next task. You can do this in two ways:  
+
+1. Uncomment the methods implemented inside the trait of `FlawedOption`, try compiling and look at the errors. Remember to comment out the methods before continuing to `FPOption`.
+2. In `tutorial/src/test/scala/com/datascience/education/tutorial/lecture4/FlawedOptionSpec.scala`, a test is provided which checks that this implementation `shouldNot compile`. You can modify this test so that it will fail by changing it to `should compile`, and look at the error for failing when the test is ran. To run this specific test in `sbt`, use `testOnly com.datascience.education.tutorial.lecture4.FlawedOptionSpec`. Remember to change the tests back otherwise your tests will continue to fail.
 
 ### Task (5b): `map` and `getOrElse`
 
@@ -549,16 +552,27 @@ Test your implementation with the runnable class `FPOptionExamples5d`.
 
 ### Task (5e): `map2`
 
-Implement 
+Implement `map2`, another non-primitive combinator.  
 
 ```
   def map2[B, C](opB: FPOption[B])(f: (A,B) => C): FPOption[C] = ???
 ```
 
-, another non-primitive combinator.
-
 Test your implementation with runnable class `FPOptionExamples5e`.
 
+-------------------------
+
+## Tests
+
+Various tests have already been implemented in the following files:  
+ 
+`tutorial/src/test/scala/com/datascience/education/tutorial/lecture4/SafeDivisionSpec.scala`  
+`tutorial/src/test/scala/com/datascience/education/tutorial/lecture4/EmptySetSpec.scala`  
+`tutorial/src/test/scala/com/datascience/education/tutorial/lecture4/EmployeesSpec.scala`  
+`tutorial/src/test/scala/com/datascience/education/tutorial/lecture4/FlawedOptionSpec.scala`  
+`tutorial/src/test/scala/com/datascience/education/tutorial/lecture4/FPOptionSpec.scala`  
+
+Uncomment all of the tests that are commented out in these files and run them to check your implementations in this tutorial.
 
 -------------------------
 ## Resources
