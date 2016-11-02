@@ -312,59 +312,74 @@ The ultimate endpoint of a transparent implementation is implementing all langua
 
 ---
 
+#Free and Cofree
 
-#Application: Rose Trees
+Let's consider a type of comonad called a Rose tree.
 
-case class Tree[A](tip: A, sub: List[Tree[A]])
+Rose trees are non-empty trees. A tree of this sort has a value of type A at the tip, and a (possibly empty) list of subtrees underneath:
 
-Rose Trees are non-empty trees. A tree of this sort has a value of type A at the tip, and a (possibly empty) list of subtrees underneath.
+		!scala
+		case class Tree[A](tip: A, sub: List[Tree[A]])
 
+<<<<<<< variant A
 One obvious use case is something like a directory structure, where each tip is a directory and the corresponding sub is its subdirectories.
+>>>>>>> variant B
+======= end
 
 ---
 
-Rose Trees are comonadic. The counit is obvious, we just get the tip. And here’s a duplicate for this structure:
+The `counit` for a Rose tree is simple: we just get the tip.
 
-  def duplicate: Tree[Tree[A]] =
-    Tree(this, sub.map(_.duplicate))
+Here’s `duplicate` for this structure:
+
+		!scala
+		def duplicate: Tree[Tree[A]] = Tree(this, sub.map(_.duplicate))
 
 ---
 
-Now, this obviously gives us a tree of trees, but what is the structure of that tree? It will be a tree of all the subtrees.
+This gives us a tree of trees, but what is the structure of that tree?
+
+It will be a tree of all the subtrees.
 
 The tip will be this tree, and the tip of each proper subtree under it will be the entire subtree at the corresponding point in the original tree.
 
 ---
 
-That is, when we say t.duplicate.map(f) (or equivalently t extend f), our f will receive each subtree of t in turn and perform some calculation over that entire subtree.
+That is, when we say `t.duplicate.map(f)` (or equivalently `t extend f`), our `f` will receive each subtree of `t` in turn and perform some calculation over that entire subtree.
 
-The result of the whole expression t extend f will be a tree mirroring the structure of t, except each node will contain f applied to the corresponding subtree of t.
-
----
-
-To carry on with our directory example, we can imagine wanting a detailed space usage summary of a directory structure, with the size of the whole tree at the tip and the size of each subdirectory underneath as tips of the subtrees, and so on.
-
-Then d extend size creates the tree of sizes of recursive subdirectories of d.
+The result of the whole expression `t` extend `f` will be a tree mirroring the structure of `t`, except each node will contain `f` applied to the corresponding subtree of `t`.
 
 ---
 
-Given this difference, we can make some statements about what it means:
+One use case is something like a directory structure, where each tip is a directory and the corresponding sub is its subdirectories.
 
-Free[F,A] is a type of “leafy tree” that branches according to F, with values of type A at the leaves, while Cofree[F,A] is a type of “node-valued tree” that branches according to F with values of type A at the nodes.
+We can imagine wanting a detailed space usage summary of a directory structure, with the size of the whole tree at the tip and the size of each subdirectory underneath as tips of the subtrees, and so on.
 
-If Exp defines the structure of some expression language, then Free[Exp,A] is the type of abstract syntax trees for that language, with free variables of type A, and monadic bind literally binds expressions to those variables.
-
-Dually, Cofree[Exp,A] is the type of closed exresspions whose subexpressions are annotated with values of type A, and comonadic extend reannotates the tree. For example, if you have a type inferencer infer, then e extend infer will annotate each subexpression of e with its inferred type.
+Then `d extend size` creates the tree of sizes of recursive subdirectories of `d`.
 
 ---
 
-This comparison of Free and Cofree actually says something about monads and comonads in general:
+More generally, `Free[F,A]` is a type of “leafy tree” that branches according to `F`, with values of type `A` at the leaves.
+
+Dually, `Cofree[F,A]` is a type of “node-valued tree” that branches according to `F` with values of type `A` at the nodes.
+
+---
+
+If `Expr` defines the structure of some expression language, then `Free[Expr,A]` is the type of abstract syntax trees for that language, with free variables of type `A`, and `flatMap` binds expressions to those variables.
+
+Dually, `Cofree[Expr,A]` is the type of a closed expression whose subexpressions are annotated with values of type `A`, and `extend` re-annotates the tree.
+
+For example, if you have a type inferencer infer, then e extend infer will annotate each subexpression of e with its inferred type.
+
+---
+
+This comparison of `Free` and `Cofree` says something about monads and comonads in general:
 
 All monads can model some kind of leafy tree structure, and all comonads can be modeled by some kind of node-valued tree structure.
 
 ---
 
-In a monad M, if f: A => M[B], then xs map f allows us to take the values at the leaves (a:A) of a monadic structure xs and substitute an entire structure (f(a)) for each value.
+In a monad `M`, if `f: A => M[B]`, then `xs map f` allows us to take the values at the leaves `(a:A)` of a monadic structure `xs` and substitute an entire structure `f(a)` for each value.
 
 A subsequent join then renormalizes the structure, eliminating the “seams” around our newly added substructures. In a comonad W, xs.duplicate denormalizes, or exposes the substructure of xs:W[A] to yield W[W[A]].
 
