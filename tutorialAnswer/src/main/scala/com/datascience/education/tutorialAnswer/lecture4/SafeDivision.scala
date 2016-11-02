@@ -1,5 +1,13 @@
 package com.datascience.education.tutorialAnswer.lecture4
 
+import scala.Option
+import scala.Some
+import scala.None
+
+import cats.Applicative
+import cats.std.list._
+
+
 object SafeDivision {
 
   // Task (2a)

@@ -2,7 +2,7 @@ package com.datascience.education.tutorial.lecture4
 
 import cats.Traverse
 import cats.Applicative
-import cats.instances.list._
+import cats.std.list._
 
 /*
  `traverse` and `sequence` from Chapter 4, 
