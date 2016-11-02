@@ -1,28 +1,492 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 
 <head>
-<title>README.html</title>
+
+<meta charset="utf-8">
+<title>README</title>
+
+
+<style type="text/css">
+body {
+  font-family: Helvetica, arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: white;
+  padding: 30px; }
+
+body > *:first-child {
+  margin-top: 0 !important; }
+body > *:last-child {
+  margin-bottom: 0 !important; }
+
+a {
+  color: #4183C4; }
+a.absent {
+  color: #cc0000; }
+a.anchor {
+  display: block;
+  padding-left: 30px;
+  margin-left: -30px;
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0; }
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 20px 0 10px;
+  padding: 0;
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased;
+  cursor: text;
+  position: relative; }
+
+h1:hover a.anchor, h2:hover a.anchor, h3:hover a.anchor, h4:hover a.anchor, h5:hover a.anchor, h6:hover a.anchor {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA09pVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoMTMuMCAyMDEyMDMwNS5tLjQxNSAyMDEyLzAzLzA1OjIxOjAwOjAwKSAgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OUM2NjlDQjI4ODBGMTFFMTg1ODlEODNERDJBRjUwQTQiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OUM2NjlDQjM4ODBGMTFFMTg1ODlEODNERDJBRjUwQTQiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo5QzY2OUNCMDg4MEYxMUUxODU4OUQ4M0REMkFGNTBBNCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo5QzY2OUNCMTg4MEYxMUUxODU4OUQ4M0REMkFGNTBBNCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PsQhXeAAAABfSURBVHjaYvz//z8DJYCRUgMYQAbAMBQIAvEqkBQWXI6sHqwHiwG70TTBxGaiWwjCTGgOUgJiF1J8wMRAIUA34B4Q76HUBelAfJYSA0CuMIEaRP8wGIkGMA54bgQIMACAmkXJi0hKJQAAAABJRU5ErkJggg==) no-repeat 10px center;
+  text-decoration: none; }
+
+h1 tt, h1 code {
+  font-size: inherit; }
+
+h2 tt, h2 code {
+  font-size: inherit; }
+
+h3 tt, h3 code {
+  font-size: inherit; }
+
+h4 tt, h4 code {
+  font-size: inherit; }
+
+h5 tt, h5 code {
+  font-size: inherit; }
+
+h6 tt, h6 code {
+  font-size: inherit; }
+
+h1 {
+  font-size: 28px;
+  color: black; }
+
+h2 {
+  font-size: 24px;
+  border-bottom: 1px solid #cccccc;
+  color: black; }
+
+h3 {
+  font-size: 18px; }
+
+h4 {
+  font-size: 16px; }
+
+h5 {
+  font-size: 14px; }
+
+h6 {
+  color: #777777;
+  font-size: 14px; }
+
+p, blockquote, ul, ol, dl, li, table, pre {
+  margin: 15px 0; }
+
+hr {
+  background: transparent url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAECAYAAACtBE5DAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OENDRjNBN0E2NTZBMTFFMEI3QjRBODM4NzJDMjlGNDgiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OENDRjNBN0I2NTZBMTFFMEI3QjRBODM4NzJDMjlGNDgiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo4Q0NGM0E3ODY1NkExMUUwQjdCNEE4Mzg3MkMyOUY0OCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo4Q0NGM0E3OTY1NkExMUUwQjdCNEE4Mzg3MkMyOUY0OCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PqqezsUAAAAfSURBVHjaYmRABcYwBiM2QSA4y4hNEKYDQxAEAAIMAHNGAzhkPOlYAAAAAElFTkSuQmCC) repeat-x 0 0;
+  border: 0 none;
+  color: #cccccc;
+  height: 4px;
+  padding: 0;
+}
+
+body > h2:first-child {
+  margin-top: 0;
+  padding-top: 0; }
+body > h1:first-child {
+  margin-top: 0;
+  padding-top: 0; }
+  body > h1:first-child + h2 {
+    margin-top: 0;
+    padding-top: 0; }
+body > h3:first-child, body > h4:first-child, body > h5:first-child, body > h6:first-child {
+  margin-top: 0;
+  padding-top: 0; }
+
+a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6 {
+  margin-top: 0;
+  padding-top: 0; }
+
+h1 p, h2 p, h3 p, h4 p, h5 p, h6 p {
+  margin-top: 0; }
+
+li p.first {
+  display: inline-block; }
+li {
+  margin: 0; }
+ul, ol {
+  padding-left: 30px; }
+
+ul :first-child, ol :first-child {
+  margin-top: 0; }
+
+dl {
+  padding: 0; }
+  dl dt {
+    font-size: 14px;
+    font-weight: bold;
+    font-style: italic;
+    padding: 0;
+    margin: 15px 0 5px; }
+    dl dt:first-child {
+      padding: 0; }
+    dl dt > :first-child {
+      margin-top: 0; }
+    dl dt > :last-child {
+      margin-bottom: 0; }
+  dl dd {
+    margin: 0 0 15px;
+    padding: 0 15px; }
+    dl dd > :first-child {
+      margin-top: 0; }
+    dl dd > :last-child {
+      margin-bottom: 0; }
+
+blockquote {
+  border-left: 4px solid #dddddd;
+  padding: 0 15px;
+  color: #777777; }
+  blockquote > :first-child {
+    margin-top: 0; }
+  blockquote > :last-child {
+    margin-bottom: 0; }
+
+table {
+  padding: 0;border-collapse: collapse; }
+  table tr {
+    border-top: 1px solid #cccccc;
+    background-color: white;
+    margin: 0;
+    padding: 0; }
+    table tr:nth-child(2n) {
+      background-color: #f8f8f8; }
+    table tr th {
+      font-weight: bold;
+      border: 1px solid #cccccc;
+      margin: 0;
+      padding: 6px 13px; }
+    table tr td {
+      border: 1px solid #cccccc;
+      margin: 0;
+      padding: 6px 13px; }
+    table tr th :first-child, table tr td :first-child {
+      margin-top: 0; }
+    table tr th :last-child, table tr td :last-child {
+      margin-bottom: 0; }
+
+img {
+  max-width: 100%; }
+
+span.frame {
+  display: block;
+  overflow: hidden; }
+  span.frame > span {
+    border: 1px solid #dddddd;
+    display: block;
+    float: left;
+    overflow: hidden;
+    margin: 13px 0 0;
+    padding: 7px;
+    width: auto; }
+  span.frame span img {
+    display: block;
+    float: left; }
+  span.frame span span {
+    clear: both;
+    color: #333333;
+    display: block;
+    padding: 5px 0 0; }
+span.align-center {
+  display: block;
+  overflow: hidden;
+  clear: both; }
+  span.align-center > span {
+    display: block;
+    overflow: hidden;
+    margin: 13px auto 0;
+    text-align: center; }
+  span.align-center span img {
+    margin: 0 auto;
+    text-align: center; }
+span.align-right {
+  display: block;
+  overflow: hidden;
+  clear: both; }
+  span.align-right > span {
+    display: block;
+    overflow: hidden;
+    margin: 13px 0 0;
+    text-align: right; }
+  span.align-right span img {
+    margin: 0;
+    text-align: right; }
+span.float-left {
+  display: block;
+  margin-right: 13px;
+  overflow: hidden;
+  float: left; }
+  span.float-left span {
+    margin: 13px 0 0; }
+span.float-right {
+  display: block;
+  margin-left: 13px;
+  overflow: hidden;
+  float: right; }
+  span.float-right > span {
+    display: block;
+    overflow: hidden;
+    margin: 13px auto 0;
+    text-align: right; }
+
+code, tt {
+  margin: 0 2px;
+  padding: 0 5px;
+  white-space: nowrap;
+  border: 1px solid #eaeaea;
+  background-color: #f8f8f8;
+  border-radius: 3px; }
+
+pre code {
+  margin: 0;
+  padding: 0;
+  white-space: pre;
+  border: none;
+  background: transparent; }
+
+.highlight pre {
+  background-color: #f8f8f8;
+  border: 1px solid #cccccc;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px; }
+
+pre {
+  background-color: #f8f8f8;
+  border: 1px solid #cccccc;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px; }
+  pre code, pre tt {
+    background-color: transparent;
+    border: none; }
+
+sup {
+    font-size: 0.83em;
+    vertical-align: super;
+    line-height: 0;
+}
+* {
+	-webkit-print-color-adjust: exact;
+}
+@media screen and (min-width: 914px) {
+    body {
+        width: 854px;
+        margin:0 auto;
+    }
+}
+@media print {
+	table, pre {
+		page-break-inside: avoid;
+	}
+	pre {
+		word-wrap: break-word;
+	}
+}
+</style>
+
+<style type="text/css">
+/*
+ Solarized Color Schemes originally by Ethan Schoonover
+ http://ethanschoonover.com/solarized
+
+ Ported for PrismJS by Hector Matos
+ Website: https://krakendev.io
+ Twitter Handle: https://twitter.com/allonsykraken)
+*/
+
+/*
+SOLARIZED HEX
+--------- -------
+base03    #002b36
+base02    #073642
+base01    #586e75
+base00    #657b83
+base0     #839496
+base1     #93a1a1
+base2     #eee8d5
+base3     #fdf6e3
+yellow    #b58900
+orange    #cb4b16
+red       #dc322f
+magenta   #d33682
+violet    #6c71c4
+blue      #268bd2
+cyan      #2aa198
+green     #859900
+*/
+
+code[class*="language-"],
+pre[class*="language-"] {
+	color: #657b83; /* base00 */
+	font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+	text-align: left;
+	white-space: pre;
+	word-spacing: normal;
+	word-break: normal;
+	word-wrap: normal;
+
+	line-height: 1.5;
+
+	-moz-tab-size: 4;
+	-o-tab-size: 4;
+	tab-size: 4;
+
+	-webkit-hyphens: none;
+	-moz-hyphens: none;
+	-ms-hyphens: none;
+	hyphens: none;
+}
+
+pre[class*="language-"]::-moz-selection, pre[class*="language-"] ::-moz-selection,
+code[class*="language-"]::-moz-selection, code[class*="language-"] ::-moz-selection {
+	background: #073642; /* base02 */
+}
+
+pre[class*="language-"]::selection, pre[class*="language-"] ::selection,
+code[class*="language-"]::selection, code[class*="language-"] ::selection {
+	background: #073642; /* base02 */
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+	padding: 1em;
+	margin: .5em 0;
+	overflow: auto;
+	border-radius: 0.3em;
+}
+
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+	background-color: #fdf6e3; /* base3 */
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+	padding: .1em;
+	border-radius: .3em;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+	color: #93a1a1; /* base1 */
+}
+
+.token.punctuation {
+	color: #586e75; /* base01 */
+}
+
+.namespace {
+	opacity: .7;
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.deleted {
+	color: #268bd2; /* blue */
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.url,
+.token.inserted {
+	color: #2aa198; /* cyan */
+}
+
+.token.entity {
+	color: #657b83; /* base00 */
+	background: #eee8d5; /* base2 */
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+	color: #859900; /* green */
+}
+
+.token.function {
+	color: #b58900; /* yellow */
+}
+
+.token.regex,
+.token.important,
+.token.variable {
+	color: #cb4b16; /* orange */
+}
+
+.token.important,
+.token.bold {
+	font-weight: bold;
+}
+.token.italic {
+	font-style: italic;
+}
+
+.token.entity {
+	cursor: help;
+}
+</style>
+
 
 </head>
 
 <body>
 
-<h1 id="option-tutorial">Option Tutorial</h1>
-<h2 id="part-0">Part 0</h2>
+<h1 id="toc_0">Option Tutorial</h1>
+
+<h2 id="toc_1">Part 0</h2>
+
 <p>In this tutorial we will understand the usage patterns, combinators, and implementation of <code>Option</code>.</p>
+
 <p>We begin with usage examples of the <a href="http://www.scala-lang.org/api/current/index.html#scala.Option">Scala Collections <code>Option</code></a>.</p>
+
 <p>Follows is an explanation of the necessity of covariance and type bounds in <code>List</code>.</p>
-<p>We conclude with fixing a flawed implementation of <code>Option</code> to strengthen our grip on subtyping, covariance, and lower type bounds. We will also implement some combinators.</p>
-<hr />
-<h2 id="part-1-option-usage-patterns">Part 1: <code>Option</code> Usage Patterns</h2>
-<p><code>code/tutorials/src/main/scala/tutorials/lecture4/EmptySet.scala</code></p>
-<p>In Lecture 2 we saw these methods.</p>
-<p><code>sumList</code> and <code>sumList2</code> sum the elements of a <code>List[Int]</code>. <code>prodList</code> and <code>prodList2</code> multiply the elements of a <code>List[Double]</code>.</p>
-<pre><code>  def sumList(l: List[Int]): Int = l match {
+
+<p>We conclude with fixing a flawed implementation of <code>Option</code> to strengthen our grip on subtyping, covariance, and lower type bounds.  We will also implement some combinators.</p>
+
+<hr>
+
+<h2 id="toc_2">Part 1: <code>Option</code> Usage Patterns</h2>
+
+<p><code>tutorial/src/main/scala/com/datascience/education/tutorial/lecture4/EmptySet.scala</code></p>
+
+<p>Consider these methods:</p>
+
+<p><code>sumList</code> and <code>sumList2</code> sum the elements of a <code>List[Int]</code>.
+<code>prodList</code> and <code>prodList2</code> multiply the elements of a <code>List[Double]</code>.</p>
+
+<div><pre><code class="language-none">  def sumList(l: List[Int]): Int = l match {
     case Nil =&gt; 0
     case x :: xs =&gt; x + sumList(xs)
   }
@@ -33,169 +497,284 @@
   
   def sumList2(l: List[Int]) = foldRight(l, 0)(_ + _)
   def prodList2(l: List[Double]) = foldRight(l, 1.0)(_ * _)
-  </code></pre>
-<p>Two math errors were permitted: The sum of an empty collection of Ints is not 0, and the product of an empty collection of Doubles in not 1.0.</p>
-<p>At the time, we had no way of describing the <em>absence</em> of an answer. A conventional solution would have return a sentinel value like <code>Double.NaN</code>. We can do better.</p>
-<h3 id="task-1a-sum">Task (1a): <code>sum</code></h3>
-<p>Use <a href="http://www.scala-lang.org/api/current/index.html#scala.Option@map%5BB%5D(f:A=%3EB):Option%5BB%5D"><code>map</code></a>, <a href="http://www.scala-lang.org/api/current/index.html#scala.Option@orElse%5BB%3E:A%5D(alternative:=%3EOption%5BB%5D):Option%5BB%5D"><code>orElse</code></a>, and the <a href="http://www.scala-lang.org/api/current/index.html#scala.Option$@apply%5BA%5D(x:A):Option%5BA%5D"><code>Option</code> constructor</a> to implement <code>sum</code>. Use pattern matching like <code>sumList</code> does:</p>
-<pre><code>    def sum(l: List[Int]): Option[Int] = ???</code></pre>
+  </code></pre></div>
+
+<p>In this implementation, two math errors are permitted:<br>
+The sum of an empty collection of Ints is not 0,
+and the product of an empty collection of Doubles in not 1.0.</p>
+
+<p>Previously, we had no way of describing the <em>absence</em> of an answer.  A conventional solution would have return a sentinel value like <code>Double.NaN</code>.  We can do better.</p>
+
+<h3 id="toc_3">Task (1a): <code>sum</code></h3>
+
+<p>Use <a href="http://www.scala-lang.org/api/current/index.html#scala.Option@map%5BB%5D(f:A=%3EB):Option%5BB%5D"><code>map</code></a>, <a href="http://www.scala-lang.org/api/current/index.html#scala.Option@orElse%5BB%3E:A%5D(alternative:=%3EOption%5BB%5D):Option%5BB%5D"><code>orElse</code></a>, and the <a href="http://www.scala-lang.org/api/current/index.html#scala.Option$@apply%5BA%5D(x:A):Option%5BA%5D"><code>Option</code> constructor</a> to implement <code>sum</code>.  Use pattern matching like <code>sumList</code> does:</p>
+
+<div><pre><code class="language-none">    def sum(l: List[Int]): Option[Int] = ???</code></pre></div>
+
 <p>Do not &quot;exit&quot; the <code>Option</code> to perform operations on its contents -- a common anti-pattern with &quot;containers&quot; like <code>Option</code>.</p>
-<h3 id="task-1b-product">Task (1b): <code>product</code></h3>
-<p>Use the same combinators to implement <code>product</code>. Use pattern matching like <code>prodList</code> does:</p>
-<pre><code>  def product(l: List[Double]): Option[Double] = ???</code></pre>
-<h3 id="task-1c-sum2">Task (1c): <code>sum2</code></h3>
-<p>Use the same combinators to implement <code>sum2</code>. Use <code>foldRight</code> like <code>sumList2</code> does:</p>
-<pre><code>  def sum2(l: List[Int]): Option[Int] = ???</code></pre>
-<h3 id="task-1d-product2">Task (1d): <code>product2</code></h3>
-<p>Use the same combinators to implement <code>product2</code>. Use <code>foldRight</code> like <code>prodList2</code> does:</p>
-<pre><code>  def product2(l: List[Double]): Option[Double] = ???</code></pre>
-<hr />
-<h2 id="part-2-safe-division">Part 2: Safe Division</h2>
-<p><code>code/tutorials/src/main/scala/tutorials/lecture4/SafeDivision.scala</code></p>
-<h3 id="task-2a-safediv">Task (2a): <code>safeDiv</code></h3>
-<p>Implement</p>
-<pre><code>  def safeDiv(x: Int, y: Int): Option[Double] = ???</code></pre>
-<p><code>safeDiv</code> should catch division by zero and results that are <code>NaN</code>, positive infinity, or negative infinity. Use methods defined on Java's <code>Double</code> class to determine these last three conditions.</p>
-<p>Use a <code>try-catch</code> statement. The user of this method will not be concerned with <code>try-catch</code> though. See <a href="http://alvinalexander.com/scala/scala-try-catch-finally-syntax-examples-exceptions-wildcard">The Scala try, catch, finally syntax (multiple exceptions, wildcard operator)</a>. You will not need to catch multiple types of exceptions, or the <code>finally</code> statement.</p>
+
+<h3 id="toc_4">Task (1b): <code>product</code></h3>
+
+<p>Use the same combinators to implement <code>product</code>.  Use pattern matching like <code>prodList</code> does:</p>
+
+<div><pre><code class="language-none">  def product(l: List[Double]): Option[Double] = ???</code></pre></div>
+
+<h3 id="toc_5">Task (1c): <code>sum2</code></h3>
+
+<p>Use the same combinators to implement <code>sum2</code>.  Use <code>foldRight</code> like <code>sumList2</code> does:</p>
+
+<div><pre><code class="language-none">  def sum2(l: List[Int]): Option[Int] = ???</code></pre></div>
+
+<h3 id="toc_6">Task (1d): <code>product2</code></h3>
+
+<p>Use the same combinators to implement <code>product2</code>.  Use <code>foldRight</code> like <code>prodList2</code> does:</p>
+
+<div><pre><code class="language-none">  def product2(l: List[Double]): Option[Double] = ???</code></pre></div>
+
+<hr>
+
+<h2 id="toc_7">Part 2: Safe Division</h2>
+
+<p><code>tutorial/src/main/scala/com/datascience/education/tutorial/lecture4/SafeDivision.scala</code></p>
+
+<h3 id="toc_8">Task (2a): <code>safeDiv</code></h3>
+
+<p>Implement </p>
+
+<div><pre><code class="language-none">  def safeDiv(x: Int, y: Int): Option[Double] = ???</code></pre></div>
+
+<p><code>safeDiv</code> should catch division by zero and results that are <code>NaN</code>, positive infinity, or negative infinity.  Use methods defined on Java&#39;s <code>Double</code> class to determine these last three conditions.  </p>
+
+<p>Use a <code>try-catch</code> statement.  The user of this method will not be concerned with <code>try-catch</code> though.  See <a href="http://alvinalexander.com/scala/scala-try-catch-finally-syntax-examples-exceptions-wildcard">The Scala try, catch, finally syntax (multiple exceptions, wildcard operator)</a>.  You will not need to catch multiple types of exceptions, or the <code>finally</code> statement.</p>
+
 <p><a href="https://docs.oracle.com/javase/7/docs/api/java/lang/Double.html">JavaDoc for <code>Double</code></a></p>
-<p>Catch a <code>java.lang.ArithmeticException</code>.</p>
-<p>Do not catch any <code>Exception</code>. This cannot be tested in this example, but is applicable to Cats' <code>Xor</code>.</p>
+
+<p>Catch a <code>java.lang.ArithmeticException</code>.  </p>
+
+<p>Do not catch any <code>Exception</code>.  This cannot be tested in this example, but is applicable to Cats&#39; <code>Xor</code>.</p>
+
 <p>Test your work with runnable class <code>SafeDivisionExamples</code>.</p>
-<p>This fills a similar purpose to <a href="http://www.scala-lang.org/api/current/index.html#scala.util.Try"><code>Try</code> in the Scala Collections</a> or <a href="http://typelevel.org/cats/api/index.html#cats.data.Xor$@catchNonFatal%5BA%5D(f:=%3EA):cats.data.Xor%5BThrowable,A%5D"><code>Xor.catchNonFatal</code> in Cats</a></p>
-<h3 id="task-2b-traversefractions">Task (2b): <code>traverseFractions</code></h3>
+
+<p>This fills a similar purpose to <a href="http://www.scala-lang.org/api/current/index.html#scala.util.Try"><code>Try</code> in the Scala Collections</a> or <a href="https://static.javadoc.io/org.typelevel/cats-core_2.11/0.7.2/index.html#cats.data.Xor$@catchNonFatal%5BA%5D(f:=%3EA):cats.data.Xor%5BThrowable,A%5D"><code>Xor.catchNonFatal</code> in Cats</a></p>
+
+<h3 id="toc_9">Task (2b): <code>traverseFractions</code></h3>
+
 <p>Implement</p>
-<pre><code>    def traverseFractions(ll: List[(Int, Int)]): Option[List[Double]] = ???</code></pre>
-<p>The input is a list of tuples, where the first member of each tuple is the numerator, and the second member is the denominator.</p>
-<p>Find and use method <code>traverse</code> defined in object <code>TraverseOption</code>, located in file <code>code/tutorials/src/main/scala/tutorials/lecture4/TraverseOption.scala</code></p>
+
+<div><pre><code class="language-none">    def traverseFractions(ll: List[(Int, Int)]): Option[List[Double]] = ???</code></pre></div>
+
+<p>The input is a list of tuples, where the first member of each tuple is the numerator, and the second member is the denominator. The output should contain the values of each of these fractions as type <code>Double</code>.</p>
+
+<p>Find and use method <code>traverse</code> defined in object <code>TraverseOption</code>, located in file
+<code>tutorial/src/main/scala/com/datascience/education/tutorial/lecture4/TraverseOption.scala</code></p>
+
 <p>Provided in <code>TraverseOption</code>:</p>
-<pre><code>  def traverse[A, B](listA: List[A])(f: A =&gt; Option[B]): Option[List[B]] = ...</code></pre>
+
+<div><pre><code class="language-none">def traverse[A, B](listA: List[A])(f: A =&gt; Option[B]): Option[List[B]] = ...</code></pre></div>
+
 <p>A note about <code>TraverseOption</code>:</p>
+
 <p><code>traverse</code> as implemented in FPiS Chapter 4 is simplified.</p>
+
 <p><code>(A =&gt; Option[B]) =&gt; Option[List[B]]</code>, as it is in Chapter 4, really should be a combinator on <code>List</code>, not <code>Option</code>.</p>
-<p><a href="http://typelevel.org/cats/api/index.html#cats.Applicative@traverse%5BA,G%5B_%5D,B%5D(value:G%5BA%5D)(f:A=%3EF%5BB%5D)(implicitG:cats.Traverse%5BG%5D):F%5BG%5BB%5D%5D">Cats implements it this way.</a></p>
-<p>The <code>traverse</code> method with type signature that matches up with Chapter 4 resides in <a href="http://typelevel.org/cats/api/index.html#cats.std.package$$list$@listInstance:cats.Traverse%5BList%5Dwithcats.MonadCombine%5BList%5Dwithcats.CoflatMap%5BList%5D"><code>listInstance</code></a></p>
-<hr />
-<h2 id="part-3-scala-collections-map-and-option">Part 3: Scala Collections <a href="http://www.scala-lang.org/api/current/index.html#scala.collection.immutable.Map"><code>Map</code></a> and <code>Option</code></h2>
-<p><code>code/tutorials/src/main/scala/tutorials/lecture4/Employees.scala</code></p>
-<p>Previously we retrieved values from a <code>Map</code> unsafely. If the key did not exist in the map, a run-time exception was thrown.</p>
-<p><a href="http://www.scala-lang.org/api/current/index.html#scala.collection.Map@get(key:A):Option%5BB%5D">With the <code>get</code> method</a>, we can retrieve a value for a key safely.</p>
-<h3 id="task-3a-employeeemail">Task (3a): <code>employeeEmail</code></h3>
+
+<p><a href="http://typelevel.org/cats/api/index.html#cats.Applicative@traverse%5BA,G%5B_%5D,B%5D(value:G%5BA%5D)(f:A=%3EF%5BB%5D)(implicitG:cats.Traverse%5BG%5D):F%5BG%5BB%5D%5D">Cats implements it this way:</a></p>
+
+<div><pre><code class="language-none">def traverse[A, G[_], B](value: G[A])(f: (A) ⇒ F[B])(implicit G: Traverse[G]): F[G[B]]</code></pre></div>
+
+<p>The <code>traverse</code> method with type signature that matches up with Chapter 4 resides in  <a href="http://typelevel.org/cats/api/index.html#cats.instances.package$$list$"><code>listInstance</code></a></p>
+
+<h3 id="toc_10">Task (2c): <code>traverseSqrtFractions</code></h3>
+
 <p>Implement</p>
-<pre><code>  def employeeEmail(id: UUID): Option[Email] = ???</code></pre>
+
+<div><pre><code class="language-none">def traverseSqrtFractions(ll: List[(Int, Int)]): Option[List[Double]] =</code></pre></div>
+
+<p>The input is again a list of tuples, where the first member of each tuple is the numerator, and the second member is the denominator. However, in this task, output for each tuple the <em>square root</em> of the fraction instead. You should use a combinator to string together functions to calculate the fraction and then the square root of the fraction. Be sure to consider the case where the square root is <code>NaN</code>.  </p>
+
+<hr>
+
+<h2 id="toc_11">Part 3: Scala Collections <a href="http://www.scala-lang.org/api/current/index.html#scala.collection.immutable.Map"><code>Map</code></a> and <code>Option</code></h2>
+
+<p><code>tutorial/src/main/scala/com/datascience/education/tutorial/lecture4/Employees.scala</code></p>
+
+<p>Previously we retrieved values from a <code>Map</code> unsafely.  If the key did not exist in the map, a run-time exception was thrown.</p>
+
+<p><a href="http://www.scala-lang.org/api/current/index.html#scala.collection.Map@get(key:A):Option%5BB%5D">With the <code>get</code> method</a>, we can retrieve a value for a key safely.</p>
+
+<h3 id="toc_12">Task (3a): <code>employeeEmail</code></h3>
+
+<p>Implement </p>
+
+<div><pre><code class="language-none">  def employeeEmail(id: UUID): Option[Email] = ???</code></pre></div>
+
 <p>This should be a one-liner.</p>
+
 <p>Test your work with runnable class <code>EmployeesExample</code>.</p>
-<hr />
-<h2 id="part-4-covariance-and-type-bounds-in-list">Part 4: Covariance and Type Bounds in <code>List</code></h2>
-<p><code>code/tutorials/src/main/scala/tutorials/lecture4/Covariance.scala</code></p>
-<p>This is a walk-through. These concepts will be used in the tasks of <b>Part 5</b>.</p>
-<h3 id="a-a-linked-list-of-fixed-type">(4a): A Linked List of Fixed Type</h3>
-<pre><code>scala&gt; import tutorials.lecture4.Covariance._
-import tutorials.lecture4.Covariance._</code></pre>
+
+<hr>
+
+<h2 id="toc_13">Part 4: Covariance and Type Bounds in <code>List</code></h2>
+
+<p><code>tutorial/src/main/scala/com/datascience/education/tutorial/lecture4/Covariance.scala</code></p>
+
+<p>This is a walk-through.  These concepts will be used in the tasks of <b>Part 5</b>.</p>
+
+<h3 id="toc_14">(4a): A Linked List of Fixed Type</h3>
+
+<div><pre><code class="language-none">scala&gt; import com.datascience.education.tutorial.lecture4.Covariance._
+import com.datascience.education.tutorial.lecture4.Covariance._</code></pre></div>
+
 <p>A simple linked list that has no need for a generic type:</p>
-<pre><code>  sealed trait LinkedListInt
+
+<div><pre><code class="language-none">  sealed trait LinkedListInt
   case class ConsInt(h: Int, t: LinkedListInt) 
     extends LinkedListInt
-  case object NilInt extends LinkedListInt</code></pre>
+  case object NilInt extends LinkedListInt</code></pre></div>
+
 <p><code>LinkedListInt</code> is a trait (abstract) so cannot be used as a value:</p>
-<pre><code>scala&gt; val il3: LinkedListInt = LinkedListInt 
+
+<div><pre><code class="language-none">scala&gt; val il3: LinkedListInt = LinkedListInt 
 &lt;console&gt;:14: error: not found: value LinkedListInt
        val il3: LinkedListInt = LinkedListInt
-                                ^</code></pre>
-<p>Scala supports subtyping. A concrete child can (and should) fill-in for the abstract parent:</p>
-<pre><code>scala&gt; val il: LinkedListInt = ConsInt(4, ConsInt(5, NilInt))
-il: tutorials.lecture4.Covariance.LinkedListInt = ConsInt(4,ConsInt(5,NilInt))
+                                ^</code></pre></div>
+
+<p>Scala supports subtyping.  A concrete child can (and should) fill-in for the abstract parent:</p>
+
+<div><pre><code class="language-none">scala&gt; val il: LinkedListInt = ConsInt(4, ConsInt(5, NilInt))
+il: com.datascience.education.tutorial.lecture4.Covariance.LinkedListInt = ConsInt(4,ConsInt(5,NilInt))
 
 scala&gt; val il2: LinkedListInt = NilInt 
-il2: tutorials.lecture4.Covariance.LinkedListInt = NilInt</code></pre>
+il2: com.datascience.education.tutorial.lecture4.Covariance.LinkedListInt = NilInt</code></pre></div>
+
 <p>More subtly, we are applying <code>NilInt</code> to argument <code>t</code> of <code>ConsInt</code> in <code>ConsInt(5, NilInt)</code>.</p>
-<p><code>NilInt</code> is a subtype of <code>LinkedListInt</code>. Because Scala supports subtying, <code>NilInt</code> is an acceptable fill-in for <code>LinkedListInt</code>.</p>
-<h3 id="b-case-class-misuse">(4b): <code>case class</code> Misuse</h3>
+
+<p><code>NilInt</code> is a subtype of <code>LinkedListInt</code>.  Because Scala supports subtying, <code>NilInt</code> is an acceptable fill-in for <code>LinkedListInt</code>.</p>
+
+<h3 id="toc_15">(4b): <code>case class</code> Misuse</h3>
+
 <p>A first attempt to add a generic type to our linked list:</p>
-<pre><code>  sealed trait LinkedList1[A]
+
+<div><pre><code class="language-none">  sealed trait LinkedList1[A]
   case class Cons1[A](h: A, t: LinkedList1[A]) 
     extends LinkedList1[A]
-  case class Nil1[A]() extends LinkedList1[A]</code></pre>
+  case class Nil1[A]() extends LinkedList1[A]</code></pre></div>
+
 <p>Again, the concrete children successfully substitute for the type of the abstract parent:</p>
-<pre><code>scala&gt; val l1: LinkedList1[Int] = Cons1(4, Cons1(5, Nil1()))
-l1: tutorials.lecture4.Covariance.LinkedList1[Int] = Cons1(4,Cons1(5,Nil1()))
+
+<div><pre><code class="language-none">scala&gt; val l1: LinkedList1[Int] = Cons1(4, Cons1(5, Nil1()))
+l1: com.datascience.education.tutorial.lecture4.Covariance.LinkedList1[Int] = Cons1(4,Cons1(5,Nil1()))
 
 scala&gt; val l2: LinkedList1[Int] = Nil1()
-l2: tutorials.lecture4.Covariance.LinkedList1[Int] = Nil1()</code></pre>
-<p>Nevertheless, this implementation needs improvement. A <code>case class</code> that takes no arguments is poor form, and should likely be replaced with a <code>case object</code>. This implementation necessitates many instances of <code>Nil1</code> for each type of empty <code>LinkedList1</code>: an empty <code>LinkedList1[Double]</code>, an empty <code>LinkedList1[String]</code> and so on.</p>
-<h3 id="c-pitfall-of-invariance">(4c): Pitfall of Invariance</h3>
-<p>We want to justify and emulate the design choices of the Scala Collections with regards to <a href="http://www.scala-lang.org/api/current/index.html#scala.collection.immutable.Nil$"><code>Nil</code>, the empty Scala Collections <code>List</code></a>. This is only a single <code>Nil</code> -- it is a <code>case object</code>.</p>
-<p>We re-write <code>Nil1</code> into a <code>case object</code>. A <code>case object</code> cannot provide a generic type, because a <code>case object</code> is a singleton. There are not supposed to be many &quot;versions&quot; of a <code>case object</code> floating around, with different internal types.</p>
-<pre><code>  sealed trait LinkedList2[A]
+l2: com.datascience.education.tutorial.lecture4.Covariance.LinkedList1[Int] = Nil1()</code></pre></div>
+
+<p>Nevertheless, this implementation needs improvement.  A <code>case class</code> that takes no arguments is poor form, and should likely be replaced with a <code>case object</code>.  This implementation necessitates many instances of <code>Nil1</code> for each type of empty <code>LinkedList1</code>: an empty <code>LinkedList1[Double]</code>, an empty <code>LinkedList1[String]</code> and so on.</p>
+
+<h3 id="toc_16">(4c): Pitfall of Invariance</h3>
+
+<p>We want to justify and emulate the design choices of the Scala Collections with regards to <a href="http://www.scala-lang.org/api/current/index.html#scala.collection.immutable.Nil$"><code>Nil</code>, the empty Scala Collections <code>List</code></a>.  This is only a single <code>Nil</code> -- it is a <code>case object</code>.</p>
+
+<p>We re-write <code>Nil1</code> into a <code>case object</code>.  A <code>case object</code> cannot provide a generic type, because a <code>case object</code> is a singleton.  There are not supposed to be many &quot;versions&quot; of a <code>case object</code> floating around, with different internal types.</p>
+
+<div><pre><code class="language-none">  sealed trait LinkedList2[A]
   case class Cons2[A](h: A, t: LinkedList2[A]) 
     extends LinkedList2[A]
-  case object Nil2 extends LinkedList2[Nothing]</code></pre>
+  case object Nil2 extends LinkedList2[Nothing]</code></pre></div>
+
 <p>We need a concrete type to fill in the generic type <code>A</code> where <code>Nil2</code> extends <code>LinkedList2</code>.</p>
+
 <p><code>Nothing</code> is a candidate for two reasons:</p>
+
 <ul>
 <li>It is a concrete type</li>
 <li>It is a subtype of every other type - but this reason jumps ahead to covariance</li>
 </ul>
-<p>Let's try instantianting a few <code>LinkedList2</code>s in the same way that we instantiated <code>LinkedListInt</code> and <code>LinkedList1</code>:</p>
-<pre><code>scala&gt; val l1: LinkedList2[Int] = Cons2(6, Cons2(7, Nil2))
+
+<p>Let&#39;s try instantianting a few <code>LinkedList2</code>s in the same way that we instantiated <code>LinkedListInt</code> and <code>LinkedList1</code>:</p>
+
+<div><pre><code class="language-none">scala&gt; val l1: LinkedList2[Int] = Cons2(6, Cons2(7, Nil2))
 
 &lt;console&gt;:14: error: type mismatch;
- found   : tutorials.lecture4.Covariance.Nil2.type
- required: tutorials.lecture4.Covariance.LinkedList2[Int]
+ found   : com.datascience.education.tutorial.lecture4.Covariance.Nil2.type
+ required: com.datascience.education.tutorial.lecture4.Covariance.LinkedList2[Int]
 Note: Nothing &lt;: Int 
-(and tutorials.lecture4.Covariance.Nil2.type &lt;:
-tutorials.lecture4.Covariance.LinkedList2[Nothing]), 
+(and com.datascience.education.tutorial.lecture4.Covariance.Nil2.type &lt;: com.datascience.education.tutorial.lecture4.Covariance.LinkedList2[Nothing]), 
 but trait LinkedList2 is invariant in type A.
 You may wish to define A as +A instead. (SLS 4.5)
        val l1: LinkedList2[Int] = Cons2(6, Cons2(7, Nil2))
-                                                    ^</code></pre>
-<p>Let's boil down this compiler error.</p>
+                                                    ^</code></pre></div>
+
+<p>Let&#39;s boil down this compiler error.</p>
+
 <p>We are trying to apply a <code>Nil2</code> as argument <code>t</code> in <code>Cons2[A](h: A, t: LinkedList2[A])</code>.</p>
+
 <p><code>Nil2</code> is an instance of <code>LinkedList2[Nothing]</code>.</p>
+
 <p>It is equivalent to say, then;</p>
+
 <p>We are trying to apply a <code>LinkedList2[Nothing]</code> as argument <code>t</code> in <code>Cons2[A](h: A, t: LinkedList2[A])</code>.</p>
-<p>Because of <em>invariance</em>, there is <em>no relationship</em> between <code>LinkedList2[Nothing]</code> and <code>LinkedList2[A]</code>.</p>
-<p><code>NilInt</code> is a subtype of <code>LinkedListInt</code>. <code>NilInt</code> is an acceptable fill-in for <code>LinkedListInt</code>.</p>
-<p><code>LinkedList2[Nothing]</code> is <em>not</em> a subtype of <code>LinkedList2[A]</code>. <code>LinkedList2[Nothing]</code> is <em>not</em> an acceptable fill-in for <code>LinkedList2[A]</code>.</p>
+
+<p>Because of <em>invariance</em>, there is <em>no relationship</em> between <code>LinkedList2[Nothing]</code> and <code>LinkedList2[A]</code>.  </p>
+
+<p><code>NilInt</code> is a subtype of <code>LinkedListInt</code>.  <code>NilInt</code> is an acceptable fill-in for <code>LinkedListInt</code>.</p>
+
+<p><code>LinkedList2[Nothing]</code> is <em>not</em> a subtype of <code>LinkedList2[A]</code>.  <code>LinkedList2[Nothing]</code> is <em>not</em> an acceptable fill-in for <code>LinkedList2[A]</code>.</p>
+
 <p>The compiler suggests <em>covariance</em> as a solution.</p>
+
 <p>Another example of the same problem:</p>
-<pre><code>scala&gt; val l2: LinkedList2[Int] = Nil2
+
+<div><pre><code class="language-none">scala&gt; val l2: LinkedList2[Int] = Nil2
 &lt;console&gt;:14: error: type mismatch;
- found   : tutorials.lecture4.Covariance.Nil2.type
- required: tutorials.lecture4.Covariance.LinkedList2[Int]
+ found   : com.datascience.education.tutorial.lecture4.Covariance.Nil2.type
+ required: com.datascience.education.tutorial.lecture4.Covariance.LinkedList2[Int]
 Note: Nothing &lt;: Int 
-(and tutorials.lecture4.Covariance.Nil2.type &lt;:
-tutorials.lecture4.Covariance.LinkedList2[Nothing]), 
+(and com.datascience.education.tutorial.lecture4.Covariance.Nil2.type &lt;: com.datascience.education.tutorial.lecture4.Covariance.LinkedList2[Nothing]), 
 but trait LinkedList2 is invariant in type A.
 You may wish to define A as +A instead. (SLS 4.5)
        val l2: LinkedList2[Int] = Nil2
-                                  ^</code></pre>
-<p>These problems exhibit a <a href="https://en.wikipedia.org/wiki/Inheritance_(object-oriented_programming)#Inheritance_vs_subtyping">difference between inheritance and subtyping</a>.</p>
-<p><code>Nil2</code> <em>inherits from</em> <code>LinkedList[A]</code>, but <code>Nil2</code> is not a proper subtype of <code>LinkedList[A]</code>. In this situation, inheritance may still be useful for shared common methods, i.e. we could put some common code in the body of <code>trait LinkedList[A]</code> that <code>Nil2</code> would inherit:</p>
-<pre><code>  sealed trait LinkedList2[A] {
+                                  ^</code></pre></div>
+
+<p>These problems exhibit a <a href="https://en.wikipedia.org/wiki/Inheritance_(object-oriented_programming)#Inheritance_vs_subtyping">difference between inheritance and subtyping</a>.  </p>
+
+<p><code>Nil2</code> <em>inherits from</em> <code>LinkedList[A]</code>, but <code>Nil2</code> is not a proper subtype of <code>LinkedList[A]</code>.  In this situation, inheritance may still be useful for shared common methods, i.e. we could put some common code in the body of <code>trait LinkedList[A]</code> that <code>Nil2</code> would inherit:</p>
+
+<div><pre><code class="language-none">  sealed trait LinkedList2[A] {
     // flaw here revealed later...
     def prepend(a: A): LinkedList2[A] = Cons2(a, this)
   }
   case class Cons2[A](h: A, t: LinkedList2[A]) 
     extends LinkedList2[A]
-  case object Nil2 extends LinkedList2[Nothing]</code></pre>
-<h3 id="d-covariance">(4d): Covariance</h3>
-<p>We want <code>LinkedList2[Nothing]</code> to be a subtype of <code>LinkedList2[A]</code>. A covariance annotation will provide this:</p>
-<pre><code>  sealed trait LinkedList3[+A]
+  case object Nil2 extends LinkedList2[Nothing]</code></pre></div>
+
+<h3 id="toc_17">(4d): Covariance</h3>
+
+<p>We want <code>LinkedList2[Nothing]</code> to be a subtype of <code>LinkedList2[A]</code>.  A covariance annotation will provide this:</p>
+
+<div><pre><code class="language-none">  sealed trait LinkedList3[+A]
   case class Cons3[+A](h: A, t: LinkedList3[A]) 
     extends LinkedList3[A]
-  case object Nil3 extends LinkedList3[Nothing]</code></pre>
+  case object Nil3 extends LinkedList3[Nothing]</code></pre></div>
+
 <p><code>LinkedList3[Nothing]</code> can fill in for <code>LinkedList3[A]</code>:</p>
-<pre><code>scala&gt; val l1: LinkedList3[Int] = Cons3(6, Cons3(7, Nil3))
-l1: tutorials.lecture4.Covariance.LinkedList3[Int] = Cons3(6,Cons3(7,Nil3))
+
+<div><pre><code class="language-none">scala&gt; val l1: LinkedList3[Int] = Cons3(6, Cons3(7, Nil3))
+l1: com.datascience.education.tutorial.lecture4.Covariance.LinkedList3[Int] = Cons3(6,Cons3(7,Nil3))
 
 scala&gt; val l2: LinkedList3[Int] = Nil3
-l2: tutorials.lecture4.Covariance.LinkedList3[Int] = Nil3</code></pre>
-<h3 id="e-necessity-of-type-bounds">(4e): Necessity of Type Bounds</h3>
-<p>Let's add some functionality to <code>LinkedList3</code>.</p>
+l2: com.datascience.education.tutorial.lecture4.Covariance.LinkedList3[Int] = Nil3</code></pre></div>
+
+<h3 id="toc_18">(4e): Necessity of Type Bounds</h3>
+
+<p>Let&#39;s add some functionality to <code>LinkedList3</code>.</p>
+
 <p>A <code>LinkedList3</code> with elements will apply <code>f</code> to each element <code>A</code>.</p>
+
 <p><code>Nil3</code> has nothing to &quot;map&quot; over, so returns itself.</p>
-<p><code>map</code> is a recursive function, and will encounter <code>Nil3</code> sooner or later. Because <code>Nil3</code> is a subtype of <code>LinkedList3[A]</code>, this is okay.</p>
-<pre><code>  sealed trait LinkedList3[+A] {
+
+<p><code>map</code> is a recursive function, and will encounter <code>Nil3</code> sooner or later.  Because <code>Nil3</code> is a subtype of <code>LinkedList3[A]</code>, this is okay.</p>
+
+<div><pre><code class="language-none">  sealed trait LinkedList3[+A] {
     def map[B](f: A =&gt; B): LinkedList3[B] = this match {
       case Cons3(h, t) =&gt; Cons3(f(h), t.map(f))
       case Nil3 =&gt; Nil3
@@ -203,41 +782,48 @@ l2: tutorials.lecture4.Covariance.LinkedList3[Int] = Nil3</code></pre>
   }
   case class Cons3[+A](h: A, t: LinkedList3[A]) 
     extends LinkedList3[A]
-  case object Nil3 extends LinkedList3[Nothing]</code></pre>
-<pre><code>scala&gt; val l1: LinkedList3[Int] = Cons3(65, Cons3(66, Nil3))
-l1: tutorials.lecture4.Covariance.LinkedList3[Int] = Cons3(65,Cons3(66,Nil3))
+  case object Nil3 extends LinkedList3[Nothing]</code></pre></div>
+
+<div><pre><code class="language-none">scala&gt; val l1: LinkedList3[Int] = Cons3(65, Cons3(66, Nil3))
+l1: com.datascience.education.tutorial.lecture4.Covariance.LinkedList3[Int] = Cons3(65,Cons3(66,Nil3))
 
 scala&gt; l1.map(_.toChar)
-res0: tutorials.lecture4.Covariance.LinkedList3[Char] = Cons3(A,Cons3(B,Nil3))</code></pre>
+res0: com.datascience.education.tutorial.lecture4.Covariance.LinkedList3[Char] = Cons3(A,Cons3(B,Nil3))</code></pre></div>
+
 <p>Other methods we could implement have problems, like <code>prepend</code>:</p>
-<pre><code>  sealed trait LinkedList3[+A] {
 
-    def prepend(a: A): LinkedList3[A] =
-      Cons3(a, this)
-
+<div><pre><code class="language-none">  sealed trait LinkedList3[+A] {
+    def prepend(a: A): LinkedList3[A] = Cons3(a, this)
   }
   case class Cons3[+A](h: A, t: LinkedList3[A]) 
     extends LinkedList3[A]
-  case object Nil3 extends LinkedList3[Nothing]</code></pre>
+  case object Nil3 extends LinkedList3[Nothing]</code></pre></div>
+
 <p>We have assumed that this will work:</p>
-<pre><code>
-val empty: LinkedList3[Nothing] = Nil3
+
+<div><pre><code class="language-none">val empty: LinkedList3[Nothing] = Nil3
 val five: LinkedList3[Int] = empty.prepend(5)
-</code></pre>
+</code></pre></div>
+
 <p>But the type signature of <code>prepend</code> in <code>empty</code> is:</p>
-<pre><code>    def prepend(a: Nothing): LinkedList3[Nothing] =
-      Cons3(a, this)</code></pre>
+
+<div><pre><code class="language-none">def prepend(a: Nothing): LinkedList3[Nothing] = Cons3(a, this)</code></pre></div>
+
 <p><code>Int</code> is a supertype of <code>Nothing</code> and so cannot fill in the argument of <code>prepend</code>.</p>
+
 <p>The compiler warns us:</p>
-<pre><code>covariant type A occurs in contravariant position in type A of value a
+
+<div><pre><code class="language-none">covariant type A occurs in contravariant position in type A of value a
 [error]     def prepend(a: A): LinkedList3[A] =
 [error]                 ^
 [error] one error found
 [error] (tutorials/compile:compileIncremental) Compilation failed
 [error] Total time: 1 s, completed Jun 21, 2016 3:12:05 PM
-</code></pre>
-<p>We need type bounds. <code>prepend</code> must accepts as an argument a <em>supertype</em> of <code>Nothing</code>.</p>
-<pre><code>
+</code></pre></div>
+
+<p>We need type bounds.  <code>prepend</code> must accept as an argument a <em>supertype</em> of <code>Nothing</code>.</p>
+
+<div><pre><code class="language-none">
   sealed trait LinkedList4[+A] {
     def map[B](f: A =&gt; B): LinkedList4[B] = this match {
       case Cons4(h, t) =&gt; Cons4(f(h), t.map(f))
@@ -251,36 +837,53 @@ val five: LinkedList3[Int] = empty.prepend(5)
   case class Cons4[+A](h: A, t: LinkedList4[A]) 
     extends LinkedList4[A]
   case object Nil4 extends LinkedList4[Nothing]
-  </code></pre>
-<p>Now <code>LinkedList4[Nothing]</code> can be &quot;upgraded&quot; to <code>LinkedList4[Int]</code>. <code>prepend</code> compiles:</p>
-<pre><code>
+  </code></pre></div>
+
+<p>Now <code>LinkedList4[Nothing]</code> can be &quot;upgraded&quot; to <code>LinkedList4[Int]</code>.  <code>prepend</code> compiles:</p>
+
+<div><pre><code class="language-none">
 scala&gt; val empty: LinkedList4[Nothing] = Nil4
-empty: tutorials.lecture4.Covariance.LinkedList4[Nothing] = Nil4
+empty: com.datascience.education.tutorial.lecture4.Covariance.LinkedList4[Nothing] = Nil4
 
 scala&gt; empty.prepend(5)
-res1: tutorials.lecture4.Covariance.LinkedList4[Int] = Cons4(5,Nil4)
-</code></pre>
+res1: com.datascience.education.tutorial.lecture4.Covariance.LinkedList4[Int] = Cons4(5,Nil4)
+</code></pre></div>
+
 <p>More concisely:</p>
-<pre><code>scala&gt; Nil4.prepend(5)
-res0: tutorials.lecture4.Covariance.LinkedList4[Int] = Cons4(5,Nil4)</code></pre>
+
+<div><pre><code class="language-none">scala&gt; Nil4.prepend(5)
+res0: com.datascience.education.tutorial.lecture4.Covariance.LinkedList4[Int] = Cons4(5,Nil4)</code></pre></div>
+
 <p>This Part has demonstrated that variance and type bounds often go hand-in-hand.</p>
-<hr />
-<h2 id="part-5-covariance-and-type-bounds-in-option-option-combinators">Part 5: Covariance and Type Bounds in <code>Option</code>; <code>Option</code> Combinators</h2>
-<p><code>code/tutorials/src/main/scala/tutorials/lecture4/FlawedOption.scala</code> <code>code/tutorials/src/main/scala/tutorials/lecture4/FPOption.scala</code></p>
+
+<hr>
+
+<h2 id="toc_19">Part 5: Covariance and Type Bounds in <code>Option</code>; <code>Option</code> Combinators</h2>
+
+<p><code>tutorial/src/test/scala/com/datascience/education/tutorial/lecture4/FlawedOptionSpec.scala</code>
+<code>tutorial/src/main/scala/com/datascience/education/tutorial/lecture4/FPOption.scala</code></p>
+
 <p><b>Part 4: Covariance and Type Bounds in <code>List</code></b> iterated through several incorrect implementations of <code>List</code> to approximate the version in the Scala Collections.</p>
+
 <p>In this Part, you will do the same for <code>Option</code> (<code>FPOption</code>, explained soon).</p>
+
 <p>To eliminate any ambiguity between the Scala Collections <code>Option</code> and our implementation, the parts of implementation will be named:</p>
+
 <ul>
 <li><code>FPOption</code></li>
 <li><code>FPSome</code></li>
 <li><code>FPNone</code></li>
 </ul>
-<p>The Scala Collections <code>Option</code> is a default import. In a <code>.scala</code> file, this <code>Option</code>, <code>Some</code> and <code>None</code> can be eliminated from scope with the following:</p>
-<pre><code>import scala.{ Option =&gt; _ }
+
+<p>The Scala Collections <code>Option</code> is a default import.  In a <code>.scala</code> file, this <code>Option</code>, <code>Some</code> and <code>None</code> can be eliminated from scope with the following:</p>
+
+<div><pre><code class="language-none">import scala.{ Option =&gt; _ }
 import scala.{ Some =&gt; _ }
-import scala.{ None =&gt; _ }</code></pre>
+import scala.{ None =&gt; _ }</code></pre></div>
+
 <p>We like to debug in the REPL, and this trick does not work in the REPL; the Scala Collections <code>Option</code> remains in scope:</p>
-<pre><code>scala&gt; import scala.{ Option =&gt; _ }
+
+<div><pre><code class="language-none">scala&gt; import scala.{ Option =&gt; _ }
 import scala.{ Some =&gt; _ }
 import scala.{ None =&gt; _ }
 
@@ -292,37 +895,104 @@ scala&gt; import scala.{None=&gt;_}
 
 scala&gt; 
 scala&gt; :t Option 
-Option.type</code></pre>
-<h3 id="task-5a-compilation-errors-in-of-flawedoption">Task (5a): compilation errors in of <code>FlawedOption</code></h3>
-<p>Uncomment the methods implemented inside the trait of <code>FlawedOption</code>. Investigate the compilation errors. Comment out the methods before continuing to <code>FPOption</code>.</p>
-<p>Leave the other methods/combinators commented out.</p>
-<p>Test your fix with the runnable class <code>FPOptionExamples5a</code>.</p>
-<h3 id="task-5b-map-and-getorelse">Task (5b): <code>map</code> and <code>getOrElse</code></h3>
-<p>Uncomment <code>map</code> and <code>getOrElse</code> inside trait <code>FPOption</code>. Use what you've learned in <b>Part 4</b> to fix the trait and the given methods: <code>map</code> and <code>getOrElse</code>.</p>
+Option.type</code></pre></div>
+
+<h3 id="toc_20">Task (5a): Compilation errors of <code>FlawedOption</code></h3>
+
+<p>Investigate the compilation errors for the given implementation of <code>FlawedOption</code>, and use these compilation errors as a clue for the solution to the next task.  </p>
+
+<p>In <code>tutorial/src/test/scala/com/datascience/education/tutorial/lecture4/FlawedOptionSpec.scala</code>, a test is provided which checks that this implementation <code>shouldNot compile</code>. You should modify this test so that it will fail by changing it to <code>should compile</code>, and look at the error for failing when the test is ran. To run this specific test in <code>sbt</code>, use <code>testOnly com.datascience.education.tutorial.lecture4.FlawedOptionSpec</code>. Remember to change the tests back otherwise your tests will continue to fail.</p>
+
+<h3 id="toc_21">Task (5b): <code>map</code> and <code>getOrElse</code></h3>
+
+<p>Uncomment <code>map</code> and <code>getOrElse</code> inside trait <code>FPOption</code>.  Use what you&#39;ve learned in <b>Part 4</b> to fix the trait and the given methods: <code>map</code> and <code>getOrElse</code>.</p>
+
 <p>Test your implementations of the combinators with the runnable class <code>FPOptionExamples5b</code>.</p>
-<h3 id="task-5c-orelse">Task (5c): <code>orElse</code></h3>
-<p>Use methods already implemented to implement <code>orElse</code>.</p>
-<p><code>orElse</code> could be called a <em>non-primitive</em> combinator. A <em>primitive</em> combinator would not be implemented on top of other combinators.</p>
+
+<h3 id="toc_22">Task (5c): <code>orElse</code></h3>
+
+<p>Use methods already implemented to implement <code>orElse</code>.  </p>
+
+<p><code>orElse</code> could be called a <em>non-primitive</em> combinator.  A <em>primitive</em> combinator would not be implemented on top of other combinators.</p>
+
 <p>Its signature needs to be fixed.</p>
+
 <p>Test your implementation with runnable class <code>FPOptionExamples5c</code></p>
-<h3 id="task-5d-flatmap">Task (5d): <code>flatMap</code></h3>
+
+<h3 id="toc_23">Task (5d): <code>flatMap</code></h3>
+
 <p>Again, use methods already implemented to implement <code>flatMap</code>.</p>
-<pre><code>  def flatMap[B](f: A =&gt; FPOption[B]): FPOption[B] = ???</code></pre>
-<p>In this case, <code>flatMap</code> is a non-primitive combinator. In later chapters and in general, <code>flatMap</code> is a primitive combinator.</p>
+
+<div><pre><code class="language-none">  def flatMap[B](f: A =&gt; FPOption[B]): FPOption[B] = ???</code></pre></div>
+
+<p>In this case, <code>flatMap</code> is a non-primitive combinator.  In later chapters and in general, <code>flatMap</code> is a primitive combinator.</p>
+
 <p>In contrast to Task 5b, there is <em>no enforced relationship</em> between types <code>A</code> and <code>B</code> in <code>flatMap</code>.</p>
+
 <p>Test your implementation with the runnable class <code>FPOptionExamples5d</code>.</p>
-<h3 id="task-5e-map2">Task (5e): <code>map2</code></h3>
-<p>Implement</p>
-<pre><code>  def map2[B, C](opB: FPOption[B])(f: (A,B) =&gt; C): FPOption[C] = ???</code></pre>
-<p>, another non-primitive combinator.</p>
+
+<h3 id="toc_24">Task (5e): <code>map2</code></h3>
+
+<p>Implement <code>map2</code>, another non-primitive combinator.  </p>
+
+<div><pre><code class="language-none">  def map2[B, C](opB: FPOption[B])(f: (A,B) =&gt; C): FPOption[C] = ???</code></pre></div>
+
 <p>Test your implementation with runnable class <code>FPOptionExamples5e</code>.</p>
-<hr />
-<h2 id="resources">Resources</h2>
+
+<hr>
+
+<h2 id="toc_25">Tests</h2>
+
+<p>Various tests have already been implemented in the following files:  </p>
+
+<p><code>tutorial/src/test/scala/com/datascience/education/tutorial/lecture4/SafeDivisionSpec.scala</code><br>
+<code>tutorial/src/test/scala/com/datascience/education/tutorial/lecture4/EmptySetSpec.scala</code><br>
+<code>tutorial/src/test/scala/com/datascience/education/tutorial/lecture4/EmployeesSpec.scala</code><br>
+<code>tutorial/src/test/scala/com/datascience/education/tutorial/lecture4/FlawedOptionSpec.scala</code><br>
+<code>tutorial/src/test/scala/com/datascience/education/tutorial/lecture4/FPOptionSpec.scala</code>  </p>
+
+<p>Uncomment all of the tests that are commented out in these files and run them to check your implementations in this tutorial.</p>
+
+<hr>
+
+<h2 id="toc_26">Resources</h2>
+
 <p><a href="http://docs.scala-lang.org/tutorials/tour/lower-type-bounds.html">Lower Type Bounds; necessity for implementation of <code>List</code></a></p>
+
 <p><a href="http://www.scala-lang.org/api/current/index.html#scala.Option">ScalaDoc for Scala Collections <code>Option</code></a></p>
+
 <p><a href="http://www.scala-lang.org/api/current/index.html#scala.Nothing">ScalaDoc for <code>Nothing</code></a></p>
-<p><a href="http://typelevel.org/cats/tut/traverse.html">Cats Traverse typeclass</a></p>
+
+<p><a href="http://typelevel.org/cats/typeclasses/traverse.html">Cats Traverse typeclass</a></p>
+
 <p><a href="http://eed3si9n.com/herding-cats/Traverse.html">Herding Cats: Traverse</a></p>
 
+
+
+<script type="text/javascript">
+var _self="undefined"!=typeof window?window:"undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?self:{},Prism=function(){var e=/\blang(?:uage)?-(\w+)\b/i,t=0,n=_self.Prism={util:{encode:function(e){return e instanceof a?new a(e.type,n.util.encode(e.content),e.alias):"Array"===n.util.type(e)?e.map(n.util.encode):e.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\u00a0/g," ")},type:function(e){return Object.prototype.toString.call(e).match(/\[object (\w+)\]/)[1]},objId:function(e){return e.__id||Object.defineProperty(e,"__id",{value:++t}),e.__id},clone:function(e){var t=n.util.type(e);switch(t){case"Object":var a={};for(var r in e)e.hasOwnProperty(r)&&(a[r]=n.util.clone(e[r]));return a;case"Array":return e.map&&e.map(function(e){return n.util.clone(e)})}return e}},languages:{extend:function(e,t){var a=n.util.clone(n.languages[e]);for(var r in t)a[r]=t[r];return a},insertBefore:function(e,t,a,r){r=r||n.languages;var l=r[e];if(2==arguments.length){a=arguments[1];for(var i in a)a.hasOwnProperty(i)&&(l[i]=a[i]);return l}var o={};for(var s in l)if(l.hasOwnProperty(s)){if(s==t)for(var i in a)a.hasOwnProperty(i)&&(o[i]=a[i]);o[s]=l[s]}return n.languages.DFS(n.languages,function(t,n){n===r[e]&&t!=e&&(this[t]=o)}),r[e]=o},DFS:function(e,t,a,r){r=r||{};for(var l in e)e.hasOwnProperty(l)&&(t.call(e,l,e[l],a||l),"Object"!==n.util.type(e[l])||r[n.util.objId(e[l])]?"Array"!==n.util.type(e[l])||r[n.util.objId(e[l])]||(r[n.util.objId(e[l])]=!0,n.languages.DFS(e[l],t,l,r)):(r[n.util.objId(e[l])]=!0,n.languages.DFS(e[l],t,null,r)))}},plugins:{},highlightAll:function(e,t){var a={callback:t,selector:'code[class*="language-"], [class*="language-"] code, code[class*="lang-"], [class*="lang-"] code'};n.hooks.run("before-highlightall",a);for(var r,l=a.elements||document.querySelectorAll(a.selector),i=0;r=l[i++];)n.highlightElement(r,e===!0,a.callback)},highlightElement:function(t,a,r){for(var l,i,o=t;o&&!e.test(o.className);)o=o.parentNode;o&&(l=(o.className.match(e)||[,""])[1],i=n.languages[l]),t.className=t.className.replace(e,"").replace(/\s+/g," ")+" language-"+l,o=t.parentNode,/pre/i.test(o.nodeName)&&(o.className=o.className.replace(e,"").replace(/\s+/g," ")+" language-"+l);var s=t.textContent,u={element:t,language:l,grammar:i,code:s};if(!s||!i)return n.hooks.run("complete",u),void 0;if(n.hooks.run("before-highlight",u),a&&_self.Worker){var c=new Worker(n.filename);c.onmessage=function(e){u.highlightedCode=e.data,n.hooks.run("before-insert",u),u.element.innerHTML=u.highlightedCode,r&&r.call(u.element),n.hooks.run("after-highlight",u),n.hooks.run("complete",u)},c.postMessage(JSON.stringify({language:u.language,code:u.code,immediateClose:!0}))}else u.highlightedCode=n.highlight(u.code,u.grammar,u.language),n.hooks.run("before-insert",u),u.element.innerHTML=u.highlightedCode,r&&r.call(t),n.hooks.run("after-highlight",u),n.hooks.run("complete",u)},highlight:function(e,t,r){var l=n.tokenize(e,t);return a.stringify(n.util.encode(l),r)},tokenize:function(e,t){var a=n.Token,r=[e],l=t.rest;if(l){for(var i in l)t[i]=l[i];delete t.rest}e:for(var i in t)if(t.hasOwnProperty(i)&&t[i]){var o=t[i];o="Array"===n.util.type(o)?o:[o];for(var s=0;s<o.length;++s){var u=o[s],c=u.inside,g=!!u.lookbehind,h=!!u.greedy,f=0,d=u.alias;u=u.pattern||u;for(var p=0;p<r.length;p++){var m=r[p];if(r.length>e.length)break e;if(!(m instanceof a)){u.lastIndex=0;var y=u.exec(m),v=1;if(!y&&h&&p!=r.length-1){var b=r[p+1].matchedStr||r[p+1],k=m+b;if(p<r.length-2&&(k+=r[p+2].matchedStr||r[p+2]),u.lastIndex=0,y=u.exec(k),!y)continue;var w=y.index+(g?y[1].length:0);if(w>=m.length)continue;var _=y.index+y[0].length,P=m.length+b.length;if(v=3,P>=_){if(r[p+1].greedy)continue;v=2,k=k.slice(0,P)}m=k}if(y){g&&(f=y[1].length);var w=y.index+f,y=y[0].slice(f),_=w+y.length,S=m.slice(0,w),O=m.slice(_),j=[p,v];S&&j.push(S);var A=new a(i,c?n.tokenize(y,c):y,d,y,h);j.push(A),O&&j.push(O),Array.prototype.splice.apply(r,j)}}}}}return r},hooks:{all:{},add:function(e,t){var a=n.hooks.all;a[e]=a[e]||[],a[e].push(t)},run:function(e,t){var a=n.hooks.all[e];if(a&&a.length)for(var r,l=0;r=a[l++];)r(t)}}},a=n.Token=function(e,t,n,a,r){this.type=e,this.content=t,this.alias=n,this.matchedStr=a||null,this.greedy=!!r};if(a.stringify=function(e,t,r){if("string"==typeof e)return e;if("Array"===n.util.type(e))return e.map(function(n){return a.stringify(n,t,e)}).join("");var l={type:e.type,content:a.stringify(e.content,t,r),tag:"span",classes:["token",e.type],attributes:{},language:t,parent:r};if("comment"==l.type&&(l.attributes.spellcheck="true"),e.alias){var i="Array"===n.util.type(e.alias)?e.alias:[e.alias];Array.prototype.push.apply(l.classes,i)}n.hooks.run("wrap",l);var o="";for(var s in l.attributes)o+=(o?" ":"")+s+'="'+(l.attributes[s]||"")+'"';return"<"+l.tag+' class="'+l.classes.join(" ")+'" '+o+">"+l.content+"</"+l.tag+">"},!_self.document)return _self.addEventListener?(_self.addEventListener("message",function(e){var t=JSON.parse(e.data),a=t.language,r=t.code,l=t.immediateClose;_self.postMessage(n.highlight(r,n.languages[a],a)),l&&_self.close()},!1),_self.Prism):_self.Prism;var r=document.currentScript||[].slice.call(document.getElementsByTagName("script")).pop();return r&&(n.filename=r.src,document.addEventListener&&!r.hasAttribute("data-manual")&&document.addEventListener("DOMContentLoaded",n.highlightAll)),_self.Prism}();"undefined"!=typeof module&&module.exports&&(module.exports=Prism),"undefined"!=typeof global&&(global.Prism=Prism);
+</script>
+
+<script type="text/x-mathjax-config">
+(function () {
+
+MathJax.Hub.Config({
+	'showProcessingMessages': false,
+	'messageStyle': 'none'
+});
+
+if (typeof MathJaxListener !== 'undefined') {
+	MathJax.Hub.Register.StartupHook('End', function () {
+		MathJaxListener.invokeCallbackForKey_('End');
+	});
+}
+
+})();
+</script>
+
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
 </body>
+
 </html>

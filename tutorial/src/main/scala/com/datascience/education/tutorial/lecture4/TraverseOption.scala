@@ -1,9 +1,5 @@
 package com.datascience.education.tutorial.lecture4
 
-import scala.Option
-import scala.Some
-import scala.None
-
 import cats.Traverse
 import cats.Applicative
 import cats.std.list._

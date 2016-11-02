@@ -1,7 +1,5 @@
 package com.datascience.education.tutorialAnswer.lecture4
 
-
-import org.scalatest._
 import org.scalatest.{FunSuite, Matchers}
 
 class FPOptionSpec extends FunSuite with Matchers {

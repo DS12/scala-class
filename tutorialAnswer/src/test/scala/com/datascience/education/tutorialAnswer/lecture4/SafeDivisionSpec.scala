@@ -1,23 +1,10 @@
 package com.datascience.education.tutorialAnswer.lecture4
 
-import org.scalatest._
 import org.scalatest.{FunSuite, Matchers}
-
-import scala.Option
-import scala.Some
-import scala.None
 
 import SafeDivision._
 
 class SafeDivisionSpec extends FunSuite with Matchers {
-
-  test("safeDivInt(5, 0) should be None") {
-    safeDivInt(5, 0) should be (None)
-  }
-
-  test("safeDivInt(5, 2) should be Some(2)") {
-    safeDivInt(5, 2) should be (Some(2))
-  }
 
   // https://docs.oracle.com/javase/7/docs/api/java/lang/Double.html
   test("safeDiv catches Double.POSITIVE_INFINITY") {
@@ -46,8 +33,17 @@ class SafeDivisionSpec extends FunSuite with Matchers {
   
   test(s"One of these fractions {$fracsFailing} is not a real number, so the traversal should fail") {
     val out: Option[List[Double]] = traverseFractions(fracsFailing)
-    out shouldBe (None)
+    out shouldBe None
   }
 
-  
+  test(s"All of these fractions {$fracsSuccessful} are real numbers, so the traversal and square root should succeed") {
+    val out: Option[List[Double]] = traverseSqrtFractions(fracsSuccessful)
+    out shouldBe a [Some[_]]
+  }
+
+  test(s"One of these fractions {$fracsFailing} is not a real number, so the traversal and square root should fail") {
+    val out: Option[List[Double]] = traverseSqrtFractions(fracsFailing)
+    out shouldBe None
+  }
+
 }

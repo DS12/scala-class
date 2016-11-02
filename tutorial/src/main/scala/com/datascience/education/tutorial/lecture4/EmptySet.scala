@@ -1,10 +1,6 @@
 package com.datascience.education.tutorial.lecture4
 
 
-import scala.Option
-import scala.Some
-import scala.None
-
 object EmptySet {
   def sumList(l: List[Int]): Int = l match {
     case Nil => 0
