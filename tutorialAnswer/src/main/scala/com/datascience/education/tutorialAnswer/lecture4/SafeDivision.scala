@@ -1,6 +1,5 @@
 package com.datascience.education.tutorialAnswer.lecture4
 
-<<<<<<< HEAD
 import scala.Option
 import scala.Some
 import scala.None
@@ -9,8 +8,6 @@ import cats.Applicative
 import cats.std.list._
 
 
-=======
->>>>>>> master_private
 object SafeDivision {
 
   // Task (2a)
