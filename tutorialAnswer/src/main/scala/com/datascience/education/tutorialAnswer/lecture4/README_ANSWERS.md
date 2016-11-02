@@ -139,7 +139,7 @@ Do not catch any `Exception`.  This cannot be tested in this example, but is app
 
 Test your work with runnable class `SafeDivisionExamples`.
 
-This fills a similar purpose to [`Try` in the Scala Collections](http://www.scala-lang.org/api/current/index.html#scala.util.Try) or [`Xor.catchNonFatal` in Cats](http://typelevel.org/cats/api/index.html#cats.data.Xor$@catchNonFatal[A](f:=>A):cats.data.Xor[Throwable,A])
+This fills a similar purpose to [`Try` in the Scala Collections](http://www.scala-lang.org/api/current/index.html#scala.util.Try) or [`Xor.catchNonFatal` in Cats](https://static.javadoc.io/org.typelevel/cats-core_2.11/0.7.2/index.html#cats.data.Xor$@catchNonFatal[A](f:=>A):cats.data.Xor[Throwable,A])
 
 #### Answer (2a)
 
@@ -553,7 +553,7 @@ This Part has demonstrated that variance and type bounds often go hand-in-hand.
 
 ## Part 5: Covariance and Type Bounds in `Option`; `Option` Combinators
 
-`tutorial/src/main/scala/com/datascience/education/tutorial/lecture4/FlawedOption.scala`
+`tutorial/src/test/scala/com/datascience/education/tutorial/lecture4/FlawedOptionSpec.scala`
 `tutorial/src/main/scala/com/datascience/education/tutorial/lecture4/FPOption.scala`
 
 <b>Part 4: Covariance and Type Bounds in `List`</b> iterated through several incorrect implementations of `List` to approximate the version in the Scala Collections.
@@ -595,10 +595,9 @@ Option.type
 
 ### Task (5a): Compilation errors of `FlawedOption`
 
-Investigate the compilation errors for the given implementation of `FlawedOption`, and use these compilation errors as a clue for the solution to the next task. You can do this in two ways:  
+Investigate the compilation errors for the given implementation of `FlawedOption`, and use these compilation errors as a clue for the solution to the next task.  
 
-1. Uncomment the methods implemented inside the trait of `FlawedOption`, try compiling and look at the errors. Remember to comment out the methods before continuing to `FPOption`.
-2. In `tutorial/src/test/scala/com/datascience/education/tutorial/lecture4/FlawedOptionSpec.scala`, a test is provided which checks that this implementation `shouldNot compile`. You can modify this test so that it will fail by changing it to `should compile`, and look at the error for failing when the test is ran. To run this specific test in `sbt`, use `testOnly com.datascience.education.tutorial.lecture4.FlawedOptionSpec`. Remember to change the tests back otherwise your tests will continue to fail.
+In `tutorial/src/test/scala/com/datascience/education/tutorial/lecture4/FlawedOptionSpec.scala`, a test is provided which checks that this implementation `shouldNot compile`. You should modify this test so that it will fail by changing it to `should compile`, and look at the error for failing when the test is ran. To run this specific test in `sbt`, use `testOnly com.datascience.education.tutorial.lecture4.FlawedOptionSpec`. Remember to change the tests back otherwise your tests will continue to fail.
  
 
 

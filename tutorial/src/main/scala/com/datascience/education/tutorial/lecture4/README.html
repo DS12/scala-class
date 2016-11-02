@@ -555,7 +555,7 @@ and the product of an empty collection of Doubles in not 1.0.</p>
 
 <p>Test your work with runnable class <code>SafeDivisionExamples</code>.</p>
 
-<p>This fills a similar purpose to <a href="http://www.scala-lang.org/api/current/index.html#scala.util.Try"><code>Try</code> in the Scala Collections</a> or <a href="http://typelevel.org/cats/api/index.html#cats.data.Xor$@catchNonFatal%5BA%5D(f:=%3EA):cats.data.Xor%5BThrowable,A%5D"><code>Xor.catchNonFatal</code> in Cats</a></p>
+<p>This fills a similar purpose to <a href="http://www.scala-lang.org/api/current/index.html#scala.util.Try"><code>Try</code> in the Scala Collections</a> or <a href="https://static.javadoc.io/org.typelevel/cats-core_2.11/0.7.2/index.html#cats.data.Xor$@catchNonFatal%5BA%5D(f:=%3EA):cats.data.Xor%5BThrowable,A%5D"><code>Xor.catchNonFatal</code> in Cats</a></p>
 
 <h3 id="toc_9">Task (2b): <code>traverseFractions</code></h3>
 
@@ -860,7 +860,7 @@ res0: com.datascience.education.tutorial.lecture4.Covariance.LinkedList4[Int] = 
 
 <h2 id="toc_19">Part 5: Covariance and Type Bounds in <code>Option</code>; <code>Option</code> Combinators</h2>
 
-<p><code>tutorial/src/main/scala/com/datascience/education/tutorial/lecture4/FlawedOption.scala</code>
+<p><code>tutorial/src/test/scala/com/datascience/education/tutorial/lecture4/FlawedOptionSpec.scala</code>
 <code>tutorial/src/main/scala/com/datascience/education/tutorial/lecture4/FPOption.scala</code></p>
 
 <p><b>Part 4: Covariance and Type Bounds in <code>List</code></b> iterated through several incorrect implementations of <code>List</code> to approximate the version in the Scala Collections.</p>
@@ -899,12 +899,9 @@ Option.type</code></pre></div>
 
 <h3 id="toc_20">Task (5a): Compilation errors of <code>FlawedOption</code></h3>
 
-<p>Investigate the compilation errors for the given implementation of <code>FlawedOption</code>, and use these compilation errors as a clue for the solution to the next task. You can do this in two ways:  </p>
+<p>Investigate the compilation errors for the given implementation of <code>FlawedOption</code>, and use these compilation errors as a clue for the solution to the next task.  </p>
 
-<ol>
-<li>Uncomment the methods implemented inside the trait of <code>FlawedOption</code>, try compiling and look at the errors. Remember to comment out the methods before continuing to <code>FPOption</code>.</li>
-<li>In <code>tutorial/src/test/scala/com/datascience/education/tutorial/lecture4/FlawedOptionSpec.scala</code>, a test is provided which checks that this implementation <code>shouldNot compile</code>. You can modify this test so that it will fail by changing it to <code>should compile</code>, and look at the error for failing when the test is ran. To run this specific test in <code>sbt</code>, use <code>testOnly com.datascience.education.tutorial.lecture4.FlawedOptionSpec</code>. Remember to change the tests back otherwise your tests will continue to fail.</li>
-</ol>
+<p>In <code>tutorial/src/test/scala/com/datascience/education/tutorial/lecture4/FlawedOptionSpec.scala</code>, a test is provided which checks that this implementation <code>shouldNot compile</code>. You should modify this test so that it will fail by changing it to <code>should compile</code>, and look at the error for failing when the test is ran. To run this specific test in <code>sbt</code>, use <code>testOnly com.datascience.education.tutorial.lecture4.FlawedOptionSpec</code>. Remember to change the tests back otherwise your tests will continue to fail.</p>
 
 <h3 id="toc_21">Task (5b): <code>map</code> and <code>getOrElse</code></h3>
 
