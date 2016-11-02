@@ -1,11 +1,8 @@
 package com.datascience.education.tutorial.lecture4
 
-import org.scalatest._
 import org.scalatest.{FunSuite, Matchers}
 
-
 class FPOptionSpec extends FunSuite with Matchers {
-
   import FPOption._
 
   // val optionHello: FPOption[String] = FPSome("hello")
@@ -54,6 +51,5 @@ class FPOptionSpec extends FunSuite with Matchers {
   // test(s"The sum of FPSome(64) and FPSome(65) should not be FPNone") {
   //   option64.map2(option65)(_+_) should not be (FPNone)
   // }
-  
-  
+
 }
