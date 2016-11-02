@@ -47,7 +47,7 @@ import cats.data.Writer
 object FactorialWriter {
 
   // Task (1a)
-  import cats.instances.vector._
+  import cats.std.vector._
   type Logged[A] = Writer[Vector[String], A]
 
   // Task (1b)

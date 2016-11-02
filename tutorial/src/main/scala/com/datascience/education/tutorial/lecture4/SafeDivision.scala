@@ -7,7 +7,7 @@ import scala.None
 
 import cats.Applicative
 import cats.Traverse
-import cats.instances.list._
+import cats.std.list._
 
 
 object SafeDivision {
