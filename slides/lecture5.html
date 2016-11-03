@@ -87,7 +87,7 @@
             </aside>
             
             <aside class="page_number">
-              1/56
+              1/39
             </aside>
 
           </footer>
@@ -121,125 +121,7 @@ This line of inquiry leads ultimately to the <code>Free</code> monad in lecture 
             </aside>
             
             <aside class="page_number">
-              2/56
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture5.md -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            
-            <section><p>In this lecture we will begin by writing <em>descriptions</em> for infinitely long processes, but only <em>evaluate</em> them for a finite length of time, or within some bound.
-<br />
-<br />
-Laziness is a fundamental component of this.</p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture5.md">lecture5.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              3/56
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture5.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code">
-          <div class="inner">
-            
-            <header><h1>Example: Transposing a Computation</h1></header>
-            
-            
-            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">foo</span><span class="o">(</span><span class="n">i</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span> <span class="k">=</span> <span class="o">{</span><span class="n">println</span><span class="o">(</span><span class="n">i</span><span class="o">);</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">10</span><span class="o">}</span>
-<span class="k">def</span> <span class="n">bar</span><span class="o">(</span><span class="n">i</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span> <span class="k">=</span> <span class="o">{</span><span class="n">println</span><span class="o">(</span><span class="n">i</span><span class="o">);</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="o">}</span>
-<span class="nc">List</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span><span class="mi">2</span><span class="o">,</span><span class="mi">3</span><span class="o">).</span><span class="n">map</span><span class="o">(</span><span class="n">foo</span><span class="o">).</span><span class="n">filter</span><span class="o">(</span><span class="n">bar</span><span class="o">)</span>
-<span class="c1">//1</span>
-<span class="c1">//2</span>
-<span class="c1">//3</span>
-<span class="c1">//11</span>
-<span class="c1">//12</span>
-<span class="c1">//13</span>
-<span class="c1">//res0: List[Int] = List(12)</span>
-</pre></div>
-</section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture5.md">lecture5.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              4/56
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture5.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code">
-          <div class="inner">
-            
-            
-            <section><div class="highlight"><pre><span></span><span class="nc">Stream</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span><span class="mi">2</span><span class="o">,</span><span class="mi">3</span><span class="o">).</span><span class="n">map</span><span class="o">(</span><span class="n">foo</span><span class="o">).</span><span class="n">filter</span><span class="o">(</span><span class="n">bar</span><span class="o">).</span><span class="n">force</span>
-<span class="c1">//1</span>
-<span class="c1">//11</span>
-<span class="c1">//2</span>
-<span class="c1">//12</span>
-<span class="c1">//3</span>
-<span class="c1">//13</span>
-<span class="c1">//res1: Stream[Int] = Stream(12)</span>
-</pre></div>
-</section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture5.md">lecture5.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              5/56
+              2/39
             </aside>
 
           </footer>
@@ -255,7 +137,7 @@ Laziness is a fundamental component of this.</p></section>
             
             
             <section><p><code>cats.Eval</code> is a monad that allows us to abstract over different models of evaluation.</p>
-<p>We typically hear of two such models: eager and lazy.</p></section>
+<p>It is somewhat similar to <code>scala.concurrent.Future</code> from the standard library and <code>fs2.Task</code> from the <a href="https://github.com/functional-streams-for-scala/fs2">Functional Streams for Scala library</a>.</p></section>
             
           </div>
           <div class="presenter_notes">
@@ -273,7 +155,7 @@ Laziness is a fundamental component of this.</p></section>
             </aside>
             
             <aside class="page_number">
-              6/56
+              3/39
             </aside>
 
           </footer>
@@ -286,9 +168,8 @@ Laziness is a fundamental component of this.</p></section>
           <div class="inner">
             
             
-            <section><p>What do these terms mean?</p>
-<p>Eager computations happen immediately, whereas lazy computations happen only upon access.</p>
-<p>For example, Scala <code>val</code>s are eager, memoized definitions.</p></section>
+            <section><p>We typically hear of two such evaluation models: eager and lazy.</p>
+<p>Eager computations happen immediately, whereas lazy computations happen only upon access.</p></section>
             
           </div>
           <div class="presenter_notes">
@@ -306,7 +187,7 @@ Laziness is a fundamental component of this.</p></section>
             </aside>
             
             <aside class="page_number">
-              7/56
+              4/39
             </aside>
 
           </footer>
@@ -346,7 +227,7 @@ Laziness is a fundamental component of this.</p></section>
             </aside>
             
             <aside class="page_number">
-              8/56
+              5/39
             </aside>
 
           </footer>
@@ -387,7 +268,7 @@ Laziness is a fundamental component of this.</p></section>
             </aside>
             
             <aside class="page_number">
-              9/56
+              6/39
             </aside>
 
           </footer>
@@ -427,7 +308,7 @@ Laziness is a fundamental component of this.</p></section>
             </aside>
             
             <aside class="page_number">
-              10/56
+              7/39
             </aside>
 
           </footer>
@@ -452,7 +333,39 @@ Laziness is a fundamental component of this.</p></section>
 <span class="c1">//res0: Int = 2</span>
 <span class="n">later</span><span class="o">.</span><span class="n">value</span>
 <span class="c1">//res1: Int = 2</span>
-<span class="k">val</span> <span class="n">always</span> <span class="k">=</span> <span class="nc">Eval</span><span class="o">.</span><span class="n">always</span><span class="o">({</span> <span class="n">println</span><span class="o">(</span><span class="s">&quot;foo&quot;</span><span class="o">);</span> <span class="mi">1</span><span class="o">+</span><span class="mi">1</span><span class="o">})</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture5.md">lecture5.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              8/39
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture5.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">always</span> <span class="k">=</span> <span class="nc">Eval</span><span class="o">.</span><span class="n">always</span><span class="o">({</span> <span class="n">println</span><span class="o">(</span><span class="s">&quot;foo&quot;</span><span class="o">);</span> <span class="mi">1</span><span class="o">+</span><span class="mi">1</span><span class="o">})</span>
 <span class="c1">//always: cats.Eval[Int] = cats.Always@773adb25</span>
 <span class="n">always</span><span class="o">.</span><span class="n">value</span>
 <span class="c1">//foo</span>
@@ -479,7 +392,7 @@ Laziness is a fundamental component of this.</p></section>
             </aside>
             
             <aside class="page_number">
-              11/56
+              9/39
             </aside>
 
           </footer>
@@ -535,7 +448,7 @@ Laziness is a fundamental component of this.</p></section>
             </aside>
             
             <aside class="page_number">
-              12/56
+              10/39
             </aside>
 
           </footer>
@@ -548,8 +461,7 @@ Laziness is a fundamental component of this.</p></section>
           <div class="inner">
             
             
-            <section><p><code>Eval</code>s <code>map</code> and <code>flatMap</code> methods add computations to a chain.</p>
-<p>This is similar to the <code>map</code> and <code>flatMap</code> methods on <code>scala.concurrent.Future</code>, except that the computations aren’t run until we call value to obtain a result:</p>
+            <section><p><code>Eval</code>s <code>map</code> and <code>flatMap</code> methods add computations to a chain:</p>
 <div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">greeting</span> <span class="k">=</span> <span class="nc">Eval</span><span class="o">.</span><span class="n">always</span> <span class="o">{</span> <span class="n">println</span><span class="o">(</span><span class="s">&quot;Step 1&quot;</span><span class="o">)</span>
   <span class="s">&quot;Hello&quot;</span>
   <span class="o">}.</span><span class="n">map</span> <span class="o">{</span> <span class="n">str</span> <span class="k">=&gt;</span>
@@ -580,7 +492,7 @@ Laziness is a fundamental component of this.</p></section>
             </aside>
             
             <aside class="page_number">
-              13/56
+              11/39
             </aside>
 
           </footer>
@@ -621,7 +533,7 @@ Laziness is a fundamental component of this.</p></section>
             </aside>
             
             <aside class="page_number">
-              14/56
+              12/39
             </aside>
 
           </footer>
@@ -662,7 +574,7 @@ Laziness is a fundamental component of this.</p></section>
             </aside>
             
             <aside class="page_number">
-              15/56
+              13/39
             </aside>
 
           </footer>
@@ -699,7 +611,7 @@ Laziness is a fundamental component of this.</p></section>
             </aside>
             
             <aside class="page_number">
-              16/56
+              14/39
             </aside>
 
           </footer>
@@ -740,7 +652,7 @@ Laziness is a fundamental component of this.</p></section>
             </aside>
             
             <aside class="page_number">
-              17/56
+              15/39
             </aside>
 
           </footer>
@@ -749,24 +661,13 @@ Laziness is a fundamental component of this.</p></section>
       
       <!-- slide source: lecture5.md -->
       <div class="slide-wrapper">
-        <div class="slide has_code has_notes">
+        <div class="slide">
           <div class="inner">
             
-            <header><h2>more (trampolines) on p 52</h2></header>
             
-            
-            <section><h1><code>val</code></h1>
-<p><a href="https://en.wikipedia.org/wiki/Evaluation_strategy#Call_by_value">Call-by-value</a>
-<br />
-<br /></p>
-<p>Strict/eager, memoizes
-<br />
-<br /></p>
-<div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">foo</span> <span class="k">=</span> <span class="mi">5</span> <span class="o">+</span> <span class="mi">5</span>
-<span class="n">println</span><span class="o">(</span><span class="n">foo</span><span class="o">)</span>
-</pre></div>
-
-<p class="notes">This program is evaluated line by line, from top to bottom.  The cost of time in calculating <code>5+5</code> is paid on the first line.  This cost will only be paid once, ever, for any use of <code>foo</code>.</p></section>
+            <section><p>One useful property of <code>Eval</code> is that its <code>map</code> and <code>flatMap</code> methods are trampolined.</p>
+<p>This means we can nest calls to <code>map</code> and <code>flatMap</code> arbitrarily without consuming stack frames.</p>
+<p>We’ll illustrate this by comparing <code>Eval</code> to <code>Option</code>.</p></section>
             
           </div>
           <div class="presenter_notes">
@@ -784,211 +685,7 @@ Laziness is a fundamental component of this.</p></section>
             </aside>
             
             <aside class="page_number">
-              18/56
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture5.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code has_notes">
-          <div class="inner">
-            
-            <header><h1><code>lazy val</code></h1></header>
-            
-            
-            <section><p><a href="https://en.wikipedia.org/wiki/Evaluation_strategy#Call_by_need">Call-by-need</a>
-<br />
-<br /></p>
-<p>lazy, memoizes
-<br />
-<br /></p>
-<div class="highlight"><pre><span></span><span class="k">lazy</span> <span class="k">val</span> <span class="n">foo</span> <span class="k">=</span> <span class="mi">5</span> <span class="o">+</span> <span class="mi">5</span>
-<span class="n">println</span><span class="o">(</span><span class="n">foo</span><span class="o">)</span>
-</pre></div>
-
-<p class="notes">The cost of time and memory in calculating <code>5+5</code> is paid on the second line.  This cost will only be paid once, ever, for any use of <code>foo</code>.</p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture5.md">lecture5.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              19/56
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture5.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code has_notes">
-          <div class="inner">
-            
-            <header><h1><code>def</code></h1></header>
-            
-            
-            <section><p><a href="https://en.wikipedia.org/wiki/Evaluation_strategy#Call_by_name">Call-by-name</a>
-<br />
-<br /></p>
-<p>lazy, does not memoize
-<br />
-<br /></p>
-<div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">foo</span> <span class="k">=</span> <span class="mi">5</span> <span class="o">+</span> <span class="mi">5</span>
-<span class="n">println</span><span class="o">(</span><span class="n">foo</span><span class="o">)</span>
-</pre></div>
-
-<p><br />
-<br />
-<br />
-<br />
-<br />
-<br /></p>
-<p><a href="http://stackoverflow.com/a/8822824/1007926">Call-by-need versus call-by-name</a></p>
-<p class="notes">The cost of time and memory in calculating <code>5+5</code> is paid on the second line.  This cost will be incurred every time <code>foo</code> is used.</p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture5.md">lecture5.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              20/56
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture5.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code has_notes">
-          <div class="inner">
-            
-            <header><h1>Thunk</h1></header>
-            
-            
-            <section><p>A <a href="https://en.wikipedia.org/wiki/Thunk#Functional_programming">"thunk"</a> uses a function to provide <em>laziness</em>:</p>
-<div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">thunk</span><span class="k">:</span> <span class="o">()</span> <span class="o">=&gt;</span> <span class="nc">Int</span> <span class="k">=</span> <span class="o">()</span> <span class="k">=&gt;</span> <span class="mi">123</span>
-</pre></div>
-
-<p><br />
-<br />
-<br />
-<br /></p>
-<p><code>expensive</code> will not be called until the thunk is called.</p>
-<div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">thunk2</span><span class="k">:</span> <span class="o">()</span> <span class="o">=&gt;</span> <span class="nc">Long</span> <span class="k">=</span> <span class="o">()</span> <span class="k">=&gt;</span> <span class="n">expensive</span><span class="o">()</span>
-
-<span class="c1">// cost incurred here</span>
-<span class="k">val</span> <span class="n">expensiveResult</span> <span class="k">=</span> <span class="n">thunk2</span><span class="o">()</span>
-</pre></div>
-
-<p><br />
-<br />
-<br />
-<br />
-<br />
-<br /></p>
-<p><a href="https://wiki.haskell.org/Lazy_vs._non-strict">Comments on evaluation strategies</a></p>
-<p class="notes"><em>Wikipedia</em> says that a "thunk" in Haskell memoizes.  This is not true in Scala.</p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture5.md">lecture5.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              21/56
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture5.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code has_notes">
-          <div class="inner">
-            
-            <header><h1>Arguments to a function</h1></header>
-            
-            
-            <section><p><a href="https://en.wikipedia.org/wiki/Evaluation_strategy#Call_by_name">Call-by-name</a> with <code>=&gt;</code>
-<br />
-<br />
-Avoid the evaluation of the <code>B</code> value if the <code>A</code> value is available
-<br /></p>
-<div class="highlight"><pre><span></span><span class="k">sealed</span> <span class="k">trait</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">+A</span><span class="o">]</span> <span class="o">{</span>
-  <span class="o">...</span>
-  <span class="k">def</span> <span class="n">getOrElse</span><span class="o">[</span><span class="kt">B</span> <span class="k">&gt;:</span> <span class="kt">A</span><span class="o">](</span><span class="n">default</span><span class="k">:</span> <span class="o">=&gt;</span> <span class="n">B</span><span class="o">)</span><span class="k">:</span> <span class="kt">B</span> <span class="o">=</span>
-    <span class="k">this</span> <span class="k">match</span> <span class="o">{</span>
-      <span class="k">case</span> <span class="nc">Some</span><span class="o">(</span><span class="n">get</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">get</span>
-      <span class="k">case</span> <span class="nc">None</span> <span class="k">=&gt;</span> <span class="n">default</span>
-    <span class="o">}</span>
-  <span class="o">...</span>
-<span class="o">}</span>
-</pre></div>
-
-<p><br />
-in <code>common.lecture4.FPOption</code>
-<br />
-<br />
-<br />
-<br />
-See <a href="http://www.artima.com/pins1ed/control-abstraction.html#9.5">Section 9.5 of <em>Programming in Scala</em></a></p>
-<p class="notes">I feel this call-by-name syntax is far more understandable/justifiable after seeing the Stream combinators.  Some Stream combinators cannot be implemented without call-by-name syntax.  Outside of the context of lazy data structures like Stream, the only justification for call-by-name syntax is "short-circuiting" and avoiding the evaluation of expensive expressions, a.f.a.i.k.  "Separation of description from evaluation" encompasses (1) short-circuiting, (2) avoiding the evaluation of unnecessary, expensive expressions, and (3) lazy data structures.</p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture5.md">lecture5.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              22/56
+              16/39
             </aside>
 
           </footer>
@@ -1000,14 +697,136 @@ See <a href="http://www.artima.com/pins1ed/control-abstraction.html#9.5">Section
         <div class="slide has_code">
           <div class="inner">
             
-            <header><h1>List (eager)</h1></header>
+            
+            <section><p>The <code>loopM</code> method below creates a loop through a monad’s <code>flatMap</code>:</p>
+<div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">cats.Monad</span>
+<span class="k">import</span> <span class="nn">cats.syntax.flatMap._</span>
+<span class="k">import</span> <span class="nn">scala.language.higherKinds</span>
+<span class="k">def</span> <span class="n">stackDepth</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="nc">Thread</span><span class="o">.</span><span class="n">currentThread</span><span class="o">.</span><span class="n">getStackTrace</span><span class="o">.</span><span class="n">length</span>
+<span class="k">def</span> <span class="n">loopM</span><span class="o">[</span><span class="kt">M</span><span class="o">[</span><span class="k">_</span><span class="o">]</span> <span class="kt">:</span> <span class="kt">Monad</span><span class="o">](</span><span class="n">m</span><span class="k">:</span> <span class="kt">M</span><span class="o">[</span><span class="kt">Int</span><span class="o">],</span> <span class="n">count</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">M</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
+  <span class="n">println</span><span class="o">(</span><span class="s">s&quot;Stack depth </span><span class="si">$stackDepth</span><span class="s">&quot;</span><span class="o">)</span>
+  <span class="n">count</span> <span class="k">match</span> <span class="o">{</span>
+    <span class="k">case</span> <span class="mi">0</span> <span class="k">=&gt;</span> <span class="n">m</span>
+    <span class="k">case</span> <span class="n">n</span> <span class="k">=&gt;</span> <span class="n">m</span><span class="o">.</span><span class="n">flatMap</span> <span class="o">{</span> <span class="k">_</span> <span class="k">=&gt;</span> <span class="n">loopM</span><span class="o">(</span><span class="n">m</span><span class="o">,</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)</span> <span class="o">}</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture5.md">lecture5.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              17/39
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture5.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
             
             
-            <section><div class="highlight"><pre><span></span><span class="c1">// abstract</span>
-<span class="k">sealed</span> <span class="k">trait</span> <span class="nc">List</span><span class="o">[</span><span class="kt">+A</span><span class="o">]</span>
-<span class="c1">// concrete</span>
-<span class="k">case</span> <span class="k">object</span> <span class="nc">Nil</span>
-  <span class="k">extends</span> <span class="nc">List</span><span class="o">[</span><span class="kt">Nothing</span><span class="o">]</span>
+            <section><p>When we run <code>loopM</code> with an <code>Option</code> we can see the stack depth slowly increasing:</p>
+<div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">cats.std.option._</span>
+<span class="k">import</span> <span class="nn">cats.syntax.option._</span>
+<span class="n">loopM</span><span class="o">(</span><span class="mf">1.</span><span class="n">some</span><span class="o">,</span> <span class="mi">3</span><span class="o">)</span>
+<span class="c1">//Stack depth 45</span>
+<span class="c1">//Stack depth 52</span>
+<span class="c1">//Stack depth 59</span>
+<span class="c1">//Stack depth 66</span>
+<span class="c1">//res0: Option[Int] = Some(1)</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture5.md">lecture5.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              18/39
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture5.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>Now let’s see the same thing using <code>Eval</code>. The trampoline keeps the stack depth constant:</p>
+<div class="highlight"><pre><span></span><span class="n">loopM</span><span class="o">(</span><span class="nc">Eval</span><span class="o">.</span><span class="n">now</span><span class="o">(</span><span class="mi">1</span><span class="o">),</span> <span class="mi">3</span><span class="o">).</span><span class="n">value</span>
+<span class="c1">//Stack depth 45</span>
+<span class="c1">//Stack depth 49</span>
+<span class="c1">//Stack depth 49</span>
+<span class="c1">//Stack depth 49</span>
+<span class="c1">//res1: Int = 1</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture5.md">lecture5.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              19/39
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture5.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            <header><h1>Streams</h1></header>
+            
+            
+            <section><p>Recall the definition of a simple list:</p>
+<div class="highlight"><pre><span></span><span class="k">sealed</span> <span class="k">trait</span> <span class="nc">List</span><span class="o">[</span><span class="kt">+A</span><span class="o">]</span> <span class="c1">//base trait</span>
+<span class="k">case</span> <span class="k">object</span> <span class="nc">Nil</span> <span class="k">extends</span> <span class="nc">List</span><span class="o">[</span><span class="kt">Nothing</span><span class="o">]</span>
 <span class="k">case</span> <span class="k">class</span> <span class="nc">Cons</span><span class="o">[</span><span class="kt">+A</span><span class="o">](</span><span class="n">head</span><span class="k">:</span> <span class="kt">A</span><span class="o">,</span>
                     <span class="n">tail</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span>
   <span class="k">extends</span> <span class="nc">List</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span>
@@ -1030,7 +849,7 @@ See <a href="http://www.artima.com/pins1ed/control-abstraction.html#9.5">Section
             </aside>
             
             <aside class="page_number">
-              23/56
+              20/39
             </aside>
 
           </footer>
@@ -1042,18 +861,13 @@ See <a href="http://www.artima.com/pins1ed/control-abstraction.html#9.5">Section
         <div class="slide has_code">
           <div class="inner">
             
-            <header><h1>Stream</h1></header>
             
-            
-            <section><p>a.k.a. lazy list</p>
-<div class="highlight"><pre><span></span><span class="c1">// abstract</span>
-<span class="k">trait</span> <span class="nc">Stream</span><span class="o">[</span><span class="kt">+A</span><span class="o">]</span>
-<span class="c1">// concrete</span>
-<span class="k">case</span> <span class="k">object</span> <span class="nc">Empty</span>
-  <span class="k">extends</span> <span class="nc">Stream</span><span class="o">[</span><span class="kt">Nothing</span><span class="o">]</span>
-<span class="k">case</span> <span class="k">class</span> <span class="nc">Cons</span><span class="o">[</span><span class="kt">+C</span><span class="o">](</span><span class="n">h</span><span class="k">:</span> <span class="o">()</span> <span class="o">=&gt;</span> <span class="n">C</span><span class="o">,</span>
-                    <span class="n">t</span><span class="k">:</span> <span class="o">()</span> <span class="o">=&gt;</span> <span class="nc">Stream</span><span class="o">[</span><span class="kt">C</span><span class="o">])</span>
-    <span class="k">extends</span> <span class="nc">Stream</span><span class="o">[</span><span class="kt">C</span><span class="o">]</span>
+            <section><p>A <code>Stream</code> is nothing other than a lazily evaluated list:</p>
+<div class="highlight"><pre><span></span><span class="k">trait</span> <span class="nc">Stream</span><span class="o">[</span><span class="kt">+A</span><span class="o">]</span> <span class="c1">//base trait</span>
+<span class="k">case</span> <span class="k">object</span> <span class="nc">Empty</span> <span class="k">extends</span> <span class="nc">Stream</span><span class="o">[</span><span class="kt">Nothing</span><span class="o">]</span>
+<span class="k">case</span> <span class="k">class</span> <span class="nc">Cons</span><span class="o">[</span><span class="kt">+A</span><span class="o">](</span><span class="n">h</span><span class="k">:</span> <span class="o">()</span> <span class="o">=&gt;</span> <span class="n">A</span><span class="o">,</span>
+                    <span class="n">t</span><span class="k">:</span> <span class="o">()</span> <span class="o">=&gt;</span> <span class="nc">Stream</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span>
+  <span class="k">extends</span> <span class="nc">Stream</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span>
 </pre></div>
 </section>
             
@@ -1073,7 +887,7 @@ See <a href="http://www.artima.com/pins1ed/control-abstraction.html#9.5">Section
             </aside>
             
             <aside class="page_number">
-              24/56
+              21/39
             </aside>
 
           </footer>
@@ -1091,7 +905,7 @@ See <a href="http://www.artima.com/pins1ed/control-abstraction.html#9.5">Section
 <li>the tail of <code>Cons</code> of <code>List</code> is <em>eager</em></li>
 <li>the tail of <code>Cons</code> of <code>Stream</code> is <em>lazy</em></li>
 </ul>
-<p>Non-empty streams are also commonly used in comonadic computations. More on this later.  </p></section>
+<p>Like lists, streams are monadic. Non-empty streams (e.g. zippers) are also commonly used comonads. More on this later.  </p></section>
             
           </div>
           <div class="presenter_notes">
@@ -1109,7 +923,7 @@ See <a href="http://www.artima.com/pins1ed/control-abstraction.html#9.5">Section
             </aside>
             
             <aside class="page_number">
-              25/56
+              22/39
             </aside>
 
           </footer>
@@ -1122,11 +936,13 @@ See <a href="http://www.artima.com/pins1ed/control-abstraction.html#9.5">Section
           <div class="inner">
             
             
-            <section><p>Scala does not support <code>call-by-name</code> parameters in <code>case class</code>.</p>
-<p>We use thunks as a work-around. A thunk is a function with no argument:</p>
-<div class="highlight"><pre><span></span><span class="k">case</span> <span class="k">class</span> <span class="nc">Cons</span><span class="o">[</span><span class="kt">+C</span><span class="o">](</span><span class="n">h</span><span class="k">:</span> <span class="o">()</span> <span class="o">=&gt;</span> <span class="n">C</span><span class="o">,</span>
-                    <span class="n">t</span><span class="k">:</span> <span class="o">()</span> <span class="o">=&gt;</span> <span class="nc">Stream</span><span class="o">[</span><span class="kt">C</span><span class="o">])</span>
-    <span class="k">extends</span> <span class="nc">Stream</span><span class="o">[</span><span class="kt">C</span><span class="o">]</span>
+            <section><p>Note the type has been inferred as <code>Cons[Int]</code> rather than <code>Stream[Int]</code>:</p>
+<div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">s</span> <span class="k">=</span> <span class="nc">Cons</span><span class="o">(()</span> <span class="k">=&gt;</span> <span class="mi">1</span><span class="o">,</span> <span class="o">()</span> <span class="k">=&gt;</span> <span class="nc">Cons</span><span class="o">(()</span> <span class="k">=&gt;</span> <span class="mi">2</span><span class="o">,</span> <span class="o">()</span> <span class="k">=&gt;</span> <span class="nc">Empty</span><span class="o">))</span>
+<span class="c1">//res0 = Cons(&lt;function0&gt;,&lt;function0&gt;)</span>
+<span class="n">s</span><span class="o">.</span><span class="n">h</span>
+<span class="c1">//res1: () =&gt; Int = &lt;function0&gt;</span>
+<span class="n">s</span><span class="o">.</span><span class="n">h</span><span class="o">()</span>
+<span class="c1">//res2: Int = 1</span>
 </pre></div>
 </section>
             
@@ -1146,7 +962,7 @@ See <a href="http://www.artima.com/pins1ed/control-abstraction.html#9.5">Section
             </aside>
             
             <aside class="page_number">
-              26/56
+              23/39
             </aside>
 
           </footer>
@@ -1159,238 +975,14 @@ See <a href="http://www.artima.com/pins1ed/control-abstraction.html#9.5">Section
           <div class="inner">
             
             
-            <section><p>The chosen syntax for a call-by-name argument was probably chosen for its resemblance to a thunk.</p>
-<div class="highlight"><pre><span></span><span class="c1">// Compare</span>
-<span class="k">def</span> <span class="n">bar</span><span class="o">(</span><span class="n">x</span><span class="k">:</span> <span class="o">=&gt;</span> <span class="nc">Int</span><span class="o">)</span>
-<span class="c1">// to</span>
-<span class="k">def</span> <span class="n">baz</span><span class="o">(</span><span class="n">x</span><span class="k">:</span> <span class="o">()</span> <span class="o">=&gt;</span> <span class="nc">Int</span><span class="o">)</span>
-</pre></div>
-</section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture5.md">lecture5.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              27/56
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture5.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_notes">
-          <div class="inner">
-            
-            
-            <section><p>!scala
-    Cons(() =&gt; 1,
-         () =&gt; Cons(() =&gt; 2,
-                    () =&gt; Cons(() =&gt; 3,
-                               () =&gt; Cons(() =&gt; 4,
-                                          () =&gt; Empty
-                                         )
-                              )</p>
-<pre><code>               )
-    )
-//res0 = Cons(&lt;function0&gt;,&lt;function0&gt;)
-</code></pre>
-<p>Note the type has been inferred as <code>Cons[Int]</code> rather than <code>Stream[Int]</code>.  We also encountered this issue with <code>List</code>.</p>
-<p class="notes">Before "tying the knot" and introduction of <code>take</code>, I think its necessary to show a manually constructed <code>Stream</code> like this.  The stack trace of <code>take</code> on an infinite <code>Stream</code> will arrive at this finite Stream.</p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture5.md">lecture5.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              28/56
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture5.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code has_notes">
-          <div class="inner">
-            
-            <header><h1>Smart constructor</h1></header>
-            
-            
-            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">cons</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">hd</span><span class="k">:</span> <span class="o">=&gt;</span> <span class="n">A</span><span class="o">,</span> <span class="n">tl</span><span class="k">:</span> <span class="o">=&gt;</span> <span class="nc">Stream</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span><span class="k">:</span>
+            <section><p>The smart constructor memoizes and hides the thunks as well as assisting with type inference:</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">cons</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">hd</span><span class="k">:</span> <span class="o">=&gt;</span> <span class="n">A</span><span class="o">,</span> <span class="n">tl</span><span class="k">:</span> <span class="o">=&gt;</span> <span class="nc">Stream</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span><span class="k">:</span>
   <span class="kt">Stream</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
     <span class="k">lazy</span> <span class="k">val</span> <span class="n">head</span> <span class="k">=</span> <span class="n">hd</span>
     <span class="k">lazy</span> <span class="k">val</span> <span class="n">tail</span> <span class="k">=</span> <span class="n">tl</span>
     <span class="nc">Cons</span><span class="o">(()</span> <span class="k">=&gt;</span> <span class="n">head</span><span class="o">,</span> <span class="o">()</span> <span class="k">=&gt;</span> <span class="n">tail</span><span class="o">)</span>
-  <span class="o">}</span>
-
+    <span class="o">}</span>
 <span class="k">def</span> <span class="n">empty</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Empty</span>
-</pre></div>
-
-<p><br />
-<br />
-<br /></p>
-<p class="notes">The <code>cons</code> smart constructor (1) memoizes (2) hides the thunks (3) assists with type inference.  Because of the type annotation <code>def cons[A](...): Stream[A]</code>, a constructed Cons will be inferred to be of type Stream, not of type Cons.  This is the same issue we encountered with Cons of List.  The <code>empty[A]</code> smart constructor only assists with type inference</p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture5.md">lecture5.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              29/56
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture5.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_notes">
-          <div class="inner">
-            
-            
-            <section><p>Using the smart constructor</p>
-<pre><code>scala&gt; cons(1, cons(2, cons(3, cons(4, empty))))
-
-res1: common.lecture5.Stream[Int] =
-       Cons(&lt;function0&gt;,&lt;function0&gt;)
-</code></pre>
-<p><br />
-<br />
-<br />
-<br />
-<br />
-<br /></p>
-<p>Type has been inferred correctly as <code>Stream[Int]</code>.</p>
-<p class="notes">Equivalent to the structure two slides earlier.  Head and Tail elements of each Cons are lazy.  Call-by-name syntax in smart constructor removes need for thunks</p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture5.md">lecture5.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              30/56
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture5.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code has_notes">
-          <div class="inner">
-            
-            <header><h1><a href="https://github.com/fpinscala/fpinscala/wiki/Chapter-5:-Strictness-and-laziness#tying-the-knot">Tying the Knot</a></h1></header>
-            
-            
-            <section><p>With strict evaluation, <code>fibonacciHelper</code> would be an endless loop and lead to stack overflow.</p>
-<div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">fibonacciHelper</span><span class="o">(</span><span class="n">a</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">b</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span>
-  <span class="nc">Stream</span><span class="o">.</span><span class="n">cons</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">fibonacciHelper</span><span class="o">(</span><span class="n">b</span><span class="o">,</span> <span class="n">a</span><span class="o">+</span><span class="n">b</span><span class="o">))</span>
-
-<span class="k">val</span> <span class="n">fibonacci</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="n">fibonacciHelper</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">1</span><span class="o">)</span>
-
-<span class="n">fibonacci</span><span class="o">.</span><span class="n">print</span><span class="o">(</span><span class="mi">22</span><span class="o">)</span>
-</pre></div>
-
-<p><br /></p>
-<p>output</p>
-<pre><code>0, 1, 1, 2, 3, 5, 8, 13, 21, 34 ...
-</code></pre>
-<p><br /></p>
-<p><a href="http://philwantsfish.github.io/scala/streamsandprimes">Source</a></p>
-<p class="notes">It will still lead to stack overflow, but the lazy list gives us more control over this.  We still need to limit our consumption of the Fibonacci stream.  <code>print</code> will be explained later</p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture5.md">lecture5.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              31/56
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture5.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code">
-          <div class="inner">
-            
-            <header><h1>Challenge question</h1></header>
-            
-            
-            <section><p>Use the <code>cons</code> smart constructor to implement a sine wave.  Implement the sine wave for multiples of π/3 radian, or multiples of π/2 radian.
-<br />
-<br />
-Utilize <code>math.sqrt(Double): Double</code>
-<br />
-<br /></p>
-<div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">sinePositive</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">Double</span><span class="o">]</span> <span class="k">=</span> <span class="o">???</span>
-
-
-<span class="k">def</span> <span class="n">sineNegative</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">Double</span><span class="o">]</span> <span class="k">=</span>
-  <span class="n">sinePositive</span><span class="o">.</span><span class="n">map</span> <span class="o">{</span> <span class="n">d</span> <span class="k">=&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="n">d</span> <span class="o">}</span>
 </pre></div>
 </section>
             
@@ -1410,7 +1002,42 @@ Utilize <code>math.sqrt(Double): Double</code>
             </aside>
             
             <aside class="page_number">
-              32/56
+              24/39
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture5.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>Note that the call-by-name syntax in the smart constructor removes need for thunks:</p>
+<div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">s</span> <span class="k">=</span> <span class="n">cons</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="n">cons</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="n">empty</span><span class="o">))</span>
+<span class="c1">//s: Stream[Int] = Cons(&lt;function0&gt;,&lt;function0&gt;)</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture5.md">lecture5.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              25/39
             </aside>
 
           </footer>
@@ -1422,9 +1049,10 @@ Utilize <code>math.sqrt(Double): Double</code>
         <div class="slide">
           <div class="inner">
             
+            <header><h1>Exercise</h1></header>
             
-            <section><p><code>sinePositive</code> corresponds to the top half of the unit circle, including <code>(1, 0)</code> and excluding <code>(-1, 0)</code>
-<img alt="" src="images/lecture5/unit_circle.png" /></p></section>
+            
+            <section><p>Use the <code>cons</code> smart constructor to implement a sine wave sampled at multiples of π/3 radians.</p></section>
             
           </div>
           <div class="presenter_notes">
@@ -1442,7 +1070,32 @@ Utilize <code>math.sqrt(Double): Double</code>
             </aside>
             
             <aside class="page_number">
-              33/56
+              26/39
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source:  -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="page_number">
+              /39
             </aside>
 
           </footer>
@@ -1454,22 +1107,10 @@ Utilize <code>math.sqrt(Double): Double</code>
         <div class="slide has_code">
           <div class="inner">
             
-            <header><h1>Answer</h1></header>
             
-            
-            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">sinePositive</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">Double</span><span class="o">]</span> <span class="k">=</span>
-  <span class="nc">Stream</span><span class="o">.</span><span class="n">cons</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span>
-    <span class="nc">Stream</span><span class="o">.</span><span class="n">cons</span><span class="o">(</span><span class="mf">1.0</span><span class="o">/</span><span class="mi">2</span><span class="o">,</span>
-      <span class="nc">Stream</span><span class="o">.</span><span class="n">cons</span><span class="o">(</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="o">(</span><span class="mi">3</span><span class="o">)/</span><span class="mi">2</span><span class="o">,</span>
-        <span class="nc">Stream</span><span class="o">.</span><span class="n">cons</span><span class="o">(</span><span class="mf">1.0</span><span class="o">,</span>
-          <span class="nc">Stream</span><span class="o">.</span><span class="n">cons</span><span class="o">(</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="o">(</span><span class="mi">3</span><span class="o">)/</span><span class="mi">2</span><span class="o">,</span>
-            <span class="nc">Stream</span><span class="o">.</span><span class="n">cons</span><span class="o">(</span><span class="mf">1.0</span><span class="o">/</span><span class="mi">2</span><span class="o">,</span> <span class="n">sineNegative</span><span class="o">)</span>
-  <span class="o">)))))</span>
-
-<span class="k">def</span> <span class="n">sineNegative</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">Double</span><span class="o">]</span> <span class="k">=</span>
-  <span class="n">sinePositive</span><span class="o">.</span><span class="n">map</span> <span class="o">{</span> <span class="n">d</span> <span class="k">=&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="n">d</span> <span class="o">}</span>
-
-<span class="n">sinePositive</span><span class="o">.</span><span class="n">print</span><span class="o">(</span><span class="mi">32</span><span class="o">)</span>
+            <section><p>Here's one approach. Create the top half of the circle 'by hand', then use it to create the bottom half :</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">sinePos</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">Double</span><span class="o">]</span> <span class="k">=</span> <span class="o">???</span>
+<span class="k">def</span> <span class="n">sineNeg</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">Double</span><span class="o">]</span> <span class="k">=</span> <span class="n">sinePos</span><span class="o">.</span><span class="n">map</span> <span class="o">{</span> <span class="n">d</span> <span class="k">=&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="n">d</span> <span class="o">}</span>
 </pre></div>
 </section>
             
@@ -1489,7 +1130,48 @@ Utilize <code>math.sqrt(Double): Double</code>
             </aside>
             
             <aside class="page_number">
-              34/56
+              27/39
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture5.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">sine</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">Double</span><span class="o">]</span> <span class="k">=</span>
+  <span class="nc">Stream</span><span class="o">.</span><span class="n">cons</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span>
+    <span class="nc">Stream</span><span class="o">.</span><span class="n">cons</span><span class="o">(</span><span class="mf">1.0</span><span class="o">/</span><span class="mi">2</span><span class="o">,</span>
+      <span class="nc">Stream</span><span class="o">.</span><span class="n">cons</span><span class="o">(</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="o">(</span><span class="mi">3</span><span class="o">)/</span><span class="mi">2</span><span class="o">,</span>
+        <span class="nc">Stream</span><span class="o">.</span><span class="n">cons</span><span class="o">(</span><span class="mf">1.0</span><span class="o">,</span>
+          <span class="nc">Stream</span><span class="o">.</span><span class="n">cons</span><span class="o">(</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="o">(</span><span class="mi">3</span><span class="o">)/</span><span class="mi">2</span><span class="o">,</span>
+            <span class="nc">Stream</span><span class="o">.</span><span class="n">cons</span><span class="o">(</span><span class="mf">1.0</span><span class="o">/</span><span class="mi">2</span><span class="o">,</span> <span class="n">sineNeg</span><span class="o">)</span>
+  <span class="o">)))))</span>
+<span class="n">sine</span><span class="o">.</span><span class="n">take</span><span class="o">(</span><span class="mi">32</span><span class="o">)</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture5.md">lecture5.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              28/39
             </aside>
 
           </footer>
@@ -1535,7 +1217,7 @@ Utilize <code>math.sqrt(Double): Double</code>
             </aside>
             
             <aside class="page_number">
-              35/56
+              29/39
             </aside>
 
           </footer>
@@ -1547,77 +1229,20 @@ Utilize <code>math.sqrt(Double): Double</code>
         <div class="slide has_code">
           <div class="inner">
             
-            <header><h1><code>from</code></h1></header>
+            <header><h1>Exercise</h1></header>
             
             
-            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">from</span><span class="o">(</span><span class="n">i</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span>
-  <span class="n">cons</span><span class="o">(</span><span class="n">i</span><span class="o">,</span> <span class="n">from</span><span class="o">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">))</span>
-</pre></div>
-
-<p><br />
-<br />
-<br />
-<br /></p>
-<p>example</p>
-<pre><code>scala&gt; Stream.from(0).print(8)
-0
-1
-2
-3
-4
-5
-6
-7
-</code></pre></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture5.md">lecture5.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              36/56
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture5.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code">
-          <div class="inner">
-            
-            <header><h1>Challenge question</h1></header>
-            
-            
-            <section><p>We can turn an infinite <code>Stream</code> into a finite <code>Stream</code> with <code>take.</code>  <code>take</code> is a method that exists inside the <code>Stream</code> trait.</p>
-<p><code>countFromZero.take(6)</code> will insert an <code>Empty</code> after the sixth element of the infinite <code>Stream</code>.</p>
-<p>Complete the implementation of <code>take</code>:</p>
+            <section><p>We can turn an infinite <code>Stream</code> into a finite <code>Stream</code> with <code>take</code>.  </p>
+<p><code>foo.take(6)</code> will insert an <code>Empty</code> after the sixth element of <code>foo</code>.</p>
 <div class="highlight"><pre><span></span><span class="k">trait</span> <span class="nc">Stream</span><span class="o">[</span><span class="kt">+A</span><span class="o">]</span> <span class="o">{</span>
-  <span class="o">...</span>
   <span class="k">def</span> <span class="n">take</span><span class="o">(</span><span class="n">n</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="k">this</span> <span class="k">match</span> <span class="o">{</span>
     <span class="k">case</span> <span class="n">cons</span><span class="o">(</span><span class="n">head</span><span class="o">,</span> <span class="n">lazyTail</span><span class="o">)</span> <span class="k">if</span> <span class="o">???</span> <span class="k">=&gt;</span> <span class="o">???</span>
-    <span class="k">case</span> <span class="n">cons</span><span class="o">(</span><span class="n">head</span><span class="o">,</span> <span class="n">lazyTail</span><span class="o">)</span> <span class="k">if</span> <span class="o">???</span> <span class="k">=&gt;</span> <span class="o">???</span>
-    <span class="k">case</span> <span class="nc">Empty</span> <span class="k">=&gt;</span> <span class="n">empty</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span>
+      <span class="k">case</span> <span class="n">cons</span><span class="o">(</span><span class="n">head</span><span class="o">,</span> <span class="n">lazyTail</span><span class="o">)</span> <span class="k">if</span> <span class="o">???</span> <span class="k">=&gt;</span> <span class="o">???</span>
+      <span class="k">case</span> <span class="nc">Empty</span> <span class="k">=&gt;</span> <span class="n">empty</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span>
   <span class="o">}</span>
-  <span class="o">...</span>
 <span class="o">}</span>
 </pre></div>
-
-<p><br />
-<br /></p>
-<p><code>print</code> relies upon <code>take</code></p></section>
+</section>
             
           </div>
           <div class="presenter_notes">
@@ -1635,7 +1260,7 @@ Utilize <code>math.sqrt(Double): Double</code>
             </aside>
             
             <aside class="page_number">
-              37/56
+              30/39
             </aside>
 
           </footer>
@@ -1660,7 +1285,7 @@ Utilize <code>math.sqrt(Double): Double</code>
           <footer>
             
             <aside class="page_number">
-              /56
+              /39
             </aside>
 
           </footer>
@@ -1672,20 +1297,14 @@ Utilize <code>math.sqrt(Double): Double</code>
         <div class="slide has_code">
           <div class="inner">
             
-            <header><h1>Answer</h1></header>
-            
             
             <section><div class="highlight"><pre><span></span><span class="k">trait</span> <span class="nc">Stream</span><span class="o">[</span><span class="kt">+A</span><span class="o">]</span> <span class="o">{</span>
-  <span class="o">...</span>
   <span class="k">def</span> <span class="n">take</span><span class="o">(</span><span class="n">n</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="k">this</span> <span class="k">match</span> <span class="o">{</span>
     <span class="k">case</span> <span class="n">cons</span><span class="o">(</span><span class="n">head</span><span class="o">,</span> <span class="n">lazyTail</span><span class="o">)</span> <span class="k">if</span> <span class="n">n</span><span class="o">&gt;</span><span class="mi">0</span> <span class="k">=&gt;</span>
-      <span class="n">cons</span><span class="o">(</span><span class="n">h</span><span class="o">,</span> <span class="n">lazyTail</span><span class="o">.</span><span class="n">take</span><span class="o">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">))</span>
-    <span class="k">case</span> <span class="n">cons</span><span class="o">(</span><span class="n">head</span><span class="o">,</span> <span class="n">lazyTail</span><span class="o">)</span> <span class="k">if</span> <span class="n">n</span><span class="o">&lt;=</span><span class="mi">0</span> <span class="k">=&gt;</span>
-      <span class="n">empty</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span>
-    <span class="k">case</span> <span class="nc">Empty</span> <span class="k">=&gt;</span>
-      <span class="n">empty</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span>
+        <span class="n">cons</span><span class="o">(</span><span class="n">head</span><span class="o">,</span> <span class="n">lazyTail</span><span class="o">.</span><span class="n">take</span><span class="o">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">))</span>
+      <span class="k">case</span> <span class="n">cons</span><span class="o">(</span><span class="n">head</span><span class="o">,</span> <span class="n">lazyTail</span><span class="o">)</span> <span class="k">if</span> <span class="n">n</span><span class="o">&lt;=</span><span class="mi">0</span> <span class="k">=&gt;</span> <span class="n">empty</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span>
+      <span class="k">case</span> <span class="nc">Empty</span> <span class="k">=&gt;</span> <span class="n">empty</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span>
   <span class="o">}</span>
-  <span class="o">...</span>
 <span class="o">}</span>
 </pre></div>
 </section>
@@ -1706,7 +1325,7 @@ Utilize <code>math.sqrt(Double): Double</code>
             </aside>
             
             <aside class="page_number">
-              38/56
+              31/39
             </aside>
 
           </footer>
@@ -1715,575 +1334,53 @@ Utilize <code>math.sqrt(Double): Double</code>
       
       <!-- slide source: lecture5.md -->
       <div class="slide-wrapper">
-        <div class="slide has_notes">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            <header><h1>Example: <code>from</code></h1></header>
+            
+            
+            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">from</span><span class="o">(</span><span class="n">i</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="n">cons</span><span class="o">(</span><span class="n">i</span><span class="o">,</span> <span class="n">from</span><span class="o">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">))</span>
+<span class="nc">Stream</span><span class="o">.</span><span class="n">from</span><span class="o">(</span><span class="mi">0</span><span class="o">).</span><span class="n">take</span><span class="o">(</span><span class="mi">4</span><span class="o">)</span>
+<span class="c1">//???</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture5.md">lecture5.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              32/39
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture5.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
           <div class="inner">
             
             
-            <section><p>Trace</p>
-<pre><code>from(0).take(4)
+            <section><pre><code>from(0).take(4)
 cons(0, from(1).take(3))
 cons(0, cons(1, from(2).take(2)))
 cons(0, cons(1, cons(2, from(3).take(1))))
 cons(0, cons(1, cons(2, cons(3, from(4).take(0)))))
 cons(0, cons(1, cons(2, cons(3, Empty))))
-</code></pre>
-<p class="notes">Evaluation is explained later.  <code>take</code> is not evaluation.  If only two elements are evaluated, then this trace will be shortened.</p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture5.md">lecture5.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              39/56
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture5.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code">
-          <div class="inner">
-            
-            <header><h1>foldRight</h1></header>
-            
-            
-            <section><p><code>foldRight</code> on <code>List</code></p>
-<div class="highlight"><pre><span></span><span class="k">trait</span> <span class="nc">List</span><span class="o">[</span><span class="kt">+A</span><span class="o">]</span> <span class="o">{</span>
-  <span class="o">...</span>
-  <span class="k">def</span> <span class="n">foldRight</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="n">z</span><span class="k">:</span> <span class="kt">B</span><span class="o">)</span>
-                  <span class="o">(</span><span class="n">f</span><span class="k">:</span> <span class="o">(</span><span class="kt">A</span><span class="o">,</span> <span class="kt">B</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">B</span><span class="o">)</span><span class="k">:</span> <span class="kt">B</span> <span class="o">=</span>
-    <span class="n">as</span> <span class="k">match</span> <span class="o">{</span>
-      <span class="k">case</span> <span class="nc">Nil</span> <span class="k">=&gt;</span> <span class="n">z</span>
-      <span class="k">case</span> <span class="nc">Cons</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">tail</span><span class="o">)</span> <span class="k">=&gt;</span>
-        <span class="n">f</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">tail</span><span class="o">.</span><span class="n">foldRight</span><span class="o">(</span><span class="n">z</span><span class="o">)(</span><span class="n">f</span><span class="o">))</span>
-    <span class="o">}</span>
-  <span class="o">...</span>
-<span class="o">}</span>
-</pre></div>
-</section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture5.md">lecture5.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              40/56
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture5.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code has_notes">
-          <div class="inner">
-            
-            
-            <section><p><code>foldRight</code> on <code>Stream</code></p>
-<div class="highlight"><pre><span></span><span class="k">trait</span> <span class="nc">Stream</span><span class="o">[</span><span class="kt">+A</span><span class="o">]</span> <span class="o">{</span>
-  <span class="o">...</span>
-  <span class="k">def</span> <span class="n">foldRight</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="n">z</span><span class="k">:</span> <span class="o">=&gt;</span> <span class="n">B</span><span class="o">)</span>
-                  <span class="o">(</span><span class="n">f</span><span class="k">:</span> <span class="o">(</span><span class="kt">A</span><span class="o">,</span> <span class="o">=&gt;</span> <span class="n">B</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">B</span><span class="o">)</span><span class="k">:</span> <span class="kt">B</span> <span class="o">=</span>
-    <span class="k">this</span> <span class="k">match</span> <span class="o">{</span>
-      <span class="k">case</span> <span class="nc">Empty</span> <span class="k">=&gt;</span> <span class="n">z</span>
-      <span class="k">case</span> <span class="n">cons</span><span class="o">(</span><span class="n">head</span><span class="o">,</span> <span class="n">lazyTail</span><span class="o">)</span> <span class="k">=&gt;</span>
-        <span class="n">f</span><span class="o">(</span><span class="n">head</span><span class="o">,</span> <span class="n">lazyTail</span><span class="o">.</span><span class="n">foldRight</span><span class="o">(</span><span class="n">z</span><span class="o">)(</span><span class="n">f</span><span class="o">))</span>
-    <span class="o">}</span>
-  <span class="o">...</span>
-<span class="o">}</span>
-</pre></div>
-
-<p class="notes">Remind them lazy tail in Stream.cons; case class Cons<a href="h: () =&gt; C, t: () =&gt; Stream[C]">+C</a></p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture5.md">lecture5.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              41/56
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture5.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code has_notes">
-          <div class="inner">
-            
-            
-            <section><p><code>foldRight</code> is not suitable to be used on an infinite <code>Stream</code>.</p>
-<p>Furthermore, <code>foldRight</code> is not tail-recursive.
-<br />
-<br />
-<br />
-<br /></p>
-<div class="highlight"><pre><span></span><span class="k">trait</span> <span class="nc">Stream</span><span class="o">[</span><span class="kt">+A</span><span class="o">]</span> <span class="o">{</span>
-  <span class="o">...</span>
-  <span class="k">def</span> <span class="n">foldRight</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="n">z</span><span class="k">:</span> <span class="o">=&gt;</span> <span class="n">B</span><span class="o">)</span>
-                  <span class="o">(</span><span class="n">f</span><span class="k">:</span> <span class="o">(</span><span class="kt">A</span><span class="o">,</span> <span class="o">=&gt;</span> <span class="n">B</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">B</span><span class="o">)</span><span class="k">:</span> <span class="kt">B</span> <span class="o">=</span> <span class="o">...</span>
-  <span class="o">...</span>
-<span class="o">}</span>
-</pre></div>
-
-<p class="notes">Point out which combinators on <code>Stream</code> are suitable to be used on an infinite <code>Stream</code>, and which are not</p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture5.md">lecture5.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              42/56
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture5.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code">
-          <div class="inner">
-            
-            
-            <section><p>Limit an infinite <code>Stream</code> to a finite length with <code>take</code> before calling <code>foldRight</code>.  </p>
-<p>Despite this precaution, a <code>Stream</code> of finite length <a href="https://groups.google.com/forum/#!topic/scala-functional/MKZ5olHHSwQ">may still overflow the stack because of <code>foldRight</code>'s tail-calls.</a></p>
-<p><br />
-<br /></p>
-<div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">summed</span> <span class="k">=</span>
-  <span class="nc">Stream</span><span class="o">.</span><span class="n">from</span><span class="o">(</span><span class="mi">0</span><span class="o">).</span><span class="n">take</span><span class="o">(</span><span class="mi">100</span><span class="o">).</span><span class="n">foldRight</span><span class="o">(</span><span class="mi">0</span><span class="o">)(</span><span class="k">_</span><span class="o">+</span><span class="k">_</span><span class="o">)</span>
-
-<span class="n">println</span><span class="o">(</span><span class="s">s&quot;sum of 0 to 99, inclusive = </span><span class="si">$summed</span><span class="s">&quot;</span><span class="o">)</span>
-
-<span class="c1">// sum of 0 to 99, inclusive = 4950</span>
-</pre></div>
-</section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture5.md">lecture5.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              43/56
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture5.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code">
-          <div class="inner">
-            
-            <header><h1>map</h1></header>
-            
-            
-            <section><div class="highlight"><pre><span></span><span class="k">trait</span> <span class="nc">Stream</span><span class="o">[</span><span class="kt">+A</span><span class="o">]</span> <span class="o">{</span>
-  <span class="o">...</span>
-  <span class="k">def</span> <span class="n">map</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="n">B</span><span class="o">)</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
-    <span class="k">def</span> <span class="n">g</span><span class="o">(</span><span class="n">a</span><span class="k">:</span> <span class="kt">A</span><span class="o">,</span> <span class="n">sb</span><span class="k">:</span> <span class="o">=&gt;</span> <span class="nc">Stream</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span> <span class="k">=</span>
-      <span class="n">cons</span><span class="o">(</span><span class="n">f</span><span class="o">(</span><span class="n">a</span><span class="o">),</span> <span class="n">sb</span><span class="o">)</span>
-
-    <span class="n">foldRight</span><span class="o">(</span><span class="n">empty</span><span class="o">[</span><span class="kt">B</span><span class="o">])(</span><span class="n">g</span><span class="o">)</span>
-  <span class="o">}</span>
-  <span class="o">...</span>
-<span class="o">}</span>
-</pre></div>
-</section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture5.md">lecture5.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              44/56
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture5.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code has_notes">
-          <div class="inner">
-            
-            
-            <section><div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">radians</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">Double</span><span class="o">]</span> <span class="k">=</span>
-  <span class="nc">Stream</span><span class="o">.</span><span class="n">from</span><span class="o">(</span><span class="mi">0</span><span class="o">).</span><span class="n">map</span> <span class="o">{</span> <span class="n">i</span> <span class="k">=&gt;</span>
-                       <span class="n">i</span><span class="o">.</span><span class="n">toDouble</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="nc">Pi</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">}</span>
-
-
-<span class="k">val</span> <span class="n">cosineWave</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">Double</span><span class="o">]</span> <span class="k">=</span>
-  <span class="n">radians</span><span class="o">.</span><span class="n">map</span> <span class="o">{</span> <span class="n">d</span> <span class="k">=&gt;</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="o">(</span><span class="n">d</span><span class="o">)</span> <span class="o">}</span>
-</pre></div>
-
-<p><br />
-<br />
-<br />
-<br />
-<br />
-<br /></p>
-<p class="notes">An implementation of <code>map</code> on an <code>Array</code> can process the elements in parallel because an <code>Array</code> provides O(1) access to any element.  An implementation of <code>map</code> on a <code>List</code> cannot process the elements in parallel because a <code>List</code> provides O(n) access to any element.  Mapping over a List occurs sequentially.  Understanding this, it is more intuitive how <code>map</code> on a <code>Stream</code> is sequential and lazy.  In this example, <code>66.toChar</code> preceed the lazy evaluation of <code>67.toChar</code>, and so on.  Anyone who thinks mapping over a <code>List</code> happens "all at once" will be confused by mapping over a Stream.</p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture5.md">lecture5.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              45/56
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture5.md -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            
-            <section><p><img alt="" src="images/lecture5/sine_wave.png" /></p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture5.md">lecture5.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              46/56
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture5.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code has_notes">
-          <div class="inner">
-            
-            <header><h1>flatMap</h1></header>
-            
-            
-            <section><div class="highlight"><pre><span></span><span class="k">trait</span> <span class="nc">Stream</span><span class="o">[</span><span class="kt">+A</span><span class="o">]</span> <span class="o">{</span>
-  <span class="o">...</span>
-  <span class="k">def</span> <span class="n">append</span><span class="o">[</span><span class="kt">B</span> <span class="k">&gt;:</span> <span class="kt">A</span><span class="o">](</span><span class="n">appended</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span><span class="k">:</span>
-    <span class="kt">Stream</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span> <span class="k">=</span> <span class="o">...</span>
-
-  <span class="k">def</span> <span class="n">flatMap</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="nc">Stream</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span><span class="k">:</span>
-    <span class="kt">Stream</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
-    <span class="k">def</span> <span class="n">g</span><span class="o">(</span><span class="n">a</span><span class="k">:</span> <span class="kt">A</span><span class="o">,</span> <span class="n">sb</span><span class="k">:</span> <span class="o">=&gt;</span> <span class="nc">Stream</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span> <span class="k">=</span>
-      <span class="n">f</span><span class="o">(</span><span class="n">a</span><span class="o">).</span><span class="n">append</span><span class="o">(</span><span class="n">sb</span><span class="o">)</span>
-
-    <span class="n">foldRight</span><span class="o">(</span><span class="n">empty</span><span class="o">[</span><span class="kt">B</span><span class="o">])(</span><span class="n">g</span><span class="o">)</span>
-  <span class="o">}</span>
-  <span class="o">...</span>
-<span class="o">}</span>
-</pre></div>
-
-<p class="notes">It is impossible for <code>map</code> to lengthen the Stream.  <code>flatMap</code> can do this.  We can interpolate more points in the sine wave with <code>flatMap</code></p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture5.md">lecture5.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              47/56
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture5.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code">
-          <div class="inner">
-            
-            
-            <section><div class="highlight"><pre><span></span><span class="c1">// def flatMap[B](f: A =&gt; Stream[B]): Stream[B]</span>
-
-<span class="k">val</span> <span class="n">interpolatedSineWave</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">Double</span><span class="o">]</span> <span class="k">=</span>
-  <span class="n">sineWave</span><span class="o">.</span><span class="n">take</span><span class="o">(</span><span class="mi">32</span><span class="o">).</span><span class="n">flatMap</span> <span class="o">{</span> <span class="n">d</span> <span class="k">=&gt;</span>
-    <span class="nc">Stream</span><span class="o">.</span><span class="n">cons</span><span class="o">(</span><span class="n">d</span><span class="o">,</span> <span class="nc">Stream</span><span class="o">.</span><span class="n">cons</span><span class="o">(</span><span class="n">d</span><span class="o">,</span> <span class="nc">Stream</span><span class="o">.</span><span class="n">empty</span><span class="o">))</span>
-  <span class="o">}</span>
-</pre></div>
-
-<p><br />
-<br />
-<br />
-<br />
-<br />
-<br /></p>
-<p>in <code>slideCode.lecture5.SineWave</code></p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture5.md">lecture5.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              48/56
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture5.md -->
-      <div class="slide-wrapper">
-        <div class="slide">
-          <div class="inner">
-            
-            
-            <section><p><img alt="" src="images/lecture5/sine_wave_interpolated.png" /></p></section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture5.md">lecture5.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              49/56
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture5.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code">
-          <div class="inner">
-            
-            <header><h1>Evaluation</h1></header>
-            
-            
-            <section><p>Exiting the <code>Stream</code></p>
-<div class="highlight"><pre><span></span><span class="k">trait</span> <span class="nc">Stream</span><span class="o">[</span><span class="kt">+A</span><span class="o">]</span> <span class="o">{</span>
-  <span class="o">...</span>
-  <span class="k">def</span> <span class="n">print</span><span class="o">(</span><span class="n">upTo</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Unit</span> <span class="o">=</span> <span class="o">{</span>
-    <span class="k">def</span> <span class="n">f</span><span class="o">(</span><span class="n">a</span><span class="k">:</span> <span class="kt">A</span><span class="o">,</span> <span class="n">remaining</span><span class="k">:</span> <span class="o">=&gt;</span> <span class="nc">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="o">{</span>
-      <span class="n">println</span><span class="o">(</span><span class="n">a</span><span class="o">)</span>
-      <span class="n">remaining</span> <span class="o">-</span> <span class="mi">1</span>
-    <span class="o">}</span>
-    <span class="k">this</span><span class="o">.</span><span class="n">take</span><span class="o">(</span><span class="n">upTo</span><span class="o">).</span><span class="n">foldRight</span><span class="o">(</span><span class="n">upTo</span><span class="o">)(</span><span class="n">f</span><span class="o">)</span>
-  <span class="o">}</span>
-  <span class="o">...</span>
-<span class="o">}</span>
-</pre></div>
-</section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture5.md">lecture5.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              50/56
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture5.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code">
-          <div class="inner">
-            
-            
-            <section><div class="highlight"><pre><span></span><span class="k">trait</span> <span class="nc">Stream</span><span class="o">[</span><span class="kt">+A</span><span class="o">]</span> <span class="o">{</span>
-  <span class="o">...</span>
-  <span class="k">def</span> <span class="n">force</span><span class="o">(</span><span class="n">n</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
-    <span class="k">def</span> <span class="n">f</span><span class="o">(</span><span class="n">a</span><span class="k">:</span> <span class="kt">A</span><span class="o">,</span> <span class="n">la</span><span class="k">:</span> <span class="o">=&gt;</span> <span class="nc">List</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span> <span class="k">=</span> <span class="n">a</span><span class="o">::</span><span class="n">la</span>
-
-    <span class="k">this</span><span class="o">.</span><span class="n">take</span><span class="o">(</span><span class="n">n</span><span class="o">).</span><span class="n">foldRight</span><span class="o">(</span><span class="nc">List</span><span class="o">[</span><span class="kt">A</span><span class="o">]())(</span><span class="n">f</span><span class="o">)</span>
-  <span class="o">}</span>
-  <span class="o">...</span>
-<span class="o">}</span>
-</pre></div>
-</section>
-            
-          </div>
-          <div class="presenter_notes">
-            <header><h1>Presenter Notes</h1></header>
-            <section>
-            
-            </section>
-          </div>
-
-
-          <footer>
-            
-            <aside class="source">
-              Source: <a href="lecture5.md">lecture5.md</a>
-            </aside>
-            
-            <aside class="page_number">
-              51/56
-            </aside>
-
-          </footer>
-        </div>
-      </div>
-      
-      <!-- slide source: lecture5.md -->
-      <div class="slide-wrapper">
-        <div class="slide has_code">
-          <div class="inner">
-            
-            
-            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">sum</span><span class="o">(</span><span class="n">s</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">Int</span><span class="o">],</span> <span class="n">maxElements</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="o">{</span>
-  <span class="k">def</span> <span class="n">f</span><span class="o">(</span><span class="n">i</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">s</span><span class="k">:</span> <span class="o">=&gt;</span> <span class="nc">Int</span><span class="o">)</span> <span class="k">=</span> <span class="n">i</span> <span class="o">+</span> <span class="n">s</span>
-  <span class="n">s</span><span class="o">.</span><span class="n">take</span><span class="o">(</span><span class="n">maxElements</span><span class="o">).</span><span class="n">foldRight</span><span class="o">(</span><span class="mi">0</span><span class="o">)(</span><span class="n">f</span><span class="o">)</span>
-<span class="o">}</span>
-</pre></div>
-
-<p><br />
-<br /></p>
-<p>Usage</p>
-<pre><code>scala&gt; from(4)
-res0: fpinscala.laziness.Stream[Int] =
-  Cons(&lt;function0&gt;,&lt;function0&gt;)
-
-scala&gt; sum(from(4), 10)
-res1: Int = 85
 </code></pre></section>
             
           </div>
@@ -2302,7 +1399,7 @@ res1: Int = 85
             </aside>
             
             <aside class="page_number">
-              52/56
+              33/39
             </aside>
 
           </footer>
@@ -2314,14 +1411,19 @@ res1: Int = 85
         <div class="slide has_code">
           <div class="inner">
             
-            <header><h1>unfold</h1></header>
+            <header><h1>Example: Transposition</h1></header>
             
             
-            <section><p><code>unfold</code> helps to create <code>Stream</code>s</p>
-<p><br />
-<br /></p>
-<div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">unfold</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">S</span><span class="o">](</span><span class="n">z</span><span class="k">:</span> <span class="kt">S</span><span class="o">)(</span><span class="n">f</span><span class="k">:</span> <span class="kt">S</span> <span class="o">=&gt;</span> <span class="nc">Option</span><span class="o">[(</span><span class="kt">A</span>, <span class="kt">S</span><span class="o">)])</span><span class="k">:</span>
-  <span class="kt">Stream</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span>
+            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">foo</span><span class="o">(</span><span class="n">i</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span> <span class="k">=</span> <span class="o">{</span><span class="n">println</span><span class="o">(</span><span class="n">i</span><span class="o">);</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">10</span><span class="o">}</span>
+<span class="k">def</span> <span class="n">bar</span><span class="o">(</span><span class="n">i</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span> <span class="k">=</span> <span class="o">{</span><span class="n">println</span><span class="o">(</span><span class="n">i</span><span class="o">);</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="o">}</span>
+<span class="nc">List</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span><span class="mi">2</span><span class="o">,</span><span class="mi">3</span><span class="o">).</span><span class="n">map</span><span class="o">(</span><span class="n">foo</span><span class="o">).</span><span class="n">filter</span><span class="o">(</span><span class="n">bar</span><span class="o">)</span>
+<span class="c1">//1</span>
+<span class="c1">//2</span>
+<span class="c1">//3</span>
+<span class="c1">//11</span>
+<span class="c1">//12</span>
+<span class="c1">//13</span>
+<span class="c1">//res0: List[Int] = List(12)</span>
 </pre></div>
 </section>
             
@@ -2341,7 +1443,7 @@ res1: Int = 85
             </aside>
             
             <aside class="page_number">
-              53/56
+              34/39
             </aside>
 
           </footer>
@@ -2354,24 +1456,16 @@ res1: Int = 85
           <div class="inner">
             
             
-            <section><p>Many of the exercises can be re-implemented with <code>unfold</code> -- often more cleanly.
-<br />
-<br /></p>
-<div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">from</span><span class="o">(</span><span class="n">n</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span>
-  <span class="n">unfold</span><span class="o">(</span><span class="n">n</span><span class="o">)((</span><span class="n">n0</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nc">Some</span><span class="o">(</span><span class="n">n0</span><span class="o">,</span> <span class="n">n0</span><span class="o">+</span><span class="mi">1</span><span class="o">))</span>
-
-<span class="n">from</span><span class="o">(</span><span class="mi">5</span><span class="o">).</span><span class="n">print</span><span class="o">(</span><span class="mi">6</span><span class="o">)</span>
-<span class="c1">// 5</span>
-<span class="c1">// 6</span>
-<span class="c1">// 7</span>
-<span class="c1">// 8</span>
-<span class="c1">// 9</span>
-<span class="c1">// 10</span>
+            <section><div class="highlight"><pre><span></span><span class="nc">Stream</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span><span class="mi">2</span><span class="o">,</span><span class="mi">3</span><span class="o">).</span><span class="n">map</span><span class="o">(</span><span class="n">foo</span><span class="o">).</span><span class="n">filter</span><span class="o">(</span><span class="n">bar</span><span class="o">).</span><span class="n">take</span><span class="o">(</span><span class="mi">1</span><span class="o">)</span>
+<span class="c1">//1</span>
+<span class="c1">//11</span>
+<span class="c1">//2</span>
+<span class="c1">//12</span>
+<span class="c1">//3</span>
+<span class="c1">//13</span>
+<span class="c1">//res1: Stream[Int] = Stream(12)</span>
 </pre></div>
-
-<p><br />
-<br /></p>
-<p>in <code>common.lecture5.StreamExamples</code></p></section>
+</section>
             
           </div>
           <div class="presenter_notes">
@@ -2389,7 +1483,7 @@ res1: Int = 85
             </aside>
             
             <aside class="page_number">
-              54/56
+              35/39
             </aside>
 
           </footer>
@@ -2401,23 +1495,21 @@ res1: Int = 85
         <div class="slide has_code">
           <div class="inner">
             
+            <header><h1>foldRight</h1></header>
             
-            <section><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">fromTo</span><span class="o">(</span><span class="n">lowerInclusive</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span>
-           <span class="n">upperExclusive</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span><span class="kt">Stream</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span><span class="k">=</span>
-  <span class="n">unfold</span><span class="o">(</span><span class="n">lowerInclusive</span><span class="o">){(</span><span class="n">n0</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span> <span class="k">=&gt;</span>
-    <span class="k">if</span> <span class="o">(</span><span class="n">n0</span> <span class="o">&lt;</span> <span class="n">upperExclusive</span><span class="o">)</span> <span class="nc">Some</span><span class="o">(</span><span class="n">n0</span><span class="o">,</span> <span class="n">n0</span><span class="o">+</span><span class="mi">1</span><span class="o">)</span>
-    <span class="k">else</span> <span class="nc">None</span>
+            
+            <section><p>Recall from our folds tutorial that <code>foldRight</code> on a list looks like this:</p>
+<div class="highlight"><pre><span></span><span class="k">trait</span> <span class="nc">List</span><span class="o">[</span><span class="kt">+A</span><span class="o">]</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="n">foldRight</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="n">z</span><span class="k">:</span> <span class="kt">B</span><span class="o">)</span>
+    <span class="o">(</span><span class="n">f</span><span class="k">:</span> <span class="o">(</span><span class="kt">A</span><span class="o">,</span> <span class="kt">B</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">B</span><span class="o">)</span><span class="k">:</span> <span class="kt">B</span> <span class="o">=</span>
+    <span class="k">this</span> <span class="k">match</span> <span class="o">{</span>
+      <span class="k">case</span> <span class="nc">Nil</span> <span class="k">=&gt;</span> <span class="n">z</span>
+      <span class="k">case</span> <span class="nc">Cons</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">tail</span><span class="o">)</span> <span class="k">=&gt;</span>
+            <span class="n">f</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">tail</span><span class="o">.</span><span class="n">foldRight</span><span class="o">(</span><span class="n">z</span><span class="o">)(</span><span class="n">f</span><span class="o">))</span>
+    <span class="o">}</span>
   <span class="o">}</span>
-
-<span class="n">fromTo</span><span class="o">(</span><span class="mi">5</span><span class="o">,</span><span class="mi">8</span><span class="o">).</span><span class="n">print</span><span class="o">(</span><span class="mi">6</span><span class="o">)</span>
-<span class="c1">// 5</span>
-<span class="c1">// 6</span>
-<span class="c1">// 7</span>
-<span class="c1">// Stream ends before 6 elements can be printed</span>
 </pre></div>
-
-<p><br /></p>
-<p>in <code>common.lecture5.StreamExamples</code></p></section>
+</section>
             
           </div>
           <div class="presenter_notes">
@@ -2435,7 +1527,89 @@ res1: Int = 85
             </aside>
             
             <aside class="page_number">
-              55/56
+              36/39
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture5.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>We can use the same pattern to create an (unsafe) <code>foldRight</code> for our <code>Stream</code>:</p>
+<div class="highlight"><pre><span></span><span class="k">trait</span> <span class="nc">Stream</span><span class="o">[</span><span class="kt">+A</span><span class="o">]</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="n">foldRight</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="n">z</span><span class="k">:</span> <span class="o">=&gt;</span> <span class="n">B</span><span class="o">)</span>
+      <span class="o">(</span><span class="n">f</span><span class="k">:</span> <span class="o">(</span><span class="kt">A</span><span class="o">,</span> <span class="o">=&gt;</span> <span class="n">B</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">B</span><span class="o">)</span><span class="k">:</span> <span class="kt">B</span> <span class="o">=</span>
+    <span class="k">this</span> <span class="k">match</span> <span class="o">{</span>
+        <span class="k">case</span> <span class="nc">Empty</span> <span class="k">=&gt;</span> <span class="n">z</span>
+        <span class="k">case</span> <span class="n">cons</span><span class="o">(</span><span class="n">head</span><span class="o">,</span> <span class="n">lazyTail</span><span class="o">)</span> <span class="k">=&gt;</span>
+          <span class="n">f</span><span class="o">(</span><span class="n">head</span><span class="o">,</span> <span class="n">lazyTail</span><span class="o">.</span><span class="n">foldRight</span><span class="o">(</span><span class="n">z</span><span class="o">)(</span><span class="n">f</span><span class="o">))</span>
+      <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture5.md">lecture5.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              37/39
+            </aside>
+
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: lecture5.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            
+            <section><p>Here is the stack-safe trampolined version from <a href="https://github.com/typelevel/cats/blob/master/core/src/main/scala/cats/instances/stream.scala">Cats</a>:</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">foldRight</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">](</span><span class="n">lb</span><span class="k">:</span> <span class="kt">Eval</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span>
+  <span class="o">(</span><span class="n">f</span><span class="k">:</span> <span class="o">(</span><span class="kt">A</span><span class="o">,</span> <span class="kt">Eval</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span> <span class="k">=&gt;</span> <span class="nc">Eval</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">Eval</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span> <span class="k">=</span>
+  <span class="nc">Now</span><span class="o">(</span><span class="k">this</span><span class="o">).</span><span class="n">flatMap</span> <span class="o">{</span> <span class="n">s</span> <span class="k">=&gt;</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="n">isEmpty</span><span class="o">)</span> <span class="n">lb</span>
+    <span class="k">else</span> <span class="n">f</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="n">head</span><span class="o">,</span> <span class="nc">Eval</span><span class="o">.</span><span class="n">defer</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="n">tail</span><span class="o">.</span><span class="n">foldRight</span><span class="o">(</span><span class="n">lb</span><span class="o">)(</span><span class="n">f</span><span class="o">)))</span>
+  <span class="o">}</span>
+</pre></div>
+
+<p>Note that we don't use pattern matching to deconstruct the stream, since that would needlessly force evaluation of the tail.</p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+
+
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="lecture5.md">lecture5.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              38/39
             </aside>
 
           </footer>
@@ -2468,7 +1642,7 @@ res1: Int = 85
             </aside>
             
             <aside class="page_number">
-              56/56
+              39/39
             </aside>
 
           </footer>
@@ -2496,13 +1670,13 @@ res1: Int = 85
       
       
       <tr id="toc-row-3">
-        <th><a href="#slide3">-</a></th>
+        <th><a href="#slide3">Eval Monad</a></th>
         <td><a href="#slide3">3</a></td>
       </tr>
       
       
       <tr id="toc-row-4">
-        <th><a href="#slide4">Example: Transposing a Computation</a></th>
+        <th><a href="#slide4">-</a></th>
         <td><a href="#slide4">4</a></td>
       </tr>
       
@@ -2514,7 +1688,7 @@ res1: Int = 85
       
       
       <tr id="toc-row-6">
-        <th><a href="#slide6">Eval Monad</a></th>
+        <th><a href="#slide6">-</a></th>
         <td><a href="#slide6">6</a></td>
       </tr>
       
@@ -2584,46 +1758,45 @@ res1: Int = 85
         <td><a href="#slide17">17</a></td>
       </tr>
       
-        
-        <tr id="toc-row-18" class="sub">
-          <th><a href="#slide18">more (trampolines) on p 52</a></th>
-          <td><a href="#slide18">18</a></td>
-        </tr>
-        
+      
+      <tr id="toc-row-18">
+        <th><a href="#slide18">-</a></th>
+        <td><a href="#slide18">18</a></td>
+      </tr>
       
       
       <tr id="toc-row-19">
-        <th><a href="#slide19"><code>lazy val</code></a></th>
+        <th><a href="#slide19">-</a></th>
         <td><a href="#slide19">19</a></td>
       </tr>
       
       
       <tr id="toc-row-20">
-        <th><a href="#slide20"><code>def</code></a></th>
+        <th><a href="#slide20">Streams</a></th>
         <td><a href="#slide20">20</a></td>
       </tr>
       
       
       <tr id="toc-row-21">
-        <th><a href="#slide21">Thunk</a></th>
+        <th><a href="#slide21">-</a></th>
         <td><a href="#slide21">21</a></td>
       </tr>
       
       
       <tr id="toc-row-22">
-        <th><a href="#slide22">Arguments to a function</a></th>
+        <th><a href="#slide22">-</a></th>
         <td><a href="#slide22">22</a></td>
       </tr>
       
       
       <tr id="toc-row-23">
-        <th><a href="#slide23">List (eager)</a></th>
+        <th><a href="#slide23">-</a></th>
         <td><a href="#slide23">23</a></td>
       </tr>
       
       
       <tr id="toc-row-24">
-        <th><a href="#slide24">Stream</a></th>
+        <th><a href="#slide24">-</a></th>
         <td><a href="#slide24">24</a></td>
       </tr>
       
@@ -2635,7 +1808,7 @@ res1: Int = 85
       
       
       <tr id="toc-row-26">
-        <th><a href="#slide26">-</a></th>
+        <th><a href="#slide26">Exercise</a></th>
         <td><a href="#slide26">26</a></td>
       </tr>
       
@@ -2653,25 +1826,25 @@ res1: Int = 85
       
       
       <tr id="toc-row-29">
-        <th><a href="#slide29">Smart constructor</a></th>
+        <th><a href="#slide29">-</a></th>
         <td><a href="#slide29">29</a></td>
       </tr>
       
       
       <tr id="toc-row-30">
-        <th><a href="#slide30">-</a></th>
+        <th><a href="#slide30">Exercise</a></th>
         <td><a href="#slide30">30</a></td>
       </tr>
       
       
       <tr id="toc-row-31">
-        <th><a href="#slide31"><a href="https://github.com/fpinscala/fpinscala/wiki/Chapter-5:-Strictness-and-laziness#tying-the-knot">Tying the Knot</a></a></th>
+        <th><a href="#slide31">-</a></th>
         <td><a href="#slide31">31</a></td>
       </tr>
       
       
       <tr id="toc-row-32">
-        <th><a href="#slide32">Challenge question</a></th>
+        <th><a href="#slide32">Example: <code>from</code></a></th>
         <td><a href="#slide32">32</a></td>
       </tr>
       
@@ -2683,7 +1856,7 @@ res1: Int = 85
       
       
       <tr id="toc-row-34">
-        <th><a href="#slide34">Answer</a></th>
+        <th><a href="#slide34">Example: Transposition</a></th>
         <td><a href="#slide34">34</a></td>
       </tr>
       
@@ -2695,128 +1868,26 @@ res1: Int = 85
       
       
       <tr id="toc-row-36">
-        <th><a href="#slide36"><code>from</code></a></th>
+        <th><a href="#slide36">foldRight</a></th>
         <td><a href="#slide36">36</a></td>
       </tr>
       
       
       <tr id="toc-row-37">
-        <th><a href="#slide37">Challenge question</a></th>
+        <th><a href="#slide37">-</a></th>
         <td><a href="#slide37">37</a></td>
       </tr>
       
       
       <tr id="toc-row-38">
-        <th><a href="#slide38">Answer</a></th>
+        <th><a href="#slide38">-</a></th>
         <td><a href="#slide38">38</a></td>
       </tr>
       
       
       <tr id="toc-row-39">
-        <th><a href="#slide39">-</a></th>
+        <th><a href="#slide39">Homework</a></th>
         <td><a href="#slide39">39</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-40">
-        <th><a href="#slide40">foldRight</a></th>
-        <td><a href="#slide40">40</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-41">
-        <th><a href="#slide41">-</a></th>
-        <td><a href="#slide41">41</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-42">
-        <th><a href="#slide42">-</a></th>
-        <td><a href="#slide42">42</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-43">
-        <th><a href="#slide43">-</a></th>
-        <td><a href="#slide43">43</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-44">
-        <th><a href="#slide44">map</a></th>
-        <td><a href="#slide44">44</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-45">
-        <th><a href="#slide45">-</a></th>
-        <td><a href="#slide45">45</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-46">
-        <th><a href="#slide46">-</a></th>
-        <td><a href="#slide46">46</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-47">
-        <th><a href="#slide47">flatMap</a></th>
-        <td><a href="#slide47">47</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-48">
-        <th><a href="#slide48">-</a></th>
-        <td><a href="#slide48">48</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-49">
-        <th><a href="#slide49">-</a></th>
-        <td><a href="#slide49">49</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-50">
-        <th><a href="#slide50">Evaluation</a></th>
-        <td><a href="#slide50">50</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-51">
-        <th><a href="#slide51">-</a></th>
-        <td><a href="#slide51">51</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-52">
-        <th><a href="#slide52">-</a></th>
-        <td><a href="#slide52">52</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-53">
-        <th><a href="#slide53">unfold</a></th>
-        <td><a href="#slide53">53</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-54">
-        <th><a href="#slide54">-</a></th>
-        <td><a href="#slide54">54</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-55">
-        <th><a href="#slide55">-</a></th>
-        <td><a href="#slide55">55</a></td>
-      </tr>
-      
-      
-      <tr id="toc-row-56">
-        <th><a href="#slide56">Homework</a></th>
-        <td><a href="#slide56">56</a></td>
       </tr>
       
       
