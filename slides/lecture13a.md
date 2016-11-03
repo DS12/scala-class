@@ -321,6 +321,10 @@ Rose trees are non-empty trees. A tree of this sort has a value of type A at the
 		!scala
 		case class Tree[A](tip: A, sub: List[Tree[A]])
 
+<<<<<<< variant A
+One obvious use case is something like a directory structure, where each tip is a directory and the corresponding sub is its subdirectories.
+>>>>>>> variant B
+======= end
 
 ---
 

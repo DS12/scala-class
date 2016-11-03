@@ -6,7 +6,7 @@ object Dependencies {
   import Common.scalaVer
 
   
-  val catsVersion = "0.7.2"
+  val catsVersion = "0.6.0"
   val dogsVersion = "0.2.2"
   val algebirdVersion = "0.12.1"
   val shapelessVersion = "2.3.2"

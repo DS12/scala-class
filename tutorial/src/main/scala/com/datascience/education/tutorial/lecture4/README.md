@@ -15,9 +15,9 @@ We conclude with fixing a flawed implementation of `Option` to strengthen our gr
 
 ## Part 1: `Option` Usage Patterns
 
-`code/tutorials/src/main/scala/tutorials/lecture4/EmptySet.scala`
+`tutorial/src/main/scala/com/datascience/education/tutorial/lecture4/EmptySet.scala`
 
-In Lecture 2 we saw these methods.
+Consider these methods:
 
 `sumList` and `sumList2` sum the elements of a `List[Int]`.
 `prodList` and `prodList2` multiply the elements of a `List[Double]`.
@@ -37,11 +37,11 @@ In Lecture 2 we saw these methods.
   
 ```
 
-Two math errors were permitted:
+In this implementation, two math errors are permitted:  
 The sum of an empty collection of Ints is not 0,
 and the product of an empty collection of Doubles in not 1.0.
 
-At the time, we had no way of describing the *absence* of an answer.  A conventional solution would have return a sentinel value like `Double.NaN`.  We can do better.
+Previously, we had no way of describing the *absence* of an answer.  A conventional solution would have return a sentinel value like `Double.NaN`.  We can do better.
 
 ### Task (1a): `sum`
 
@@ -81,7 +81,7 @@ Use the same combinators to implement `product2`.  Use `foldRight` like `prodLis
 
 ## Part 2: Safe Division
 
-`code/tutorials/src/main/scala/tutorials/lecture4/SafeDivision.scala`
+`tutorial/src/main/scala/com/datascience/education/tutorial/lecture4/SafeDivision.scala`
 
 ### Task (2a): `safeDiv`
 
@@ -104,7 +104,7 @@ Do not catch any `Exception`.  This cannot be tested in this example, but is app
 
 Test your work with runnable class `SafeDivisionExamples`.
 
-This fills a similar purpose to [`Try` in the Scala Collections](http://www.scala-lang.org/api/current/index.html#scala.util.Try) or [`Xor.catchNonFatal` in Cats](http://typelevel.org/cats/api/index.html#cats.data.Xor$@catchNonFatal[A](f:=>A):cats.data.Xor[Throwable,A])
+This fills a similar purpose to [`Try` in the Scala Collections](http://www.scala-lang.org/api/current/index.html#scala.util.Try) or [`Xor.catchNonFatal` in Cats](https://static.javadoc.io/org.typelevel/cats-core_2.11/0.7.2/index.html#cats.data.Xor$@catchNonFatal[A](f:=>A):cats.data.Xor[Throwable,A])
 
 ### Task (2b): `traverseFractions`
 
@@ -115,15 +115,15 @@ Implement
 ```
 
 
-The input is a list of tuples, where the first member of each tuple is the numerator, and the second member is the denominator.
+The input is a list of tuples, where the first member of each tuple is the numerator, and the second member is the denominator. The output should contain the values of each of these fractions as type `Double`.
 
 Find and use method `traverse` defined in object `TraverseOption`, located in file
-`code/tutorials/src/main/scala/tutorials/lecture4/TraverseOption.scala`
+`tutorial/src/main/scala/com/datascience/education/tutorial/lecture4/TraverseOption.scala`
 
 Provided in `TraverseOption`:
 
 ```
-  def traverse[A, B](listA: List[A])(f: A => Option[B]): Option[List[B]] = ...
+def traverse[A, B](listA: List[A])(f: A => Option[B]): Option[List[B]] = ...
 ```
 
 
@@ -133,16 +133,30 @@ A note about `TraverseOption`:
 
 `(A => Option[B]) => Option[List[B]]`, as it is in Chapter 4, really should be a combinator on `List`, not `Option`.
 
-[Cats implements it this way.](http://typelevel.org/cats/api/index.html#cats.Applicative@traverse[A,G[_],B](value:G[A])(f:A=>F[B])(implicitG:cats.Traverse[G]):F[G[B]])
+[Cats implements it this way:](http://typelevel.org/cats/api/index.html#cats.Applicative@traverse[A,G[_],B](value:G[A])(f:A=>F[B])(implicitG:cats.Traverse[G]):F[G[B]])
 
-The `traverse` method with type signature that matches up with Chapter 4 resides in  [`listInstance`](http://typelevel.org/cats/api/index.html#cats.std.package$$list$@listInstance:cats.Traverse[List]withcats.MonadCombine[List]withcats.CoflatMap[List])
+```
+def traverse[A, G[_], B](value: G[A])(f: (A) ⇒ F[B])(implicit G: Traverse[G]): F[G[B]]
+```
 
+The `traverse` method with type signature that matches up with Chapter 4 resides in  [`listInstance`](http://typelevel.org/cats/api/index.html#cats.instances.package$$list$)
+
+
+### Task (2c): `traverseSqrtFractions`
+
+Implement
+
+```
+def traverseSqrtFractions(ll: List[(Int, Int)]): Option[List[Double]] =
+```
+
+The input is again a list of tuples, where the first member of each tuple is the numerator, and the second member is the denominator. However, in this task, output for each tuple the *square root* of the fraction instead. You should use a combinator to string together functions to calculate the fraction and then the square root of the fraction. Be sure to consider the case where the square root is `NaN`.  
 
 ---------------------
 
 ## Part 3: Scala Collections [`Map`](http://www.scala-lang.org/api/current/index.html#scala.collection.immutable.Map) and `Option`
 
-`code/tutorials/src/main/scala/tutorials/lecture4/Employees.scala`
+`tutorial/src/main/scala/com/datascience/education/tutorial/lecture4/Employees.scala`
 
 Previously we retrieved values from a `Map` unsafely.  If the key did not exist in the map, a run-time exception was thrown.
 
@@ -165,14 +179,14 @@ Test your work with runnable class `EmployeesExample`.
 
 ## Part 4: Covariance and Type Bounds in `List`
 
-`code/tutorials/src/main/scala/tutorials/lecture4/Covariance.scala`
+`tutorial/src/main/scala/com/datascience/education/tutorial/lecture4/Covariance.scala`
 
 This is a walk-through.  These concepts will be used in the tasks of <b>Part 5</b>.
 
 ### (4a): A Linked List of Fixed Type
 ```
-scala> import tutorials.lecture4.Covariance._
-import tutorials.lecture4.Covariance._
+scala> import com.datascience.education.tutorial.lecture4.Covariance._
+import com.datascience.education.tutorial.lecture4.Covariance._
 ```
 
 A simple linked list that has no need for a generic type:
@@ -198,10 +212,10 @@ Scala supports subtyping.  A concrete child can (and should) fill-in for the abs
 
 ```
 scala> val il: LinkedListInt = ConsInt(4, ConsInt(5, NilInt))
-il: tutorials.lecture4.Covariance.LinkedListInt = ConsInt(4,ConsInt(5,NilInt))
+il: com.datascience.education.tutorial.lecture4.Covariance.LinkedListInt = ConsInt(4,ConsInt(5,NilInt))
 
 scala> val il2: LinkedListInt = NilInt 
-il2: tutorials.lecture4.Covariance.LinkedListInt = NilInt
+il2: com.datascience.education.tutorial.lecture4.Covariance.LinkedListInt = NilInt
 ```
 
 More subtly, we are applying `NilInt` to argument `t` of `ConsInt` in `ConsInt(5, NilInt)`.
@@ -224,10 +238,10 @@ Again, the concrete children successfully substitute for the type of the abstrac
 
 ```
 scala> val l1: LinkedList1[Int] = Cons1(4, Cons1(5, Nil1()))
-l1: tutorials.lecture4.Covariance.LinkedList1[Int] = Cons1(4,Cons1(5,Nil1()))
+l1: com.datascience.education.tutorial.lecture4.Covariance.LinkedList1[Int] = Cons1(4,Cons1(5,Nil1()))
 
 scala> val l2: LinkedList1[Int] = Nil1()
-l2: tutorials.lecture4.Covariance.LinkedList1[Int] = Nil1()
+l2: com.datascience.education.tutorial.lecture4.Covariance.LinkedList1[Int] = Nil1()
 ```
 
 
@@ -259,11 +273,10 @@ Let's try instantianting a few `LinkedList2`s in the same way that we instantiat
 scala> val l1: LinkedList2[Int] = Cons2(6, Cons2(7, Nil2))
 
 <console>:14: error: type mismatch;
- found   : tutorials.lecture4.Covariance.Nil2.type
- required: tutorials.lecture4.Covariance.LinkedList2[Int]
+ found   : com.datascience.education.tutorial.lecture4.Covariance.Nil2.type
+ required: com.datascience.education.tutorial.lecture4.Covariance.LinkedList2[Int]
 Note: Nothing <: Int 
-(and tutorials.lecture4.Covariance.Nil2.type <:
-tutorials.lecture4.Covariance.LinkedList2[Nothing]), 
+(and com.datascience.education.tutorial.lecture4.Covariance.Nil2.type <: com.datascience.education.tutorial.lecture4.Covariance.LinkedList2[Nothing]), 
 but trait LinkedList2 is invariant in type A.
 You may wish to define A as +A instead. (SLS 4.5)
        val l1: LinkedList2[Int] = Cons2(6, Cons2(7, Nil2))
@@ -293,11 +306,10 @@ Another example of the same problem:
 ```
 scala> val l2: LinkedList2[Int] = Nil2
 <console>:14: error: type mismatch;
- found   : tutorials.lecture4.Covariance.Nil2.type
- required: tutorials.lecture4.Covariance.LinkedList2[Int]
+ found   : com.datascience.education.tutorial.lecture4.Covariance.Nil2.type
+ required: com.datascience.education.tutorial.lecture4.Covariance.LinkedList2[Int]
 Note: Nothing <: Int 
-(and tutorials.lecture4.Covariance.Nil2.type <:
-tutorials.lecture4.Covariance.LinkedList2[Nothing]), 
+(and com.datascience.education.tutorial.lecture4.Covariance.Nil2.type <: com.datascience.education.tutorial.lecture4.Covariance.LinkedList2[Nothing]), 
 but trait LinkedList2 is invariant in type A.
 You may wish to define A as +A instead. (SLS 4.5)
        val l2: LinkedList2[Int] = Nil2
@@ -337,10 +349,10 @@ We want `LinkedList2[Nothing]` to be a subtype of `LinkedList2[A]`.  A covarianc
 
 ```
 scala> val l1: LinkedList3[Int] = Cons3(6, Cons3(7, Nil3))
-l1: tutorials.lecture4.Covariance.LinkedList3[Int] = Cons3(6,Cons3(7,Nil3))
+l1: com.datascience.education.tutorial.lecture4.Covariance.LinkedList3[Int] = Cons3(6,Cons3(7,Nil3))
 
 scala> val l2: LinkedList3[Int] = Nil3
-l2: tutorials.lecture4.Covariance.LinkedList3[Int] = Nil3
+l2: com.datascience.education.tutorial.lecture4.Covariance.LinkedList3[Int] = Nil3
 ```
 
 ### (4e): Necessity of Type Bounds
@@ -367,10 +379,10 @@ A `LinkedList3` with elements will apply `f` to each element `A`.
 
 ```
 scala> val l1: LinkedList3[Int] = Cons3(65, Cons3(66, Nil3))
-l1: tutorials.lecture4.Covariance.LinkedList3[Int] = Cons3(65,Cons3(66,Nil3))
+l1: com.datascience.education.tutorial.lecture4.Covariance.LinkedList3[Int] = Cons3(65,Cons3(66,Nil3))
 
 scala> l1.map(_.toChar)
-res0: tutorials.lecture4.Covariance.LinkedList3[Char] = Cons3(A,Cons3(B,Nil3))
+res0: com.datascience.education.tutorial.lecture4.Covariance.LinkedList3[Char] = Cons3(A,Cons3(B,Nil3))
 ```
 
 
@@ -378,10 +390,7 @@ Other methods we could implement have problems, like `prepend`:
 
 ```
   sealed trait LinkedList3[+A] {
-
-    def prepend(a: A): LinkedList3[A] =
-      Cons3(a, this)
-
+    def prepend(a: A): LinkedList3[A] = Cons3(a, this)
   }
   case class Cons3[+A](h: A, t: LinkedList3[A]) 
 	extends LinkedList3[A]
@@ -391,7 +400,6 @@ Other methods we could implement have problems, like `prepend`:
 We have assumed that this will work:
 
 ```
-
 val empty: LinkedList3[Nothing] = Nil3
 val five: LinkedList3[Int] = empty.prepend(5)
 
@@ -400,8 +408,7 @@ val five: LinkedList3[Int] = empty.prepend(5)
 But the type signature of `prepend` in `empty` is:
 
 ```
-    def prepend(a: Nothing): LinkedList3[Nothing] =
-      Cons3(a, this)
+def prepend(a: Nothing): LinkedList3[Nothing] = Cons3(a, this)
 ```
 
 `Int` is a supertype of `Nothing` and so cannot fill in the argument of `prepend`.
@@ -418,7 +425,7 @@ covariant type A occurs in contravariant position in type A of value a
 
 ```
 
-We need type bounds.  `prepend` must accepts as an argument a *supertype* of `Nothing`.
+We need type bounds.  `prepend` must accept as an argument a *supertype* of `Nothing`.
 
 
 ```
@@ -444,10 +451,10 @@ Now `LinkedList4[Nothing]` can be "upgraded" to `LinkedList4[Int]`.  `prepend` c
 ```
 
 scala> val empty: LinkedList4[Nothing] = Nil4
-empty: tutorials.lecture4.Covariance.LinkedList4[Nothing] = Nil4
+empty: com.datascience.education.tutorial.lecture4.Covariance.LinkedList4[Nothing] = Nil4
 
 scala> empty.prepend(5)
-res1: tutorials.lecture4.Covariance.LinkedList4[Int] = Cons4(5,Nil4)
+res1: com.datascience.education.tutorial.lecture4.Covariance.LinkedList4[Int] = Cons4(5,Nil4)
 
 ```
 
@@ -455,7 +462,7 @@ More concisely:
 
 ```
 scala> Nil4.prepend(5)
-res0: tutorials.lecture4.Covariance.LinkedList4[Int] = Cons4(5,Nil4)
+res0: com.datascience.education.tutorial.lecture4.Covariance.LinkedList4[Int] = Cons4(5,Nil4)
 ```
 
 
@@ -465,8 +472,8 @@ This Part has demonstrated that variance and type bounds often go hand-in-hand.
 
 ## Part 5: Covariance and Type Bounds in `Option`; `Option` Combinators
 
-`code/tutorials/src/main/scala/tutorials/lecture4/FlawedOption.scala`
-`code/tutorials/src/main/scala/tutorials/lecture4/FPOption.scala`
+`tutorial/src/test/scala/com/datascience/education/tutorial/lecture4/FlawedOptionSpec.scala`
+`tutorial/src/main/scala/com/datascience/education/tutorial/lecture4/FPOption.scala`
 
 <b>Part 4: Covariance and Type Bounds in `List`</b> iterated through several incorrect implementations of `List` to approximate the version in the Scala Collections.
 
@@ -505,14 +512,11 @@ scala> :t Option
 Option.type
 ```
 
-### Task (5a): compilation errors in of `FlawedOption`
+### Task (5a): Compilation errors of `FlawedOption`
 
-Uncomment the methods implemented inside the trait of `FlawedOption`.  Investigate the compilation errors.  Comment out the methods before continuing to `FPOption`.
+Investigate the compilation errors for the given implementation of `FlawedOption`, and use these compilation errors as a clue for the solution to the next task.  
 
-Leave the other methods/combinators commented out.
-
-Test your fix with the runnable class `FPOptionExamples5a`.
-
+In `tutorial/src/test/scala/com/datascience/education/tutorial/lecture4/FlawedOptionSpec.scala`, a test is provided which checks that this implementation `shouldNot compile`. You should modify this test so that it will fail by changing it to `should compile`, and look at the error for failing when the test is ran. To run this specific test in `sbt`, use `testOnly com.datascience.education.tutorial.lecture4.FlawedOptionSpec`. Remember to change the tests back otherwise your tests will continue to fail.
 
 ### Task (5b): `map` and `getOrElse`
 
@@ -547,16 +551,27 @@ Test your implementation with the runnable class `FPOptionExamples5d`.
 
 ### Task (5e): `map2`
 
-Implement 
+Implement `map2`, another non-primitive combinator.  
 
 ```
   def map2[B, C](opB: FPOption[B])(f: (A,B) => C): FPOption[C] = ???
 ```
 
-, another non-primitive combinator.
-
 Test your implementation with runnable class `FPOptionExamples5e`.
 
+-------------------------
+
+## Tests
+
+Various tests have already been implemented in the following files:  
+ 
+`tutorial/src/test/scala/com/datascience/education/tutorial/lecture4/SafeDivisionSpec.scala`  
+`tutorial/src/test/scala/com/datascience/education/tutorial/lecture4/EmptySetSpec.scala`  
+`tutorial/src/test/scala/com/datascience/education/tutorial/lecture4/EmployeesSpec.scala`  
+`tutorial/src/test/scala/com/datascience/education/tutorial/lecture4/FlawedOptionSpec.scala`  
+`tutorial/src/test/scala/com/datascience/education/tutorial/lecture4/FPOptionSpec.scala`  
+
+Uncomment all of the tests that are commented out in these files and run them to check your implementations in this tutorial.
 
 -------------------------
 ## Resources
@@ -569,6 +584,6 @@ Test your implementation with runnable class `FPOptionExamples5e`.
 [ScalaDoc for `Nothing`](http://www.scala-lang.org/api/current/index.html#scala.Nothing)
 
 
-[Cats Traverse typeclass](http://typelevel.org/cats/tut/traverse.html)
+[Cats Traverse typeclass](http://typelevel.org/cats/typeclasses/traverse.html)
 
 [Herding Cats: Traverse](http://eed3si9n.com/herding-cats/Traverse.html)
