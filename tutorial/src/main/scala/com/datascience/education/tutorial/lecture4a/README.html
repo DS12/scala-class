@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="utf-8">
+<title>README</title>
+
+
+<style type="text/css">
+body {
+  font-family: Helvetica, arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: white;
+  padding: 30px; }
+
+body > *:first-child {
+  margin-top: 0 !important; }
+body > *:last-child {
+  margin-bottom: 0 !important; }
+
+a {
+  color: #4183C4; }
+a.absent {
+  color: #cc0000; }
+a.anchor {
+  display: block;
+  padding-left: 30px;
+  margin-left: -30px;
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0; }
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 20px 0 10px;
+  padding: 0;
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased;
+  cursor: text;
+  position: relative; }
+
+h1:hover a.anchor, h2:hover a.anchor, h3:hover a.anchor, h4:hover a.anchor, h5:hover a.anchor, h6:hover a.anchor {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA09pVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoMTMuMCAyMDEyMDMwNS5tLjQxNSAyMDEyLzAzLzA1OjIxOjAwOjAwKSAgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OUM2NjlDQjI4ODBGMTFFMTg1ODlEODNERDJBRjUwQTQiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OUM2NjlDQjM4ODBGMTFFMTg1ODlEODNERDJBRjUwQTQiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo5QzY2OUNCMDg4MEYxMUUxODU4OUQ4M0REMkFGNTBBNCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo5QzY2OUNCMTg4MEYxMUUxODU4OUQ4M0REMkFGNTBBNCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PsQhXeAAAABfSURBVHjaYvz//z8DJYCRUgMYQAbAMBQIAvEqkBQWXI6sHqwHiwG70TTBxGaiWwjCTGgOUgJiF1J8wMRAIUA34B4Q76HUBelAfJYSA0CuMIEaRP8wGIkGMA54bgQIMACAmkXJi0hKJQAAAABJRU5ErkJggg==) no-repeat 10px center;
+  text-decoration: none; }
+
+h1 tt, h1 code {
+  font-size: inherit; }
+
+h2 tt, h2 code {
+  font-size: inherit; }
+
+h3 tt, h3 code {
+  font-size: inherit; }
+
+h4 tt, h4 code {
+  font-size: inherit; }
+
+h5 tt, h5 code {
+  font-size: inherit; }
+
+h6 tt, h6 code {
+  font-size: inherit; }
+
+h1 {
+  font-size: 28px;
+  color: black; }
+
+h2 {
+  font-size: 24px;
+  border-bottom: 1px solid #cccccc;
+  color: black; }
+
+h3 {
+  font-size: 18px; }
+
+h4 {
+  font-size: 16px; }
+
+h5 {
+  font-size: 14px; }
+
+h6 {
+  color: #777777;
+  font-size: 14px; }
+
+p, blockquote, ul, ol, dl, li, table, pre {
+  margin: 15px 0; }
+
+hr {
+  background: transparent url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAECAYAAACtBE5DAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OENDRjNBN0E2NTZBMTFFMEI3QjRBODM4NzJDMjlGNDgiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OENDRjNBN0I2NTZBMTFFMEI3QjRBODM4NzJDMjlGNDgiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo4Q0NGM0E3ODY1NkExMUUwQjdCNEE4Mzg3MkMyOUY0OCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo4Q0NGM0E3OTY1NkExMUUwQjdCNEE4Mzg3MkMyOUY0OCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PqqezsUAAAAfSURBVHjaYmRABcYwBiM2QSA4y4hNEKYDQxAEAAIMAHNGAzhkPOlYAAAAAElFTkSuQmCC) repeat-x 0 0;
+  border: 0 none;
+  color: #cccccc;
+  height: 4px;
+  padding: 0;
+}
+
+body > h2:first-child {
+  margin-top: 0;
+  padding-top: 0; }
+body > h1:first-child {
+  margin-top: 0;
+  padding-top: 0; }
+  body > h1:first-child + h2 {
+    margin-top: 0;
+    padding-top: 0; }
+body > h3:first-child, body > h4:first-child, body > h5:first-child, body > h6:first-child {
+  margin-top: 0;
+  padding-top: 0; }
+
+a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6 {
+  margin-top: 0;
+  padding-top: 0; }
+
+h1 p, h2 p, h3 p, h4 p, h5 p, h6 p {
+  margin-top: 0; }
+
+li p.first {
+  display: inline-block; }
+li {
+  margin: 0; }
+ul, ol {
+  padding-left: 30px; }
+
+ul :first-child, ol :first-child {
+  margin-top: 0; }
+
+dl {
+  padding: 0; }
+  dl dt {
+    font-size: 14px;
+    font-weight: bold;
+    font-style: italic;
+    padding: 0;
+    margin: 15px 0 5px; }
+    dl dt:first-child {
+      padding: 0; }
+    dl dt > :first-child {
+      margin-top: 0; }
+    dl dt > :last-child {
+      margin-bottom: 0; }
+  dl dd {
+    margin: 0 0 15px;
+    padding: 0 15px; }
+    dl dd > :first-child {
+      margin-top: 0; }
+    dl dd > :last-child {
+      margin-bottom: 0; }
+
+blockquote {
+  border-left: 4px solid #dddddd;
+  padding: 0 15px;
+  color: #777777; }
+  blockquote > :first-child {
+    margin-top: 0; }
+  blockquote > :last-child {
+    margin-bottom: 0; }
+
+table {
+  padding: 0;border-collapse: collapse; }
+  table tr {
+    border-top: 1px solid #cccccc;
+    background-color: white;
+    margin: 0;
+    padding: 0; }
+    table tr:nth-child(2n) {
+      background-color: #f8f8f8; }
+    table tr th {
+      font-weight: bold;
+      border: 1px solid #cccccc;
+      margin: 0;
+      padding: 6px 13px; }
+    table tr td {
+      border: 1px solid #cccccc;
+      margin: 0;
+      padding: 6px 13px; }
+    table tr th :first-child, table tr td :first-child {
+      margin-top: 0; }
+    table tr th :last-child, table tr td :last-child {
+      margin-bottom: 0; }
+
+img {
+  max-width: 100%; }
+
+span.frame {
+  display: block;
+  overflow: hidden; }
+  span.frame > span {
+    border: 1px solid #dddddd;
+    display: block;
+    float: left;
+    overflow: hidden;
+    margin: 13px 0 0;
+    padding: 7px;
+    width: auto; }
+  span.frame span img {
+    display: block;
+    float: left; }
+  span.frame span span {
+    clear: both;
+    color: #333333;
+    display: block;
+    padding: 5px 0 0; }
+span.align-center {
+  display: block;
+  overflow: hidden;
+  clear: both; }
+  span.align-center > span {
+    display: block;
+    overflow: hidden;
+    margin: 13px auto 0;
+    text-align: center; }
+  span.align-center span img {
+    margin: 0 auto;
+    text-align: center; }
+span.align-right {
+  display: block;
+  overflow: hidden;
+  clear: both; }
+  span.align-right > span {
+    display: block;
+    overflow: hidden;
+    margin: 13px 0 0;
+    text-align: right; }
+  span.align-right span img {
+    margin: 0;
+    text-align: right; }
+span.float-left {
+  display: block;
+  margin-right: 13px;
+  overflow: hidden;
+  float: left; }
+  span.float-left span {
+    margin: 13px 0 0; }
+span.float-right {
+  display: block;
+  margin-left: 13px;
+  overflow: hidden;
+  float: right; }
+  span.float-right > span {
+    display: block;
+    overflow: hidden;
+    margin: 13px auto 0;
+    text-align: right; }
+
+code, tt {
+  margin: 0 2px;
+  padding: 0 5px;
+  white-space: nowrap;
+  border: 1px solid #eaeaea;
+  background-color: #f8f8f8;
+  border-radius: 3px; }
+
+pre code {
+  margin: 0;
+  padding: 0;
+  white-space: pre;
+  border: none;
+  background: transparent; }
+
+.highlight pre {
+  background-color: #f8f8f8;
+  border: 1px solid #cccccc;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px; }
+
+pre {
+  background-color: #f8f8f8;
+  border: 1px solid #cccccc;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px; }
+  pre code, pre tt {
+    background-color: transparent;
+    border: none; }
+
+sup {
+    font-size: 0.83em;
+    vertical-align: super;
+    line-height: 0;
+}
+* {
+	-webkit-print-color-adjust: exact;
+}
+@media screen and (min-width: 914px) {
+    body {
+        width: 854px;
+        margin:0 auto;
+    }
+}
+@media print {
+	table, pre {
+		page-break-inside: avoid;
+	}
+	pre {
+		word-wrap: break-word;
+	}
+}
+</style>
+
+<style type="text/css">
+/**
+ * okaidia theme for JavaScript, CSS and HTML
+ * Loosely based on Monokai textmate theme by http://www.monokai.nl/
+ * @author ocodia
+ */
+
+code[class*="language-"],
+pre[class*="language-"] {
+	color: #f8f8f2;
+	background: none;
+	text-shadow: 0 1px rgba(0, 0, 0, 0.3);
+	font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+	text-align: left;
+	white-space: pre;
+	word-spacing: normal;
+	word-break: normal;
+	word-wrap: normal;
+	line-height: 1.5;
+
+	-moz-tab-size: 4;
+	-o-tab-size: 4;
+	tab-size: 4;
+
+	-webkit-hyphens: none;
+	-moz-hyphens: none;
+	-ms-hyphens: none;
+	hyphens: none;
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+	padding: 1em;
+	margin: .5em 0;
+	overflow: auto;
+	border-radius: 0.3em;
+}
+
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+	background: #272822;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+	padding: .1em;
+	border-radius: .3em;
+	white-space: normal;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+	color: slategray;
+}
+
+.token.punctuation {
+	color: #f8f8f2;
+}
+
+.namespace {
+	opacity: .7;
+}
+
+.token.property,
+.token.tag,
+.token.constant,
+.token.symbol,
+.token.deleted {
+	color: #f92672;
+}
+
+.token.boolean,
+.token.number {
+	color: #ae81ff;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+	color: #a6e22e;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string,
+.token.variable {
+	color: #f8f8f2;
+}
+
+.token.atrule,
+.token.attr-value,
+.token.function {
+	color: #e6db74;
+}
+
+.token.keyword {
+	color: #66d9ef;
+}
+
+.token.regex,
+.token.important {
+	color: #fd971f;
+}
+
+.token.important,
+.token.bold {
+	font-weight: bold;
+}
+.token.italic {
+	font-style: italic;
+}
+
+.token.entity {
+	cursor: help;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<h1 id="toc_0"><a href="http://typelevel.org/cats/api/index.html#cats.data.Xor"><code>Xor</code></a> Tutorial</h1>
+
+<hr>
+
+<h2 id="toc_1">Part 1: Introducing <code>Xor</code></h2>
+
+<p><code>Xor</code>, also known as <code>Either</code>, is an error-handling datatype like <code>Option</code>.  Its primary difference is that it can carry information other than <code>None</code> in its failure case.  <code>Option</code> has one generic type; <code>Xor</code> has two.  The type of this failure information fills generic <code>A</code> in <code>Left</code> and in <code>Xor</code>, below.</p>
+
+<div><pre><code class="language-scala">sealed abstract class Xor[+A, +B] extends Product with Serializable
+
+final case class Left[+A](a: A) extends Xor[A, Nothing] with Product with Serializable
+
+final case class Right[+B](b: B) extends Xor[Nothing, B] with Product with Serializable
+</code></pre></div>
+
+<p>Compare with <code>Option</code></p>
+
+<div><pre><code class="language-scala">trait Option[+A] //base trait
+
+case class Some[+A](get: A) extends Option[A]
+
+case object None extends Option[Nothing]</code></pre></div>
+
+<p><a href="http://typelevel.org/cats/tut/xor.html">Read the official Cats <code>Xor</code> documentation</a></p>
+
+<p>The left side of <code>Xor</code> is <em>typically</em> an <code>Exception</code> of some form, and is usually intended to be the &quot;end of the chain.&quot;  To prioritize typical usage, combinators on <code>Xor</code> are &quot;right-biased.&quot;</p>
+
+<p>Nevertheless, sometimes we <em>do</em> want to operate on the &quot;left&quot; type.  <a href="http://typelevel.org/cats/api/index.html#cats.data.Xor@leftMap%5BC%5D(f:A=%3EC):cats.data.Xor%5BC,B%5D"><code>leftMap</code> exists for this purpose.</a></p>
+
+<div><pre><code class="language-scala">def leftMap[C](f: (A) ⇒ C): Xor[C, B]</code></pre></div>
+
+<p>The implementation of <code>Xor</code> in the Scala STL, <a href="http://www.scala-lang.org/api/current/index.html#scala.util.Either">named <code>Either</code></a>, is not left or right biased.  Call <code>left</code> or <code>right</code> on this <code>Either</code> to produce a <code>LeftProjection</code> or <code>RightProjection</code>.  This implementation adds boilerplate for the majority of use cases, most operatings being on the &quot;right&quot; type.</p>
+
+<p><code>Xor</code> is best suited to <em>sequential</em> dependencies.</p>
+
+<div><pre><code class="language-scala">    val xorA: Xor[Exception, A] = ...
+    def produceB(a: A): Xor[Exception, B] = ...
+    def produceC(b: B): Xor[Exception, C] = ...
+
+    val xorD: Xor[Exception, C] = 
+      xorA.flatMap { a =&gt;
+        produceB(a).map { b =&gt;
+          produceC(b)
+        }
+      }
+</code></pre></div>
+
+<p><a href="http://typelevel.org/cats/api/index.html#cats.data.Xor"><code>Xor</code> ScalaDoc</a></p>
+
+<p><a href="http://typelevel.org/cats/api/index.html#cats.data.Xor$@Left%5B+A%5DextendsXor%5BA,Nothing%5DwithProductwithSerializable"><code>Left</code> ScalaDoc</a></p>
+
+<p><a href="http://typelevel.org/cats/api/index.html#cats.data.Xor$@Right%5B+B%5DextendsXor%5BNothing,B%5DwithProductwithSerializable"><code>Right</code> ScalaDoc</a></p>
+
+<hr>
+
+<h2 id="toc_2">Part 2: Safe Division with <code>Xor</code></h2>
+
+<p><code>scala-class/tutorial/src/main/scala/com/datascience/education/tutorial/lecture4a/SafeDivision.scala</code></p>
+
+<p>We re-implement our safe division exercises from Tutorial 4, replacing <code>Option</code> with <code>Xor</code>.</p>
+
+<div><pre><code class="language-scala">  def safeDivInt(numerator: Int, denominator: Int): Option[Int] =
+    try {
+      Some(numerator / denominator)
+    } catch {
+      case ae: java.lang.ArithmeticException =&gt; None
+    }
+
+  def squareRootFrac(numerator: Int, denominator: Int): Option[Double] =
+    safeDivInt(numerator, denominator).flatMap { _ =&gt;
+      val squareRoot: Double =
+        math.sqrt(numerator.toDouble / denominator)
+      if (squareRoot.isNaN)
+        None
+      else
+        Some(squareRoot)
+    }
+
+
+  def squareRootFrac(tup: (Int, Int)): Option[Double] =
+    squareRootFrac(tup._1, tup._2)</code></pre></div>
+
+<p><code>squareRootFrac</code> is intended to take the square root of a fraction.</p>
+
+<p><code>safeDivInt</code> will catch a divide-by-zero error (<code>java.lang.ArithmeticException</code>), and <code>squareRootFrac</code> will catch any undefined number (<code>Double.NaN</code>) produced by <code>math.sqrt</code> -- usually by a negative argument.</p>
+
+<p>Which of these errors occurs is lost information -- <code>Option</code>&#39;s <code>None</code> is not informative.</p>
+
+<p><code>Xor</code> will be more informative.</p>
+
+<h3 id="toc_3">Task (2a): <code>SafeDivisionXor.safeDivInt</code></h3>
+
+<p>Implement</p>
+
+<div><pre><code class="language-scala">  def safeDivInt(numerator: Int, denominator: Int): Xor[Exception, Int] = ...</code></pre></div>
+
+<p>There are at least two acceptable answers. </p>
+
+<p>Test your implementation with <code>SafeDivIntXorExamples</code>.</p>
+
+<h3 id="toc_4">Task (2b): <code>SafeDivisionXor.squareRootFrac</code></h3>
+
+<p>Implement </p>
+
+<div><pre><code class="language-scala">  def squareRootFrac(numerator: Int, denominator: Int): Xor[Exception, Double] = ...</code></pre></div>
+
+<p>The square root of a negative <code>Double</code> will produce <code>Double.NaN</code>.</p>
+
+<p>Test your implementation with <code>SquareRootFracXorExamples</code>.</p>
+
+<hr>
+
+<h2 id="toc_5">Part 3: Mock Client</h2>
+
+<p><code>scala-class/tutorial/src/main/scala/com/datascience/education/tutorial/lecture4a/RequestResponse.scala</code></p>
+
+<p><code>RequestResponse</code> contains side-effecting code that resembles poor Java usage.  In Java and Scala, it is permitted to throw <code>Exception</code>s or <code>Throwable</code>s and leave them unhandled (<a href="http://crunchify.com/better-understanding-on-checked-vs-unchecked-exceptions-how-to-handle-exception-better-way-in-java/">in Java-speak, unchecked</a>).  Lacking programmer directives on how to handle these unchecked exceptions, even trivial exceptions may crash the program in a run-time error -- the one-size-fits-all solution to exception handling.</p>
+
+<p><a href="http://stackoverflow.com/questions/6083248/is-it-a-bad-practice-to-catch-throwable">Equally dangerous is catching the <em>wrong</em> <code>Exception</code>s -- too wide of a net.</a>  The rule of thumb is &quot;Don&#39;t catch fatal exceptions -- let the JVM deal with them.&quot;  This explains method <a href="http://typelevel.org/cats/api/index.html#cats.data.Xor$@catchNonFatal%5BA%5D(f:=%3EA):cats.data.Xor%5BThrowable,A%5D"><code>Xor.catchNonFatal</code>.</a></p>
+
+<h3 id="toc_6">Task (3a): implement <code>sendRequest</code></h3>
+
+<p>Use <a href="http://typelevel.org/cats/api/index.html#cats.data.Xor$@catchOnly%5BT%3E:Null%3C:Throwable%5D:XorFunctions.this.CatchOnlyPartiallyApplied%5BT%5D"><code>Xor.catchOnly</code></a> to &quot;catch only&quot; <code>BadRequestExceptions</code> in <code>sendRequestUnsafe</code>.</p>
+
+<h3 id="toc_7">Task (3b): implement <code>unpackResponse</code></h3>
+
+<p>Use <a href="http://typelevel.org/cats/api/index.html#cats.data.Xor$@catchOnly%5BT%3E:Null%3C:Throwable%5D:XorFunctions.this.CatchOnlyPartiallyApplied%5BT%5D"><code>Xor.catchOnly</code></a> to &quot;catch only&quot; <code>CorruptPayloadException</code>s in <code>unpackResponseUnsafe</code>.</p>
+
+<h3 id="toc_8">Task (3c): implement <code>client</code></h3>
+
+<p>Use <code>flatMap</code> on <code>Xor</code> to chain together <code>sendRequest</code> and <code>unpackResponse</code>.</p>
+
+<div><pre><code class="language-scala">sealed abstract class Xor[+A, +B] extends Product with Serializable {
+  ...
+  def flatMap[AA &gt;: A, D](f: (B) ⇒ Xor[AA, D]): Xor[AA, D]
+  ...
+}</code></pre></div>
+
+<p>Test the catching of these exceptions with <code>RequestResponseExample</code>.  The testing code relies on a random number generator, so run it a few times to see both <code>BadRequestException</code> and <code>CorruptPayloadException</code> occur.</p>
+
+<p>Tweak the thresholds in <code>sendRequestUnsafe</code> and <code>unpackResponseUnsafe</code> to test your error handling.</p>
+
+<div><pre><code class="language-scala">    if (rand.nextDouble() &lt; 0.02) ...</code></pre></div>
+
+<h4 id="toc_9">Subtask</h4>
+
+<p>In your comments, name the concrete types of generics <code>A</code>, <code>B</code>, <code>AA</code>, and <code>D</code> in your usage of <code>flatMap</code>.</p>
+
+<h3 id="toc_10">Task (3d): Test out-of-memory error</h3>
+
+<p>Uncomment the block of code under &quot;Catastrophic exception should not be caught&quot;.</p>
+
+<p>Run <code>RequestResponseExample</code> again, and ensure that a run-time exception is thrown.  This verifies that <code>client</code> is not a &quot;catch-all&quot; exception handler.</p>
+
+<p><a href="http://stackoverflow.com/questions/511013/how-to-handle-outofmemoryerror-in-java"><code>new Exception(&quot;out of memory&quot;)</code> is a mock of the real <code>OutOfMemoryError</code> in Java.</a></p>
+
+<p>Read section &quot;Xor in the small, Xor in the large&quot; of <a href="http://typelevel.org/cats/tut/xor.html">the official Cats Xor tutorial</a> to see what happens when two <code>Xor</code>s of unrelated <code>Left</code> types are <code>flatMap</code>ped together.  tldr; the compiler reverts to the most recent common ancestor.</p>
+
+<p>Comment:</p>
+
+<p>The terms <em>synchronous</em> and <em>asynchronous</em> are commonly referred to in discussions of networked processes.  </p>
+
+<p>The earliest HTTP frameworks were sychronous.  The most primitive server of a request-response cycle is a simple for-loop -- each iteration of the loop handles one request and one response.  A web application developer using this primitive HTTP framework would think of their server process at this level.</p>
+
+<p>Modern HTTP frameworks <a href="http://stackoverflow.com/questions/5971301/determining-synchronous-vs-asynchronous-in-web-applications">support asynchrony between a request and its response, in one form or another.</a></p>
+
+<p>The distinction between synchronous and asynchronous actually depends on perspective; to the perspective of the code implementing any HTTP framework, a request-response cycle is synchronous.  To the perspective of a web application built on top an asynchronous HTTP framework, a request-response cycle is asynchronous.</p>
+
+<p>Analogously, a threading library for a single-core machine is single-threaded from the perspective of its implementation.</p>
+
+<p><code>sendRequest</code> is not a mock server, but a mock client.  A client may be implemented to be synchronous or asynchronous to the perspective of its user.</p>
+
+<p><code>sendRequest</code> is a mock synchronous client.</p>
+
+<hr>
+
+<h2 id="toc_11">Part 4: Combining Payloads</h2>
+
+<p><code>scala-class/tutorial/src/main/scala/com/datascience/education/tutorial/lecture4a/ResponseList.scala</code></p>
+
+<h3 id="toc_12">Task (4a): <code>parsePayload</code></h3>
+
+<p>Implement ...  Complete its signature.</p>
+
+<p>Read the <a href="https://docs.oracle.com/javase/7/docs/api/java/lang/Integer.html#parseInt(java.lang.String,%20int)">JavaDoc for <code>Integer.parseInt</code></a> and determine the type of <code>Exception</code> that <code>parseInt</code> throws.</p>
+
+<h3 id="toc_13">Task (4b): <code>pipeline</code></h3>
+
+<p>Implement <code>pipeline</code>, which chains together <code>client</code> from the previous <b>Part</b> and <code>parsePayload</code>.  Once again, use <code>flatMap</code> on <code>Xor</code>.  Complete <code>pipeline</code>s signature.</p>
+
+<div><pre><code class="language-scala">sealed abstract class Xor[+A, +B] extends Product with Serializable {
+  ...
+  def flatMap[AA &gt;: A, D](f: (B) ⇒ Xor[AA, D]): Xor[AA, D]
+  ...
+}</code></pre></div>
+
+<h4 id="toc_14">Subtask</h4>
+
+<p>Once again, name the concrete types of generics <code>A</code>, <code>B</code>, <code>AA</code>, and <code>D</code>.  This will be useful for completing the signature of <code>pipeline</code>.</p>
+
+<h3 id="toc_15">Task (4c): <code>sum</code></h3>
+
+<p>Implement <code>sum</code> with method <code>TraverseXor.traverse</code>, <code>map</code>, and <code>pipeline</code>.</p>
+
+<div><pre><code class="language-scala">    def sum(lr: List[Request]): XorException[Int] = ???</code></pre></div>
+
+<p><code>sum</code> should add the Integers parsed by <code>pipeline</code>.  If any Integer/Response is corrupted, the summation fails.</p>
+
+<p>Test your implementation with <code>ResponseListExample</code>.</p>
+
+<p>Tweak the thresholds in <code>sendRequestUnsafe</code> and <code>unpackResponseUnsafe</code> to test your error handling.</p>
+
+<div><pre><code class="language-scala">    if (rand.nextDouble() &lt; 0.02) ...</code></pre></div>
+
+<hr>
+
+<h2 id="toc_16">Part 5: <code>WebFormVerifier</code> with <code>Xor</code></h2>
+
+<p><code>scala-class/tutorial/src/main/scala/com/datascience/education/tutorial/lecture4a/WebForm.scala</code></p>
+
+<p><code>scala-class/tutorial/src/main/scala/com/datascience/education/tutorial/lecture4a/WebFormVerifier.scala</code></p>
+
+<p><code>scala-class/tutorial/src/main/scala/com/datascience/education/tutorial/lecture4a/XorWebForm.scala</code></p>
+
+<p><code>scala-class/tutorial/src/main/scala/com/datascience/education/tutorial/lecture4a/TraverseXor.scala</code></p>
+
+<p>The defining difference between <code>Xor</code> and <code>Validated</code> is <em>failing-fast</em> versus <em>accumulation</em>.</p>
+
+<p><code>Xor</code> is intended for <em>chaining</em> a sequence of problematic operations -- any break of a link will prematurely terminate the sequence of operations.</p>
+
+<p><code>Validated</code> is intended to accumulate errors.</p>
+
+<h3 id="toc_17">(5a): Layout</h3>
+
+<p>An attempt is made to prevent <code>VerifiedWebForm</code> from being created in any place.  This would make it too easy for another programmer to skip the verification step, and convert <code>UnverifiedWebForm</code> directly to <code>VerifiedWebForm</code>.</p>
+
+<div><pre><code class="language-scala">trait WebForm {
+  def firstName: String
+  def lastName: String
+  def phoneNumber: Long
+  def email: String
+}
+
+case class UnverifiedWebForm(firstName: String, lastName: String,
+  phoneNumber: Long, email: String) extends WebForm
+
+trait VerifiedWebForm extends WebForm</code></pre></div>
+
+<p>The constructor for <code>VerifiedWebForm</code> resides in trait <code>WebFormVerifier</code>.</p>
+
+<div><pre><code class="language-scala">trait WebFormVerifier[P &lt;: Product] {
+
+  private case class VerifiedWebFormImpl(
+    firstName: String, lastName: String,
+    phoneNumber: Long, email: String) extends VerifiedWebForm
+
+  protected def constructVerifiedWebForm(
+    firstName: String, lastName: String,
+    phoneNumber: Long, email: String): VerifiedWebForm =
+    VerifiedWebFormImpl(firstName, lastName, phoneNumber, email)
+
+  def verify(unverifiedWebForm: UnverifiedWebForm): P
+
+}</code></pre></div>
+
+<p>The verifier implemented in <code>Xor</code> is </p>
+
+<div><pre><code class="language-scala">object XorWebFormVerifier
+    extends WebFormVerifier[XorErrors[String,VerifiedWebForm]] {
+    ...
+    }</code></pre></div>
+
+<h3 id="toc_18">Task (5b): <code>verify</code></h3>
+
+<p>Review the given verification code in <code>XorWebFormVerifier</code>.</p>
+
+<p>Implement <code>verify</code>, which ties these simpler verifiers together.</p>
+
+<div><pre><code class="language-scala">  def verify(unverifiedWebForm: UnverifiedWebForm):
+      XorErrors[String, VerifiedWebForm] = ...</code></pre></div>
+
+<p>Test your implementation with <code>XorWebFormVerifierExample</code>.</p>
+
+<hr>
+
+<h2 id="toc_19">Part 6: Introducing <code>Validated</code></h2>
+
+<p><code>Validated</code> is another error-handling datatype in Cats.  </p>
+
+<p>A different description relates <code>Xor</code> to sequentiality and <code>Validated</code> to parallelism; and &quot;Monad&quot; to sequentiality and &quot;Applicative Functor&quot; to parallelism.</p>
+
+<div><pre><code class="language-scala">sealed abstract class Validated[+E, +A] extends Product with Serializable
+
+final case class Invalid[+E](e: E) extends Validated[E, Nothing] with Product with Serializable
+
+final case class Valid[+A](a: A) extends Validated[Nothing, A] with Product with Serializable
+
+type ValidatedNel[E, A] = Validated[NonEmptyList[E], A]
+
+type NonEmptyList[A] = OneAnd[List, A]
+</code></pre></div>
+
+<p><a href="http://typelevel.org/cats/api/index.html#cats.data.Validated"><code>Validated</code> ScalaDoc</a></p>
+
+<p><a href="http://typelevel.org/cats/api/index.html#cats.data.Validated$@Invalid%5B+E%5DextendsValidated%5BE,Nothing%5DwithProductwithSerializable"><code>Invalid</code> ScalaDoc</a></p>
+
+<p><a href="http://typelevel.org/cats/api/index.html#cats.data.Validated$@Valid%5B+A%5DextendsValidated%5BNothing,A%5DwithProductwithSerializable"><code>Valid</code> ScalaDoc</a></p>
+
+<p><a href="http://typelevel.org/cats/api/index.html#cats.data.package@ValidatedNel%5BE,A%5D=cats.data.Validated%5Bcats.data.package.NonEmptyList%5BE%5D,A%5D"><code>ValidatedNel</code> ScalaDoc</a></p>
+
+<p><a href="http://typelevel.org/cats/api/index.html#cats.data.package@NonEmptyList%5BA%5D=cats.data.OneAnd%5BList,A%5D"><code>NonEmptyList</code> ScalaDoc</a></p>
+
+<p><a href="http://typelevel.org/cats/tut/validated.html">Cats Validation documentation</a>, section &quot;Of <code>flatMap</code>s and <code>Xor</code>s&quot;: </p>
+
+<blockquote>
+<p>Sometimes the task at hand requires error-accumulation. However, sometimes we want a monadic structure that we can use for sequential validation (such as in a for-comprehension). This leaves us in a bit of a conundrum.</p>
+
+<p>Cats has decided to solve this problem by using separate data structures for error-accumulation (Validated) and short-circuiting monadic behavior (Xor).</p>
+
+<p><b>If you are trying to decide whether you want to use Validated or Xor, a simple heuristic is to use Validated if you want error-accumulation and to otherwise use Xor.</b></p>
+</blockquote>
+
+<hr>
+
+<h2 id="toc_20">Resources</h2>
+
+<p><a href="http://typelevel.org/cats/tut/xor.html"><code>Xor</code> in Cats</a></p>
+
+<p><a href="http://typelevel.org/cats/tut/validated.html"><code>Validated</code> in Cats</a></p>
+
+<p><a href="http://longcao.org/2015/06/15/easing-into-functional-error-handling-in-scala">Easing Into Functional Error Handling in Scala</a></p>
+
+<p><a href="http://eed3si9n.com/herding-cats/Xor.html">Herding Cats: Xor</a></p>
+
+<p><a href="http://eed3si9n.com/herding-cats/Validated.html#Using+NonEmptyList+to+accumulate+failures">Herding Cats: Validated</a></p>
+
+
+
+<script type="text/javascript">
+var _self="undefined"!=typeof window?window:"undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?self:{},Prism=function(){var e=/\blang(?:uage)?-(\w+)\b/i,t=0,n=_self.Prism={util:{encode:function(e){return e instanceof a?new a(e.type,n.util.encode(e.content),e.alias):"Array"===n.util.type(e)?e.map(n.util.encode):e.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\u00a0/g," ")},type:function(e){return Object.prototype.toString.call(e).match(/\[object (\w+)\]/)[1]},objId:function(e){return e.__id||Object.defineProperty(e,"__id",{value:++t}),e.__id},clone:function(e){var t=n.util.type(e);switch(t){case"Object":var a={};for(var r in e)e.hasOwnProperty(r)&&(a[r]=n.util.clone(e[r]));return a;case"Array":return e.map&&e.map(function(e){return n.util.clone(e)})}return e}},languages:{extend:function(e,t){var a=n.util.clone(n.languages[e]);for(var r in t)a[r]=t[r];return a},insertBefore:function(e,t,a,r){r=r||n.languages;var l=r[e];if(2==arguments.length){a=arguments[1];for(var i in a)a.hasOwnProperty(i)&&(l[i]=a[i]);return l}var o={};for(var s in l)if(l.hasOwnProperty(s)){if(s==t)for(var i in a)a.hasOwnProperty(i)&&(o[i]=a[i]);o[s]=l[s]}return n.languages.DFS(n.languages,function(t,n){n===r[e]&&t!=e&&(this[t]=o)}),r[e]=o},DFS:function(e,t,a,r){r=r||{};for(var l in e)e.hasOwnProperty(l)&&(t.call(e,l,e[l],a||l),"Object"!==n.util.type(e[l])||r[n.util.objId(e[l])]?"Array"!==n.util.type(e[l])||r[n.util.objId(e[l])]||(r[n.util.objId(e[l])]=!0,n.languages.DFS(e[l],t,l,r)):(r[n.util.objId(e[l])]=!0,n.languages.DFS(e[l],t,null,r)))}},plugins:{},highlightAll:function(e,t){var a={callback:t,selector:'code[class*="language-"], [class*="language-"] code, code[class*="lang-"], [class*="lang-"] code'};n.hooks.run("before-highlightall",a);for(var r,l=a.elements||document.querySelectorAll(a.selector),i=0;r=l[i++];)n.highlightElement(r,e===!0,a.callback)},highlightElement:function(t,a,r){for(var l,i,o=t;o&&!e.test(o.className);)o=o.parentNode;o&&(l=(o.className.match(e)||[,""])[1],i=n.languages[l]),t.className=t.className.replace(e,"").replace(/\s+/g," ")+" language-"+l,o=t.parentNode,/pre/i.test(o.nodeName)&&(o.className=o.className.replace(e,"").replace(/\s+/g," ")+" language-"+l);var s=t.textContent,u={element:t,language:l,grammar:i,code:s};if(!s||!i)return n.hooks.run("complete",u),void 0;if(n.hooks.run("before-highlight",u),a&&_self.Worker){var c=new Worker(n.filename);c.onmessage=function(e){u.highlightedCode=e.data,n.hooks.run("before-insert",u),u.element.innerHTML=u.highlightedCode,r&&r.call(u.element),n.hooks.run("after-highlight",u),n.hooks.run("complete",u)},c.postMessage(JSON.stringify({language:u.language,code:u.code,immediateClose:!0}))}else u.highlightedCode=n.highlight(u.code,u.grammar,u.language),n.hooks.run("before-insert",u),u.element.innerHTML=u.highlightedCode,r&&r.call(t),n.hooks.run("after-highlight",u),n.hooks.run("complete",u)},highlight:function(e,t,r){var l=n.tokenize(e,t);return a.stringify(n.util.encode(l),r)},tokenize:function(e,t){var a=n.Token,r=[e],l=t.rest;if(l){for(var i in l)t[i]=l[i];delete t.rest}e:for(var i in t)if(t.hasOwnProperty(i)&&t[i]){var o=t[i];o="Array"===n.util.type(o)?o:[o];for(var s=0;s<o.length;++s){var u=o[s],c=u.inside,g=!!u.lookbehind,h=!!u.greedy,f=0,d=u.alias;u=u.pattern||u;for(var p=0;p<r.length;p++){var m=r[p];if(r.length>e.length)break e;if(!(m instanceof a)){u.lastIndex=0;var y=u.exec(m),v=1;if(!y&&h&&p!=r.length-1){var b=r[p+1].matchedStr||r[p+1],k=m+b;if(p<r.length-2&&(k+=r[p+2].matchedStr||r[p+2]),u.lastIndex=0,y=u.exec(k),!y)continue;var w=y.index+(g?y[1].length:0);if(w>=m.length)continue;var _=y.index+y[0].length,P=m.length+b.length;if(v=3,P>=_){if(r[p+1].greedy)continue;v=2,k=k.slice(0,P)}m=k}if(y){g&&(f=y[1].length);var w=y.index+f,y=y[0].slice(f),_=w+y.length,S=m.slice(0,w),O=m.slice(_),j=[p,v];S&&j.push(S);var A=new a(i,c?n.tokenize(y,c):y,d,y,h);j.push(A),O&&j.push(O),Array.prototype.splice.apply(r,j)}}}}}return r},hooks:{all:{},add:function(e,t){var a=n.hooks.all;a[e]=a[e]||[],a[e].push(t)},run:function(e,t){var a=n.hooks.all[e];if(a&&a.length)for(var r,l=0;r=a[l++];)r(t)}}},a=n.Token=function(e,t,n,a,r){this.type=e,this.content=t,this.alias=n,this.matchedStr=a||null,this.greedy=!!r};if(a.stringify=function(e,t,r){if("string"==typeof e)return e;if("Array"===n.util.type(e))return e.map(function(n){return a.stringify(n,t,e)}).join("");var l={type:e.type,content:a.stringify(e.content,t,r),tag:"span",classes:["token",e.type],attributes:{},language:t,parent:r};if("comment"==l.type&&(l.attributes.spellcheck="true"),e.alias){var i="Array"===n.util.type(e.alias)?e.alias:[e.alias];Array.prototype.push.apply(l.classes,i)}n.hooks.run("wrap",l);var o="";for(var s in l.attributes)o+=(o?" ":"")+s+'="'+(l.attributes[s]||"")+'"';return"<"+l.tag+' class="'+l.classes.join(" ")+'" '+o+">"+l.content+"</"+l.tag+">"},!_self.document)return _self.addEventListener?(_self.addEventListener("message",function(e){var t=JSON.parse(e.data),a=t.language,r=t.code,l=t.immediateClose;_self.postMessage(n.highlight(r,n.languages[a],a)),l&&_self.close()},!1),_self.Prism):_self.Prism;var r=document.currentScript||[].slice.call(document.getElementsByTagName("script")).pop();return r&&(n.filename=r.src,document.addEventListener&&!r.hasAttribute("data-manual")&&document.addEventListener("DOMContentLoaded",n.highlightAll)),_self.Prism}();"undefined"!=typeof module&&module.exports&&(module.exports=Prism),"undefined"!=typeof global&&(global.Prism=Prism);
+</script>
+
+<script type="text/javascript">
+Prism.languages.clike={comment:[{pattern:/(^|[^\\])\/\*[\w\W]*?\*\//,lookbehind:!0},{pattern:/(^|[^\\:])\/\/.*/,lookbehind:!0}],string:{pattern:/(["'])(\\(?:\r\n|[\s\S])|(?!\1)[^\\\r\n])*\1/,greedy:!0},"class-name":{pattern:/((?:\b(?:class|interface|extends|implements|trait|instanceof|new)\s+)|(?:catch\s+\())[a-z0-9_\.\\]+/i,lookbehind:!0,inside:{punctuation:/(\.|\\)/}},keyword:/\b(if|else|while|do|for|return|in|instanceof|function|new|try|throw|catch|finally|null|break|continue)\b/,"boolean":/\b(true|false)\b/,"function":/[a-z0-9_]+(?=\()/i,number:/\b-?(?:0x[\da-f]+|\d*\.?\d+(?:e[+-]?\d+)?)\b/i,operator:/--?|\+\+?|!=?=?|<=?|>=?|==?=?|&&?|\|\|?|\?|\*|\/|~|\^|%/,punctuation:/[{}[\];(),.:]/};
+</script>
+
+<script type="text/javascript">
+Prism.languages.java=Prism.languages.extend("clike",{keyword:/\b(abstract|continue|for|new|switch|assert|default|goto|package|synchronized|boolean|do|if|private|this|break|double|implements|protected|throw|byte|else|import|public|throws|case|enum|instanceof|return|transient|catch|extends|int|short|try|char|final|interface|static|void|class|finally|long|strictfp|volatile|const|float|native|super|while)\b/,number:/\b0b[01]+\b|\b0x[\da-f]*\.?[\da-fp\-]+\b|\b\d*\.?\d+(?:e[+-]?\d+)?[df]?\b/i,operator:{pattern:/(^|[^.])(?:\+[+=]?|-[-=]?|!=?|<<?=?|>>?>?=?|==?|&[&=]?|\|[|=]?|\*=?|\/=?|%=?|\^=?|[?:~])/m,lookbehind:!0}}),Prism.languages.insertBefore("java","function",{annotation:{alias:"punctuation",pattern:/(^|[^.])@\w+/,lookbehind:!0}});
+</script>
+
+<script type="text/javascript">
+Prism.languages.scala=Prism.languages.extend("java",{keyword:/<-|=>|\b(?:abstract|case|catch|class|def|do|else|extends|final|finally|for|forSome|if|implicit|import|lazy|match|new|null|object|override|package|private|protected|return|sealed|self|super|this|throw|trait|try|type|val|var|while|with|yield)\b/,string:/"""[\W\w]*?"""|"(?:[^"\\\r\n]|\\.)*"|'(?:[^\\\r\n']|\\.[^\\']*)'/,builtin:/\b(?:String|Int|Long|Short|Byte|Boolean|Double|Float|Char|Any|AnyRef|AnyVal|Unit|Nothing)\b/,number:/\b(?:0x[\da-f]*\.?[\da-f]+|\d*\.?\d+e?\d*[dfl]?)\b/i,symbol:/'[^\d\s\\]\w*/}),delete Prism.languages.scala["class-name"],delete Prism.languages.scala["function"];
+</script>
+
+<script type="text/x-mathjax-config">
+if (typeof MathJaxListener !== 'undefined') {
+  MathJax.Hub.Register.StartupHook('End', function () {
+    MathJaxListener.invokeCallbackForKey_('End');
+  });
+}
+</script>
+
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+</body>
+
+</html>

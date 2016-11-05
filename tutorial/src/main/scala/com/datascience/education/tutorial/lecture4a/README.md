@@ -1,4 +1,4 @@
-# [`Xor`](http://typelevel.org/cats/api/index.html#cats.data.Xor) Lab
+# [`Xor`](http://typelevel.org/cats/api/index.html#cats.data.Xor) Tutorial
 
 
 -----------------------------------
@@ -7,7 +7,7 @@
 
 `Xor`, also known as `Either`, is an error-handling datatype like `Option`.  Its primary difference is that it can carry information other than `None` in its failure case.  `Option` has one generic type; `Xor` has two.  The type of this failure information fills generic `A` in `Left` and in `Xor`, below.
 
-```
+```scala
 sealed abstract class Xor[+A, +B] extends Product with Serializable
 
 final case class Left[+A](a: A) extends Xor[A, Nothing] with Product with Serializable
@@ -18,7 +18,7 @@ final case class Right[+B](b: B) extends Xor[Nothing, B] with Product with Seria
 
 Compare with `Option`
 
-```
+```scala
 trait Option[+A] //base trait
 
 case class Some[+A](get: A) extends Option[A]
@@ -34,7 +34,7 @@ The left side of `Xor` is *typically* an `Exception` of some form, and is usuall
 
 Nevertheless, sometimes we *do* want to operate on the "left" type.  [`leftMap` exists for this purpose.](http://typelevel.org/cats/api/index.html#cats.data.Xor@leftMap[C](f:A=>C):cats.data.Xor[C,B])
 
-```
+```scala
 def leftMap[C](f: (A) ⇒ C): Xor[C, B]
 ```
 
@@ -44,7 +44,7 @@ The implementation of `Xor` in the Scala STL, [named `Either`](http://www.scala-
 `Xor` is best suited to *sequential* dependencies.
 
 
-```
+```scala
 	val xorA: Xor[Exception, A] = ...
 	def produceB(a: A): Xor[Exception, B] = ...
 	def produceC(b: B): Xor[Exception, C] = ...
@@ -69,12 +69,12 @@ The implementation of `Xor` in the Scala STL, [named `Either`](http://www.scala-
 
 ## Part 2: Safe Division with `Xor`
 
-`code/labAnswers/src/main/scala/labAnswers/lecture4a/SafeDivision.scala`
+`scala-class/tutorial/src/main/scala/com/datascience/education/tutorial/lecture4a/SafeDivision.scala`
 
 We re-implement our safe division exercises from Tutorial 4, replacing `Option` with `Xor`.
 
 
-```
+```scala
   def safeDivInt(numerator: Int, denominator: Int): Option[Int] =
     try {
       Some(numerator / denominator)
@@ -110,7 +110,7 @@ Which of these errors occurs is lost information -- `Option`'s `None` is not inf
 
 Implement
 
-```
+```scala
   def safeDivInt(numerator: Int, denominator: Int): Xor[Exception, Int] = ...
 ```
 
@@ -122,7 +122,7 @@ Test your implementation with `SafeDivIntXorExamples`.
 
 Implement 
 
-```
+```scala
   def squareRootFrac(numerator: Int, denominator: Int): Xor[Exception, Double] = ...
 ```
 
@@ -136,7 +136,7 @@ Test your implementation with `SquareRootFracXorExamples`.
 
 ## Part 3: Mock Client
 
-`code/labAnswers/src/main/scala/labAnswers/lecture4a/RequestResponse.scala`
+`scala-class/tutorial/src/main/scala/com/datascience/education/tutorial/lecture4a/RequestResponse.scala`
 
 
 `RequestResponse` contains side-effecting code that resembles poor Java usage.  In Java and Scala, it is permitted to throw `Exception`s or `Throwable`s and leave them unhandled ([in Java-speak, unchecked](http://crunchify.com/better-understanding-on-checked-vs-unchecked-exceptions-how-to-handle-exception-better-way-in-java/)).  Lacking programmer directives on how to handle these unchecked exceptions, even trivial exceptions may crash the program in a run-time error -- the one-size-fits-all solution to exception handling.
@@ -157,7 +157,7 @@ Use [`Xor.catchOnly`](http://typelevel.org/cats/api/index.html#cats.data.Xor$@ca
 Use `flatMap` on `Xor` to chain together `sendRequest` and `unpackResponse`.
 
 
-```
+```scala
 sealed abstract class Xor[+A, +B] extends Product with Serializable {
   ...
   def flatMap[AA >: A, D](f: (B) ⇒ Xor[AA, D]): Xor[AA, D]
@@ -169,7 +169,7 @@ Test the catching of these exceptions with `RequestResponseExample`.  The testin
 
 Tweak the thresholds in `sendRequestUnsafe` and `unpackResponseUnsafe` to test your error handling.
 
-```
+```scala
     if (rand.nextDouble() < 0.02) ...
 ```
 
@@ -212,7 +212,7 @@ Analogously, a threading library for a single-core machine is single-threaded fr
 
 ## Part 4: Combining Payloads
 
-`code/labAnswers/src/main/scala/labAnswers/lecture4a/ResponseList.scala`
+`scala-class/tutorial/src/main/scala/com/datascience/education/tutorial/lecture4a/ResponseList.scala`
 
 ### Task (4a): `parsePayload`
 
@@ -224,7 +224,7 @@ Read the [JavaDoc for `Integer.parseInt`](https://docs.oracle.com/javase/7/docs/
 
 Implement `pipeline`, which chains together `client` from the previous <b>Part</b> and `parsePayload`.  Once again, use `flatMap` on `Xor`.  Complete `pipeline`s signature.
 
-```
+```scala
 sealed abstract class Xor[+A, +B] extends Product with Serializable {
   ...
   def flatMap[AA >: A, D](f: (B) ⇒ Xor[AA, D]): Xor[AA, D]
@@ -241,7 +241,7 @@ Once again, name the concrete types of generics `A`, `B`, `AA`, and `D`.  This w
 
 Implement `sum` with method `TraverseXor.traverse`, `map`, and `pipeline`.
 
-```
+```scala
 	def sum(lr: List[Request]): XorException[Int] = ???
 ```
 
@@ -251,7 +251,7 @@ Test your implementation with `ResponseListExample`.
 
 Tweak the thresholds in `sendRequestUnsafe` and `unpackResponseUnsafe` to test your error handling.
 
-```
+```scala
     if (rand.nextDouble() < 0.02) ...
 ```
 
@@ -260,13 +260,13 @@ Tweak the thresholds in `sendRequestUnsafe` and `unpackResponseUnsafe` to test y
 
 ## Part 5: `WebFormVerifier` with `Xor`
 
-`code/labAnswers/src/main/scala/labAnswers/lecture4a/WebForm.scala`
+`scala-class/tutorial/src/main/scala/com/datascience/education/tutorial/lecture4a/WebForm.scala`
 
-`code/labAnswers/src/main/scala/labAnswers/lecture4a/WebFormVerifier.scala`
+`scala-class/tutorial/src/main/scala/com/datascience/education/tutorial/lecture4a/WebFormVerifier.scala`
 
-`code/labAnswers/src/main/scala/labAnswers/lecture4a/XorWebForm.scala`
+`scala-class/tutorial/src/main/scala/com/datascience/education/tutorial/lecture4a/XorWebForm.scala`
 
-`code/labAnswers/src/main/scala/labAnswers/lecture4a/TraverseXor.scala`
+`scala-class/tutorial/src/main/scala/com/datascience/education/tutorial/lecture4a/TraverseXor.scala`
 
 
 The defining difference between `Xor` and `Validated` is *failing-fast* versus *accumulation*.
@@ -280,7 +280,7 @@ The defining difference between `Xor` and `Validated` is *failing-fast* versus *
 
 An attempt is made to prevent `VerifiedWebForm` from being created in any place.  This would make it too easy for another programmer to skip the verification step, and convert `UnverifiedWebForm` directly to `VerifiedWebForm`.
 
-```
+```scala
 trait WebForm {
   def firstName: String
   def lastName: String
@@ -296,7 +296,7 @@ trait VerifiedWebForm extends WebForm
 
 The constructor for `VerifiedWebForm` resides in trait `WebFormVerifier`.
 
-```
+```scala
 trait WebFormVerifier[P <: Product] {
 
   private case class VerifiedWebFormImpl(
@@ -315,7 +315,7 @@ trait WebFormVerifier[P <: Product] {
 
 The verifier implemented in `Xor` is 
 
-```
+```scala
 object XorWebFormVerifier
     extends WebFormVerifier[XorErrors[String,VerifiedWebForm]] {
 	...
@@ -328,7 +328,7 @@ Review the given verification code in `XorWebFormVerifier`.
 
 Implement `verify`, which ties these simpler verifiers together.
 
-```
+```scala
   def verify(unverifiedWebForm: UnverifiedWebForm):
       XorErrors[String, VerifiedWebForm] = ...
 ```
@@ -345,7 +345,7 @@ Test your implementation with `XorWebFormVerifierExample`.
 
 A different description relates `Xor` to sequentiality and `Validated` to parallelism; and "Monad" to sequentiality and "Applicative Functor" to parallelism.
 
-```
+```scala
 sealed abstract class Validated[+E, +A] extends Product with Serializable
 
 final case class Invalid[+E](e: E) extends Validated[E, Nothing] with Product with Serializable
