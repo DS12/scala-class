@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>README_ANSWERS.html</title>
+
+</head>
+
+<body>
+
+<h1 id="xor-lab---answers"><a href="http://typelevel.org/cats/api/index.html#cats.data.Xor"><code>Xor</code></a> Lab - Answers</h1>
+<hr />
+<h2 id="part-1-introducing-xor">Part 1: Introducing <code>Xor</code></h2>
+<p><code>Xor</code>, also known as <code>Either</code>, is an error-handling datatype like <code>Option</code>. Its primary difference is that it can carry information other than <code>None</code> in its failure case. <code>Option</code> has one generic type; <code>Xor</code> has two. The type of this failure information fills generic <code>A</code> in <code>Left</code> and in <code>Xor</code>, below.</p>
+<pre><code>sealed abstract class Xor[+A, +B] extends Product with Serializable
+
+final case class Left[+A](a: A) extends Xor[A, Nothing] with Product with Serializable
+
+final case class Right[+B](b: B) extends Xor[Nothing, B] with Product with Serializable
+</code></pre>
+<p>Compare with <code>Option</code></p>
+<pre><code>trait Option[+A] //base trait
+
+case class Some[+A](get: A) extends Option[A]
+
+case object None extends Option[Nothing]</code></pre>
+<p><a href="http://typelevel.org/cats/tut/xor.html">Read the official Cats <code>Xor</code> documentation</a></p>
+<p>The left side of <code>Xor</code> is <em>typically</em> an <code>Exception</code> of some form, and is usually intended to be the &quot;end of the chain.&quot; To prioritize typical usage, combinators on <code>Xor</code> are &quot;right-biased.&quot;</p>
+<p>Nevertheless, sometimes we <em>do</em> want to operate on the &quot;left&quot; type. <a href="http://typelevel.org/cats/api/index.html#cats.data.Xor@leftMap%5BC%5D(f:A=%3EC):cats.data.Xor%5BC,B%5D"><code>leftMap</code> exists for this purpose.</a></p>
+<pre><code>def leftMap[C](f: (A) ⇒ C): Xor[C, B]</code></pre>
+<p>The implementation of <code>Xor</code> in the Scala STL, <a href="http://www.scala-lang.org/api/current/index.html#scala.util.Either">named <code>Either</code></a>, is not left or right biased. Call <code>left</code> or <code>right</code> on this <code>Either</code> to produce a <code>LeftProjection</code> or <code>RightProjection</code>. This implementation adds boilerplate for the majority of use cases, most operatings being on the &quot;right&quot; type.</p>
+<p><code>Xor</code> is best suited to <em>sequential</em> dependencies.</p>
+<pre><code>    val xorA: Xor[Exception, A] = ...
+    def produceB(a: A): Xor[Exception, B] = ...
+    def produceC(b: B): Xor[Exception, C] = ...
+
+    val xorD: Xor[Exception, C] = 
+      xorA.flatMap { a =&gt;
+        produceB(a).map { b =&gt;
+          produceC(b)
+        }
+      }
+</code></pre>
+<p><a href="http://typelevel.org/cats/api/index.html#cats.data.Xor"><code>Xor</code> ScalaDoc</a></p>
+<p><a href="http://typelevel.org/cats/api/index.html#cats.data.Xor$@Left%5B+A%5DextendsXor%5BA,Nothing%5DwithProductwithSerializable"><code>Left</code> ScalaDoc</a></p>
+<p><a href="http://typelevel.org/cats/api/index.html#cats.data.Xor$@Right%5B+B%5DextendsXor%5BNothing,B%5DwithProductwithSerializable"><code>Right</code> ScalaDoc</a></p>
+<pre><code>
+sealed abstract class Xor[+A, +B] extends Product with Serializable {
+  ...
+  def flatMap[AA &gt;: A, D](f: B =&gt; Xor[AA, D]): Xor[AA, D] = this match {
+    case l @ Xor.Left(_) =&gt; l:  Left[A]   =:=    Xor[ A , Nothing ]
+    case Xor.Right(b) =&gt; f(b): Xor[AA, D]
+  }
+  ...
+
+}
+
+</code></pre>
+<hr />
+<h2 id="part-2-safe-division-with-xor">Part 2: Safe Division with <code>Xor</code></h2>
+<p><code>code/labAnswers/src/main/scala/labAnswers/lecture4a/SafeDivision.scala</code></p>
+<p>We re-implement our safe division exercises from Tutorial 4, replacing <code>Option</code> with <code>Xor</code>.</p>
+<pre><code>  def safeDivInt(numerator: Int, denominator: Int): Option[Int] =
+    try {
+      Some(numerator / denominator)
+    } catch {
+      case ae: java.lang.ArithmeticException =&gt; None
+    }
+
+  def squareRootFrac(numerator: Int, denominator: Int): Option[Double] =
+    safeDivInt(numerator, denominator).flatMap { _ =&gt;
+      val squareRoot: Double =
+        math.sqrt(numerator.toDouble / denominator)
+      if (squareRoot.isNaN)
+        None
+      else
+        Some(squareRoot)
+    }
+
+
+  def squareRootFrac(tup: (Int, Int)): Option[Double] =
+    squareRootFrac(tup._1, tup._2)</code></pre>
+<p><code>squareRootFrac</code> is intended to take the square root of a fraction.</p>
+<p><code>safeDivInt</code> will catch a divide-by-zero error (<code>java.lang.ArithmeticException</code>), and <code>squareRootFrac</code> will catch any undefined number (<code>Double.NaN</code>) produced by <code>math.sqrt</code> -- usually by a negative argument.</p>
+<p>Which of these errors occurs is lost information -- <code>Option</code>'s <code>None</code> is not informative.</p>
+<p><code>Xor</code> will be more informative.</p>
+<h3 id="task-2a-safedivisionxor.safedivint">Task (2a): <code>SafeDivisionXor.safeDivInt</code></h3>
+<p>Implement</p>
+<pre><code>  def safeDivInt(numerator: Int, denominator: Int): Xor[Exception, Int] = ...</code></pre>
+<p>Test your implementation with <code>SafeDivIntXorExamples</code>.</p>
+<h4 id="answer">Answer</h4>
+<pre><code>  def safeDivInt(numerator: Int, denominator: Int): Xor[Exception, Int] =
+    try {
+      Right(numerator / denominator)
+    } catch {
+      case ae: java.lang.ArithmeticException =&gt;
+        Left(ae)
+    }
+    
+  // alternative answer
+  def safeDivInt2(numerator: Int, denominator: Int): Xor[Exception, Int] =
+    Xor.catchOnly[Exception](numerator / denominator)
+    </code></pre>
+<h3 id="task-2b-safedivisionxor.squarerootfrac">Task (2b): <code>SafeDivisionXor.squareRootFrac</code></h3>
+<p>Implement</p>
+<pre><code>  def squareRootFrac(numerator: Int, denominator: Int): Xor[Exception, Double] = ...</code></pre>
+<p>Test your implementation with <code>SquareRootFracXorExamples</code>.</p>
+<h4 id="answer-1">Answer</h4>
+<pre><code>  def squareRootFrac(numerator: Int, denominator: Int):
+      Xor[Exception, Double] =
+    safeDivInt(numerator, denominator).flatMap { _ =&gt;
+      val squareRoot: Double =
+        math.sqrt(numerator.toDouble / denominator)
+      if (squareRoot.isNaN)
+        Left(new Exception(&quot;Square root is undefined&quot;))
+      else
+        Right(squareRoot)
+    }</code></pre>
+<hr />
+<h2 id="part-3-mock-client">Part 3: Mock Client</h2>
+<p><code>code/labAnswers/src/main/scala/labAnswers/lecture4a/RequestResponse.scala</code></p>
+<p><code>RequestResponse</code> contains side-effecting code that resembles poor Java usage. In Java and Scala, it is permitted to throw <code>Exception</code>s or <code>Throwable</code>s and leave them unhandled (<a href="http://crunchify.com/better-understanding-on-checked-vs-unchecked-exceptions-how-to-handle-exception-better-way-in-java/">in Java-speak, unchecked</a>). Lacking programmer directives on how to handle these unchecked exceptions, even trivial exceptions may crash the program in a run-time error -- the one-size-fits-all solution to exception handling.</p>
+<p><a href="http://stackoverflow.com/questions/6083248/is-it-a-bad-practice-to-catch-throwable">Equally dangerous is catching the <em>wrong</em> <code>Exception</code>s -- too wide of a net.</a> The rule of thumb is &quot;Don't catch fatal exceptions -- let the JVM deal with them.&quot; This explains method <a href="http://typelevel.org/cats/api/index.html#cats.data.Xor$@catchNonFatal%5BA%5D(f:=%3EA):cats.data.Xor%5BThrowable,A%5D"><code>Xor.catchNonFatal</code>.</a></p>
+<h3 id="task-3a-implement-sendrequest">Task (3a): implement <code>sendRequest</code></h3>
+<p>Use <a href="http://typelevel.org/cats/api/index.html#cats.data.Xor$@catchOnly%5BT%3E:Null%3C:Throwable%5D:XorFunctions.this.CatchOnlyPartiallyApplied%5BT%5D"><code>Xor.catchOnly</code></a> to &quot;catch only&quot; <code>BadRequestExceptions</code> in <code>sendRequestUnsafe</code>.</p>
+<h3 id="task-3b-implement-unpackresponse">Task (3b): implement <code>unpackResponse</code></h3>
+<p>Use <a href="http://typelevel.org/cats/api/index.html#cats.data.Xor$@catchOnly%5BT%3E:Null%3C:Throwable%5D:XorFunctions.this.CatchOnlyPartiallyApplied%5BT%5D"><code>Xor.catchOnly</code></a> to &quot;catch only&quot; <code>CorruptPayloadException</code>s in <code>unpackResponseUnsafe</code>.</p>
+<h3 id="task-3c-implement-client">Task (3c): implement <code>client</code></h3>
+<p>Use <code>flatMap</code> on <code>Xor</code> to chain together <code>sendRequest</code> and <code>unpackResponse</code>.</p>
+<pre><code>sealed abstract class Xor[+A, +B] extends Product with Serializable {
+  ...
+  def flatMap[AA &gt;: A, D](f: (B) ⇒ Xor[AA, D]): Xor[AA, D]
+  ...
+}</code></pre>
+<p>Test the catching of these exceptions with <code>RequestResponseExample</code>. The testing code relies on a random number generator, so run it a few times to see both <code>BadRequestException</code> and <code>CorruptPayloadException</code> occur.</p>
+<p>Tweak the thresholds in <code>sendRequestUnsafe</code> and <code>unpackResponseUnsafe</code> to test your error handling.</p>
+<pre><code>    if (rand.nextDouble() &lt; 0.02) ...</code></pre>
+<h4 id="subtask">Subtask</h4>
+<p>In your comments, name the concrete types of generics <code>A</code>, <code>B</code>, <code>AA</code>, and <code>D</code> in your usage of <code>flatMap</code>.</p>
+<h4 id="answer-2">Answer</h4>
+<pre><code>  def sendRequest(request: Request):
+      Xor[BadRequestException, Response] =
+    Xor.catchOnly[BadRequestException](sendRequestUnsafe(request))
+
+  // Task
+  def unpackResponse(response: Response)(outOfMemory: Boolean):
+      Xor[CorruptPayloadException, Payload] =
+    Xor.catchOnly[CorruptPayloadException](
+      unpackResponseUnsafe(response, outOfMemory)
+    )
+
+  // Task
+  def client(request: Request, outOfMemory: Boolean = false):
+      Xor[ClientException, Payload] =
+    sendRequest(request).flatMap(unpackResponse(_)(outOfMemory))
+</code></pre>
+<pre><code>A = BadRequestException
+
+B = Response
+
+AA = ClientException
+
+D = Payload</code></pre>
+<pre><code>[info] Running labAnswers.lecture4a.RequestResponseExample 
+------------------
+sending request: Request(K8bTe8KR)
+Right(Payload(Request for K8bTe8KR received and fulfilled.))
+------------------
+sending request: Request(5YPLQYeD)
+Right(Payload(Request for 5YPLQYeD received and fulfilled.))
+------------------
+sending request: Request(6IurMOw4)
+Right(Payload(Request for 6IurMOw4 received and fulfilled.))
+------------------
+sending request: Request(KaulKwxF)
+Right(Payload(Request for KaulKwxF received and fulfilled.))
+------------------
+sending request: Request(97LbgjRN)
+Right(Payload(Request for 97LbgjRN received and fulfilled.))
+------------------
+sending request: Request(DnWPGkfO)
+Left(labAnswers.lecture4a.RequestResponse$CorruptPayloadException)
+------------------
+sending request: Request(GFbqA29Q)
+Left(labAnswers.lecture4a.RequestResponse$BadRequestException)
+------------------
+sending request: Request(XnlpjgvI)
+Right(Payload(Request for XnlpjgvI received and fulfilled.))
+
+</code></pre>
+<h3 id="task-3d-test-out-of-memory-error">Task (3d): Test out-of-memory error</h3>
+<p>Uncomment the block of code under &quot;Catastrophic exception should not be caught&quot;.</p>
+<p>Run <code>RequestResponseExample</code> again, and ensure that a run-time exception is thrown. This verifies that <code>client</code> is not a &quot;catch-all&quot; exception handler.</p>
+<p><a href="http://stackoverflow.com/questions/511013/how-to-handle-outofmemoryerror-in-java"><code>new Exception(&quot;out of memory&quot;)</code> is a mock of the real <code>OutOfMemoryError</code> in Java.</a></p>
+<p>Read section &quot;Xor in the small, Xor in the large&quot; of <a href="http://typelevel.org/cats/tut/xor.html">the official Cats Xor tutorial</a> to see what happens when two <code>Xor</code>s of unrelated <code>Left</code> types are <code>flatMap</code>ped together. tldr; the compiler reverts to the most recent common ancestor.</p>
+<p>Comment:</p>
+<p>The terms <em>synchronous</em> and <em>asynchronous</em> are commonly referred to in discussions of networked processes.</p>
+<p>The earliest HTTP frameworks were sychronous. The most primitive server of a request-response cycle is a simple for-loop -- each iteration of the loop handles one request and one response. A web application developer using this primitive HTTP framework would think of their server process at this level.</p>
+<p>Modern HTTP frameworks <a href="http://stackoverflow.com/questions/5971301/determining-synchronous-vs-asynchronous-in-web-applications">support asynchrony between a request and its response, in one form or another.</a></p>
+<p>The distinction between synchronous and asynchronous actually depends on perspective; to the perspective of the code implementing any HTTP framework, a request-response cycle is synchronous. To the perspective of a web application built on top an asynchronous HTTP framework, a request-response cycle is asynchronous.</p>
+<p>Analogously, a threading library for a single-core machine is single-threaded from the perspective of its implementation.</p>
+<p><code>sendRequest</code> is not a mock server, but a mock client. A client may be implemented to be synchronous or asynchronous to the perspective of its user.</p>
+<p><code>sendRequest</code> is a mock synchronous client.</p>
+<h4 id="answer-3">Answer</h4>
+<pre><code>Catastrophic exception should not be caught
+[error] (run-main-5) java.lang.Exception: out of memory
+java.lang.Exception: out of memory
+    at labAnswers.lecture4a.RequestResponse$.unpackResponseUnsafe(RequestResponse.scala:50)
+    at labAnswers.lecture4a.RequestResponse$$anonfun$unpackResponse$1.apply(RequestResponse.scala:74)
+    at labAnswers.lecture4a.RequestResponse$$anonfun$unpackResponse$1.apply(RequestResponse.scala:74)
+    at cats.data.XorFunctions$CatchOnlyPartiallyApplied.apply(Xor.scala:301)</code></pre>
+<hr />
+<h2 id="part-4-combining-payloads">Part 4: Combining Payloads</h2>
+<p><code>code/labAnswers/src/main/scala/labAnswers/lecture4a/ResponseList.scala</code></p>
+<h3 id="task-4a-parsepayload">Task (4a): <code>parsePayload</code></h3>
+<p>Implement ... Complete its signature.</p>
+<p>Read the <a href="https://docs.oracle.com/javase/7/docs/api/java/lang/Integer.html#parseInt(java.lang.String)">JavaDoc for <code>Integer.parseInt</code></a> and determine the type of <code>Exception</code> that <code>parseInt</code> throws.</p>
+<h3 id="task-4b-pipeline">Task (4b): <code>pipeline</code></h3>
+<p>Implement <code>pipeline</code>, which chains together <code>client</code> from the previous <b>Part</b> and <code>parsePayload</code>. Once again, use <code>flatMap</code> on <code>Xor</code>. Complete <code>pipeline</code>s signature.</p>
+<pre><code>sealed abstract class Xor[+A, +B] extends Product with Serializable {
+  ...
+  def flatMap[AA &gt;: A, D](f: (B) ⇒ Xor[AA, D]): Xor[AA, D]
+  ...
+}</code></pre>
+<h4 id="subtask-1">Subtask</h4>
+<p>Once again, name the concrete types of generics <code>A</code>, <code>B</code>, <code>AA</code>, and <code>D</code>. This will be useful for completing the signature of <code>pipeline</code>.</p>
+<h4 id="answer-4">Answer</h4>
+<pre><code>  def parsePayload(payload: Payload): Xor[NumberFormatException, Int] =
+    Xor.catchOnly[NumberFormatException] {
+      Integer.parseInt(payload.pay)
+    }
+
+
+  // Task
+  def pipeline(request: Request): Xor[Exception, Int] =
+    client(request).flatMap(parsePayload)
+
+
+A = ClientException
+B = Payload
+AA = Exception
+D = Int</code></pre>
+<h3 id="task-4c-sum">Task (4c): <code>sum</code></h3>
+<p>Implement <code>sum</code> with method <code>TraverseXor.traverse</code>, <code>map</code>, and <code>pipeline</code>.</p>
+<pre><code>    def sum(lr: List[Request]): XorException[Int] = ???</code></pre>
+<p><code>sum</code> should add the Integers parsed by <code>pipeline</code>. If any Integer/Response is corrupted, the summation fails.</p>
+<p>Test your implementation with <code>ResponseListExample</code>.</p>
+<p>Tweak the thresholds in <code>sendRequestUnsafe</code> and <code>unpackResponseUnsafe</code> to test your error handling.</p>
+<pre><code>    if (rand.nextDouble() &lt; 0.02) ...</code></pre>
+<h4 id="answer-5">Answer</h4>
+<pre><code>  // Task
+  def sum(lr: List[Request]): XorException[Int] =
+    traverse(lr)(pipeline).map { list =&gt;
+      list.foldLeft(0)(_ + _)
+    }</code></pre>
+<pre><code>[info] Running labAnswers.lecture4a.ResponseListExample 
+List of valid Requests:
+List(Request(1), Request(2), Request(3), Request(4), Request(5), Request(6), Request(7), Request(8), Request(9), Request(10))
+Right(55)
+----------------------
+List of possibly corrupt Payloads:
+List(Request(foo), Request(1), Request(2), Request(3), Request(4), Request(5), Request(6), Request(7), Request(8), Request(9), Request(10), Request(bar), Request(5))
+Left(java.lang.NumberFormatException: For input string: &quot;foo&quot;)
+
+</code></pre>
+<hr />
+<h2 id="part-5-webformverifier-with-xor">Part 5: <code>WebFormVerifier</code> with <code>Xor</code></h2>
+<p><code>code/labAnswers/src/main/scala/labAnswers/lecture4a/WebForm.scala</code></p>
+<p><code>code/labAnswers/src/main/scala/labAnswers/lecture4a/WebFormVerifier.scala</code></p>
+<p><code>code/labAnswers/src/main/scala/labAnswers/lecture4a/XorWebForm.scala</code></p>
+<p><code>code/labAnswers/src/main/scala/labAnswers/lecture4a/TraverseXor.scala</code></p>
+<p>The defining difference between <code>Xor</code> and <code>Validated</code> is <em>failing-fast</em> versus <em>accumulation</em>.</p>
+<p><code>Xor</code> is intended for <em>chaining</em> a sequence of problematic operations -- any break of a link will prematurely terminate the sequence of operations.</p>
+<p><code>Validated</code> is intended to accumulate errors.</p>
+<h3 id="a-layout">(5a): Layout</h3>
+<p>An attempt is made to prevent <code>VerifiedWebForm</code> from being created in any place. This would make it too easy for another programmer to skip the verification step, and convert <code>UnverifiedWebForm</code> directly to <code>VerifiedWebForm</code>.</p>
+<pre><code>trait WebForm {
+  def firstName: String
+  def lastName: String
+  def phoneNumber: Long
+  def email: String
+}
+
+case class UnverifiedWebForm(firstName: String, lastName: String,
+  phoneNumber: Long, email: String) extends WebForm
+
+trait VerifiedWebForm extends WebForm</code></pre>
+<p>The constructor for <code>VerifiedWebForm</code> resides in trait <code>WebFormVerifier</code>.</p>
+<pre><code>trait WebFormVerifier[P &lt;: Product] {
+
+  private case class VerifiedWebFormImpl(
+    firstName: String, lastName: String,
+    phoneNumber: Long, email: String) extends VerifiedWebForm
+
+  protected def constructVerifiedWebForm(
+    firstName: String, lastName: String,
+    phoneNumber: Long, email: String): VerifiedWebForm =
+    VerifiedWebFormImpl(firstName, lastName, phoneNumber, email)
+
+  def verify(unverifiedWebForm: UnverifiedWebForm): P
+
+}</code></pre>
+<p>The verifier implemented in <code>Xor</code> is</p>
+<pre><code>object XorWebFormVerifier
+    extends WebFormVerifier[XorErrors[String,VerifiedWebForm]] {
+    ...
+    }</code></pre>
+<h3 id="task-5b-verify">Task (5b): <code>verify</code></h3>
+<p>Review the given verification code in <code>XorWebFormVerifier</code>.</p>
+<p>Implement <code>verify</code>, which ties these simpler verifiers together.</p>
+<pre><code>  def verify(unverifiedWebForm: UnverifiedWebForm):
+      XorErrors[String, VerifiedWebForm] = ...</code></pre>
+<p>Test your implementation with <code>XorWebFormVerifierExample</code>.</p>
+<h4 id="answer-6">Answer</h4>
+<pre><code>  def verify(unverifiedWebForm: UnverifiedWebForm):
+      XorErrors[String, VerifiedWebForm] = {
+
+    val unverifiedFirstName: String = unverifiedWebForm.firstName
+    val unverifiedLastName: String = unverifiedWebForm.lastName
+    val unverifiedPhoneNumber: Long = unverifiedWebForm.phoneNumber
+    val unverifiedEmail: String = unverifiedWebForm.email
+
+    val xorVerifiedFirstName: XorErrors[String, String] =
+      validateName(unverifiedFirstName)
+    val xorVerifiedLastName: XorErrors[String, String] =
+      validateName(unverifiedLastName)
+    val xorVerifiedPhoneNumber: XorErrors[String, Long] =
+      validatePhoneNumber(unverifiedPhoneNumber)
+    val xorVerifiedEmail: XorErrors[String, String] =
+      validateEmailAddress(unverifiedEmail)
+
+
+
+    // Note the use of the case class constructor
+    val xorVerifiedWebForm: XorErrors[String, VerifiedWebForm] =
+      map4(xorVerifiedFirstName,
+        xorVerifiedLastName,
+        xorVerifiedPhoneNumber,
+        xorVerifiedEmail)(constructVerifiedWebForm)
+
+    xorVerifiedWebForm
+
+  }</code></pre>
+<hr />
+<h2 id="part-6-introducing-validated">Part 6: Introducing <code>Validated</code></h2>
+<p><code>Validated</code> is another error-handling datatype in Cats.</p>
+<p>A different description relates <code>Xor</code> to sequentiality and <code>Validated</code> to parallelism; and &quot;Monad&quot; to sequentiality and &quot;Applicative Functor&quot; to parallelism.</p>
+<pre><code>sealed abstract class Validated[+E, +A] extends Product with Serializable
+
+final case class Invalid[+E](e: E) extends Validated[E, Nothing] with Product with Serializable
+
+final case class Valid[+A](a: A) extends Validated[Nothing, A] with Product with Serializable
+
+type ValidatedNel[E, A] = Validated[NonEmptyList[E], A]
+
+type NonEmptyList[A] = OneAnd[List, A]
+</code></pre>
+<p><a href="http://typelevel.org/cats/api/index.html#cats.data.Validated"><code>Validated</code> ScalaDoc</a></p>
+<p><a href="http://typelevel.org/cats/api/index.html#cats.data.Validated$@Invalid%5B+E%5DextendsValidated%5BE,Nothing%5DwithProductwithSerializable"><code>Invalid</code> ScalaDoc</a></p>
+<p><a href="http://typelevel.org/cats/api/index.html#cats.data.Validated$@Valid%5B+A%5DextendsValidated%5BNothing,A%5DwithProductwithSerializable"><code>Valid</code> ScalaDoc</a></p>
+<p><a href="http://typelevel.org/cats/api/index.html#cats.data.package@ValidatedNel%5BE,A%5D=cats.data.Validated%5Bcats.data.package.NonEmptyList%5BE%5D,A%5D"><code>ValidatedNel</code> ScalaDoc</a></p>
+<p><a href="http://typelevel.org/cats/api/index.html#cats.data.package@NonEmptyList%5BA%5D=cats.data.OneAnd%5BList,A%5D"><code>NonEmptyList</code> ScalaDoc</a></p>
+<p><a href="http://typelevel.org/cats/tut/validated.html">Cats Validation documentation</a>, section &quot;Of <code>flatMap</code>s and <code>Xor</code>s&quot;:</p>
+<blockquote>
+<p>Sometimes the task at hand requires error-accumulation. However, sometimes we want a monadic structure that we can use for sequential validation (such as in a for-comprehension). This leaves us in a bit of a conundrum.</p>
+</blockquote>
+<blockquote>
+<p>Cats has decided to solve this problem by using separate data structures for error-accumulation (Validated) and short-circuiting monadic behavior (Xor).</p>
+</blockquote>
+<blockquote>
+<p><b>If you are trying to decide whether you want to use Validated or Xor, a simple heuristic is to use Validated if you want error-accumulation and to otherwise use Xor.</b></p>
+</blockquote>
+<hr />
+<h2 id="resources">Resources</h2>
+<p><a href="http://typelevel.org/cats/tut/xor.html"><code>Xor</code> in Cats</a></p>
+<p><a href="http://typelevel.org/cats/tut/validated.html"><code>Validated</code> in Cats</a></p>
+<p><a href="http://longcao.org/2015/06/15/easing-into-functional-error-handling-in-scala">Easing Into Functional Error Handling in Scala</a></p>
+<p><a href="http://eed3si9n.com/herding-cats/Xor.html">Herding Cats: Xor</a></p>
+<p><a href="http://eed3si9n.com/herding-cats/Validated.html#Using+NonEmptyList+to+accumulate+failures">Herding Cats: Validated</a></p>
+
+</body>
+</html>
