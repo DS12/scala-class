@@ -53,6 +53,7 @@ object Dependencies {
     "com.twitter" %% "summingbird-builder" % summingbirdVersion,
     "com.twitter" %% "summingbird-storm" % summingbirdVersion,
     "org.json4s" %% "json4s-native" % json4sVersion,
+    "commons-validator" % "commons-validator" % "1.5.1",
     kindProjector,
     si2712
   )
