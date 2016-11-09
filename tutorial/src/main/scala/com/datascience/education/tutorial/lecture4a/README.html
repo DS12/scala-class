@@ -436,7 +436,7 @@ pre[class*="language-"] {
 
 <body>
 
-<h1 id="toc_0"><a href="http://typelevel.org/cats/api/index.html#cats.data.Xor"><code>Xor</code></a> Tutorial</h1>
+<h1 id="toc_0"><a href="https://static.javadoc.io/org.typelevel/cats-core_2.11/0.7.2/index.html#cats.data.Xor"><code>Xor</code></a> Tutorial</h1>
 
 <hr>
 
@@ -459,15 +459,15 @@ case class Some[+A](get: A) extends Option[A]
 
 case object None extends Option[Nothing]</code></pre></div>
 
-<p><a href="http://typelevel.org/cats/tut/xor.html">Read the official Cats <code>Xor</code> documentation</a></p>
+<p>Read the official Cats <a href="https://github.com/typelevel/cats/blob/0.7.x/docs/src/main/tut/xor.md"><code>Xor</code></a> documentation.</p>
 
 <p>The left side of <code>Xor</code> is <em>typically</em> an <code>Exception</code> of some form, and is usually intended to be the &quot;end of the chain.&quot;  To prioritize typical usage, combinators on <code>Xor</code> are &quot;right-biased.&quot;</p>
 
-<p>Nevertheless, sometimes we <em>do</em> want to operate on the &quot;left&quot; type.  <a href="http://typelevel.org/cats/api/index.html#cats.data.Xor@leftMap%5BC%5D(f:A=%3EC):cats.data.Xor%5BC,B%5D"><code>leftMap</code> exists for this purpose.</a></p>
+<p>Nevertheless, sometimes we <em>do</em> want to operate on the &quot;left&quot; type.  <a href="https://static.javadoc.io/org.typelevel/cats-core_2.11/0.7.2/index.html#cats.data.Xor@leftMap%5BC%5D(f:A=%3EC):cats.data.Xor%5BC,B%5D"><code>leftMap</code></a> exists for this purpose.</p>
 
 <div><pre><code class="language-scala">def leftMap[C](f: (A) ⇒ C): Xor[C, B]</code></pre></div>
 
-<p>The implementation of <code>Xor</code> in the Scala STL, <a href="http://www.scala-lang.org/api/current/index.html#scala.util.Either">named <code>Either</code></a>, is not left or right biased.  Call <code>left</code> or <code>right</code> on this <code>Either</code> to produce a <code>LeftProjection</code> or <code>RightProjection</code>.  This implementation adds boilerplate for the majority of use cases, most operatings being on the &quot;right&quot; type.</p>
+<p>The implementation of <code>Xor</code> in the Scala STL, named <a href="http://www.scala-lang.org/api/current/index.html#scala.util.Either"><code>Either</code></a>, is not left or right biased.  Call <code>left</code> or <code>right</code> on this <code>Either</code> to produce a <code>LeftProjection</code> or <code>RightProjection</code>.  This implementation adds boilerplate for the majority of use cases, most operatings being on the &quot;right&quot; type.</p>
 
 <p><code>Xor</code> is best suited to <em>sequential</em> dependencies.</p>
 
@@ -483,11 +483,11 @@ case object None extends Option[Nothing]</code></pre></div>
       }
 </code></pre></div>
 
-<p><a href="http://typelevel.org/cats/api/index.html#cats.data.Xor"><code>Xor</code> ScalaDoc</a></p>
+<p><a href="https://static.javadoc.io/org.typelevel/cats-core_2.11/0.7.2/index.html#cats.data.Xor"><code>Xor</code></a> ScalaDoc</p>
 
-<p><a href="http://typelevel.org/cats/api/index.html#cats.data.Xor$@Left%5B+A%5DextendsXor%5BA,Nothing%5DwithProductwithSerializable"><code>Left</code> ScalaDoc</a></p>
+<p><a href="https://static.javadoc.io/org.typelevel/cats-core_2.11/0.7.2/index.html#cats.data.Xor$$Left"><code>Left</code></a> ScalaDoc</p>
 
-<p><a href="http://typelevel.org/cats/api/index.html#cats.data.Xor$@Right%5B+B%5DextendsXor%5BNothing,B%5DwithProductwithSerializable"><code>Right</code> ScalaDoc</a></p>
+<p><a href="https://static.javadoc.io/org.typelevel/cats-core_2.11/0.7.2/index.html#cats.data.Xor$$Right"><code>Right</code></a> ScalaDoc</p>
 
 <hr>
 
@@ -552,17 +552,17 @@ case object None extends Option[Nothing]</code></pre></div>
 
 <p><code>scala-class/tutorial/src/main/scala/com/datascience/education/tutorial/lecture4a/RequestResponse.scala</code></p>
 
-<p><code>RequestResponse</code> contains side-effecting code that resembles poor Java usage.  In Java and Scala, it is permitted to throw <code>Exception</code>s or <code>Throwable</code>s and leave them unhandled (<a href="http://crunchify.com/better-understanding-on-checked-vs-unchecked-exceptions-how-to-handle-exception-better-way-in-java/">in Java-speak, unchecked</a>).  Lacking programmer directives on how to handle these unchecked exceptions, even trivial exceptions may crash the program in a run-time error -- the one-size-fits-all solution to exception handling.</p>
+<p><code>RequestResponse</code> contains side-effecting code that resembles poor Java usage.  In Java and Scala, it is permitted to throw <code>Exception</code>s or <code>Throwable</code>s and leave them unhandled (in Java-speak, <a href="http://crunchify.com/better-understanding-on-checked-vs-unchecked-exceptions-how-to-handle-exception-better-way-in-java/">unchecked</a>).  Lacking programmer directives on how to handle these unchecked exceptions, even trivial exceptions may crash the program in a run-time error -- the one-size-fits-all solution to exception handling.</p>
 
-<p><a href="http://stackoverflow.com/questions/6083248/is-it-a-bad-practice-to-catch-throwable">Equally dangerous is catching the <em>wrong</em> <code>Exception</code>s -- too wide of a net.</a>  The rule of thumb is &quot;Don&#39;t catch fatal exceptions -- let the JVM deal with them.&quot;  This explains method <a href="http://typelevel.org/cats/api/index.html#cats.data.Xor$@catchNonFatal%5BA%5D(f:=%3EA):cats.data.Xor%5BThrowable,A%5D"><code>Xor.catchNonFatal</code>.</a></p>
+<p><a href="http://stackoverflow.com/questions/6083248/is-it-a-bad-practice-to-catch-throwable">Equally dangerous is catching the <em>wrong</em> <code>Exception</code>s -- too wide of a net.</a>  The rule of thumb is &quot;Don&#39;t catch fatal exceptions -- let the JVM deal with them.&quot;  This explains method <a href="https://static.javadoc.io/org.typelevel/cats-core_2.11/0.7.2/index.html#cats.data.Xor$@catchNonFatal%5BA%5D(f:=%3EA):cats.data.Xor%5BThrowable,A%5D"><code>Xor.catchNonFatal</code>.</a></p>
 
 <h3 id="toc_6">Task (3a): implement <code>sendRequest</code></h3>
 
-<p>Use <a href="http://typelevel.org/cats/api/index.html#cats.data.Xor$@catchOnly%5BT%3E:Null%3C:Throwable%5D:XorFunctions.this.CatchOnlyPartiallyApplied%5BT%5D"><code>Xor.catchOnly</code></a> to &quot;catch only&quot; <code>BadRequestExceptions</code> in <code>sendRequestUnsafe</code>.</p>
+<p>Use <a href="https://static.javadoc.io/org.typelevel/cats-core_2.11/0.7.2/index.html#cats.data.Xor$@catchOnly%5BT%3E:Null%3C:Throwable%5D:XorFunctions.this.CatchOnlyPartiallyApplied%5BT%5D"><code>Xor.catchOnly</code></a> to &quot;catch only&quot; <code>BadRequestExceptions</code> in <code>sendRequestUnsafe</code>.</p>
 
 <h3 id="toc_7">Task (3b): implement <code>unpackResponse</code></h3>
 
-<p>Use <a href="http://typelevel.org/cats/api/index.html#cats.data.Xor$@catchOnly%5BT%3E:Null%3C:Throwable%5D:XorFunctions.this.CatchOnlyPartiallyApplied%5BT%5D"><code>Xor.catchOnly</code></a> to &quot;catch only&quot; <code>CorruptPayloadException</code>s in <code>unpackResponseUnsafe</code>.</p>
+<p>Use <a href="https://static.javadoc.io/org.typelevel/cats-core_2.11/0.7.2/index.html#cats.data.Xor$@catchOnly%5BT%3E:Null%3C:Throwable%5D:XorFunctions.this.CatchOnlyPartiallyApplied%5BT%5D"><code>Xor.catchOnly</code></a> to &quot;catch only&quot; <code>CorruptPayloadException</code>s in <code>unpackResponseUnsafe</code>.</p>
 
 <h3 id="toc_8">Task (3c): implement <code>client</code></h3>
 
@@ -592,7 +592,7 @@ case object None extends Option[Nothing]</code></pre></div>
 
 <p><a href="http://stackoverflow.com/questions/511013/how-to-handle-outofmemoryerror-in-java"><code>new Exception(&quot;out of memory&quot;)</code> is a mock of the real <code>OutOfMemoryError</code> in Java.</a></p>
 
-<p>Read section &quot;Xor in the small, Xor in the large&quot; of <a href="http://typelevel.org/cats/tut/xor.html">the official Cats Xor tutorial</a> to see what happens when two <code>Xor</code>s of unrelated <code>Left</code> types are <code>flatMap</code>ped together.  tldr; the compiler reverts to the most recent common ancestor.</p>
+<p>Read section &quot;Xor in the small, Xor in the large&quot; of <a href="https://github.com/typelevel/cats/blob/0.7.x/docs/src/main/tut/xor.md">the official Cats Xor tutorial</a> to see what happens when two <code>Xor</code>s of unrelated <code>Left</code> types are <code>flatMap</code>ped together.  tldr; the compiler reverts to the most recent common ancestor.</p>
 
 <p>Comment:</p>
 
@@ -738,17 +738,17 @@ type ValidatedNel[E, A] = Validated[NonEmptyList[E], A]
 type NonEmptyList[A] = OneAnd[List, A]
 </code></pre></div>
 
-<p><a href="http://typelevel.org/cats/api/index.html#cats.data.Validated"><code>Validated</code> ScalaDoc</a></p>
+<p><a href="https://static.javadoc.io/org.typelevel/cats-core_2.11/0.7.2/index.html#cats.data.Validated"><code>Validated</code></a> ScalaDoc</p>
 
-<p><a href="http://typelevel.org/cats/api/index.html#cats.data.Validated$@Invalid%5B+E%5DextendsValidated%5BE,Nothing%5DwithProductwithSerializable"><code>Invalid</code> ScalaDoc</a></p>
+<p><a href="https://static.javadoc.io/org.typelevel/cats-core_2.11/0.7.2/index.html#cats.data.Validated$Invalid"><code>Invalid</code></a> ScalaDoc</p>
 
-<p><a href="http://typelevel.org/cats/api/index.html#cats.data.Validated$@Valid%5B+A%5DextendsValidated%5BNothing,A%5DwithProductwithSerializable"><code>Valid</code> ScalaDoc</a></p>
+<p><a href="https://static.javadoc.io/org.typelevel/cats-core_2.11/0.7.2/index.html#cats.data.Validated$Valid"><code>Valid</code></a> ScalaDoc</p>
 
-<p><a href="http://typelevel.org/cats/api/index.html#cats.data.package@ValidatedNel%5BE,A%5D=cats.data.Validated%5Bcats.data.package.NonEmptyList%5BE%5D,A%5D"><code>ValidatedNel</code> ScalaDoc</a></p>
+<p><a href="https://static.javadoc.io/org.typelevel/cats-core_2.11/0.7.2/index.html#cats.data.package@ValidatedNel%5BE,A%5D=cats.data.Validated%5Bcats.data.NonEmptyList%5BE%5D,A%5D"><code>ValidatedNel</code></a> ScalaDoc</p>
 
-<p><a href="http://typelevel.org/cats/api/index.html#cats.data.package@NonEmptyList%5BA%5D=cats.data.OneAnd%5BList,A%5D"><code>NonEmptyList</code> ScalaDoc</a></p>
+<p><a href="https://static.javadoc.io/org.typelevel/cats-core_2.11/0.7.2/index.html#cats.data.NonEmptyList"><code>NonEmptyList</code></a> ScalaDoc</p>
 
-<p><a href="http://typelevel.org/cats/tut/validated.html">Cats Validation documentation</a>, section &quot;Of <code>flatMap</code>s and <code>Xor</code>s&quot;: </p>
+<p><a href="https://github.com/typelevel/cats/blob/0.7.x/docs/src/main/tut/validated.md#of-flatmaps-and-xors">Cats Validation documentation</a>, section &quot;Of <code>flatMap</code>s and <code>Xor</code>s&quot;: </p>
 
 <blockquote>
 <p>Sometimes the task at hand requires error-accumulation. However, sometimes we want a monadic structure that we can use for sequential validation (such as in a for-comprehension). This leaves us in a bit of a conundrum.</p>
@@ -762,9 +762,9 @@ type NonEmptyList[A] = OneAnd[List, A]
 
 <h2 id="toc_20">Resources</h2>
 
-<p><a href="http://typelevel.org/cats/tut/xor.html"><code>Xor</code> in Cats</a></p>
+<p><a href="https://github.com/typelevel/cats/blob/0.7.x/docs/src/main/tut/xor.md"><code>Xor</code> in Cats</a></p>
 
-<p><a href="http://typelevel.org/cats/tut/validated.html"><code>Validated</code> in Cats</a></p>
+<p><a href="https://github.com/typelevel/cats/blob/0.7.x/docs/src/main/tut/validated.md#of-flatmaps-and-xors"><code>Validated</code> in Cats</a></p>
 
 <p><a href="http://longcao.org/2015/06/15/easing-into-functional-error-handling-in-scala">Easing Into Functional Error Handling in Scala</a></p>
 
